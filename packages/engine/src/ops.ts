@@ -165,7 +165,7 @@ export function apply(doc: Document, op: Op): Document {
       const updated: Record<string, unknown> = { ...node };
       if (op.value === null || op.value === undefined) delete updated[op.key];
       else updated[op.key] = clone(op.value);
-      next.nodes[op.id] = updated as Node;
+      next.nodes[op.id] = updated as unknown as Node;
       return next;
     }
 
@@ -262,7 +262,7 @@ export function invert(doc: Document, op: Op): Op {
       return { kind: 'setText', id: op.id, spans: clone(doc.nodes[op.id]?.spans ?? []) };
 
     case 'setField': {
-      const previous = (doc.nodes[op.id] as Record<string, unknown> | undefined)?.[op.key];
+      const previous = (doc.nodes[op.id] as unknown as Record<string, unknown> | undefined)?.[op.key];
       return { kind: 'setField', id: op.id, key: op.key, value: previous === undefined ? null : clone(previous) };
     }
 

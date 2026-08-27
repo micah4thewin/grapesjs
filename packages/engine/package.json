@@ -18,6 +18,7 @@
   "scripts": {
     "build": "node tools/codegen.mjs",
     "codegen:check": "node tools/codegen.mjs --check",
-    "test": "node --test 'test/*.test.ts'"
+    "test": "node --test 'test/*.test.ts'",
+    "ts:check": "tsc -p tsconfig.json"
   }
 }

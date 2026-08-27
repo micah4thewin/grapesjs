@@ -35,7 +35,11 @@
     "lattice:export-and-run": "node scripts/lattice/export-and-run.mjs",
     "lattice:wasm-parity": "cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown && node scripts/lattice/wasm-parity.mjs",
     "lattice:projection-parity": "node scripts/lattice/projection-parity.mjs",
-    "lattice:lighthouse": "node scripts/lattice/lighthouse.mjs"
+    "lattice:lighthouse": "node scripts/lattice/lighthouse.mjs",
+    "lattice:spike": "node scripts/lattice/c3-spike.mjs",
+    "lattice:bench": "node scripts/lattice/bench.mjs",
+    "lattice:exposure": "cargo run -q -p lattice-cli -- exposure corpus/sites",
+    "lattice:ts:check": "pnpm --filter @lattice/engine ts:check && pnpm --filter @lattice/shell ts:check"
   },
   "devDependencies": {
     "@babel/cli": "7.27.0",

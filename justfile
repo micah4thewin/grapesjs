@@ -53,6 +53,22 @@ wasm-parity: build-wasm
 projection-parity:
     node scripts/lattice/projection-parity.mjs
 
+# 5. The graft gate: a scripted editing session in a real editor, read by the tripwire (Stage C3).
+spike:
+    node scripts/lattice/c3-spike.mjs
+
+# 6. Latency thresholds on a 2,000-node page (Stage C6, Part IV risk 6).
+bench:
+    node scripts/lattice/bench.mjs
+
+# 7. The Stage B exit gate: Lighthouse over every corpus route, from the export.
+lighthouse:
+    node scripts/lattice/lighthouse.mjs
+
+# What each route makes readable to an anonymous visitor, diffed against the published set (E4).
+exposure:
+    cargo run -q -p lattice-cli -- exposure corpus/sites
+
 corpus:
     cargo run -q -p lattice-cli -- build --corpus
 

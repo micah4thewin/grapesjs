@@ -70,9 +70,10 @@ test('a heading panel offers levels and type roles, not font sizes', () => {
   const sections = panelForNode(doc, 'hero-title');
   const fields = sections.flatMap((s) => s.fields.map((f) => f.key));
   assert.deepEqual(fields.sort(), ['fg', 'level', 'type']);
-  const typeField = sections[0].fields.find((f) => f.key === 'type')!;
+  const typeField = sections[0].fields.find((field) => field.key === 'type');
+  assert.ok(typeField?.control === 'token', 'the type role is a token control, not a free value');
   assert.deepEqual(
-    typeField.options.map((o) => o.ref),
+    typeField.options.map((option) => option.ref),
     ['type.body', 'type.h1', 'type.h2', 'type.h3', 'type.lead', 'type.small'],
   );
 });

@@ -10,7 +10,8 @@
   "scripts": {
     "test": "node --test 'test/*.test.ts'",
     "dev:build": "node dev/build.mjs",
-    "spike": "node ../../scripts/lattice/c3-spike.mjs"
+    "spike": "node ../../scripts/lattice/c3-spike.mjs",
+    "ts:check": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "@lattice/engine": "workspace:*"
