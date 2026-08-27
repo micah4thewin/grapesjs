@@ -198,6 +198,17 @@ fn render_page(
     };
     render_node(doc, styles, &route.root, &scope, records, &mut body);
 
+    // The page's own background comes from the route root. Without this a dark site has a white
+    // gutter below the content — on the canvas and, worse, on the shipped page.
+    let page_css = doc
+        .nodes
+        .get(&route.root)
+        .and_then(|node| node.style.as_ref())
+        .and_then(|style| style.bg.as_ref())
+        .and_then(|token| token.split_once('.'))
+        .map(|(group, name)| format!("body{{background-color:var(--{group}-{name})}}"))
+        .unwrap_or_default();
+
     let mut out = String::from("<!doctype html>\n<html lang=\"en\">\n<head>\n");
     out.push_str("<meta charset=\"utf-8\">\n");
     out.push_str("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n");
@@ -218,7 +229,7 @@ fn render_page(
             icon_mime(icon)
         ));
     }
-    out.push_str(&format!("<style>{css}</style>\n"));
+    out.push_str(&format!("<style>{css}{page_css}</style>\n"));
     out.push_str("</head>\n<body>\n");
     out.push_str(&body);
     out.push_str("\n</body>\n</html>\n");

@@ -23,7 +23,8 @@ delete the old organs only once their replacements carry load.
 |---|---|
 | `packages/engine` | `@lattice/engine` — the IR, the op vocabulary, the document store, the grid solver, the token model, the WASM host. No GrapesJS imports, ever. |
 | `packages/engine/schema` | The IR schema. The single source of truth; TS and Rust types are generated from it. |
-| `packages/shell` | The editor shell — flags, the IR→canvas projection, gesture capture, the tripwire. |
+| `packages/shell` | The editor shell — flags, the IR→canvas projection, gesture capture, the tripwire, the schema-derived inspector. |
+| `packages/shell/dev` | The runnable shell: a real GrapesJS editor showing a projection, with structure tree, block palette, token-only inspector, design-debt panel and budget meter. |
 | `packages/lattice-cli` | `npx lattice` shim over the Rust binary. |
 | `packages/core` | The GrapesJS fork, untouched. |
 | `crates/compiler` | The compiler: resolve → typecheck → style-flatten → emit → prove → budget. The only emitter. |
@@ -32,7 +33,20 @@ delete the old organs only once their replacements carry load.
 | `corpus/` | Ten hand-authored sites and the invalid fixtures each named diagnostic is pinned by. |
 | `scripts/lattice/` | The CI gates: determinism, export-and-run, same-binary parity, projection parity, Lighthouse. |
 
-## Try it
+## Run the editor
+
+```
+pnpm run build:cli && pnpm run build:core                                  # the GrapesJS fork
+cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown
+node packages/shell/dev/build.mjs corpus/sites/blog.json                    # bundle the shell
+npx serve packages/shell/dev/dist          # or any static server; open the page
+```
+
+The shell boots with the Lattice flags on: the canvas is a projection of the IR compiled by the
+same binary `lattice build` runs, every control in the inspector emits an op, ⌘Z is the engine's
+history, and the session persists to IndexedDB as an op log. `?fresh=1` starts a clean session.
+
+## Try the compiler
 
 ```
 cargo run -p lattice-cli -- check corpus/sites        # every pass, no output

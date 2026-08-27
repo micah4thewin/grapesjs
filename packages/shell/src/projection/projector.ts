@@ -87,7 +87,13 @@ export function projectRoute(
       errors,
     );
   }
-  const file = routeFilePath(path);
+  let file = routeFilePath(path);
+  if (result.files[file] === undefined && path.includes('/:')) {
+    // A dynamic route is a template plus N pages. The canvas edits the template, so it shows the
+    // first record's page — real data, not a placeholder (Stage E3).
+    const prefix = `${path.split('/:')[0].replace(/^\//, '')}/`;
+    file = Object.keys(result.files).find((name) => name.startsWith(prefix) && name.endsWith('index.html')) ?? file;
+  }
   const html = result.files[file];
   if (html === undefined) throw new ProjectionError(`compiler emitted no page for route ${path}`);
 

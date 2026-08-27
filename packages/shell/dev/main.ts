@@ -16,25 +16,30 @@ import {
   grid,
   restore,
 } from '@lattice/engine';
-import type { Change, Document, Op } from '@lattice/engine';
+import type { Change, Document, Node, Op } from '@lattice/engine';
 import { projectRoute } from '../src/projection/projector.ts';
 import { ProjectionScheduler } from '../src/projection/scheduler.ts';
 import { ProjectionCanvas, componentTypes } from '../src/projection/canvas.ts';
 import { createTripwire } from '../src/projection/tripwire.ts';
 import { blockToOps, dropToOps, resizeToOps, textCommitToOps } from '../src/gestures.ts';
 import { LATTICE, describe } from '../src/flags.ts';
+import { BLOCKS, Shell } from './ui.ts';
 
 declare const grapesjs: any;
 
 const status = document.getElementById('status')!;
-const say = (text: string) => {
-  status.textContent = text;
+const say = (html: string) => {
+  status.innerHTML = html;
 };
 
-const [schema, site, wasm] = await Promise.all([
+const [schema, site, wasm, records] = await Promise.all([
   fetch('./schema.json').then((r) => r.json()),
   fetch('./site.json').then((r) => r.json()),
   fetch('./compiler.wasm').then((r) => r.arrayBuffer()),
+  // Stage E3: real rows on the canvas from the first minute. Absent for sites without collections.
+  fetch('./data.json')
+    .then((r) => (r.ok ? r.text() : null))
+    .catch(() => null),
 ]);
 
 const compiler = await LatticeCompiler.fromBytes(wasm);
@@ -52,7 +57,7 @@ const tripwire = createTripwire({ throwOnLeak: false }); // soft: a spike lists 
 const flags = LATTICE;
 
 const editor = grapesjs.init({
-  container: '#editor',
+  container: '#canvas',
   height: '100vh',
   fromElement: false,
   storageManager: false,
@@ -80,8 +85,10 @@ const record = (reason: string, ops: Op[]) => {
 };
 
 let selected: string | null = null;
+let activeRoute = store.document.routes[0].path;
 canvas.onSelect = (nodeId) => {
   selected = nodeId;
+  shell.render();
   report();
 };
 
@@ -95,11 +102,15 @@ let lastBytes: Record<string, { html: number; css: number; js: number; images?: 
  * session, and the errors name the node anyway.
  */
 function project() {
-  const route = store.document.routes[0].path;
+  const route = activeRoute;
   try {
-    lastGood = projectRoute(compiler, store.document, route);
+    lastGood = projectRoute(compiler, store.document, route, records);
     lastErrors = [];
-    lastBytes = compiler.compile({ document: JSON.stringify(store.document), profile: 'fast' }).route_bytes;
+    lastBytes = compiler.compile({
+      document: JSON.stringify(store.document),
+      data: records,
+      profile: 'fast',
+    }).route_bytes;
     return lastGood;
   } catch (error: any) {
     lastErrors = error?.diagnostics ?? [{ code: 'projection', message: String(error), node: null }];
@@ -109,33 +120,133 @@ function project() {
 }
 
 /** Stage D5 — the budget meter, from the same compile the canvas is showing. */
+function currentBytes() {
+  if (!lastBytes) return null;
+  return lastBytes[activeRoute] ?? Object.values(lastBytes)[0] ?? null;
+}
+
 function budgetLine(): string {
   const bytes = lastBytes;
   if (!bytes) return 'budget: —';
-  const route = store.document.routes[0].path;
-  const entry = bytes[route] ?? Object.values(bytes)[0];
+  const entry = bytes[activeRoute] ?? Object.values(bytes)[0];
   if (!entry) return 'budget: —';
   const kb = (entry.html + entry.css + entry.js + (entry.images ?? 0)) / 1024;
   return `budget: ${kb.toFixed(1)}KB of 500KB (html ${(entry.html / 1024).toFixed(1)}KB, css ${(entry.css / 1024).toFixed(1)}KB)`;
 }
 
 function report() {
+  const leaks = tripwire.leaks.length;
+  const errors = lastErrors.length;
   say(
     [
-      describe(flags),
-      `route ${store.document.routes[0].path} · ${canvas.projection?.index.size ?? 0} nodes projected`,
-      `selected: ${selected ?? '—'}`,
-      `ops: ${emitted.length} batch(es), ${emitted.reduce((n, e) => n + e.ops.length, 0)} op(s)`,
-      `tripwire: ${tripwire.leaks.length} leak(s)`,
-      `recovered ${restored.recoveredOps} op(s) from the last session · ${persistence.pending.length} unsent`,
+      'flags: lattice',
+      `${canvas.projection?.index.size ?? 0} nodes`,
+      `${emitted.reduce((n, e) => n + e.ops.length, 0)} ops`,
+      `<span class="${leaks ? 'warn' : 'ok'}">tripwire ${leaks ? `${leaks} leak(s)` : 'clean'}</span>`,
+      `<span class="${errors ? 'warn' : 'ok'}">compiler ${errors ? `${errors} error(s)` : 'clean'}</span>`,
+      `${persistence.pending.length} unsent`,
       budgetLine(),
-    ].join('\n'),
+    ].join(' &nbsp;·&nbsp; '),
   );
+  const undoButton = document.getElementById('undo') as HTMLButtonElement | null;
+  const redoButton = document.getElementById('redo') as HTMLButtonElement | null;
+  if (undoButton) undoButton.disabled = !store.canUndo;
+  if (redoButton) redoButton.disabled = !store.canRedo;
+}
+
+/** The chrome: structure, palette, inspector, debt, meter. Every control emits an op. */
+const shell = new Shell({
+  document: () => store.document,
+  selected: () => selected,
+  activeRoute: () => activeRoute,
+  routeBytes: () => currentBytes(),
+  apply: (ops, reason) => {
+    record(reason, ops);
+    store.apply(ops);
+    scheduler.flush();
+    shell.render();
+  },
+  select: (nodeId) => {
+    const component = findComponent(nodeId);
+    if (component) editor.select(component);
+    selected = nodeId;
+    shell.render();
+    report();
+  },
+  setRoute: (path) => {
+    activeRoute = path;
+    selected = null;
+    canvas.mount(project());
+    canvas.armAll();
+    shell.render();
+    report();
+  },
+  insertBlock: (name) => {
+    const fragment = BLOCKS[name];
+    const parent = pickInsertParent(fragment);
+    if (!fragment || !parent) return;
+    let n = 0;
+    const ops = blockToOps(
+      store.document,
+      fragment,
+      { parent, index: 999, point: { x: 0.02, y: 0 } },
+      () => `b${Date.now().toString(36)}-${++n}`,
+    );
+    if (!ops.length) return;
+    record('block', ops);
+    store.apply(ops);
+    scheduler.flush();
+    shell.render();
+  },
+});
+
+/**
+ * Where a palette block lands when it is clicked rather than dragged: the selected container, the
+ * selected node's parent, or the route root. A grid fragment never nests inside a grid.
+ */
+function pickInsertParent(fragment: { root: string; nodes: Node[] } | undefined): string | null {
+  const doc = store.document;
+  const root = doc.routes.find((r) => r.path === activeRoute)?.root ?? doc.routes[0].root;
+  const containerKinds = ['section', 'stack', 'grid', 'frame'];
+  const parentOf = (id: string) =>
+    Object.values(doc.nodes).find((node) => (node.children ?? []).includes(id))?.id ?? null;
+
+  const candidates = [selected, selected ? parentOf(selected) : null, root].filter(Boolean) as string[];
+  for (const candidate of candidates) {
+    const node = doc.nodes[candidate];
+    if (!node || !containerKinds.includes(node.kind)) continue;
+    // A grid child needs a placement; the fragment's root carries one only for grid-shaped blocks.
+    const rootNode = fragment?.nodes.find((n) => n.id === fragment.root);
+    if (node.kind === 'grid' && rootNode?.kind === 'grid') continue;
+    return candidate;
+  }
+  return root;
 }
 
 canvas.mount(project());
 canvas.attach();
 canvas.armAll();
+shell.render();
+
+document.getElementById('undo')!.addEventListener('click', () => {
+  store.undo();
+  scheduler.flush();
+  shell.render();
+});
+document.getElementById('redo')!.addEventListener('click', () => {
+  store.redo();
+  scheduler.flush();
+  shell.render();
+});
+// ⌘Z routes to the engine's history, not GrapesJS's UndoManager (Stage C4).
+window.addEventListener('keydown', (event) => {
+  if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== 'z') return;
+  event.preventDefault();
+  if (event.shiftKey) store.redo();
+  else store.undo();
+  scheduler.flush();
+  shell.render();
+});
 
 // Ops are immediate; the picture is coalesced. A drag is dozens of ops and should cost one
 // projection, not dozens (Stage C6).
@@ -145,6 +256,7 @@ const scheduler = new ProjectionScheduler<Change>({
     if (batch.structural) canvas.mount(projection);
     else canvas.patch(projection, batch.touched);
     canvas.armAll();
+    shell.render();
     report();
   },
   isStructural: (change) =>
@@ -194,7 +306,7 @@ Object.assign(window as any, {
     canvasHtml: () => editor.Canvas.getDocument().body.innerHTML,
     /** What the compiler would ship for this route, right now. */
     compiledHtml: () => {
-      const result = compiler.compile({ document: JSON.stringify(store.document), profile: 'full' });
+      const result = compiler.compile({ document: JSON.stringify(store.document), data: records, profile: 'full' });
       return result.files['index.html'];
     },
     /**

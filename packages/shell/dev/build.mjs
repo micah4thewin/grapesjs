@@ -27,6 +27,10 @@ const required = [
   [resolve(repoRoot, site), 'site.json', null],
 ];
 
+// Stage E3: if the site has a record snapshot, ship it — the canvas shows real rows, never lorem.
+const dataFrom = resolve(repoRoot, site.replace(/\.json$/, '.data.json'));
+if (existsSync(dataFrom)) copyFileSync(dataFrom, resolve(out, 'data.json'));
+
 for (const [from, to, how] of required) {
   if (!existsSync(from)) {
     console.error(`missing ${from}${how ? `\n  build it with: ${how}` : ''}`);
@@ -35,6 +39,7 @@ for (const [from, to, how] of required) {
   copyFileSync(from, resolve(out, to));
 }
 copyFileSync(resolve(here, 'index.html'), resolve(out, 'index.html'));
+copyFileSync(resolve(here, 'shell.css'), resolve(out, 'shell.css'));
 
 // The projected page references real assets; without them the canvas shows broken images and the
 // spike's "no console errors" check would be measuring the harness, not the graft.

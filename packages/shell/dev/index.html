@@ -3,39 +3,57 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lattice shell — C3 spike harness</title>
+    <title>Lattice — editor shell</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="./grapes.min.css" />
-    <style>
-      html,
-      body {
-        margin: 0;
-        height: 100%;
-        font-family: system-ui, sans-serif;
-      }
-      #editor {
-        height: 100vh;
-      }
-      #status {
-        position: fixed;
-        right: 8px;
-        bottom: 8px;
-        z-index: 10;
-        background: #111;
-        color: #eee;
-        font:
-          12px/1.4 ui-monospace,
-          monospace;
-        padding: 8px 10px;
-        border-radius: 6px;
-        max-width: 46ch;
-        white-space: pre-wrap;
-      }
-    </style>
+    <link rel="stylesheet" href="./shell.css" />
   </head>
   <body>
-    <div id="editor"></div>
-    <pre id="status">booting…</pre>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="mark" aria-hidden="true"></span>
+          <span class="name">Lattice</span>
+          <span class="site" id="site-name">—</span>
+        </div>
+        <nav class="routes" id="routes" aria-label="Routes"></nav>
+        <div class="actions">
+          <button class="btn" id="undo" title="Undo (one op batch)">Undo</button>
+          <button class="btn" id="redo" title="Redo">Redo</button>
+          <span class="meter" id="meter">budget —</span>
+        </div>
+      </header>
+
+      <div class="body">
+        <aside class="rail left">
+          <section class="panel">
+            <h2>Structure</h2>
+            <div class="tree" id="tree"></div>
+          </section>
+          <section class="panel">
+            <h2>Blocks</h2>
+            <div class="blocks" id="blocks"></div>
+          </section>
+        </aside>
+
+        <main class="canvas-wrap"><div id="canvas"></div></main>
+
+        <aside class="rail right">
+          <section class="panel">
+            <h2>Inspector <span class="node-id" id="selected-id"></span></h2>
+            <div class="inspector" id="inspector">
+              <p class="empty">Select something on the canvas.</p>
+            </div>
+          </section>
+          <section class="panel">
+            <h2>Design debt</h2>
+            <div id="debt" class="debt"></div>
+          </section>
+        </aside>
+      </div>
+
+      <footer class="statusbar" id="status">booting…</footer>
+    </div>
     <script src="./grapes.min.js"></script>
     <script type="module" src="./main.js"></script>
   </body>
