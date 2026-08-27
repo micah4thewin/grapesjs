@@ -29,6 +29,7 @@ name = "lattice-compiler-wasm"
 version = "0.1.0"
 dependencies = [
  "lattice-compiler",
+ "serde",
  "serde_json",
 ]
 

@@ -31,13 +31,23 @@ pub fn limits(doc: &Document) -> Limits {
     }
 }
 
-pub fn run(doc: &Document, route_bytes: &BTreeMap<String, RouteBytes>, diags: &mut Vec<Diagnostic>) {
+pub fn run(
+    doc: &Document,
+    route_bytes: &BTreeMap<String, RouteBytes>,
+    diags: &mut Vec<Diagnostic>,
+) {
     let limits = limits(doc);
     for (route, bytes) in route_bytes {
         check(diags, route, "html", bytes.html, limits.html_kb);
         check(diags, route, "css", bytes.css, limits.css_kb);
         check(diags, route, "js", bytes.js, limits.js_kb);
-        check(diags, route, "total", bytes.html + bytes.css + bytes.js, limits.total_kb);
+        check(
+            diags,
+            route,
+            "total",
+            bytes.html + bytes.css + bytes.js,
+            limits.total_kb,
+        );
     }
 }
 
@@ -47,7 +57,11 @@ fn check(diags: &mut Vec<Diagnostic>, route: &str, what: &str, bytes: usize, lim
         diags.push(
             Diagnostic::error(
                 format!("budget.{what}"),
-                format!("route {route:?} ships {}KB of {what}, over the {}KB budget", num::px(kb), num::px(limit_kb)),
+                format!(
+                    "route {route:?} ships {}KB of {what}, over the {}KB budget",
+                    num::px(kb),
+                    num::px(limit_kb)
+                ),
             )
             .at_route(route.to_string()),
         );
@@ -55,7 +69,10 @@ fn check(diags: &mut Vec<Diagnostic>, route: &str, what: &str, bytes: usize, lim
 }
 
 /// What the editor's live meter shows: headroom per route, same numbers the gate uses.
-pub fn headroom(doc: &Document, route_bytes: &BTreeMap<String, RouteBytes>) -> BTreeMap<String, f64> {
+pub fn headroom(
+    doc: &Document,
+    route_bytes: &BTreeMap<String, RouteBytes>,
+) -> BTreeMap<String, f64> {
     let limits = limits(doc);
     route_bytes
         .iter()

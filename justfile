@@ -27,10 +27,10 @@ check-codegen:
     node packages/engine/tools/codegen.mjs --check
 
 test-engine:
-    node --test packages/engine/test
+    node --test 'packages/engine/test/*.test.ts'
 
 test-shell:
-    node --test packages/shell/test
+    node --test 'packages/shell/test/*.test.ts'
 
 test-rust:
     cargo test --workspace

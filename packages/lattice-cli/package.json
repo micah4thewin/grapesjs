@@ -1,0 +1,9 @@
+{
+  "name": "@lattice/cli",
+  "version": "0.1.0",
+  "description": "npm entry point for the `lattice` binary built from crates/cli.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "bin": { "lattice": "bin/lattice.mjs" }
+}

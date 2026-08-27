@@ -45,18 +45,30 @@ pub fn run(doc: &Document, res: &Resolved) -> Styles {
     let mut s = Styles::default();
 
     for (name, token) in &doc.tokens.color {
-        s.vars.insert(format!("--color-{name}"), token.value.clone());
+        s.vars
+            .insert(format!("--color-{name}"), token.value.clone());
     }
     for (name, token) in &doc.tokens.space {
-        s.vars.insert(format!("--space-{name}"), format!("{}px", num::px(token.px)));
+        s.vars.insert(
+            format!("--space-{name}"),
+            format!("{}px", num::px(token.px)),
+        );
     }
     for (name, token) in &doc.tokens.radius {
-        s.vars.insert(format!("--radius-{name}"), format!("{}px", num::px(token.px)));
+        s.vars.insert(
+            format!("--radius-{name}"),
+            format!("{}px", num::px(token.px)),
+        );
     }
     for (name, token) in &doc.tokens.type_ {
-        s.vars.insert(format!("--type-{name}-size"), format!("{}px", num::px(token.size_px)));
-        s.vars.insert(format!("--type-{name}-lh"), num::ratio(token.line_height));
-        s.vars.insert(format!("--type-{name}-weight"), token.weight.to_string());
+        s.vars.insert(
+            format!("--type-{name}-size"),
+            format!("{}px", num::px(token.size_px)),
+        );
+        s.vars
+            .insert(format!("--type-{name}-lh"), num::ratio(token.line_height));
+        s.vars
+            .insert(format!("--type-{name}-weight"), token.weight.to_string());
     }
 
     for (id, node) in &doc.nodes {
@@ -68,7 +80,12 @@ pub fn run(doc: &Document, res: &Resolved) -> Styles {
                 classes.push("l-grid".into());
                 let cols = node.cols.unwrap_or(12);
                 let class = format!("cols-{cols}");
-                rule(&mut s, &class, format!("grid-template-columns:repeat({cols},minmax(0,1fr))"), &[]);
+                rule(
+                    &mut s,
+                    &class,
+                    format!("grid-template-columns:repeat({cols},minmax(0,1fr))"),
+                    &[],
+                );
                 classes.push(class);
             }
             NodeKind::Frame => classes.push("l-frame".into()),
@@ -78,7 +95,12 @@ pub fn run(doc: &Document, res: &Resolved) -> Styles {
 
         if let Some(place) = &node.place {
             let class = format!("col-{}-span-{}", place.col, place.span);
-            rule(&mut s, &class, format!("grid-column:{} / span {}", place.col, place.span), &[]);
+            rule(
+                &mut s,
+                &class,
+                format!("grid-column:{} / span {}", place.col, place.span),
+                &[],
+            );
             classes.push(class);
             if let Some(row) = place.row {
                 let class = format!("row-{row}");
@@ -101,11 +123,20 @@ pub fn run(doc: &Document, res: &Resolved) -> Styles {
 }
 
 fn rule(s: &mut Styles, class: &str, body: String, vars: &[String]) {
-    s.class_vars.entry(class.to_string()).or_default().extend(vars.iter().cloned());
+    s.class_vars
+        .entry(class.to_string())
+        .or_default()
+        .extend(vars.iter().cloned());
     s.rules.insert(class.to_string(), body);
 }
 
-fn add_token_class(s: &mut Styles, out: &mut Vec<String>, prefix: &str, token: &Option<String>, decl: impl Fn(&str) -> String) {
+fn add_token_class(
+    s: &mut Styles,
+    out: &mut Vec<String>,
+    prefix: &str,
+    token: &Option<String>,
+    decl: impl Fn(&str) -> String,
+) {
     let Some(token) = token else { return };
     let (group, name) = token.split_once('.').unwrap_or(("", token.as_str()));
     let class = format!("{prefix}-{}", num::slug(name));
@@ -117,15 +148,28 @@ fn add_token_class(s: &mut Styles, out: &mut Vec<String>, prefix: &str, token: &
 
 fn style_classes(s: &mut Styles, style: &Style, node_id: &str) -> Vec<String> {
     let mut out = Vec::new();
-    add_token_class(s, &mut out, "bg", &style.bg, |v| format!("background-color:var({v})"));
-    add_token_class(s, &mut out, "text", &style.fg, |v| format!("color:var({v})"));
-    add_token_class(s, &mut out, "pad", &style.pad, |v| format!("padding:var({v})"));
+    add_token_class(s, &mut out, "bg", &style.bg, |v| {
+        format!("background-color:var({v})")
+    });
+    add_token_class(s, &mut out, "text", &style.fg, |v| {
+        format!("color:var({v})")
+    });
+    add_token_class(s, &mut out, "pad", &style.pad, |v| {
+        format!("padding:var({v})")
+    });
     add_token_class(s, &mut out, "gap", &style.gap, |v| format!("gap:var({v})"));
-    add_token_class(s, &mut out, "radius", &style.radius, |v| format!("border-radius:var({v})"));
-    add_token_class(s, &mut out, "mw", &style.max_width, |v| format!("max-width:var({v})"));
+    add_token_class(s, &mut out, "radius", &style.radius, |v| {
+        format!("border-radius:var({v})")
+    });
+    add_token_class(s, &mut out, "mw", &style.max_width, |v| {
+        format!("max-width:var({v})")
+    });
 
     if let Some(token) = &style.type_ {
-        let name = token.split_once('.').map(|(_, n)| n).unwrap_or(token.as_str());
+        let name = token
+            .split_once('.')
+            .map(|(_, n)| n)
+            .unwrap_or(token.as_str());
         let class = format!("type-{}", num::slug(name));
         let body =
             format!("font-size:var(--type-{name}-size);line-height:var(--type-{name}-lh);font-weight:var(--type-{name}-weight)");
@@ -160,7 +204,12 @@ fn style_classes(s: &mut Styles, style: &Style, node_id: &str) -> Vec<String> {
     // design-debt panel can point at it and a reviewer reading the CSS sees the debt.
     if !style.escape.is_empty() {
         let class = format!("esc-{}", num::slug(node_id));
-        let body = style.escape.iter().map(|(property, value)| format!("{property}:{value}")).collect::<Vec<_>>().join(";");
+        let body = style
+            .escape
+            .iter()
+            .map(|(property, value)| format!("{property}:{value}"))
+            .collect::<Vec<_>>()
+            .join(";");
         let vars = collect_vars(&body);
         rule(s, &class, body, &vars);
         out.push(class);

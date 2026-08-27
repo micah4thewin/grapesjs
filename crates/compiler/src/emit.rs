@@ -23,9 +23,20 @@ pub fn run(doc: &Document, res: &Resolved, styles: &Styles, opts: &Options, buil
     run_with_data(doc, res, styles, &Records::new(), opts, build)
 }
 
-pub fn run_with_data(doc: &Document, res: &Resolved, styles: &Styles, records: &Records, opts: &Options, build: &mut Build) {
+pub fn run_with_data(
+    doc: &Document,
+    res: &Resolved,
+    styles: &Styles,
+    records: &Records,
+    opts: &Options,
+    build: &mut Build,
+) {
     for route in &doc.routes {
-        let node_ids = res.route_nodes.get(&route.path).cloned().unwrap_or_default();
+        let node_ids = res
+            .route_nodes
+            .get(&route.path)
+            .cloned()
+            .unwrap_or_default();
         let css = styles.css_for(&node_ids);
 
         match &route.collection {
@@ -68,18 +79,35 @@ pub fn run_with_data(doc: &Document, res: &Resolved, styles: &Styles, records: &
     }
 
     if !doc.redirects.is_empty() {
-        build.files.insert("_redirects".to_string(), redirects_file(doc).into_bytes());
+        build
+            .files
+            .insert("_redirects".to_string(), redirects_file(doc).into_bytes());
     }
 
     if opts.emit_app {
-        build.files.insert("package.json".to_string(), app_package_json(doc).into_bytes());
-        build.files.insert("server.js".to_string(), SERVER_JS.as_bytes().to_vec());
-        build.files.insert("404.html".to_string(), not_found_html(doc, styles).into_bytes());
+        build.files.insert(
+            "package.json".to_string(),
+            app_package_json(doc).into_bytes(),
+        );
+        build
+            .files
+            .insert("server.js".to_string(), SERVER_JS.as_bytes().to_vec());
+        build.files.insert(
+            "404.html".to_string(),
+            not_found_html(doc, styles).into_bytes(),
+        );
     }
 }
 
 fn record_route(build: &mut Build, path: &str, html: &str, css: &str) {
-    build.route_bytes.insert(path.to_string(), RouteBytes { html: html.len(), css: css.len(), js: 0 });
+    build.route_bytes.insert(
+        path.to_string(),
+        RouteBytes {
+            html: html.len(),
+            css: css.len(),
+            js: 0,
+        },
+    );
 }
 
 /// `/` -> `index.html`, `/pricing` -> `pricing/index.html`. Directory-style so any static host
@@ -102,15 +130,25 @@ fn render_page(
     records: &Records,
 ) -> String {
     let mut body = String::new();
-    let scope = Scope { record, collection: route.collection.as_deref(), index: None };
+    let scope = Scope {
+        record,
+        collection: route.collection.as_deref(),
+        index: None,
+    };
     render_node(doc, styles, &route.root, &scope, records, &mut body);
 
     let mut out = String::from("<!doctype html>\n<html lang=\"en\">\n<head>\n");
     out.push_str("<meta charset=\"utf-8\">\n");
     out.push_str("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n");
-    out.push_str(&format!("<title>{}</title>\n", escape_text(&interpolate(&route.title, record))));
+    out.push_str(&format!(
+        "<title>{}</title>\n",
+        escape_text(&interpolate(&route.title, record))
+    ));
     if let Some(description) = &route.description {
-        out.push_str(&format!("<meta name=\"description\" content=\"{}\">\n", escape_attr(&interpolate(description, record))));
+        out.push_str(&format!(
+            "<meta name=\"description\" content=\"{}\">\n",
+            escape_attr(&interpolate(description, record))
+        ));
     }
     out.push_str(&format!("<style>{css}</style>\n"));
     out.push_str("</head>\n<body>\n");
@@ -125,15 +163,27 @@ struct Scope<'a> {
     index: Option<usize>,
 }
 
-fn render_node(doc: &Document, styles: &Styles, id: &str, scope: &Scope, records: &Records, out: &mut String) {
-    let Some(node) = doc.nodes.get(id) else { return };
+fn render_node(
+    doc: &Document,
+    styles: &Styles,
+    id: &str,
+    scope: &Scope,
+    records: &Records,
+    out: &mut String,
+) {
+    let Some(node) = doc.nodes.get(id) else {
+        return;
+    };
     let class_attr = styles
         .classes
         .get(id)
         .filter(|c| !c.is_empty())
         .map(|c| format!(" class=\"{}\"", c.join(" ")))
         .unwrap_or_default();
-    let index_attr = scope.index.map(|i| format!(" data-lattice-index=\"{i}\"")).unwrap_or_default();
+    let index_attr = scope
+        .index
+        .map(|i| format!(" data-lattice-index=\"{i}\""))
+        .unwrap_or_default();
     let id_attr = format!(" data-lattice-id=\"{}\"{index_attr}", escape_attr(id));
 
     match node.kind {
@@ -164,10 +214,19 @@ fn render_node(doc: &Document, styles: &Styles, id: &str, scope: &Scope, records
         NodeKind::List => {
             let tag = "div";
             out.push_str(&format!("<{tag}{id_attr}{class_attr}>"));
-            let rows = node.source.as_ref().and_then(|s| records.get(s)).cloned().unwrap_or_default();
+            let rows = node
+                .source
+                .as_ref()
+                .and_then(|s| records.get(s))
+                .cloned()
+                .unwrap_or_default();
             let limit = node.limit.unwrap_or(i64::MAX).max(0) as usize;
             for (i, row) in rows.iter().take(limit).enumerate() {
-                let child_scope = Scope { record: Some(row), collection: node.source.as_deref(), index: Some(i) };
+                let child_scope = Scope {
+                    record: Some(row),
+                    collection: node.source.as_deref(),
+                    index: Some(i),
+                };
                 for child in &node.children {
                     render_node(doc, styles, child, &child_scope, records, out);
                 }
@@ -238,7 +297,9 @@ fn bound_value(bind: &str, scope: &Scope) -> Option<String> {
 
 /// `{title}` in a route title/description resolves against the record on dynamic routes.
 fn interpolate(text: &str, record: Option<&BTreeMap<String, serde_json::Value>>) -> String {
-    let Some(record) = record else { return text.to_string() };
+    let Some(record) = record else {
+        return text.to_string();
+    };
     let mut out = String::new();
     let mut rest = text;
     while let Some(start) = rest.find('{') {
@@ -269,7 +330,9 @@ fn interpolate(text: &str, record: Option<&BTreeMap<String, serde_json::Value>>)
 }
 
 pub fn escape_text(text: &str) -> String {
-    text.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
+    text.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
 }
 
 pub fn escape_attr(text: &str) -> String {

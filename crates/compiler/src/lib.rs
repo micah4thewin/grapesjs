@@ -23,8 +23,8 @@ pub mod diagnostics;
 pub mod emit;
 pub mod generated;
 pub mod num;
-pub mod prove;
 pub mod passes;
+pub mod prove;
 
 pub use diagnostics::{Diagnostic, Severity};
 pub use generated::ir;
@@ -51,7 +51,9 @@ pub struct RouteBytes {
 
 impl Build {
     pub fn errors(&self) -> impl Iterator<Item = &Diagnostic> {
-        self.diagnostics.iter().filter(|d| d.severity == Severity::Error)
+        self.diagnostics
+            .iter()
+            .filter(|d| d.severity == Severity::Error)
     }
 
     pub fn ok(&self) -> bool {
@@ -78,10 +80,16 @@ pub struct Options {
 
 impl Options {
     pub fn full() -> Self {
-        Options { profile: Profile::Full, emit_app: true }
+        Options {
+            profile: Profile::Full,
+            emit_app: true,
+        }
     }
     pub fn fast() -> Self {
-        Options { profile: Profile::Fast, emit_app: false }
+        Options {
+            profile: Profile::Fast,
+            emit_app: false,
+        }
     }
 }
 
@@ -99,7 +107,10 @@ pub fn compile_str_with_data(source: &str, data: Option<&str>, opts: &Options) -
             Ok(r) => r,
             Err(e) => {
                 let mut build = Build::default();
-                build.diagnostics.push(Diagnostic::error("parse", format!("record snapshot is not valid JSON: {e}")));
+                build.diagnostics.push(Diagnostic::error(
+                    "parse",
+                    format!("record snapshot is not valid JSON: {e}"),
+                ));
                 return build;
             }
         },
@@ -108,7 +119,10 @@ pub fn compile_str_with_data(source: &str, data: Option<&str>, opts: &Options) -
         Ok(d) => d,
         Err(e) => {
             let mut build = Build::default();
-            build.diagnostics.push(Diagnostic::error("parse", format!("document is not valid IR JSON: {e}")));
+            build.diagnostics.push(Diagnostic::error(
+                "parse",
+                format!("document is not valid IR JSON: {e}"),
+            ));
             return build;
         }
     };
@@ -125,7 +139,11 @@ pub fn compile_with_data(doc: &ir::Document, records: &emit::Records, opts: &Opt
     if doc.schema != ir::SCHEMA_VERSION {
         build.diagnostics.push(Diagnostic::error(
             "schema",
-            format!("document declares schema {:?}, this compiler speaks {:?}", doc.schema, ir::SCHEMA_VERSION),
+            format!(
+                "document declares schema {:?}, this compiler speaks {:?}",
+                doc.schema,
+                ir::SCHEMA_VERSION
+            ),
         ));
         return build;
     }

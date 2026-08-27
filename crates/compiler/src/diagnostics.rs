@@ -22,11 +22,23 @@ pub struct Diagnostic {
 
 impl Diagnostic {
     pub fn error(code: impl Into<String>, message: impl Into<String>) -> Self {
-        Diagnostic { severity: Severity::Error, code: code.into(), message: message.into(), node: None, route: None }
+        Diagnostic {
+            severity: Severity::Error,
+            code: code.into(),
+            message: message.into(),
+            node: None,
+            route: None,
+        }
     }
 
     pub fn warning(code: impl Into<String>, message: impl Into<String>) -> Self {
-        Diagnostic { severity: Severity::Warning, code: code.into(), message: message.into(), node: None, route: None }
+        Diagnostic {
+            severity: Severity::Warning,
+            code: code.into(),
+            message: message.into(),
+            node: None,
+            route: None,
+        }
     }
 
     pub fn at_node(mut self, node: impl Into<String>) -> Self {

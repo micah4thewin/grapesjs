@@ -8,6 +8,7 @@ description = "WASM facade over the Lattice compiler. Same passes, same bytes, s
 
 [dependencies]
 lattice-compiler.workspace = true
+serde.workspace = true
 serde_json.workspace = true
 
 [lib]

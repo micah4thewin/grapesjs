@@ -46,7 +46,9 @@ fn bind_scopes(doc: &Document, res: &Resolved) -> BTreeMap<String, String> {
         if let Some(collection) = &route.collection {
             if let Some(nodes) = res.route_nodes.get(&route.path) {
                 for id in nodes {
-                    scopes.entry(id.clone()).or_insert_with(|| collection.clone());
+                    scopes
+                        .entry(id.clone())
+                        .or_insert_with(|| collection.clone());
                 }
             }
         }
@@ -69,54 +71,102 @@ fn bind_scopes(doc: &Document, res: &Resolved) -> BTreeMap<String, String> {
 }
 
 fn is_container(kind: NodeKind) -> bool {
-    matches!(kind, NodeKind::Section | NodeKind::Stack | NodeKind::Grid | NodeKind::Frame | NodeKind::List)
+    matches!(
+        kind,
+        NodeKind::Section | NodeKind::Stack | NodeKind::Grid | NodeKind::Frame | NodeKind::List
+    )
 }
 
 fn check_kind(doc: &Document, res: &Resolved, node: &Node, diags: &mut Vec<Diagnostic>) {
     let id = &node.id;
     if !is_container(node.kind) && !node.children.is_empty() && node.kind != NodeKind::Instance {
         diags.push(
-            Diagnostic::error("typecheck.leaf-children", format!("{:?} node {id:?} cannot have children", node.kind))
-                .at_node(id.clone()),
+            Diagnostic::error(
+                "typecheck.leaf-children",
+                format!("{:?} node {id:?} cannot have children", node.kind),
+            )
+            .at_node(id.clone()),
         );
     }
     match node.kind {
         NodeKind::Heading => {
             if node.level.is_none() {
-                diags.push(Diagnostic::error("typecheck.heading.level", format!("heading {id:?} has no level")).at_node(id.clone()));
+                diags.push(
+                    Diagnostic::error(
+                        "typecheck.heading.level",
+                        format!("heading {id:?} has no level"),
+                    )
+                    .at_node(id.clone()),
+                );
             }
             if node.spans.is_empty() && node.bind.is_none() {
-                diags.push(Diagnostic::error("typecheck.heading.empty", format!("heading {id:?} has neither text nor a binding")).at_node(id.clone()));
+                diags.push(
+                    Diagnostic::error(
+                        "typecheck.heading.empty",
+                        format!("heading {id:?} has neither text nor a binding"),
+                    )
+                    .at_node(id.clone()),
+                );
             }
         }
         NodeKind::Text => {
             if node.spans.is_empty() && node.bind.is_none() {
-                diags.push(Diagnostic::error("typecheck.text.empty", format!("text {id:?} has neither text nor a binding")).at_node(id.clone()));
+                diags.push(
+                    Diagnostic::error(
+                        "typecheck.text.empty",
+                        format!("text {id:?} has neither text nor a binding"),
+                    )
+                    .at_node(id.clone()),
+                );
             }
         }
         NodeKind::Image => {
             if node.src.is_none() && node.bind.is_none() {
-                diags.push(Diagnostic::error("typecheck.image.src", format!("image {id:?} has no source")).at_node(id.clone()));
+                diags.push(
+                    Diagnostic::error("typecheck.image.src", format!("image {id:?} has no source"))
+                        .at_node(id.clone()),
+                );
             }
             // Intrinsic dimensions and alt are required by the plan, not merely encouraged:
             // layout shift and screen-reader silence are not tradeable against author convenience.
             if node.alt.is_none() {
-                diags.push(Diagnostic::error("typecheck.image.alt", format!("image {id:?} has no alt text")).at_node(id.clone()));
+                diags.push(
+                    Diagnostic::error(
+                        "typecheck.image.alt",
+                        format!("image {id:?} has no alt text"),
+                    )
+                    .at_node(id.clone()),
+                );
             }
             if node.width.is_none() || node.height.is_none() {
                 diags.push(
-                    Diagnostic::error("typecheck.image.dimensions", format!("image {id:?} is missing intrinsic width/height"))
-                        .at_node(id.clone()),
+                    Diagnostic::error(
+                        "typecheck.image.dimensions",
+                        format!("image {id:?} is missing intrinsic width/height"),
+                    )
+                    .at_node(id.clone()),
                 );
             }
         }
         NodeKind::Grid => {
             if node.cols.is_none() {
-                diags.push(Diagnostic::error("typecheck.grid.cols", format!("grid {id:?} does not declare a column count")).at_node(id.clone()));
+                diags.push(
+                    Diagnostic::error(
+                        "typecheck.grid.cols",
+                        format!("grid {id:?} does not declare a column count"),
+                    )
+                    .at_node(id.clone()),
+                );
             }
         }
         NodeKind::List => match &node.source {
-            None => diags.push(Diagnostic::error("typecheck.list.source", format!("list {id:?} has no source collection")).at_node(id.clone())),
+            None => diags.push(
+                Diagnostic::error(
+                    "typecheck.list.source",
+                    format!("list {id:?} has no source collection"),
+                )
+                .at_node(id.clone()),
+            ),
             Some(source) => {
                 if !res.collections.contains_key(source) {
                     diags.push(
@@ -127,11 +177,20 @@ fn check_kind(doc: &Document, res: &Resolved, node: &Node, diags: &mut Vec<Diagn
             }
         },
         NodeKind::Instance => match &node.component {
-            None => diags.push(Diagnostic::error("typecheck.instance.component", format!("instance {id:?} names no component")).at_node(id.clone())),
+            None => diags.push(
+                Diagnostic::error(
+                    "typecheck.instance.component",
+                    format!("instance {id:?} names no component"),
+                )
+                .at_node(id.clone()),
+            ),
             Some(name) => match res.components.get(name) {
                 None => diags.push(
-                    Diagnostic::error("typecheck.instance.dangling", format!("instance {id:?} uses component {name:?}, which is not declared"))
-                        .at_node(id.clone()),
+                    Diagnostic::error(
+                        "typecheck.instance.dangling",
+                        format!("instance {id:?} uses component {name:?}, which is not declared"),
+                    )
+                    .at_node(id.clone()),
                 ),
                 Some(def) => {
                     for prop in &def.props {
@@ -165,7 +224,11 @@ fn check_kind(doc: &Document, res: &Resolved, node: &Node, diags: &mut Vec<Diagn
 }
 
 fn check_place(doc: &Document, res: &Resolved, node: &Node, diags: &mut Vec<Diagnostic>) {
-    let parent_kind = res.parent.get(&node.id).and_then(|p| doc.nodes.get(p)).map(|p| (p.id.clone(), p.kind, p.cols));
+    let parent_kind = res
+        .parent
+        .get(&node.id)
+        .and_then(|p| doc.nodes.get(p))
+        .map(|p| (p.id.clone(), p.kind, p.cols));
     match (&node.place, parent_kind) {
         (Some(place), Some((parent_id, NodeKind::Grid, cols))) => {
             let cols = cols.unwrap_or(12);
@@ -183,13 +246,22 @@ fn check_place(doc: &Document, res: &Resolved, node: &Node, diags: &mut Vec<Diag
             }
         }
         (Some(_), _) => diags.push(
-            Diagnostic::error("typecheck.place.orphan", format!("node {:?} carries a grid placement but its parent is not a grid", node.id))
-                .at_node(node.id.clone()),
+            Diagnostic::error(
+                "typecheck.place.orphan",
+                format!(
+                    "node {:?} carries a grid placement but its parent is not a grid",
+                    node.id
+                ),
+            )
+            .at_node(node.id.clone()),
         ),
         (None, Some((parent_id, NodeKind::Grid, _))) => diags.push(
             Diagnostic::error(
                 "typecheck.place.missing",
-                format!("node {:?} is a child of grid {parent_id:?} but has no placement", node.id),
+                format!(
+                    "node {:?} is a child of grid {parent_id:?} but has no placement",
+                    node.id
+                ),
             )
             .at_node(node.id.clone()),
         ),
@@ -213,8 +285,14 @@ fn check_style(doc: &Document, node: &Node, diags: &mut Vec<Diagnostic>) {
         let Some(token) = value else { continue };
         let Some((prefix, name)) = token.split_once('.') else {
             diags.push(
-                Diagnostic::error("typecheck.token.malformed", format!("node {:?} style {field} uses {token:?}, which is not a token reference", node.id))
-                    .at_node(node.id.clone()),
+                Diagnostic::error(
+                    "typecheck.token.malformed",
+                    format!(
+                        "node {:?} style {field} uses {token:?}, which is not a token reference",
+                        node.id
+                    ),
+                )
+                .at_node(node.id.clone()),
             );
             continue;
         };
@@ -222,7 +300,10 @@ fn check_style(doc: &Document, node: &Node, diags: &mut Vec<Diagnostic>) {
             diags.push(
                 Diagnostic::error(
                     "typecheck.token.group",
-                    format!("node {:?} style {field} expects a {group} token but got {token:?}", node.id),
+                    format!(
+                        "node {:?} style {field} expects a {group} token but got {token:?}",
+                        node.id
+                    ),
                 )
                 .at_node(node.id.clone()),
             );
@@ -237,22 +318,45 @@ fn check_style(doc: &Document, node: &Node, diags: &mut Vec<Diagnostic>) {
         };
         if !exists {
             diags.push(
-                Diagnostic::error("typecheck.token.dangling", format!("node {:?} style {field} references {token:?}, which is not defined", node.id))
-                    .at_node(node.id.clone()),
+                Diagnostic::error(
+                    "typecheck.token.dangling",
+                    format!(
+                        "node {:?} style {field} references {token:?}, which is not defined",
+                        node.id
+                    ),
+                )
+                .at_node(node.id.clone()),
             );
         }
     }
 }
 
-fn check_bind(res: &Resolved, id: &str, bind: &str, scope: Option<&str>, diags: &mut Vec<Diagnostic>) {
+fn check_bind(
+    res: &Resolved,
+    id: &str,
+    bind: &str,
+    scope: Option<&str>,
+    diags: &mut Vec<Diagnostic>,
+) {
     let Some((collection, field)) = bind.split_once('.') else {
-        diags.push(Diagnostic::error("typecheck.bind.malformed", format!("node {id:?} binds to {bind:?}, which is not a collection path")).at_node(id.to_string()));
+        diags.push(
+            Diagnostic::error(
+                "typecheck.bind.malformed",
+                format!("node {id:?} binds to {bind:?}, which is not a collection path"),
+            )
+            .at_node(id.to_string()),
+        );
         return;
     };
     let Some(def) = res.collections.get(collection) else {
         diags.push(
-            Diagnostic::error("typecheck.bind.dangling", format!("node {id:?} binds to {bind:?}, but collection {collection:?} is not declared"))
-                .at_node(id.to_string()),
+            Diagnostic::error(
+                "typecheck.bind.dangling",
+                format!(
+                    "node {id:?} binds to {bind:?}, but collection {collection:?} is not declared"
+                ),
+            )
+            .at_node(id.to_string()),
         );
         return;
     };

@@ -1,0 +1,99 @@
+# Stage A3 — the non-negotiables, guarded from commit one.
+#
+# Determinism and export-and-run are properties that are lost quietly: to a stray HashMap, to a
+# timestamp, to a dependency someone added to the export "just for now". They are checked on every
+# PR from the moment the corpus is empty, when they pass trivially, so that the day they start
+# meaning something nobody has to build the harness under pressure.
+#
+# The GrapesJS suites (.github/workflows/test.yml) stay in the required set as the regression net
+# for the modules the transformation keeps — canvas, sorter, navigator, RTE, panels. They come out
+# of the required set module by module, as each is rewired, not before.
+name: Lattice
+
+on:
+  push:
+    branches: [dev, 'claude/**']
+  pull_request:
+    branches: [dev]
+
+jobs:
+  compiler:
+    name: Compiler (schema, passes, gates)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.2'
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Generated IR types are in sync with the schema
+        run: node packages/engine/tools/codegen.mjs --check
+      - name: Rust format
+        run: cargo fmt --all -- --check
+      - name: Compiler tests (corpus + fixtures)
+        run: cargo test --workspace
+      - name: Engine tests
+        run: node --test 'packages/engine/test/*.test.ts'
+      - name: Shell tests
+        run: node --test 'packages/shell/test/*.test.ts'
+
+  determinism:
+    name: Determinism (build twice, diff every byte)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.2'
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: node scripts/lattice/determinism.mjs
+
+  export-and-run:
+    name: Export and run (no network route back to us)
+    runs-on: ubuntu-latest
+    # The export must install and boot with nothing but the files it shipped. `npm ci --offline`
+    # against a dependency-free lockfile is the mechanical form of that promise.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.2'
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: node scripts/lattice/export-and-run.mjs
+
+  same-binary-parity:
+    name: Same binary, two hosts (native vs WASM)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.2'
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown
+      - run: node scripts/lattice/wasm-parity.mjs
+
+  projection-parity:
+    name: What you see is what ships (projection vs compilation)
+    runs-on: ubuntu-latest
+    # Permanent, not scaffolding (Part IV risk 2): the canvas and the compiler are two views of one
+    # IR, and any divergence between them is a silent lie to the person editing.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.2'
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown
+      - run: node scripts/lattice/projection-parity.mjs

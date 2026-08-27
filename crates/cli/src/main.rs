@@ -56,7 +56,12 @@ struct Flags {
 }
 
 fn parse_flags(args: &[String]) -> Flags {
-    let mut flags = Flags { out: None, port: 8080, quiet: false, sites: Vec::new() };
+    let mut flags = Flags {
+        out: None,
+        port: 8080,
+        quiet: false,
+        sites: Vec::new(),
+    };
     let mut i = 0;
     while i < args.len() {
         match args[i].as_str() {
@@ -117,8 +122,15 @@ fn data_path(site: &Path) -> PathBuf {
 fn compile_site(site: &Path, emit_app: bool) -> Result<lattice_compiler::Build, String> {
     let source = fs::read_to_string(site).map_err(|e| format!("{}: {e}", site.display()))?;
     let data = fs::read_to_string(data_path(site)).ok();
-    let opts = Options { profile: lattice_compiler::Profile::Full, emit_app };
-    Ok(lattice_compiler::compile_str_with_data(&source, data.as_deref(), &opts))
+    let opts = Options {
+        profile: lattice_compiler::Profile::Full,
+        emit_app,
+    };
+    Ok(lattice_compiler::compile_str_with_data(
+        &source,
+        data.as_deref(),
+        &opts,
+    ))
 }
 
 fn report(site: &Path, build: &lattice_compiler::Build, quiet: bool) -> bool {
@@ -158,7 +170,11 @@ fn run_build(args: &[String], emit: bool) -> ExitCode {
         }
         if !emit {
             if !flags.quiet {
-                println!("check {} — {} route(s) ok", site.display(), build.route_bytes.len());
+                println!(
+                    "check {} — {} route(s) ok",
+                    site.display(),
+                    build.route_bytes.len()
+                );
             }
             continue;
         }
@@ -174,7 +190,12 @@ fn run_build(args: &[String], emit: bool) -> ExitCode {
         }
         if !flags.quiet {
             let headroom = budget::headroom_summary(&build);
-            println!("built {} -> {} ({} file(s)){headroom}", site.display(), out.display(), build.files.len());
+            println!(
+                "built {} -> {} ({} file(s)){headroom}",
+                site.display(),
+                out.display(),
+                build.files.len()
+            );
         }
     }
 
@@ -200,7 +221,8 @@ fn write_build(out: &Path, build: &lattice_compiler::Build) -> Result<(), String
     }
     // The dependency graph Stage F1's incremental rebuild keys off. Deterministic, no timestamps.
     let manifest = manifest_json(build);
-    fs::write(out.join(".lattice-manifest.json"), manifest).map_err(|e| format!("{}: {e}", out.display()))?;
+    fs::write(out.join(".lattice-manifest.json"), manifest)
+        .map_err(|e| format!("{}: {e}", out.display()))?;
     Ok(())
 }
 
@@ -217,7 +239,10 @@ fn manifest_json(build: &lattice_compiler::Build) -> String {
         })
         .collect();
     let value = serde_json::json!({ "routeDeps": deps, "routeBytes": bytes });
-    format!("{}\n", serde_json::to_string_pretty(&value).unwrap_or_default())
+    format!(
+        "{}\n",
+        serde_json::to_string_pretty(&value).unwrap_or_default()
+    )
 }
 
 fn run_dev(args: &[String]) -> ExitCode {
@@ -227,7 +252,10 @@ fn run_dev(args: &[String]) -> ExitCode {
         eprintln!("no site found");
         return ExitCode::FAILURE;
     };
-    let out = flags.out.clone().unwrap_or_else(|| PathBuf::from("dist").join(site.file_stem().unwrap_or_default()));
+    let out = flags
+        .out
+        .clone()
+        .unwrap_or_else(|| PathBuf::from("dist").join(site.file_stem().unwrap_or_default()));
 
     let rebuild = |site: &Path, out: &Path| match compile_site(site, true) {
         Ok(build) => {
@@ -289,7 +317,9 @@ fn run_dev(args: &[String]) -> ExitCode {
 
 fn modified(path: &Path) -> Option<std::time::SystemTime> {
     let site = fs::metadata(path).ok()?.modified().ok()?;
-    let data = fs::metadata(data_path(path)).ok().and_then(|m| m.modified().ok());
+    let data = fs::metadata(data_path(path))
+        .ok()
+        .and_then(|m| m.modified().ok());
     Some(match data {
         Some(d) if d > site => d,
         _ => site,
@@ -298,7 +328,9 @@ fn modified(path: &Path) -> Option<std::time::SystemTime> {
 
 fn serve(mut stream: TcpStream, root: &Path) {
     let mut buf = [0u8; 8192];
-    let Ok(read) = stream.read(&mut buf) else { return };
+    let Ok(read) = stream.read(&mut buf) else {
+        return;
+    };
     let request = String::from_utf8_lossy(&buf[..read]);
     let path = request.split_whitespace().nth(1).unwrap_or("/");
     let path = path.split('?').next().unwrap_or("/");
@@ -308,7 +340,11 @@ fn serve(mut stream: TcpStream, root: &Path) {
     }
     let (status, content_type, body) = match fs::read(&file) {
         Ok(bytes) => ("200 OK", content_type(&file), bytes),
-        Err(_) => ("404 Not Found", "text/html; charset=utf-8", b"<h1>not found</h1>".to_vec()),
+        Err(_) => (
+            "404 Not Found",
+            "text/html; charset=utf-8",
+            b"<h1>not found</h1>".to_vec(),
+        ),
     };
     let header = format!(
         "HTTP/1.1 {status}\r\ncontent-type: {content_type}\r\ncontent-length: {}\r\ncache-control: no-store\r\nconnection: close\r\n\r\n",

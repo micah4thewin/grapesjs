@@ -30,8 +30,14 @@ pub fn run(doc: &Document, diags: &mut Vec<Diagnostic>) -> Option<Resolved> {
     for (key, node) in &doc.nodes {
         if &node.id != key {
             diags.push(
-                Diagnostic::error("resolve.id-mismatch", format!("node table key {key:?} does not match node id {:?}", node.id))
-                    .at_node(key.clone()),
+                Diagnostic::error(
+                    "resolve.id-mismatch",
+                    format!(
+                        "node table key {key:?} does not match node id {:?}",
+                        node.id
+                    ),
+                )
+                .at_node(key.clone()),
             );
         }
     }
@@ -43,8 +49,11 @@ pub fn run(doc: &Document, diags: &mut Vec<Diagnostic>) -> Option<Resolved> {
         r.components.insert(c.name.clone(), c.clone());
         if !doc.nodes.contains_key(&c.root) {
             diags.push(
-                Diagnostic::error("resolve.component-root", format!("component {:?} has no root node {:?}", c.name, c.root))
-                    .at_node(c.root.clone()),
+                Diagnostic::error(
+                    "resolve.component-root",
+                    format!("component {:?} has no root node {:?}", c.name, c.root),
+                )
+                .at_node(c.root.clone()),
             );
         }
     }
@@ -55,15 +64,21 @@ pub fn run(doc: &Document, diags: &mut Vec<Diagnostic>) -> Option<Resolved> {
         for child in &node.children {
             if !doc.nodes.contains_key(child) {
                 diags.push(
-                    Diagnostic::error("resolve.dangling-child", format!("node {id:?} lists child {child:?}, which does not exist"))
-                        .at_node(id.clone()),
+                    Diagnostic::error(
+                        "resolve.dangling-child",
+                        format!("node {id:?} lists child {child:?}, which does not exist"),
+                    )
+                    .at_node(id.clone()),
                 );
                 continue;
             }
             if !seen.insert(child.clone()) {
                 diags.push(
-                    Diagnostic::error("resolve.duplicate-child", format!("node {id:?} lists child {child:?} twice"))
-                        .at_node(id.clone()),
+                    Diagnostic::error(
+                        "resolve.duplicate-child",
+                        format!("node {id:?} lists child {child:?} twice"),
+                    )
+                    .at_node(id.clone()),
                 );
             }
             if let Some(existing) = r.parent.get(child) {
@@ -83,18 +98,33 @@ pub fn run(doc: &Document, diags: &mut Vec<Diagnostic>) -> Option<Resolved> {
     }
 
     if doc.routes.is_empty() {
-        diags.push(Diagnostic::error("resolve.no-routes", "document has no routes"));
+        diags.push(Diagnostic::error(
+            "resolve.no-routes",
+            "document has no routes",
+        ));
     }
 
     let mut route_paths = BTreeSet::new();
     for route in &doc.routes {
         if !route_paths.insert(route.path.clone()) {
-            diags.push(Diagnostic::error("resolve.duplicate-route", format!("route {:?} is declared twice", route.path)).at_route(route.path.clone()));
+            diags.push(
+                Diagnostic::error(
+                    "resolve.duplicate-route",
+                    format!("route {:?} is declared twice", route.path),
+                )
+                .at_route(route.path.clone()),
+            );
         }
         if !doc.nodes.contains_key(&route.root) {
             diags.push(
-                Diagnostic::error("resolve.dangling-root", format!("route {:?} points at root node {:?}, which does not exist", route.path, route.root))
-                    .at_route(route.path.clone()),
+                Diagnostic::error(
+                    "resolve.dangling-root",
+                    format!(
+                        "route {:?} points at root node {:?}, which does not exist",
+                        route.path, route.root
+                    ),
+                )
+                .at_route(route.path.clone()),
             );
             continue;
         }
@@ -103,7 +133,10 @@ pub fn run(doc: &Document, diags: &mut Vec<Diagnostic>) -> Option<Resolved> {
                 diags.push(
                     Diagnostic::error(
                         "resolve.dangling-collection",
-                        format!("route {:?} renders collection {collection:?}, which is not declared", route.path),
+                        format!(
+                            "route {:?} renders collection {collection:?}, which is not declared",
+                            route.path
+                        ),
                     )
                     .at_route(route.path.clone()),
                 );
@@ -114,9 +147,12 @@ pub fn run(doc: &Document, diags: &mut Vec<Diagnostic>) -> Option<Resolved> {
         let mut stack_path = BTreeSet::new();
         if let Err(cycle) = walk(doc, &route.root, &mut order, &mut stack_path) {
             diags.push(
-                Diagnostic::error("resolve.cycle", format!("node {cycle:?} is its own ancestor; the node graph must be acyclic"))
-                    .at_node(cycle)
-                    .at_route(route.path.clone()),
+                Diagnostic::error(
+                    "resolve.cycle",
+                    format!("node {cycle:?} is its own ancestor; the node graph must be acyclic"),
+                )
+                .at_node(cycle)
+                .at_route(route.path.clone()),
             );
             continue;
         }
@@ -130,8 +166,11 @@ pub fn run(doc: &Document, diags: &mut Vec<Diagnostic>) -> Option<Resolved> {
     for (id, _) in &doc.nodes {
         if !r.reachable.contains(id) && !r.components.values().any(|c| &c.root == id) {
             diags.push(
-                Diagnostic::warning("resolve.orphan", format!("node {id:?} is not reachable from any route or component"))
-                    .at_node(id.clone()),
+                Diagnostic::warning(
+                    "resolve.orphan",
+                    format!("node {id:?} is not reachable from any route or component"),
+                )
+                .at_node(id.clone()),
             );
         }
     }
@@ -142,7 +181,12 @@ pub fn run(doc: &Document, diags: &mut Vec<Diagnostic>) -> Option<Resolved> {
     Some(r)
 }
 
-fn walk(doc: &Document, id: &str, order: &mut Vec<String>, on_path: &mut BTreeSet<String>) -> Result<(), String> {
+fn walk(
+    doc: &Document,
+    id: &str,
+    order: &mut Vec<String>,
+    on_path: &mut BTreeSet<String>,
+) -> Result<(), String> {
     if !on_path.insert(id.to_string()) {
         return Err(id.to_string());
     }

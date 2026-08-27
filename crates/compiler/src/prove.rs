@@ -23,7 +23,11 @@ fn luminance(hex: &str) -> Option<f64> {
     }
     let channel = |i: usize| -> Option<f64> {
         let v = u8::from_str_radix(&hex[i..i + 2], 16).ok()? as f64 / 255.0;
-        Some(if v <= 0.03928 { v / 12.92 } else { ((v + 0.055) / 1.055).powf(2.4) })
+        Some(if v <= 0.03928 {
+            v / 12.92
+        } else {
+            ((v + 0.055) / 1.055).powf(2.4)
+        })
     };
     Some(0.2126 * channel(0)? + 0.7152 * channel(2)? + 0.0722 * channel(4)?)
 }
@@ -37,7 +41,9 @@ pub fn contrast_ratio(fg: &str, bg: &str) -> Option<f64> {
 pub fn run(doc: &Document, res: &Resolved, diags: &mut Vec<Diagnostic>) {
     for (route, nodes) in &res.route_nodes {
         for id in nodes {
-            let Some(node) = doc.nodes.get(id) else { continue };
+            let Some(node) = doc.nodes.get(id) else {
+                continue;
+            };
             prove_alt(node, route, diags);
             prove_contrast(doc, res, node, route, diags);
         }
@@ -52,19 +58,30 @@ fn prove_alt(node: &Node, route: &str, diags: &mut Vec<Diagnostic>) {
     let trimmed = alt.trim();
     if trimmed.is_empty() {
         diags.push(
-            Diagnostic::error("prove.alt.empty", format!("image {:?} has empty alt text", node.id))
-                .at_node(node.id.clone())
-                .at_route(route.to_string()),
+            Diagnostic::error(
+                "prove.alt.empty",
+                format!("image {:?} has empty alt text", node.id),
+            )
+            .at_node(node.id.clone())
+            .at_route(route.to_string()),
         );
         return;
     }
     let looks_like_filename = trimmed.split_whitespace().count() == 1
-        && [".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".avif"].iter().any(|ext| trimmed.to_lowercase().ends_with(ext));
+        && [".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".avif"]
+            .iter()
+            .any(|ext| trimmed.to_lowercase().ends_with(ext));
     if looks_like_filename {
         diags.push(
-            Diagnostic::error("prove.alt.filename", format!("image {:?} uses a filename ({trimmed:?}) as alt text", node.id))
-                .at_node(node.id.clone())
-                .at_route(route.to_string()),
+            Diagnostic::error(
+                "prove.alt.filename",
+                format!(
+                    "image {:?} uses a filename ({trimmed:?}) as alt text",
+                    node.id
+                ),
+            )
+            .at_node(node.id.clone())
+            .at_route(route.to_string()),
         );
     }
 }
@@ -72,15 +89,27 @@ fn prove_alt(node: &Node, route: &str, diags: &mut Vec<Diagnostic>) {
 /// The background in force at a node is the nearest ancestor that sets one; the foreground is the
 /// node's own, or inherited the same way. Both are token references, which is exactly why this is
 /// provable at build time instead of screenshot-time.
-fn prove_contrast(doc: &Document, res: &Resolved, node: &Node, route: &str, diags: &mut Vec<Diagnostic>) {
+fn prove_contrast(
+    doc: &Document,
+    res: &Resolved,
+    node: &Node,
+    route: &str,
+    diags: &mut Vec<Diagnostic>,
+) {
     if !matches!(node.kind, NodeKind::Text | NodeKind::Heading) {
         return;
     }
     let fg = inherited(doc, res, &node.id, |s| s.fg.clone());
     let bg = inherited(doc, res, &node.id, |s| s.bg.clone());
-    let (Some(fg), Some(bg)) = (fg, bg) else { return };
-    let (Some(fg_value), Some(bg_value)) = (token_color(doc, &fg), token_color(doc, &bg)) else { return };
-    let Some(ratio) = contrast_ratio(&fg_value, &bg_value) else { return };
+    let (Some(fg), Some(bg)) = (fg, bg) else {
+        return;
+    };
+    let (Some(fg_value), Some(bg_value)) = (token_color(doc, &fg), token_color(doc, &bg)) else {
+        return;
+    };
+    let Some(ratio) = contrast_ratio(&fg_value, &bg_value) else {
+        return;
+    };
 
     // WCAG large text: >= 24px, or >= 18.66px when bold.
     let type_token = inherited(doc, res, &node.id, |s| s.type_.clone())
@@ -114,7 +143,12 @@ fn token_color(doc: &Document, token: &str) -> Option<String> {
     doc.tokens.color.get(name).map(|c| c.value.clone())
 }
 
-fn inherited(doc: &Document, res: &Resolved, id: &str, pick: impl Fn(&Style) -> Option<String>) -> Option<String> {
+fn inherited(
+    doc: &Document,
+    res: &Resolved,
+    id: &str,
+    pick: impl Fn(&Style) -> Option<String>,
+) -> Option<String> {
     let mut current = Some(id.to_string());
     while let Some(node_id) = current {
         if let Some(node) = doc.nodes.get(&node_id) {

@@ -1,0 +1,24 @@
+{
+  "name": "@lattice/shell",
+  "version": "0.1.0",
+  "description": "The editor shell: feature flags, the IR→canvas projection, and gesture capture. Composes @lattice/engine with the GrapesJS fork in packages/core.",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "node --test 'test/*.test.ts'"
+  },
+  "dependencies": {
+    "@lattice/engine": "workspace:*"
+  },
+  "peerDependencies": {
+    "grapesjs": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "grapesjs": {
+      "optional": true
+    }
+  }
+}
