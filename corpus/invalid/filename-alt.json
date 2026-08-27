@@ -1,0 +1,92 @@
+{
+  "schema": "lattice/1.0",
+  "id": "filename-alt",
+  "name": "Filename as alt",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#ffffff"
+      },
+      "surface": {
+        "value": "#f4f5f7"
+      },
+      "fg": {
+        "value": "#16181d"
+      },
+      "muted": {
+        "value": "#585c66"
+      },
+      "faint": {
+        "value": "#b9bec9"
+      },
+      "accent": {
+        "value": "#1d4ed8"
+      },
+      "on-accent": {
+        "value": "#ffffff",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "7": {
+        "px": 48
+      },
+      "measure": {
+        "px": 960
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      }
+    },
+    "radius": {
+      "md": {
+        "px": 8
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Filename as alt",
+      "root": "root"
+    }
+  ],
+  "nodes": {
+    "root": {
+      "id": "root",
+      "kind": "section",
+      "children": [
+        "img"
+      ]
+    },
+    "img": {
+      "id": "img",
+      "kind": "image",
+      "src": "assets/team.jpg",
+      "alt": "team.jpg",
+      "width": 800,
+      "height": 600
+    }
+  }
+}

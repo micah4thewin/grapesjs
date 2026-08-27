@@ -1,0 +1,14 @@
+[package]
+name = "lattice-compiler"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "The Lattice compiler: IR in, static site out. The only emitter."
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+
+[lib]
+crate-type = ["rlib"]

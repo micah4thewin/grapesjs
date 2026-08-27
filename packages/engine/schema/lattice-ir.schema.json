@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.dev/schema/lattice-ir-1.0.json",
+  "title": "Document",
+  "x-lattice-version": "lattice/1.0",
+  "description": "The Lattice IR: the single source of truth for a site. Closed world by construction — every style is a token reference, every node has a stable id, every image carries intrinsic dimensions and alt text. Anything this schema cannot express cannot be built.",
+  "type": "object",
+  "required": ["schema", "id", "name", "tokens", "routes", "nodes"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "lattice/1.0", "description": "Version stamp. Migrations key off this." },
+    "id": { "$ref": "#/$defs/Id" },
+    "name": { "type": "string", "minLength": 1 },
+    "tokens": { "$ref": "#/$defs/TokenSet" },
+    "routes": { "type": "array", "items": { "$ref": "#/$defs/Route" }, "minItems": 1 },
+    "nodes": {
+      "type": "object",
+      "description": "Flat node table keyed by stable node id. Flat because identity must survive tree moves, and because ops address nodes by id.",
+      "additionalProperties": { "$ref": "#/$defs/Node" }
+    },
+    "components": { "type": "array", "items": { "$ref": "#/$defs/ComponentDef" }, "default": [] },
+    "collections": { "type": "array", "items": { "$ref": "#/$defs/Collection" }, "default": [] },
+    "redirects": {
+      "type": "array",
+      "description": "Append-only redirect ledger (Stage F2). Schema'd from day one, dormant until publish exists.",
+      "items": { "$ref": "#/$defs/Redirect" },
+      "default": []
+    },
+    "budgets": { "$ref": "#/$defs/Budgets" }
+  },
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "description": "Stable identity. Never derived from position or content.",
+      "pattern": "^[a-zA-Z0-9_-]{1,64}$"
+    },
+    "TokenRef": {
+      "type": "string",
+      "description": "A reference into the token set, e.g. 'color.accent'. The pattern alone rejects raw values: '#ff0000' and '12px' cannot be written here.",
+      "pattern": "^[a-z][a-z0-9]*\\.[a-z0-9][a-z0-9-]*$"
+    },
+    "TokenSet": {
+      "type": "object",
+      "required": ["color", "space", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "color": { "type": "object", "additionalProperties": { "$ref": "#/$defs/ColorToken" } },
+        "space": { "type": "object", "additionalProperties": { "$ref": "#/$defs/SpaceToken" } },
+        "type": { "type": "object", "additionalProperties": { "$ref": "#/$defs/TypeToken" } },
+        "radius": { "type": "object", "additionalProperties": { "$ref": "#/$defs/SpaceToken" }, "default": {} }
+      }
+    },
+    "ColorToken": {
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "string", "pattern": "^#[0-9a-f]{6}$", "description": "Lowercase 6-digit hex. The one place a raw color may appear." },
+        "onLight": { "type": "boolean", "default": true, "description": "Hint for the contrast prove-pass about intended usage." }
+      }
+    },
+    "SpaceToken": {
+      "type": "object",
+      "required": ["px"],
+      "additionalProperties": false,
+      "properties": { "px": { "type": "number", "minimum": 0, "maximum": 1600 } }
+    },
+    "TypeToken": {
+      "type": "object",
+      "required": ["sizePx", "lineHeight", "weight"],
+      "additionalProperties": false,
+      "properties": {
+        "sizePx": { "type": "number", "minimum": 8, "maximum": 200 },
+        "lineHeight": { "type": "number", "minimum": 0.8, "maximum": 3 },
+        "weight": { "type": "integer", "minimum": 100, "maximum": 900 },
+        "family": { "type": "string", "default": "system" }
+      }
+    },
+    "Route": {
+      "type": "object",
+      "required": ["path", "title", "root"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string", "pattern": "^/([a-z0-9-]+(/[a-z0-9-]+)*)?$|^/[a-z0-9-]*/:[a-z]+$" },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "root": { "$ref": "#/$defs/Id" },
+        "collection": { "type": "string", "description": "Set for dynamic routes: the collection whose records the ':slug' segment addresses." }
+      }
+    },
+    "Style": {
+      "type": "object",
+      "description": "Token references only. Every field is optional; absent means 'inherit the system default', never 'unset an arbitrary CSS property'.",
+      "additionalProperties": false,
+      "properties": {
+        "bg": { "$ref": "#/$defs/TokenRef" },
+        "fg": { "$ref": "#/$defs/TokenRef" },
+        "pad": { "$ref": "#/$defs/TokenRef" },
+        "gap": { "$ref": "#/$defs/TokenRef" },
+        "radius": { "$ref": "#/$defs/TokenRef" },
+        "type": { "$ref": "#/$defs/TokenRef" },
+        "align": { "enum": ["start", "center", "end", "stretch"] },
+        "justify": { "enum": ["start", "center", "end", "between"] },
+        "maxWidth": { "$ref": "#/$defs/TokenRef" },
+        "escape": {
+          "type": "object",
+          "description": "The counted exit hatch. Raw declarations, authored only in the expert drawer, surfaced in the design-debt panel, never written by a normal panel.",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "Place": {
+      "type": "object",
+      "description": "Grid placement. A card dragged on canvas produces a span change here — never a pixel offset.",
+      "required": ["col", "span"],
+      "additionalProperties": false,
+      "properties": {
+        "col": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "span": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "row": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "Span": {
+      "type": "object",
+      "required": ["text"],
+      "additionalProperties": false,
+      "properties": {
+        "text": { "type": "string" },
+        "mark": { "enum": ["strong", "em", "code"] },
+        "href": { "type": "string" }
+      }
+    },
+    "Bind": {
+      "type": "string",
+      "description": "A path into a collection record, e.g. 'posts.title'. Resolved at build time by the typecheck pass; a dangling bind is a build error, never a runtime blank.",
+      "pattern": "^[a-z][a-zA-Z0-9]*(\\.[a-z][a-zA-Z0-9]*)+$"
+    },
+    "Node": {
+      "type": "object",
+      "description": "Discriminated by `kind`. The per-kind requirements live in the compiler's typecheck pass, which names the offending node id.",
+      "required": ["id", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "kind": { "enum": ["section", "stack", "grid", "frame", "text", "heading", "image", "list", "instance"] },
+        "children": { "type": "array", "items": { "$ref": "#/$defs/Id" }, "default": [] },
+        "style": { "$ref": "#/$defs/Style" },
+        "place": { "$ref": "#/$defs/Place" },
+        "spans": { "type": "array", "items": { "$ref": "#/$defs/Span" } },
+        "bind": { "$ref": "#/$defs/Bind" },
+        "level": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "cols": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "src": { "type": "string", "description": "Asset reference. Content-addressed once the asset store exists." },
+        "alt": { "type": "string", "description": "Required on images by the typecheck pass. Non-negotiable, not a lint." },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "source": { "type": "string", "description": "For `list`: the collection it repeats over." },
+        "limit": { "type": "integer", "minimum": 1 },
+        "component": { "type": "string", "description": "For `instance`: the ComponentDef name." },
+        "props": { "type": "object", "additionalProperties": { "type": "string" } },
+        "tag": { "enum": ["div", "section", "article", "header", "footer", "nav", "main", "aside"] }
+      }
+    },
+    "ComponentDef": {
+      "type": "object",
+      "required": ["name", "root", "props"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*$" },
+        "root": { "$ref": "#/$defs/Id" },
+        "props": { "type": "array", "items": { "$ref": "#/$defs/PropDef" } }
+      }
+    },
+    "PropDef": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$" },
+        "type": { "enum": ["text", "number", "boolean", "image", "color", "url"] },
+        "required": { "type": "boolean", "default": false }
+      }
+    },
+    "Collection": {
+      "type": "object",
+      "required": ["name", "fields"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$" },
+        "fields": { "type": "array", "items": { "$ref": "#/$defs/Field" }, "minItems": 1 },
+        "publicRead": { "type": "boolean", "default": false, "description": "Feeds the exposure prove-pass (Stage E4)." }
+      }
+    },
+    "Field": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$" },
+        "type": { "enum": ["text", "richtext", "number", "boolean", "date", "image", "reference"] },
+        "required": { "type": "boolean", "default": false },
+        "private": { "type": "boolean", "default": false, "description": "Never readable anonymously; the exposure diff fails the build if a route would render it." }
+      }
+    },
+    "Redirect": {
+      "type": "object",
+      "required": ["from", "to", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "status": { "enum": [301, 302, 308] },
+        "reason": { "type": "string" }
+      }
+    },
+    "Budgets": {
+      "type": "object",
+      "description": "Per-route ceilings. The compiler's terminal pass fails the build and names the offender.",
+      "additionalProperties": false,
+      "properties": {
+        "htmlKb": { "type": "number", "minimum": 1, "default": 60 },
+        "cssKb": { "type": "number", "minimum": 1, "default": 30 },
+        "jsKb": { "type": "number", "minimum": 0, "default": 5 },
+        "imageKb": { "type": "number", "minimum": 0, "default": 400 },
+        "totalKb": { "type": "number", "minimum": 1, "default": 500 }
+      }
+    }
+  }
+}
