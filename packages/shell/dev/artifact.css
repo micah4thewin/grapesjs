@@ -1,0 +1,78 @@
+/* Framing for the single-file build: a short note above the editor, in the editor's own palette.
+   The shell is deliberately single-theme — it is tool chrome, like every editor's — so every
+   colour here is explicit and the page carries its own ground rather than borrowing the host's. */
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.frame {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, #12151c, var(--bg));
+}
+.frame-head {
+  max-width: 78ch;
+}
+.frame h1 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.frame p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+.frame em {
+  color: var(--fg);
+  font-style: normal;
+}
+.frame code {
+  font: 11.5px/1.4 var(--mono);
+  color: var(--accent);
+  background: rgba(106, 162, 255, 0.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.frame-hints {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 12px 0 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+.frame-hints li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px 3px 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+}
+.frame-hints .key {
+  font: 10.5px/1 var(--mono);
+  color: var(--fg);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 7px;
+}
+
+/* The app fills what the note leaves, rather than a fixed 100vh that would overflow the page. */
+.app {
+  flex: 1;
+  min-height: 720px;
+  grid-template-rows: 48px 1fr 26px;
+}

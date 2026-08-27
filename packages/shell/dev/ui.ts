@@ -11,8 +11,15 @@ import type { Document, Node, Op } from '@lattice/engine';
 import { tokens } from '@lattice/engine';
 import { designDebt, panelForNode, type Field } from '../src/panels.ts';
 
+export interface CompilerIssue {
+  code: string;
+  message: string;
+  node: string | null;
+}
+
 export interface ShellHooks {
   document(): Document;
+  issues(): CompilerIssue[];
   selected(): string | null;
   activeRoute(): string;
   apply(ops: Op[], reason: string): void;
@@ -62,12 +69,43 @@ export class Shell {
   }
 
   render(): void {
+    this.#renderIssues();
     this.#renderRoutes();
     this.#renderTree();
     this.#renderBlocks();
     this.#renderInspector();
     this.#renderDebt();
     this.#renderMeter();
+  }
+
+  /**
+   * The compiler's refusals, on screen and clickable. The canvas keeps showing the last page that
+   * compiled, so without this the editor would be quietly stale — which is the failure mode the
+   * whole "what you see is what ships" claim cannot afford.
+   */
+  #renderIssues(): void {
+    const host = document.getElementById('issues');
+    if (!host) return;
+    const issues = this.#hooks.issues();
+    host.replaceChildren();
+    host.hidden = issues.length === 0;
+    if (!issues.length) return;
+
+    host.append(
+      el(
+        'div',
+        'headline',
+        issues.length === 1 ? 'This page will not build:' : `This page will not build — ${issues.length} reasons:`,
+      ),
+    );
+    for (const issue of issues.slice(0, 6)) {
+      const row = el('button', 'issue');
+      row.append(el('span', 'code', issue.code));
+      row.append(el('span', 'message', issue.message));
+      if (issue.node) row.append(el('span', 'node', issue.node));
+      if (issue.node) row.onclick = () => this.#hooks.select(issue.node!);
+      host.append(row);
+    }
   }
 
   #renderRoutes(): void {

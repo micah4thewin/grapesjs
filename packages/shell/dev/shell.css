@@ -217,9 +217,63 @@ body {
   min-height: 0;
   overflow: hidden;
   background: #0b0d11;
+  display: flex;
+  flex-direction: column;
 }
 #canvas {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+/* When the document does not compile, the canvas keeps showing the last page that did — and says
+   so, naming the node. A stale canvas with a silent error is the one state this editor must not
+   have. */
+.issues {
+  border-bottom: 1px solid rgba(227, 179, 65, 0.4);
+  background: rgba(227, 179, 65, 0.08);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 30%;
+  overflow: auto;
+}
+.issues .headline {
+  font-size: 12px;
+  color: var(--warn);
+  font-weight: 600;
+}
+.issues .issue {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--fg);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.issues .issue:hover .node {
+  border-color: var(--accent);
+  color: var(--fg);
+}
+.issues .code {
+  font: 10.5px/1.5 var(--mono);
+  color: var(--warn);
+  white-space: nowrap;
+}
+.issues .message {
+  flex: 1;
+}
+.issues .node {
+  font: 10.5px/1.4 var(--mono);
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 1px 7px;
+  white-space: nowrap;
 }
 
 .field {

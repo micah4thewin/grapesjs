@@ -11,6 +11,7 @@ import {
   DocumentStore,
   IndexedDbOpLogStorage,
   LatticeCompiler,
+  MemoryOpLogStorage,
   SessionPersistence,
   Validator,
   grid,
@@ -32,22 +33,46 @@ const say = (html: string) => {
   status.innerHTML = html;
 };
 
-const [schema, site, wasm, records] = await Promise.all([
-  fetch('./schema.json').then((r) => r.json()),
-  fetch('./site.json').then((r) => r.json()),
-  fetch('./compiler.wasm').then((r) => r.arrayBuffer()),
-  // Stage E3: real rows on the canvas from the first minute. Absent for sites without collections.
-  fetch('./data.json')
-    .then((r) => (r.ok ? r.text() : null))
-    .catch(() => null),
-]);
+/**
+ * The shell loads its schema, site, records and compiler from files next to it — or, in a
+ * single-file build, from an inlined payload. Same code either way: one build serves the dev
+ * server, the headless spike, and a page that has to run with nothing beside it.
+ */
+interface InlinePayload {
+  schema: unknown;
+  site: unknown;
+  data: string | null;
+  wasmBase64: string;
+}
+const inline = (window as unknown as { __LATTICE_INLINE__?: InlinePayload }).__LATTICE_INLINE__;
 
-const compiler = await LatticeCompiler.fromBytes(wasm);
-const validator = new Validator(schema);
+const decodeBase64 = (value: string) => {
+  const binary = atob(value);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+};
+
+const [schema, site, wasm, records] = inline
+  ? [inline.schema, inline.site, decodeBase64(inline.wasmBase64), inline.data]
+  : await Promise.all([
+      fetch('./schema.json').then((r) => r.json()),
+      fetch('./site.json').then((r) => r.json()),
+      fetch('./compiler.wasm').then((r) => r.arrayBuffer()),
+      // Stage E3: real rows on the canvas from the first minute. Absent for sites without collections.
+      fetch('./data.json')
+        .then((r) => (r.ok ? r.text() : null))
+        .catch(() => null),
+    ]);
+
+const compiler = await LatticeCompiler.fromBytes(wasm as BufferSource);
+const validator = new Validator(schema as Record<string, unknown>);
 
 // Stage C5: the durable thing is the op log. A reload picks the session back up from IndexedDB;
 // `?fresh=1` starts over, which is how the spike separates "recovered" from "never happened".
-const storage = new IndexedDbOpLogStorage('lattice-spike');
+// Where IndexedDB is unavailable or blocked (a sandboxed frame, a browser set to block site data),
+// the session runs in memory: everything works, nothing survives the tab.
+const storage = await openStorage();
 if (new URLSearchParams(location.search).has('fresh')) await storage.clear();
 const restored = await restore(storage, site as Document, { validator: { validator } });
 const store = restored.store;
@@ -56,9 +81,19 @@ persistence.start();
 const tripwire = createTripwire({ throwOnLeak: false }); // soft: a spike lists every leak, it does not stop at the first
 const flags = LATTICE;
 
+async function openStorage() {
+  try {
+    const candidate = new IndexedDbOpLogStorage('lattice-shell');
+    await candidate.loadSnapshot(); // forces the database open, and the failure, here
+    return candidate;
+  } catch {
+    return new MemoryOpLogStorage();
+  }
+}
+
 const editor = grapesjs.init({
   container: '#canvas',
-  height: '100vh',
+  height: '100%',
   fromElement: false,
   storageManager: false,
   undoManager: false, // Stage C4: history is the op log, not Backbone change tracking
@@ -157,6 +192,7 @@ function report() {
 /** The chrome: structure, palette, inspector, debt, meter. Every control emits an op. */
 const shell = new Shell({
   document: () => store.document,
+  issues: () => lastErrors,
   selected: () => selected,
   activeRoute: () => activeRoute,
   routeBytes: () => currentBytes(),
