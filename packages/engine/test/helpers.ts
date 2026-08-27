@@ -20,4 +20,5 @@ export function rng(seed: number): () => number {
   };
 }
 
-export const pick = <T,>(random: () => number, items: T[]): T => items[Math.floor(random() * items.length) % items.length];
+export const pick = <T>(random: () => number, items: T[]): T =>
+  items[Math.floor(random() * items.length) % items.length];

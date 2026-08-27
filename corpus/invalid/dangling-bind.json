@@ -76,9 +76,7 @@
     "root": {
       "id": "root",
       "kind": "section",
-      "children": [
-        "t"
-      ]
+      "children": ["t"]
     },
     "t": {
       "id": "t",

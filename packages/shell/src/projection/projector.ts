@@ -68,7 +68,12 @@ export function projectRoute(
   data?: string | null,
 ): Projection {
   const path = typeof route === 'string' ? route : route.path;
-  const result = compiler.compile({ document: JSON.stringify(doc), data: data ?? null, profile: 'fast', emit_app: false });
+  const result = compiler.compile({
+    document: JSON.stringify(doc),
+    data: data ?? null,
+    profile: 'fast',
+    emit_app: false,
+  });
   if (!result.ok) {
     const errors = result.diagnostics.filter((d) => d.severity === 'error');
     throw new ProjectionError(

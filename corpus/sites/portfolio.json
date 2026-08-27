@@ -1,0 +1,451 @@
+{
+  "schema": "lattice/1.0",
+  "id": "portfolio",
+  "name": "Ines Okafor",
+  "icon": "assets/icon-portfolio.png",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#ffffff"
+      },
+      "surface": {
+        "value": "#f2f4f8"
+      },
+      "fg": {
+        "value": "#111827"
+      },
+      "muted": {
+        "value": "#4b5563"
+      },
+      "accent": {
+        "value": "#0f766e"
+      },
+      "on-accent": {
+        "value": "#ffffff",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "3": {
+        "px": 12
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "6": {
+        "px": 32
+      },
+      "7": {
+        "px": 48
+      },
+      "8": {
+        "px": 64
+      },
+      "measure": {
+        "px": 1040
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "lead": {
+        "sizePx": 20,
+        "lineHeight": 1.5,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      },
+      "h2": {
+        "sizePx": 30,
+        "lineHeight": 1.25,
+        "weight": 600
+      },
+      "h3": {
+        "sizePx": 20,
+        "lineHeight": 1.35,
+        "weight": 600
+      },
+      "small": {
+        "sizePx": 14,
+        "lineHeight": 1.5,
+        "weight": 400
+      }
+    },
+    "radius": {
+      "sm": {
+        "px": 4
+      },
+      "md": {
+        "px": 8
+      },
+      "lg": {
+        "px": 16
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Ines Okafor — industrial design",
+      "description": "Objects that survive a warehouse floor.",
+      "root": "home"
+    },
+    {
+      "path": "/contact",
+      "title": "Contact — Ines Okafor",
+      "root": "contact",
+      "description": "Briefs under 500 words get answered the same week."
+    }
+  ],
+  "nodes": {
+    "home": {
+      "id": "home",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.7"
+      },
+      "children": ["intro", "work", "footer"]
+    },
+    "intro": {
+      "id": "intro",
+      "kind": "stack",
+      "tag": "header",
+      "style": {
+        "gap": "space.3"
+      },
+      "children": ["intro-h", "intro-b"]
+    },
+    "intro-h": {
+      "id": "intro-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Ines Okafor — industrial design"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "intro-b": {
+      "id": "intro-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Ten years of objects that have to survive a warehouse floor. Currently at Halden Tools, Oslo."
+        }
+      ],
+      "style": {
+        "type": "type.lead",
+        "fg": "color.muted"
+      }
+    },
+    "work": {
+      "id": "work",
+      "kind": "grid",
+      "cols": 12,
+      "style": {
+        "gap": "space.5"
+      },
+      "children": ["w1", "w2", "w3", "w4"]
+    },
+    "w1": {
+      "id": "w1",
+      "kind": "stack",
+      "place": {
+        "col": 1,
+        "span": 6
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["w1-img", "w1-h", "w1-b"]
+    },
+    "w1-img": {
+      "id": "w1-img",
+      "kind": "image",
+      "src": "assets/pallet-jack.png",
+      "alt": "A yellow pallet jack handle, redesigned with a wider grip",
+      "width": 1200,
+      "height": 900,
+      "style": {
+        "radius": "radius.md"
+      }
+    },
+    "w1-h": {
+      "id": "w1-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Pallet jack handle"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "w1-b": {
+      "id": "w1-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Reduced two-handed lifts to one. Shipped 2024."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "w2": {
+      "id": "w2",
+      "kind": "stack",
+      "place": {
+        "col": 7,
+        "span": 6
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["w2-img", "w2-h", "w2-b"]
+    },
+    "w2-img": {
+      "id": "w2-img",
+      "kind": "image",
+      "src": "assets/torque-wrench.png",
+      "alt": "A torque wrench with a high-contrast dial for low-light work",
+      "width": 1200,
+      "height": 900,
+      "style": {
+        "radius": "radius.md"
+      }
+    },
+    "w2-h": {
+      "id": "w2-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Low-light torque dial"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "w2-b": {
+      "id": "w2-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Readable at arm's length in a dim bay."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "w3": {
+      "id": "w3",
+      "kind": "stack",
+      "place": {
+        "col": 1,
+        "span": 6
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["w3-img", "w3-h", "w3-b"]
+    },
+    "w3-img": {
+      "id": "w3-img",
+      "kind": "image",
+      "src": "assets/crate.png",
+      "alt": "A stackable crate whose handles double as interlocks",
+      "width": 1200,
+      "height": 900,
+      "style": {
+        "radius": "radius.md"
+      }
+    },
+    "w3-h": {
+      "id": "w3-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Interlocking crate"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "w3-b": {
+      "id": "w3-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Handles that stack. Fewer parts, fewer failures."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "w4": {
+      "id": "w4",
+      "kind": "stack",
+      "place": {
+        "col": 7,
+        "span": 6
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["w4-img", "w4-h", "w4-b"]
+    },
+    "w4-img": {
+      "id": "w4-img",
+      "kind": "image",
+      "src": "assets/scanner.png",
+      "alt": "A handheld barcode scanner with a thumb-reachable trigger",
+      "width": 1200,
+      "height": 900,
+      "style": {
+        "radius": "radius.md"
+      }
+    },
+    "w4-h": {
+      "id": "w4-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Scanner grip"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "w4-b": {
+      "id": "w4-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Trigger moved 9mm. Complaints stopped."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "footer": {
+      "id": "footer",
+      "kind": "stack",
+      "tag": "footer",
+      "style": {
+        "gap": "space.2",
+        "pad": "space.5",
+        "bg": "color.surface",
+        "radius": "radius.md"
+      },
+      "children": ["f-h", "f-b"]
+    },
+    "f-h": {
+      "id": "f-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Work with me"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "f-b": {
+      "id": "f-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "ines@example.com",
+          "href": "/contact"
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.accent"
+      }
+    },
+    "contact": {
+      "id": "contact",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.4"
+      },
+      "children": ["c-h", "c-b"]
+    },
+    "c-h": {
+      "id": "c-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Contact"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "c-b": {
+      "id": "c-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Briefs under 500 words get answered the same week."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    }
+  }
+}

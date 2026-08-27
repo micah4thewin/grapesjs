@@ -5,5 +5,11 @@
   "license": "MIT",
   "type": "module",
   "private": true,
-  "bin": { "lattice": "bin/lattice.mjs" }
+  "bin": {
+    "lattice": "bin/lattice.mjs"
+  },
+  "devDependencies": {
+    "chrome-launcher": "^1.1.2",
+    "lighthouse": "^12.2.1"
+  }
 }

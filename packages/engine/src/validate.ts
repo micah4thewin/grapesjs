@@ -145,8 +145,10 @@ export class Validator {
       return;
     }
     if (schema.type === 'integer' && !Number.isInteger(value)) this.#fail(errors, path, 'must be an integer');
-    if (schema.minimum !== undefined && value < schema.minimum) this.#fail(errors, path, `must be >= ${schema.minimum}`);
-    if (schema.maximum !== undefined && value > schema.maximum) this.#fail(errors, path, `must be <= ${schema.maximum}`);
+    if (schema.minimum !== undefined && value < schema.minimum)
+      this.#fail(errors, path, `must be >= ${schema.minimum}`);
+    if (schema.maximum !== undefined && value > schema.maximum)
+      this.#fail(errors, path, `must be <= ${schema.maximum}`);
   }
 }
 
@@ -163,5 +165,7 @@ export async function schemaValidator(): Promise<Validator> {
 }
 
 export function formatErrors(errors: ValidationError[]): string {
-  return errors.map((e) => (e.node ? `node ${e.node}: ${e.message} (${e.path})` : `${e.path}: ${e.message}`)).join('\n');
+  return errors
+    .map((e) => (e.node ? `node ${e.node}: ${e.message} (${e.path})` : `${e.path}: ${e.message}`))
+    .join('\n');
 }

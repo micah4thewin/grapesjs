@@ -12,12 +12,14 @@ use std::collections::BTreeMap;
 pub const DEFAULT_HTML_KB: f64 = 60.0;
 pub const DEFAULT_CSS_KB: f64 = 30.0;
 pub const DEFAULT_JS_KB: f64 = 5.0;
+pub const DEFAULT_IMAGE_KB: f64 = 400.0;
 pub const DEFAULT_TOTAL_KB: f64 = 500.0;
 
 pub struct Limits {
     pub html_kb: f64,
     pub css_kb: f64,
     pub js_kb: f64,
+    pub image_kb: f64,
     pub total_kb: f64,
 }
 
@@ -27,6 +29,7 @@ pub fn limits(doc: &Document) -> Limits {
         html_kb: b.html_kb.unwrap_or(DEFAULT_HTML_KB),
         css_kb: b.css_kb.unwrap_or(DEFAULT_CSS_KB),
         js_kb: b.js_kb.unwrap_or(DEFAULT_JS_KB),
+        image_kb: b.image_kb.unwrap_or(DEFAULT_IMAGE_KB),
         total_kb: b.total_kb.unwrap_or(DEFAULT_TOTAL_KB),
     }
 }
@@ -77,7 +80,7 @@ pub fn headroom(
     route_bytes
         .iter()
         .map(|(route, bytes)| {
-            let used = (bytes.html + bytes.css + bytes.js) as f64 / 1024.0;
+            let used = (bytes.html + bytes.css + bytes.js + bytes.images) as f64 / 1024.0;
             (route.clone(), limits.total_kb - used)
         })
         .collect()
@@ -88,7 +91,7 @@ pub fn headroom_summary(build: &crate::Build) -> String {
     let tightest = build
         .route_bytes
         .iter()
-        .map(|(route, b)| (route, (b.html + b.css + b.js) as f64 / 1024.0))
+        .map(|(route, b)| (route, (b.html + b.css + b.js + b.images) as f64 / 1024.0))
         .min_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
     match tightest {
         Some((route, kb)) => format!(" — largest route {route:?} at {}KB", num::px(kb)),

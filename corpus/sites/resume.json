@@ -1,0 +1,406 @@
+{
+  "schema": "lattice/1.0",
+  "id": "resume",
+  "name": "Dmitri Sokolov",
+  "icon": "assets/icon-resume.png",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#ffffff"
+      },
+      "surface": {
+        "value": "#f1f5f9"
+      },
+      "fg": {
+        "value": "#0f172a"
+      },
+      "muted": {
+        "value": "#475569"
+      },
+      "accent": {
+        "value": "#0369a1"
+      },
+      "on-accent": {
+        "value": "#ffffff",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "3": {
+        "px": 12
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "6": {
+        "px": 32
+      },
+      "7": {
+        "px": 48
+      },
+      "8": {
+        "px": 64
+      },
+      "measure": {
+        "px": 840
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "lead": {
+        "sizePx": 20,
+        "lineHeight": 1.5,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      },
+      "h2": {
+        "sizePx": 30,
+        "lineHeight": 1.25,
+        "weight": 600
+      },
+      "h3": {
+        "sizePx": 20,
+        "lineHeight": 1.35,
+        "weight": 600
+      },
+      "small": {
+        "sizePx": 14,
+        "lineHeight": 1.5,
+        "weight": 400
+      }
+    },
+    "radius": {
+      "sm": {
+        "px": 4
+      },
+      "md": {
+        "px": 8
+      },
+      "lg": {
+        "px": 16
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Dmitri Sokolov — site reliability",
+      "description": "Fifteen years of pagers, four of them quiet.",
+      "root": "home"
+    },
+    {
+      "path": "/writing",
+      "title": "Writing — Dmitri Sokolov",
+      "root": "writing",
+      "description": "Two pieces worth reading: error budgets that do not lie, and the runbook as the product."
+    }
+  ],
+  "nodes": {
+    "home": {
+      "id": "home",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.6"
+      },
+      "children": ["head", "roles-h", "roles", "skills"]
+    },
+    "head": {
+      "id": "head",
+      "kind": "stack",
+      "tag": "header",
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["head-h", "head-b"]
+    },
+    "head-h": {
+      "id": "head-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Dmitri Sokolov"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "head-b": {
+      "id": "head-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Site reliability. Fifteen years of pagers, four of them quiet."
+        }
+      ],
+      "style": {
+        "type": "type.lead",
+        "fg": "color.muted"
+      }
+    },
+    "roles": {
+      "id": "roles",
+      "kind": "stack",
+      "style": {
+        "gap": "space.5"
+      },
+      "children": ["r1", "r2", "r3"]
+    },
+    "skills": {
+      "id": "skills",
+      "kind": "stack",
+      "style": {
+        "gap": "space.2",
+        "pad": "space.5",
+        "bg": "color.surface",
+        "radius": "radius.md"
+      },
+      "children": ["sk-h", "sk-b"]
+    },
+    "sk-h": {
+      "id": "sk-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Tools I would bring"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "sk-b": {
+      "id": "sk-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Postgres, Kubernetes when it is warranted, Terraform, and a strong preference for boring."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "writing": {
+      "id": "writing",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.4"
+      },
+      "children": ["wr-h", "wr-b"]
+    },
+    "wr-h": {
+      "id": "wr-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Writing"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "wr-b": {
+      "id": "wr-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Two pieces worth reading: one on error budgets that do not lie, one on why the runbook is the product."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "r1": {
+      "id": "r1",
+      "kind": "stack",
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["r1-h", "r1-m", "r1-b"]
+    },
+    "r1-h": {
+      "id": "r1-h",
+      "kind": "heading",
+      "level": 3,
+      "spans": [
+        {
+          "text": "Principal SRE"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "r1-m": {
+      "id": "r1-m",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Kestrel Payments · 2021–present"
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "r1-b": {
+      "id": "r1-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Took the payment path from four nines to five without adding a service. Most of the work was deletion."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "r2": {
+      "id": "r2",
+      "kind": "stack",
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["r2-h", "r2-m", "r2-b"]
+    },
+    "r2-h": {
+      "id": "r2-h",
+      "kind": "heading",
+      "level": 3,
+      "spans": [
+        {
+          "text": "Staff engineer"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "r2-m": {
+      "id": "r2-m",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Northwind Logistics · 2016–2021"
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "r2-b": {
+      "id": "r2-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Built the tracking pipeline, then spent two years making it smaller."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "r3": {
+      "id": "r3",
+      "kind": "stack",
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["r3-h", "r3-m", "r3-b"]
+    },
+    "r3-h": {
+      "id": "r3-h",
+      "kind": "heading",
+      "level": 3,
+      "spans": [
+        {
+          "text": "Systems engineer"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "r3-m": {
+      "id": "r3-m",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Various · 2011–2016"
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "r3-b": {
+      "id": "r3-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Datacentres, then the move out of them."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "roles-h": {
+      "id": "roles-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Experience"
+        }
+      ],
+      "style": {
+        "type": "type.h2",
+        "fg": "color.fg"
+      }
+    }
+  }
+}

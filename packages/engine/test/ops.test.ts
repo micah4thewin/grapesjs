@@ -98,7 +98,10 @@ test('op then inverse is the identity, for every op kind', () => {
 test('token and route ops invert cleanly too', () => {
   const withToken = apply(base, { kind: 'setToken', group: 'color', name: 'accent', value: { value: '#aa0000' } });
   assert.equal(withToken.tokens.color.accent.value, '#aa0000');
-  const back = apply(withToken, invert(base, { kind: 'setToken', group: 'color', name: 'accent', value: { value: '#aa0000' } }));
+  const back = apply(
+    withToken,
+    invert(base, { kind: 'setToken', group: 'color', name: 'accent', value: { value: '#aa0000' } }),
+  );
   assert.deepEqual(back, base);
 
   const route = { path: '/about', title: 'About', root: 'home' };
@@ -122,8 +125,18 @@ test('two replicas converge on concurrent edits', () => {
     for (let step = 0; step < 12; step++) {
       const a = randomOp(left.document, randomLeft);
       const b = randomOp(right.document, randomRight);
-      if (a) try { left.apply(a); } catch { /* refused locally */ }
-      if (b) try { right.apply(b); } catch { /* refused locally */ }
+      if (a)
+        try {
+          left.apply(a);
+        } catch {
+          /* refused locally */
+        }
+      if (b)
+        try {
+          right.apply(b);
+        } catch {
+          /* refused locally */
+        }
     }
 
     const merged = DocumentStore.merge(base, [left.log, right.log]);

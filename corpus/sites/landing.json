@@ -2,6 +2,7 @@
   "schema": "lattice/1.0",
   "id": "landing",
   "name": "Northgate Landing",
+  "icon": "assets/icon-landing.png",
   "tokens": {
     "color": {
       "bg": {
@@ -116,11 +117,7 @@
       "id": "home",
       "kind": "section",
       "tag": "main",
-      "children": [
-        "hero",
-        "features",
-        "cta"
-      ],
+      "children": ["hero", "features", "cta"],
       "style": {
         "maxWidth": "space.measure"
       }
@@ -135,11 +132,7 @@
         "gap": "space.4",
         "align": "center"
       },
-      "children": [
-        "hero-title",
-        "hero-sub",
-        "hero-shot"
-      ]
+      "children": ["hero-title", "hero-sub", "hero-shot"]
     },
     "hero-title": {
       "id": "hero-title",
@@ -194,11 +187,7 @@
         "pad": "space.7",
         "gap": "space.5"
       },
-      "children": [
-        "f-sched",
-        "f-invoice",
-        "f-mobile"
-      ]
+      "children": ["f-sched", "f-invoice", "f-mobile"]
     },
     "f-sched": {
       "id": "f-sched",
@@ -210,10 +199,7 @@
       "style": {
         "gap": "space.2"
       },
-      "children": [
-        "f-sched-h",
-        "f-sched-b"
-      ]
+      "children": ["f-sched-h", "f-sched-b"]
     },
     "f-sched-h": {
       "id": "f-sched-h",
@@ -252,10 +238,7 @@
       "style": {
         "gap": "space.2"
       },
-      "children": [
-        "f-invoice-h",
-        "f-invoice-b"
-      ]
+      "children": ["f-invoice-h", "f-invoice-b"]
     },
     "f-invoice-h": {
       "id": "f-invoice-h",
@@ -294,10 +277,7 @@
       "style": {
         "gap": "space.2"
       },
-      "children": [
-        "f-mobile-h",
-        "f-mobile-b"
-      ]
+      "children": ["f-mobile-h", "f-mobile-b"]
     },
     "f-mobile-h": {
       "id": "f-mobile-h",
@@ -337,10 +317,7 @@
         "gap": "space.3",
         "align": "center"
       },
-      "children": [
-        "cta-h",
-        "cta-link"
-      ]
+      "children": ["cta-h", "cta-link"]
     },
     "cta-h": {
       "id": "cta-h",
@@ -379,10 +356,7 @@
         "gap": "space.5",
         "maxWidth": "space.measure"
       },
-      "children": [
-        "pricing-h",
-        "plans"
-      ]
+      "children": ["pricing-h", "plans"]
     },
     "pricing-h": {
       "id": "pricing-h",
@@ -405,11 +379,7 @@
       "style": {
         "gap": "space.5"
       },
-      "children": [
-        "plan-solo",
-        "plan-crew",
-        "plan-fleet"
-      ]
+      "children": ["plan-solo", "plan-crew", "plan-fleet"]
     },
     "plan-solo": {
       "id": "plan-solo",
@@ -424,10 +394,7 @@
         "gap": "space.2",
         "radius": "radius.md"
       },
-      "children": [
-        "plan-solo-h",
-        "plan-solo-b"
-      ]
+      "children": ["plan-solo-h", "plan-solo-b"]
     },
     "plan-solo-h": {
       "id": "plan-solo-h",
@@ -469,10 +436,7 @@
         "gap": "space.2",
         "radius": "radius.md"
       },
-      "children": [
-        "plan-crew-h",
-        "plan-crew-b"
-      ]
+      "children": ["plan-crew-h", "plan-crew-b"]
     },
     "plan-crew-h": {
       "id": "plan-crew-h",
@@ -514,10 +478,7 @@
         "gap": "space.2",
         "radius": "radius.md"
       },
-      "children": [
-        "plan-fleet-h",
-        "plan-fleet-b"
-      ]
+      "children": ["plan-fleet-h", "plan-fleet-b"]
     },
     "plan-fleet-h": {
       "id": "plan-fleet-h",

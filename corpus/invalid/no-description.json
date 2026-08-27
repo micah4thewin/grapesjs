@@ -1,0 +1,99 @@
+{
+  "schema": "lattice/1.0",
+  "id": "no-description",
+  "name": "Route without a description",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#ffffff"
+      },
+      "surface": {
+        "value": "#f4f5f7"
+      },
+      "fg": {
+        "value": "#16181d"
+      },
+      "muted": {
+        "value": "#585c66"
+      },
+      "faint": {
+        "value": "#b9bec9"
+      },
+      "accent": {
+        "value": "#1d4ed8"
+      },
+      "on-accent": {
+        "value": "#ffffff",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "7": {
+        "px": 48
+      },
+      "measure": {
+        "px": 960
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      }
+    },
+    "radius": {
+      "md": {
+        "px": 8
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Route without a description",
+      "root": "root"
+    }
+  ],
+  "nodes": {
+    "root": {
+      "id": "root",
+      "kind": "section",
+      "children": ["h1"],
+      "style": {
+        "bg": "color.bg"
+      }
+    },
+    "h1": {
+      "id": "h1",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Untitled in every result page"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    }
+  }
+}

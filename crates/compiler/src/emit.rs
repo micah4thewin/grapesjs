@@ -38,12 +38,16 @@ pub fn run_with_data(
             .cloned()
             .unwrap_or_default();
         let css = styles.css_for(&node_ids);
+        let usage = image_usage(doc, &node_ids, opts, &route.path);
+        let images = usage.bytes;
+        build.diagnostics.extend(usage.diagnostics);
+        build.assets_used.extend(usage.used);
 
         match &route.collection {
             None => {
                 let html = render_page(doc, styles, route, &css, None, records);
                 let path = file_path(&route.path);
-                record_route(build, &route.path, &html, &css);
+                record_route(build, &route.path, &html, &css, images);
                 build.files.insert(path, html.into_bytes());
             }
             Some(collection) => {
@@ -71,7 +75,7 @@ pub fn run_with_data(
                     };
                     let concrete = route.path.replace(":slug", slug);
                     let html = render_page(doc, styles, route, &css, Some(row), records);
-                    record_route(build, &concrete, &html, &css);
+                    record_route(build, &concrete, &html, &css, images);
                     build.files.insert(file_path(&concrete), html.into_bytes());
                 }
             }
@@ -99,15 +103,72 @@ pub fn run_with_data(
     }
 }
 
-fn record_route(build: &mut Build, path: &str, html: &str, css: &str) {
+fn record_route(build: &mut Build, path: &str, html: &str, css: &str, images: usize) {
     build.route_bytes.insert(
         path.to_string(),
         RouteBytes {
             html: html.len(),
             css: css.len(),
             js: 0,
+            images,
         },
     );
+}
+
+/// What the route's images cost a visitor. When the host supplied an asset table it is
+/// authoritative: an `src` that is not in it names a node and fails the build, because a broken
+/// image in production is not something to discover from a bug report.
+#[derive(Default)]
+struct ImageUsage {
+    bytes: usize,
+    used: Vec<String>,
+    diagnostics: Vec<Diagnostic>,
+}
+
+fn image_usage(doc: &Document, node_ids: &[String], opts: &Options, route: &str) -> ImageUsage {
+    let mut usage = ImageUsage::default();
+    if opts.assets.is_empty() {
+        return usage;
+    }
+    if let Some(icon) = &doc.icon {
+        match opts.assets.get(icon) {
+            Some(bytes) => {
+                usage.bytes += bytes;
+                usage.used.push(icon.clone());
+            }
+            None => usage.diagnostics.push(
+                Diagnostic::error(
+                    "emit.missing-asset",
+                    format!("site icon {icon:?} is not in the asset store"),
+                )
+                .at_route(route.to_string()),
+            ),
+        }
+    }
+    for id in node_ids {
+        let Some(node) = doc.nodes.get(id) else {
+            continue;
+        };
+        if node.kind != NodeKind::Image {
+            continue;
+        }
+        let Some(src) = &node.src else { continue };
+        match opts.assets.get(src) {
+            Some(bytes) => {
+                usage.bytes += bytes;
+                usage.used.push(src.clone());
+            }
+            None => usage.diagnostics.push(
+                Diagnostic::error(
+                    "emit.missing-asset",
+                    format!("image {id:?} references {src:?}, which is not in the asset store"),
+                )
+                .at_node(id.clone())
+                .at_route(route.to_string()),
+            ),
+        }
+    }
+    usage
 }
 
 /// `/` -> `index.html`, `/pricing` -> `pricing/index.html`. Directory-style so any static host
@@ -148,6 +209,13 @@ fn render_page(
         out.push_str(&format!(
             "<meta name=\"description\" content=\"{}\">\n",
             escape_attr(&interpolate(description, record))
+        ));
+    }
+    if let Some(icon) = &doc.icon {
+        out.push_str(&format!(
+            "<link rel=\"icon\" href=\"/{}\" type=\"{}\">\n",
+            escape_attr(icon),
+            icon_mime(icon)
         ));
     }
     out.push_str(&format!("<style>{css}</style>\n"));
@@ -339,6 +407,16 @@ pub fn escape_attr(text: &str) -> String {
     escape_text(text).replace('"', "&quot;")
 }
 
+fn icon_mime(path: &str) -> &'static str {
+    match path.rsplit('.').next() {
+        Some("svg") => "image/svg+xml",
+        Some("ico") => "image/x-icon",
+        Some("jpg" | "jpeg") => "image/jpeg",
+        Some("webp") => "image/webp",
+        _ => "image/png",
+    }
+}
+
 fn redirects_file(doc: &Document) -> String {
     let mut out = String::new();
     for entry in &doc.redirects {
@@ -349,8 +427,19 @@ fn redirects_file(doc: &Document) -> String {
 
 fn not_found_html(doc: &Document, styles: &Styles) -> String {
     let css = styles.css_for(&[]);
+    let icon = doc
+        .icon
+        .as_ref()
+        .map(|icon| {
+            format!(
+                "<link rel=\"icon\" href=\"/{}\" type=\"{}\">\n",
+                escape_attr(icon),
+                icon_mime(icon)
+            )
+        })
+        .unwrap_or_default();
     format!(
-        "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Not found — {}</title>\n<style>{css}</style>\n</head>\n<body>\n<main class=\"l-section\"><h1>Not found</h1><p>That page does not exist.</p></main>\n</body>\n</html>\n",
+        "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Not found — {}</title>\n{icon}<style>{css}</style>\n</head>\n<body>\n<main class=\"l-section\"><h1>Not found</h1><p>That page does not exist.</p></main>\n</body>\n</html>\n",
         escape_text(&doc.name)
     )
 }

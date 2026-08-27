@@ -81,6 +81,27 @@ jobs:
       - run: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown
       - run: node scripts/lattice/wasm-parity.mjs
 
+  exit-gate:
+    name: Stage B exit gate (Lighthouse 95+ on every corpus route)
+    runs-on: ubuntu-latest
+    # The plan's Phase-0 kill criterion, measured rather than asserted: every route of every corpus
+    # site, scored in Chromium, served by the export's own server.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.2'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.10.0
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: pnpm install
+      - name: Lighthouse
+        run: node scripts/lattice/lighthouse.mjs --require
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+
   projection-parity:
     name: What you see is what ships (projection vs compilation)
     runs-on: ubuntu-latest

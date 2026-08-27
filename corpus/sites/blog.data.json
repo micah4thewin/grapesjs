@@ -1,0 +1,28 @@
+{
+  "posts": [
+    {
+      "slug": "headset-bearings",
+      "title": "Headset bearings, and when to stop caring",
+      "published": "2026-03-02",
+      "excerpt": "A loose headset announces itself. A tight one just wears out quietly.",
+      "body": "Sealed cartridges changed the maths. Grease still wins on a winter bike, and a cup-and-cone headset you can service in the stand will outlast three sealed ones you cannot.",
+      "authorEmail": "rae@example.com"
+    },
+    {
+      "slug": "wheel-truing",
+      "title": "Truing a wheel in eleven minutes",
+      "published": "2026-02-18",
+      "excerpt": "Not because speed matters, but because a slow true is usually an indecisive one.",
+      "body": "Work opposite pairs. Chase the wobble, not the spoke. If the rim will not come round in three passes, the problem is tension, not alignment.",
+      "authorEmail": "rae@example.com"
+    },
+    {
+      "slug": "winter-drivetrain",
+      "title": "The winter drivetrain argument",
+      "published": "2026-01-09",
+      "excerpt": "Wax, oil, or neglect: an honest accounting of all three.",
+      "body": "Wax is cleaner and slower to apply. Oil is faster and dirtier. Neglect is free until February, when it is not.",
+      "authorEmail": "rae@example.com"
+    }
+  ]
+}

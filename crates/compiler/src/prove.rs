@@ -47,6 +47,77 @@ pub fn run(doc: &Document, res: &Resolved, diags: &mut Vec<Diagnostic>) {
             prove_alt(node, route, diags);
             prove_contrast(doc, res, node, route, diags);
         }
+        prove_heading_order(doc, nodes, route, diags);
+    }
+    prove_descriptions(doc, diags);
+    if doc.icon.is_none() {
+        // Not fatal: a site can launch without an icon. It is counted because the cost is a 404 on
+        // every first page view and a browser-default icon in every tab.
+        diags.push(Diagnostic::warning(
+            "prove.icon.missing",
+            "the document declares no site icon; browsers will request /favicon.ico and get a 404",
+        ));
+    }
+}
+
+/// A heading level that jumps (h1 straight to h3) breaks the outline screen readers and search
+/// engines navigate by. Same rule Lighthouse applies, applied at build time against the IR, where
+/// the offending node has a name.
+fn prove_heading_order(doc: &Document, nodes: &[String], route: &str, diags: &mut Vec<Diagnostic>) {
+    let mut previous: Option<i64> = None;
+    for id in nodes {
+        let Some(node) = doc.nodes.get(id) else {
+            continue;
+        };
+        if node.kind != NodeKind::Heading {
+            continue;
+        }
+        let level = node.level.unwrap_or(2);
+        match previous {
+            Some(previous_level) if level > previous_level + 1 => diags.push(
+                Diagnostic::error(
+                    "prove.heading-order",
+                    format!(
+                        "heading {:?} is level {level} but follows a level {previous_level} heading; the outline skips level {}",
+                        node.id,
+                        previous_level + 1
+                    ),
+                )
+                .at_node(node.id.clone())
+                .at_route(route.to_string()),
+            ),
+            None if level != 1 => diags.push(
+                Diagnostic::error(
+                    "prove.heading-order",
+                    format!("route {route:?} opens with heading {:?} at level {level}; every page needs one h1 first", node.id),
+                )
+                .at_node(node.id.clone())
+                .at_route(route.to_string()),
+            ),
+            _ => {}
+        }
+        previous = Some(level);
+    }
+}
+
+/// A route with no description is a route whose search result someone else writes. Cheap to
+/// author, invisible when missing, so the build asks for it rather than hoping.
+fn prove_descriptions(doc: &Document, diags: &mut Vec<Diagnostic>) {
+    for route in &doc.routes {
+        let missing = route
+            .description
+            .as_ref()
+            .map(|d| d.trim().is_empty())
+            .unwrap_or(true);
+        if missing {
+            diags.push(
+                Diagnostic::error(
+                    "prove.seo.description",
+                    format!("route {:?} has no description; search engines and link previews will invent one", route.path),
+                )
+                .at_route(route.path.clone()),
+            );
+        }
     }
 }
 

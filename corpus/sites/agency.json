@@ -1,0 +1,415 @@
+{
+  "schema": "lattice/1.0",
+  "id": "agency",
+  "name": "Harbour & Vale",
+  "icon": "assets/icon-agency.png",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#ffffff"
+      },
+      "surface": {
+        "value": "#f4f4f5"
+      },
+      "fg": {
+        "value": "#18181b"
+      },
+      "muted": {
+        "value": "#52525b"
+      },
+      "accent": {
+        "value": "#4338ca"
+      },
+      "on-accent": {
+        "value": "#ffffff",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "3": {
+        "px": 12
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "6": {
+        "px": 32
+      },
+      "7": {
+        "px": 48
+      },
+      "8": {
+        "px": 64
+      },
+      "measure": {
+        "px": 1080
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "lead": {
+        "sizePx": 20,
+        "lineHeight": 1.5,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      },
+      "h2": {
+        "sizePx": 30,
+        "lineHeight": 1.25,
+        "weight": 600
+      },
+      "h3": {
+        "sizePx": 20,
+        "lineHeight": 1.35,
+        "weight": 600
+      },
+      "small": {
+        "sizePx": 14,
+        "lineHeight": 1.5,
+        "weight": 400
+      }
+    },
+    "radius": {
+      "sm": {
+        "px": 4
+      },
+      "md": {
+        "px": 8
+      },
+      "lg": {
+        "px": 16
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Harbour & Vale — a four-person design studio",
+      "description": "Research, then design, then we leave.",
+      "root": "home"
+    },
+    {
+      "path": "/work",
+      "title": "How we work — Harbour & Vale",
+      "root": "work",
+      "description": "Two weeks of research, three of design, one of handover — and what you get at the end."
+    }
+  ],
+  "nodes": {
+    "home": {
+      "id": "home",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "gap": "space.7"
+      },
+      "children": ["hero", "services", "clients", "foot"]
+    },
+    "hero": {
+      "id": "hero",
+      "kind": "stack",
+      "tag": "header",
+      "style": {
+        "pad": "space.8",
+        "gap": "space.4"
+      },
+      "children": ["hero-h", "hero-b"]
+    },
+    "hero-h": {
+      "id": "hero-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Harbour & Vale"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "hero-b": {
+      "id": "hero-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "A four-person studio that does research, then design, then leaves. We do not do retainers."
+        }
+      ],
+      "style": {
+        "type": "type.lead",
+        "fg": "color.muted"
+      }
+    },
+    "services": {
+      "id": "services",
+      "kind": "grid",
+      "cols": 12,
+      "style": {
+        "gap": "space.5",
+        "pad": "space.6"
+      },
+      "children": ["sv1", "sv2", "sv3"]
+    },
+    "clients": {
+      "id": "clients",
+      "kind": "stack",
+      "style": {
+        "pad": "space.6",
+        "gap": "space.3",
+        "bg": "color.surface"
+      },
+      "children": ["cl-h", "cl-b"]
+    },
+    "cl-h": {
+      "id": "cl-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Recent work"
+        }
+      ],
+      "style": {
+        "type": "type.h2",
+        "fg": "color.fg"
+      }
+    },
+    "cl-b": {
+      "id": "cl-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "A regional bank's mortgage journey, a hospital's rota tool, and a bakery's ordering page. In that order of difficulty, though not the order you would guess."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "foot": {
+      "id": "foot",
+      "kind": "stack",
+      "tag": "footer",
+      "style": {
+        "pad": "space.6",
+        "gap": "space.2"
+      },
+      "children": ["foot-h", "foot-b"]
+    },
+    "foot-h": {
+      "id": "foot-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Six-week engagements, quoted flat"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "foot-b": {
+      "id": "foot-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Start a conversation",
+          "href": "/work"
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.accent"
+      }
+    },
+    "work": {
+      "id": "work",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.5"
+      },
+      "children": ["w-h", "w-b", "w-img"]
+    },
+    "w-h": {
+      "id": "w-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "How we work"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "w-b": {
+      "id": "w-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Two weeks of research, three of design, one of handover. You get the files, the reasoning, and a recording of every session."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "w-img": {
+      "id": "w-img",
+      "kind": "image",
+      "src": "assets/workshop.png",
+      "alt": "A wall of index cards grouped into six themes during a research readout",
+      "width": 1600,
+      "height": 1000,
+      "style": {
+        "radius": "radius.md"
+      }
+    },
+    "sv1": {
+      "id": "sv1",
+      "kind": "stack",
+      "place": {
+        "col": 1,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["sv1-h", "sv1-b"]
+    },
+    "sv1-h": {
+      "id": "sv1-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Research"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "sv1-b": {
+      "id": "sv1-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Six to ten interviews, transcribed, with the awkward parts left in."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "sv2": {
+      "id": "sv2",
+      "kind": "stack",
+      "place": {
+        "col": 5,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["sv2-h", "sv2-b"]
+    },
+    "sv2-h": {
+      "id": "sv2-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Design"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "sv2-b": {
+      "id": "sv2-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Flows and screens, in the browser, tested with the people from step one."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "sv3": {
+      "id": "sv3",
+      "kind": "stack",
+      "place": {
+        "col": 9,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["sv3-h", "sv3-b"]
+    },
+    "sv3-h": {
+      "id": "sv3-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Handover"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "sv3-b": {
+      "id": "sv3-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Files, tokens and a written argument for every decision."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    }
+  }
+}

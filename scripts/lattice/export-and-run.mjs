@@ -16,7 +16,9 @@ import { join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 
 const sites = existsSync('corpus/sites')
-  ? readdirSync('corpus/sites').filter((f) => f.endsWith('.json') && !f.endsWith('.data.json')).sort()
+  ? readdirSync('corpus/sites')
+      .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json'))
+      .sort()
   : [];
 
 let failures = 0;
@@ -26,13 +28,32 @@ for (const site of sites) {
   const out = mkdtempSync(join(tmpdir(), 'lattice-export-'));
   let server;
   try {
-    execFileSync('cargo', ['run', '-q', '-p', 'lattice-cli', '--', 'build', join('corpus/sites', site), '--out', out, '--quiet'], {
-      stdio: ['ignore', 'inherit', 'inherit'],
-    });
+    execFileSync(
+      'cargo',
+      ['run', '-q', '-p', 'lattice-cli', '--', 'build', join('corpus/sites', site), '--out', out, '--quiet'],
+      {
+        stdio: ['ignore', 'inherit', 'inherit'],
+      },
+    );
 
     // An empty lockfile keeps `npm ci` honest: it will refuse rather than resolve anything.
-    writeFileSync(join(out, 'package-lock.json'), JSON.stringify({ name: site.replace(/\.json$/, ''), lockfileVersion: 3, requires: true, packages: { '': { name: site.replace(/\.json$/, ''), version: '0.0.0' } } }, null, 2));
-    execFileSync('npm', ['ci', '--offline', '--no-audit', '--no-fund'], { cwd: out, stdio: ['ignore', 'pipe', 'pipe'] });
+    writeFileSync(
+      join(out, 'package-lock.json'),
+      JSON.stringify(
+        {
+          name: site.replace(/\.json$/, ''),
+          lockfileVersion: 3,
+          requires: true,
+          packages: { '': { name: site.replace(/\.json$/, ''), version: '0.0.0' } },
+        },
+        null,
+        2,
+      ),
+    );
+    execFileSync('npm', ['ci', '--offline', '--no-audit', '--no-fund'], {
+      cwd: out,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
 
     const sitePort = port++;
     // Detached so the whole process group can be killed: `npm start` spawns node, and killing
@@ -61,7 +82,8 @@ for (const site of sites) {
       const response = await fetch(`http://127.0.0.1:${sitePort}${route}`);
       if (!response.ok) throw new Error(`route ${route} returned ${response.status}`);
       const body = await response.text();
-      if (!body.includes('data-lattice-id')) throw new Error(`route ${route} served a page with no IR-addressed content`);
+      if (!body.includes('data-lattice-id'))
+        throw new Error(`route ${route} served a page with no IR-addressed content`);
     }
     const missing = await fetch(`http://127.0.0.1:${sitePort}/definitely-not-a-route`);
     if (missing.status !== 404) throw new Error(`unknown route returned ${missing.status}, expected 404`);

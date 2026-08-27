@@ -8,6 +8,7 @@
 
 export * from './flags.ts';
 export * from './gestures.ts';
+export * from './panels.ts';
 export * from './projection/projector.ts';
 export * from './projection/tripwire.ts';
 export * from './projection/canvas.ts';

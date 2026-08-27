@@ -1,0 +1,528 @@
+{
+  "schema": "lattice/1.0",
+  "id": "restaurant",
+  "name": "Casa Miel",
+  "icon": "assets/icon-restaurant.png",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#fffdf9"
+      },
+      "surface": {
+        "value": "#f3ece1"
+      },
+      "fg": {
+        "value": "#20180f"
+      },
+      "muted": {
+        "value": "#5b5044"
+      },
+      "accent": {
+        "value": "#7f1d1d"
+      },
+      "on-accent": {
+        "value": "#fff7ed",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "3": {
+        "px": 12
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "6": {
+        "px": 32
+      },
+      "7": {
+        "px": 48
+      },
+      "8": {
+        "px": 64
+      },
+      "measure": {
+        "px": 960
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "lead": {
+        "sizePx": 20,
+        "lineHeight": 1.5,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      },
+      "h2": {
+        "sizePx": 30,
+        "lineHeight": 1.25,
+        "weight": 600
+      },
+      "h3": {
+        "sizePx": 20,
+        "lineHeight": 1.35,
+        "weight": 600
+      },
+      "small": {
+        "sizePx": 14,
+        "lineHeight": 1.5,
+        "weight": 400
+      }
+    },
+    "radius": {
+      "sm": {
+        "px": 4
+      },
+      "md": {
+        "px": 8
+      },
+      "lg": {
+        "px": 16
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Casa Miel — wood-oven cooking, Paris 10e",
+      "description": "Twelve tables, one wood oven.",
+      "root": "home"
+    },
+    {
+      "path": "/menu",
+      "title": "Menu — Casa Miel",
+      "root": "menu-page",
+      "description": "The whole menu, printed each morning and reprinted here without the smudges."
+    }
+  ],
+  "nodes": {
+    "home": {
+      "id": "home",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "gap": "space.6"
+      },
+      "children": ["hero", "menu-heading", "menu", "hours"]
+    },
+    "hero": {
+      "id": "hero",
+      "kind": "stack",
+      "tag": "header",
+      "style": {
+        "pad": "space.8",
+        "gap": "space.3",
+        "align": "center",
+        "bg": "color.surface"
+      },
+      "children": ["hero-h", "hero-b"]
+    },
+    "hero-h": {
+      "id": "hero-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Casa Miel"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "hero-b": {
+      "id": "hero-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Twelve tables, one wood oven, and whatever the market had on Tuesday."
+        }
+      ],
+      "style": {
+        "type": "type.lead",
+        "fg": "color.muted"
+      }
+    },
+    "menu": {
+      "id": "menu",
+      "kind": "grid",
+      "cols": 12,
+      "style": {
+        "gap": "space.5",
+        "pad": "space.6"
+      },
+      "children": ["m1", "m2", "m3", "m4", "m5", "m6"]
+    },
+    "hours": {
+      "id": "hours",
+      "kind": "stack",
+      "tag": "footer",
+      "style": {
+        "pad": "space.6",
+        "gap": "space.2",
+        "bg": "color.surface"
+      },
+      "children": ["h-h", "h-b", "h-addr"]
+    },
+    "h-h": {
+      "id": "h-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Hours"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "h-b": {
+      "id": "h-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Wednesday to Sunday, 5pm until the oven goes cold."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "h-addr": {
+      "id": "h-addr",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "41 Rue des Petites Écuries, Paris 10e."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "menu-page": {
+      "id": "menu-page",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.6",
+        "gap": "space.5"
+      },
+      "children": ["mp-h", "mp-h2", "mp-note"]
+    },
+    "mp-h": {
+      "id": "mp-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "The whole menu"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "mp-note": {
+      "id": "mp-note",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Printed each morning. This page is the same list, minus the smudges."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "m1": {
+      "id": "m1",
+      "kind": "stack",
+      "place": {
+        "col": 1,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["m1-n", "m1-d"]
+    },
+    "m1-n": {
+      "id": "m1-n",
+      "kind": "heading",
+      "level": 3,
+      "spans": [
+        {
+          "text": "Pan de cristal — €6"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "m1-d": {
+      "id": "m1-d",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Tomato, garlic, salt, oil. That is the entire recipe."
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "m2": {
+      "id": "m2",
+      "kind": "stack",
+      "place": {
+        "col": 5,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["m2-n", "m2-d"]
+    },
+    "m2-n": {
+      "id": "m2-n",
+      "kind": "heading",
+      "level": 3,
+      "spans": [
+        {
+          "text": "Escalivada — €11"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "m2-d": {
+      "id": "m2-d",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Peppers and aubergine, roasted until they collapse."
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "m3": {
+      "id": "m3",
+      "kind": "stack",
+      "place": {
+        "col": 9,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["m3-n", "m3-d"]
+    },
+    "m3-n": {
+      "id": "m3-n",
+      "kind": "heading",
+      "level": 3,
+      "spans": [
+        {
+          "text": "Gambas al ajillo — €16"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "m3-d": {
+      "id": "m3-d",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Prawns, chilli, more garlic than you expect."
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "m4": {
+      "id": "m4",
+      "kind": "stack",
+      "place": {
+        "col": 1,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["m4-n", "m4-d"]
+    },
+    "m4-n": {
+      "id": "m4-n",
+      "kind": "heading",
+      "level": 3,
+      "spans": [
+        {
+          "text": "Arroz negro — €19"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "m4-d": {
+      "id": "m4-d",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Squid ink rice, crisp at the edges."
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "m5": {
+      "id": "m5",
+      "kind": "stack",
+      "place": {
+        "col": 5,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["m5-n", "m5-d"]
+    },
+    "m5-n": {
+      "id": "m5-n",
+      "kind": "heading",
+      "level": 3,
+      "spans": [
+        {
+          "text": "Pollo al horno — €21"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "m5-d": {
+      "id": "m5-d",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Half a chicken, lemon, thyme, forty minutes."
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "m6": {
+      "id": "m6",
+      "kind": "stack",
+      "place": {
+        "col": 9,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["m6-n", "m6-d"]
+    },
+    "m6-n": {
+      "id": "m6-n",
+      "kind": "heading",
+      "level": 3,
+      "spans": [
+        {
+          "text": "Flan de la casa — €7"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "m6-d": {
+      "id": "m6-d",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Made Sunday. Gone by Friday."
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "menu-heading": {
+      "id": "menu-heading",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Tonight, and most nights"
+        }
+      ],
+      "style": {
+        "type": "type.h2",
+        "fg": "color.fg",
+        "pad": "space.6"
+      }
+    },
+    "mp-h2": {
+      "id": "mp-h2",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Every dish we run"
+        }
+      ],
+      "style": {
+        "type": "type.h2",
+        "fg": "color.fg"
+      }
+    }
+  }
+}

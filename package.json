@@ -25,7 +25,17 @@
     "release:docs": "ts-node scripts/releaseDocs latest",
     "build:cli": "pnpm --filter grapesjs-cli build",
     "build:docs:api": "pnpm --filter @grapesjs/docs docs:api",
-    "build:docs": "pnpm --filter @grapesjs/docs build"
+    "build:docs": "pnpm --filter @grapesjs/docs build",
+    "lattice:check": "cargo run -q -p lattice-cli -- check corpus/sites",
+    "lattice:build": "cargo run -q -p lattice-cli -- build corpus/sites",
+    "lattice:codegen": "node packages/engine/tools/codegen.mjs",
+    "lattice:codegen:check": "node packages/engine/tools/codegen.mjs --check",
+    "lattice:test": "node --test 'packages/engine/test/*.test.ts' 'packages/shell/test/*.test.ts' && cargo test --workspace",
+    "lattice:determinism": "node scripts/lattice/determinism.mjs",
+    "lattice:export-and-run": "node scripts/lattice/export-and-run.mjs",
+    "lattice:wasm-parity": "cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown && node scripts/lattice/wasm-parity.mjs",
+    "lattice:projection-parity": "node scripts/lattice/projection-parity.mjs",
+    "lattice:lighthouse": "node scripts/lattice/lighthouse.mjs"
   },
   "devDependencies": {
     "@babel/cli": "7.27.0",

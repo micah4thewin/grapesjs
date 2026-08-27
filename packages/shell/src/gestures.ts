@@ -115,7 +115,10 @@ export function resizeToOps(doc: Document, id: string, edge: 'start' | 'end', de
   return [{ kind: 'setPlace', id, place }];
 }
 
-function samePlace(a: { col: number; span: number; row?: number }, b: { col: number; span: number; row?: number }): boolean {
+function samePlace(
+  a: { col: number; span: number; row?: number },
+  b: { col: number; span: number; row?: number },
+): boolean {
   return a.col === b.col && a.span === b.span && (a.row ?? null) === (b.row ?? null);
 }
 

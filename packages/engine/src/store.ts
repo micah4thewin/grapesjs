@@ -34,7 +34,9 @@ export interface StoreOptions {
 export class ValidationFailure extends Error {
   errors: ValidationError[];
   constructor(errors: ValidationError[]) {
-    super(`document would be invalid:\n${errors.map((e) => `  ${e.node ? `node ${e.node}` : e.path}: ${e.message}`).join('\n')}`);
+    super(
+      `document would be invalid:\n${errors.map((e) => `  ${e.node ? `node ${e.node}` : e.path}: ${e.message}`).join('\n')}`,
+    );
     this.errors = errors;
   }
 }
@@ -155,7 +157,12 @@ export class DocumentStore {
       if (!ids.length) documentWide = true;
       ids.forEach((id) => touched.add(id));
     }
-    const stamped = batch.map(({ op, batch: id }) => ({ op, replica: this.#replica, lamport: ++this.#lamport, batch: id }));
+    const stamped = batch.map(({ op, batch: id }) => ({
+      op,
+      replica: this.#replica,
+      lamport: ++this.#lamport,
+      batch: id,
+    }));
     this.#document = next;
     this.#log.push(...stamped);
     const change: Change = { document: next, ops: stamped, touched: documentWide ? [] : [...touched], origin };
@@ -180,7 +187,10 @@ export class DocumentStore {
    * the same base in one total order — (lamport, replica, position) — so every replica computes
    * the same document without any of them needing to have seen the others' ops in order.
    */
-  static merge(base: Document, logs: readonly (readonly StampedOp[])[]): { document: Document; log: StampedOp[]; refused: StampedOp[] } {
+  static merge(
+    base: Document,
+    logs: readonly (readonly StampedOp[])[],
+  ): { document: Document; log: StampedOp[]; refused: StampedOp[] } {
     const seen = new Set<string>();
     const all: StampedOp[] = [];
     for (const log of logs) {

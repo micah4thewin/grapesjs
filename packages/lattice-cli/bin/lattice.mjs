@@ -13,10 +13,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
-const candidates = [
-  resolve(repoRoot, 'target/release/lattice'),
-  resolve(repoRoot, 'target/debug/lattice'),
-];
+const candidates = [resolve(repoRoot, 'target/release/lattice'), resolve(repoRoot, 'target/debug/lattice')];
 const binary = candidates.find((path) => existsSync(path));
 const args = process.argv.slice(2);
 

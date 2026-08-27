@@ -4,7 +4,7 @@
 //! do to publish a site, this does today from a terminal, against the same compiler.
 
 use lattice_compiler::{budget, Options, Severity};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
@@ -125,12 +125,63 @@ fn compile_site(site: &Path, emit_app: bool) -> Result<lattice_compiler::Build, 
     let opts = Options {
         profile: lattice_compiler::Profile::Full,
         emit_app,
+        assets: asset_sizes(&asset_root(site)),
     };
     Ok(lattice_compiler::compile_str_with_data(
         &source,
         data.as_deref(),
         &opts,
     ))
+}
+
+/// Assets live beside the sites (`corpus/assets` for `corpus/sites/x.json`). One directory shared
+/// by every site in a project is the shape a content-addressed store will take later; today it is
+/// a folder, and the compiler only ever learns the sizes.
+fn asset_root(site: &Path) -> PathBuf {
+    site.parent()
+        .and_then(|p| p.parent())
+        .map(|p| p.join("assets"))
+        .unwrap_or_else(|| PathBuf::from("assets"))
+}
+
+fn asset_sizes(root: &Path) -> BTreeMap<String, usize> {
+    let mut sizes = BTreeMap::new();
+    collect_assets(root, root, &mut sizes);
+    sizes
+}
+
+fn collect_assets(root: &Path, dir: &Path, sizes: &mut BTreeMap<String, usize>) {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return;
+    };
+    let mut paths: Vec<PathBuf> = entries.filter_map(Result::ok).map(|e| e.path()).collect();
+    paths.sort();
+    for path in paths {
+        if path.is_dir() {
+            collect_assets(root, &path, sizes);
+        } else if let Ok(meta) = fs::metadata(&path) {
+            if let Ok(relative) = path.strip_prefix(root) {
+                sizes.insert(
+                    format!("assets/{}", relative.to_string_lossy().replace('\\', "/")),
+                    meta.len() as usize,
+                );
+            }
+        }
+    }
+}
+
+/// Copy exactly the assets the build referenced — an export that carries a project's whole media
+/// library is a slower download and a bigger surface for a stale file to hide in.
+fn copy_assets(root: &Path, out: &Path, used: &BTreeSet<String>) -> Result<usize, String> {
+    for path in used {
+        let from = root.join(path.trim_start_matches("assets/"));
+        let to = out.join(path);
+        if let Some(parent) = to.parent() {
+            fs::create_dir_all(parent).map_err(|e| format!("{}: {e}", parent.display()))?;
+        }
+        fs::copy(&from, &to).map_err(|e| format!("{}: {e}", from.display()))?;
+    }
+    Ok(used.len())
 }
 
 fn report(site: &Path, build: &lattice_compiler::Build, quiet: bool) -> bool {
@@ -183,7 +234,9 @@ fn run_build(args: &[String], emit: bool) -> ExitCode {
             .out
             .clone()
             .unwrap_or_else(|| PathBuf::from("dist").join(site.file_stem().unwrap_or_default()));
-        if let Err(e) = write_build(&out, &build) {
+        if let Err(e) = write_build(&out, &build)
+            .and_then(|()| copy_assets(&asset_root(site), &out, &build.assets_used).map(|_| ()))
+        {
             eprintln!("error: {e}");
             failed = true;
             continue;
@@ -238,7 +291,8 @@ fn manifest_json(build: &lattice_compiler::Build) -> String {
             )
         })
         .collect();
-    let value = serde_json::json!({ "routeDeps": deps, "routeBytes": bytes });
+    let assets: Vec<&String> = build.assets_used.iter().collect();
+    let value = serde_json::json!({ "routeDeps": deps, "routeBytes": bytes, "assets": assets });
     format!(
         "{}\n",
         serde_json::to_string_pretty(&value).unwrap_or_default()
@@ -260,7 +314,9 @@ fn run_dev(args: &[String]) -> ExitCode {
     let rebuild = |site: &Path, out: &Path| match compile_site(site, true) {
         Ok(build) => {
             if report(site, &build, flags.quiet) {
-                if let Err(e) = write_build(out, &build) {
+                if let Err(e) = write_build(out, &build).and_then(|()| {
+                    copy_assets(&asset_root(site), out, &build.assets_used).map(|_| ())
+                }) {
                     eprintln!("error: {e}");
                 } else {
                     println!("rebuilt {} ({} files)", site.display(), build.files.len());
@@ -296,6 +352,11 @@ fn run_dev(args: &[String]) -> ExitCode {
                     Ok(build) => {
                         if build.ok() {
                             let _ = write_build(&watch_out, &build);
+                            let _ = copy_assets(
+                                &asset_root(&watch_site),
+                                &watch_out,
+                                &build.assets_used,
+                            );
                             println!("rebuilt {}", watch_site.display());
                         } else {
                             for d in build.errors() {

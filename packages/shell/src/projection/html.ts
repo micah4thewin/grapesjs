@@ -50,7 +50,8 @@ export function parseFragment(source: string): Element[] {
       if (close < 0) throw new HtmlParseError('unterminated closing tag');
       const tag = source.slice(next + 2, close).trim();
       const open = stack.pop();
-      if (!open || open.tag !== tag) throw new HtmlParseError(`closing </${tag}> does not match <${open?.tag ?? 'nothing'}>`);
+      if (!open || open.tag !== tag)
+        throw new HtmlParseError(`closing </${tag}> does not match <${open?.tag ?? 'nothing'}>`);
       index = close + 1;
       continue;
     }
@@ -95,7 +96,11 @@ function parseAttrs(source: string): Record<string, string> {
 }
 
 function decode(text: string): string {
-  return text.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  return text
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
 }
 
 function encodeText(text: string): string {

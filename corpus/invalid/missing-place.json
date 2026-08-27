@@ -76,24 +76,18 @@
     "root": {
       "id": "root",
       "kind": "section",
-      "children": [
-        "g"
-      ]
+      "children": ["g"]
     },
     "g": {
       "id": "g",
       "kind": "grid",
       "cols": 12,
-      "children": [
-        "card"
-      ]
+      "children": ["card"]
     },
     "card": {
       "id": "card",
       "kind": "stack",
-      "children": [
-        "t"
-      ]
+      "children": ["t"]
     },
     "t": {
       "id": "t",

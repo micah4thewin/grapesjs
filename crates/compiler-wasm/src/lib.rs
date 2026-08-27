@@ -28,6 +28,10 @@ struct Request {
     profile: Option<String>,
     #[serde(default)]
     emit_app: Option<bool>,
+    /// Asset path -> byte size, as the editor already has it cached. Sizes only: the compiler
+    /// never needs the pixels, so the canvas does not have to ship them across the ABI.
+    #[serde(default)]
+    assets: std::collections::BTreeMap<String, usize>,
 }
 
 #[derive(serde::Serialize)]
@@ -53,6 +57,7 @@ struct RouteBytes {
     html: usize,
     css: usize,
     js: usize,
+    images: usize,
 }
 
 /// The whole facade, host-independent so the native tests can exercise the same path the browser
@@ -86,6 +91,7 @@ pub fn compile_request(input: &str) -> String {
             Profile::Full
         },
         emit_app: request.emit_app.unwrap_or(false),
+        assets: request.assets.clone(),
     };
     let build = compile_str_with_data(&request.document, request.data.as_deref(), &opts);
 
@@ -121,6 +127,7 @@ pub fn compile_request(input: &str) -> String {
                         html: b.html,
                         css: b.css,
                         js: b.js,
+                        images: b.images,
                     },
                 )
             })

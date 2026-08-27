@@ -76,9 +76,7 @@
     "root": {
       "id": "root",
       "kind": "section",
-      "children": [
-        "t"
-      ],
+      "children": ["t"],
       "style": {
         "bg": "#ff0000"
       }

@@ -136,7 +136,9 @@ function idOf(component: unknown): string | null {
   const model = component as { getAttributes?: () => Record<string, string>; get?: (key: string) => unknown } | null;
   const attrs = model?.getAttributes?.();
   if (attrs?.['data-lattice-id']) return attrs['data-lattice-id'];
-  const element = model?.get?.('el') as { getAttribute(name: string): string | null; parentElement: unknown } | undefined;
+  const element = model?.get?.('el') as
+    | { getAttribute(name: string): string | null; parentElement: unknown }
+    | undefined;
   return element ? nodeIdFromElement(element) : null;
 }
 
@@ -154,7 +156,11 @@ export function renderNode(node: ProjectedNode): string {
 }
 
 /** The component-type definitions GrapesJS registers, one per IR node kind. */
-export function componentTypes(): { id: string; isComponent: (el: { getAttribute?: (n: string) => string | null }) => unknown; model: Record<string, unknown> }[] {
+export function componentTypes(): {
+  id: string;
+  isComponent: (el: { getAttribute?: (n: string) => string | null }) => unknown;
+  model: Record<string, unknown>;
+}[] {
   const kinds = ['section', 'stack', 'grid', 'frame', 'text', 'heading', 'image', 'list', 'instance'];
   return kinds.map((kind) => ({
     id: `lattice-${kind}`,

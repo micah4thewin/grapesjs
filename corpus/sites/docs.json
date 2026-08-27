@@ -1,0 +1,483 @@
+{
+  "schema": "lattice/1.0",
+  "id": "docs",
+  "name": "Ledgerfoot documentation",
+  "icon": "assets/icon-docs.png",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#ffffff"
+      },
+      "surface": {
+        "value": "#f5f7fa"
+      },
+      "fg": {
+        "value": "#0f172a"
+      },
+      "muted": {
+        "value": "#475569"
+      },
+      "accent": {
+        "value": "#1e40af"
+      },
+      "on-accent": {
+        "value": "#ffffff",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "3": {
+        "px": 12
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "6": {
+        "px": 32
+      },
+      "7": {
+        "px": 48
+      },
+      "8": {
+        "px": 64
+      },
+      "measure": {
+        "px": 1120
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "lead": {
+        "sizePx": 20,
+        "lineHeight": 1.5,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      },
+      "h2": {
+        "sizePx": 30,
+        "lineHeight": 1.25,
+        "weight": 600
+      },
+      "h3": {
+        "sizePx": 20,
+        "lineHeight": 1.35,
+        "weight": 600
+      },
+      "small": {
+        "sizePx": 14,
+        "lineHeight": 1.5,
+        "weight": 400
+      }
+    },
+    "radius": {
+      "sm": {
+        "px": 4
+      },
+      "md": {
+        "px": 8
+      },
+      "lg": {
+        "px": 16
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Ledgerfoot documentation",
+      "description": "A double-entry ledger that stays out of the way.",
+      "root": "home"
+    },
+    {
+      "path": "/install",
+      "title": "Install — Ledgerfoot",
+      "root": "install",
+      "description": "Download one binary, put it on your PATH, run ledgerfoot init. No daemon, no account."
+    },
+    {
+      "path": "/cli",
+      "title": "CLI reference — Ledgerfoot",
+      "root": "cli",
+      "description": "Six commands — init, add, reconcile, report, export, check — and every flag on them."
+    }
+  ],
+  "nodes": {
+    "home": {
+      "id": "home",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.5"
+      },
+      "children": ["home-nav", "home-h", "home-b", "home-cards"]
+    },
+    "home-nav": {
+      "id": "home-nav",
+      "kind": "stack",
+      "tag": "nav",
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["home-nav-l"]
+    },
+    "home-nav-l": {
+      "id": "home-nav-l",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Docs",
+          "href": "/"
+        },
+        {
+          "text": " · "
+        },
+        {
+          "text": "Install",
+          "href": "/install"
+        },
+        {
+          "text": " · "
+        },
+        {
+          "text": "CLI",
+          "href": "/cli"
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.accent"
+      }
+    },
+    "home-h": {
+      "id": "home-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Ledgerfoot documentation"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "home-b": {
+      "id": "home-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "A double-entry ledger for people who would rather not learn double-entry bookkeeping."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "home-cards": {
+      "id": "home-cards",
+      "kind": "grid",
+      "cols": 12,
+      "style": {
+        "gap": "space.5"
+      },
+      "children": ["c-install", "c-cli", "c-api"]
+    },
+    "c-install": {
+      "id": "c-install",
+      "kind": "stack",
+      "place": {
+        "col": 1,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.2",
+        "pad": "space.5",
+        "bg": "color.surface",
+        "radius": "radius.md"
+      },
+      "children": ["c-install-h", "c-install-b"]
+    },
+    "c-install-h": {
+      "id": "c-install-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Install"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "c-install-b": {
+      "id": "c-install-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "One binary, no runtime. Works offline."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "c-cli": {
+      "id": "c-cli",
+      "kind": "stack",
+      "place": {
+        "col": 5,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.2",
+        "pad": "space.5",
+        "bg": "color.surface",
+        "radius": "radius.md"
+      },
+      "children": ["c-cli-h", "c-cli-b"]
+    },
+    "c-cli-h": {
+      "id": "c-cli-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Command line"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "c-cli-b": {
+      "id": "c-cli-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Every screen has a flag; every flag is in the manual."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "c-api": {
+      "id": "c-api",
+      "kind": "stack",
+      "place": {
+        "col": 9,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.2",
+        "pad": "space.5",
+        "bg": "color.surface",
+        "radius": "radius.md"
+      },
+      "children": ["c-api-h", "c-api-b"]
+    },
+    "c-api-h": {
+      "id": "c-api-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Exports"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "c-api-b": {
+      "id": "c-api-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "CSV, OFX, and a JSON shape you can read."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "install": {
+      "id": "install",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.5"
+      },
+      "children": ["install-nav", "install-h", "install-b"]
+    },
+    "install-nav": {
+      "id": "install-nav",
+      "kind": "stack",
+      "tag": "nav",
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["install-nav-l"]
+    },
+    "install-nav-l": {
+      "id": "install-nav-l",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Docs",
+          "href": "/"
+        },
+        {
+          "text": " · "
+        },
+        {
+          "text": "Install",
+          "href": "/install"
+        },
+        {
+          "text": " · "
+        },
+        {
+          "text": "CLI",
+          "href": "/cli"
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.accent"
+      }
+    },
+    "install-h": {
+      "id": "install-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Install"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "install-b": {
+      "id": "install-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Download the binary for your platform, put it on your PATH, and run `ledgerfoot init`. There is no daemon and no account."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "cli": {
+      "id": "cli",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.5"
+      },
+      "children": ["cli-nav", "cli-h", "cli-b"]
+    },
+    "cli-nav": {
+      "id": "cli-nav",
+      "kind": "stack",
+      "tag": "nav",
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["cli-nav-l"]
+    },
+    "cli-nav-l": {
+      "id": "cli-nav-l",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Docs",
+          "href": "/"
+        },
+        {
+          "text": " · "
+        },
+        {
+          "text": "Install",
+          "href": "/install"
+        },
+        {
+          "text": " · "
+        },
+        {
+          "text": "CLI",
+          "href": "/cli"
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.accent"
+      }
+    },
+    "cli-h": {
+      "id": "cli-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Command line reference"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "cli-b": {
+      "id": "cli-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Six commands: init, add, reconcile, report, export, check. Everything else is a flag on one of those."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    }
+  }
+}

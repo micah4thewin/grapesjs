@@ -19,12 +19,16 @@ import { loadCompiler, DEFAULT_WASM_PATH } from '../../packages/engine/src/wasm-
 import { projectRoute, projectionHtml, routeFilePath } from '../../packages/shell/src/projection/projector.ts';
 
 if (!existsSync(DEFAULT_WASM_PATH)) {
-  console.error(`missing ${DEFAULT_WASM_PATH}\nrun: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown`);
+  console.error(
+    `missing ${DEFAULT_WASM_PATH}\nrun: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown`,
+  );
   process.exit(1);
 }
 
 const compiler = await loadCompiler(DEFAULT_WASM_PATH);
-const sites = readdirSync('corpus/sites').filter((f) => f.endsWith('.json') && !f.endsWith('.data.json')).sort();
+const sites = readdirSync('corpus/sites')
+  .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json'))
+  .sort();
 
 let failures = 0;
 let routesChecked = 0;
@@ -46,7 +50,9 @@ for (const site of sites) {
     // Dynamic routes render one page per record; the projection of the template is checked
     // against the first of them, which is what the canvas shows while editing it.
     const file = route.collection
-      ? Object.keys(compiled.files).find((f) => f.startsWith(route.path.split('/:')[0].replace(/^\//, '')) && f.endsWith('index.html'))
+      ? Object.keys(compiled.files).find(
+          (f) => f.startsWith(route.path.split('/:')[0].replace(/^\//, '')) && f.endsWith('index.html'),
+        )
       : routeFilePath(route.path);
     if (!file || !compiled.files[file]) continue;
 
@@ -90,12 +96,17 @@ for (const site of sites) {
     // Classes must match what shipped, not merely look similar.
     let classMismatch = 0;
     for (const [nodeId, projected] of projection.index) {
-      const pattern = new RegExp(`data-lattice-id="${escapeRegExp(nodeId)}"(?: data-lattice-index="\\d+")?(?: class="([^"]*)")?`, 'g');
+      const pattern = new RegExp(
+        `data-lattice-id="${escapeRegExp(nodeId)}"(?: data-lattice-index="\\d+")?(?: class="([^"]*)")?`,
+        'g',
+      );
       const emitted = [...compiledBody.matchAll(pattern)].map((m) => (m[1] ?? '').split(' ').filter(Boolean).join(' '));
       projected.forEach((node, i) => {
         const expected = emitted[i] ?? '';
         if (node.classes.join(' ') !== expected) {
-          console.error(`✗ ${site} ${concrete}: node ${nodeId} projects classes "${node.classes.join(' ')}" but ships "${expected}"`);
+          console.error(
+            `✗ ${site} ${concrete}: node ${nodeId} projects classes "${node.classes.join(' ')}" but ships "${expected}"`,
+          );
           classMismatch++;
         }
       });

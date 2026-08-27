@@ -36,6 +36,9 @@ pub struct Document {
     /// Append-only redirect ledger (Stage F2). Schema'd from day one, dormant until publish exists.
     #[serde(default)]
     pub redirects: Vec<Redirect>,
+    /// Site icon asset reference. Absent means every visitor's browser asks for /favicon.ico and gets a 404, which is why the prove pass counts it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub budgets: Option<Budgets>,
 }

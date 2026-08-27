@@ -12,13 +12,19 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 const sites = existsSync('corpus/sites')
-  ? readdirSync('corpus/sites').filter((f) => f.endsWith('.json') && !f.endsWith('.data.json')).sort()
+  ? readdirSync('corpus/sites')
+      .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json'))
+      .sort()
   : [];
 
 const build = (site, out) =>
-  execFileSync('cargo', ['run', '-q', '-p', 'lattice-cli', '--', 'build', join('corpus/sites', site), '--out', out, '--quiet'], {
-    stdio: ['ignore', 'inherit', 'inherit'],
-  });
+  execFileSync(
+    'cargo',
+    ['run', '-q', '-p', 'lattice-cli', '--', 'build', join('corpus/sites', site), '--out', out, '--quiet'],
+    {
+      stdio: ['ignore', 'inherit', 'inherit'],
+    },
+  );
 
 const listFiles = (dir, prefix = '') =>
   readdirSync(dir, { withFileTypes: true })

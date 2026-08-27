@@ -39,6 +39,8 @@ pub struct Build {
     pub diagnostics: Vec<Diagnostic>,
     /// route path -> node ids that route depends on. Persisted for incremental rebuild (Stage F1).
     pub route_deps: BTreeMap<String, Vec<String>>,
+    /// Assets the build actually references. An export carries these and nothing else.
+    pub assets_used: std::collections::BTreeSet<String>,
     pub route_bytes: BTreeMap<String, RouteBytes>,
 }
 
@@ -47,6 +49,9 @@ pub struct RouteBytes {
     pub html: usize,
     pub css: usize,
     pub js: usize,
+    /// Bytes of image the route asks the browser to fetch. Counted per route, because that is
+    /// what a visitor actually pays.
+    pub images: usize,
 }
 
 impl Build {
@@ -76,6 +81,11 @@ pub struct Options {
     pub profile: Profile,
     /// Emit the runnable export (package.json + server.js) alongside the static files.
     pub emit_app: bool,
+    /// Asset path -> byte size. Sizes, not bytes: the compiler never needs the pixels, and the
+    /// editor already has this metadata cached, so the fast profile costs nothing extra.
+    /// Empty means "assets were not supplied"; a non-empty map is authoritative, and an image
+    /// whose `src` is missing from it fails the build.
+    pub assets: BTreeMap<String, usize>,
 }
 
 impl Options {
@@ -83,13 +93,19 @@ impl Options {
         Options {
             profile: Profile::Full,
             emit_app: true,
+            assets: BTreeMap::new(),
         }
     }
     pub fn fast() -> Self {
         Options {
             profile: Profile::Fast,
             emit_app: false,
+            assets: BTreeMap::new(),
         }
+    }
+    pub fn with_assets(mut self, assets: BTreeMap<String, usize>) -> Self {
+        self.assets = assets;
+        self
     }
 }
 

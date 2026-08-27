@@ -26,6 +26,8 @@ export interface Document {
   collections?: Collection[];
   /** Append-only redirect ledger (Stage F2). Schema'd from day one, dormant until publish exists. */
   redirects?: Redirect[];
+  /** Site icon asset reference. Absent means every visitor's browser asks for /favicon.ico and gets a 404, which is why the prove pass counts it. */
+  icon?: string;
   budgets?: Budgets;
 }
 

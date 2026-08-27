@@ -26,13 +26,16 @@ test('a write from outside the projector throws, naming the node', () => {
   const { model } = fakeModel();
   const report = createTripwire();
   guardModel(model, 'hero', report);
-  assert.throws(() => model.set('content', 'edited'), (error: unknown) => {
-    assert.ok(error instanceof ProjectionLeak);
-    assert.equal(error.nodeId, 'hero');
-    assert.equal(error.method, 'set');
-    assert.match(error.message, /must be an op instead/);
-    return true;
-  });
+  assert.throws(
+    () => model.set('content', 'edited'),
+    (error: unknown) => {
+      assert.ok(error instanceof ProjectionLeak);
+      assert.equal(error.nodeId, 'hero');
+      assert.equal(error.method, 'set');
+      assert.match(error.message, /must be an op instead/);
+      return true;
+    },
+  );
 });
 
 test('the projector may write; that is the whole point of the exemption', () => {
@@ -48,7 +51,13 @@ test('the exemption does not leak past a throw inside the projector', () => {
   const { model } = fakeModel();
   const report = createTripwire();
   guardModel(model, 'hero', report);
-  assert.throws(() => asProjector(() => { throw new Error('projection failed'); }), /projection failed/);
+  assert.throws(
+    () =>
+      asProjector(() => {
+        throw new Error('projection failed');
+      }),
+    /projection failed/,
+  );
   assert.throws(() => model.set('content', 'after'), ProjectionLeak);
 });
 
@@ -59,7 +68,10 @@ test('soft mode collects every leaking path instead of stopping at the first', (
   model.set('content', 'a');
   model.add();
   model.remove();
-  assert.deepEqual(report.leaks.map((l) => l.method), ['set', 'add', 'remove']);
+  assert.deepEqual(
+    report.leaks.map((l) => l.method),
+    ['set', 'add', 'remove'],
+  );
   assert.equal(calls.length, 3, 'soft mode still lets the underlying call through, for triage runs');
 });
 

@@ -51,7 +51,15 @@ test('a document that does not compile projects nothing at all', () => {
     compile: () => ({
       ok: false,
       files: {},
-      diagnostics: [{ severity: 'error', code: 'typecheck.image.alt', message: 'image "i" has no alt text', node: 'i', route: null }],
+      diagnostics: [
+        {
+          severity: 'error',
+          code: 'typecheck.image.alt',
+          message: 'image "i" has no alt text',
+          node: 'i',
+          route: null,
+        },
+      ],
       route_bytes: {},
     }),
   };
@@ -61,13 +69,17 @@ test('a document that does not compile projects nothing at all', () => {
   );
 });
 
-test('projecting a corpus route through the real compiler matches its compiled page', { skip: !existsSync(new URL(`../../../${DEFAULT_WASM_PATH}`, import.meta.url)) }, async () => {
-  const compiler = await loadCompiler(new URL(`../../../${DEFAULT_WASM_PATH}`, import.meta.url).pathname);
-  const doc = JSON.parse(readFileSync(repoFile('corpus/sites/landing.json'), 'utf8'));
-  const projection = projectRoute(compiler, doc, '/');
-  const compiled = compiler.compile({ document: JSON.stringify(doc), profile: 'full' });
-  const page = compiled.files['index.html'];
-  const body = page.slice(page.indexOf('<body>') + 6, page.lastIndexOf('</body>')).trim();
-  assert.equal(projectionHtml(projection), body);
-  assert.ok(projection.index.has('hero-title'));
-});
+test(
+  'projecting a corpus route through the real compiler matches its compiled page',
+  { skip: !existsSync(new URL(`../../../${DEFAULT_WASM_PATH}`, import.meta.url)) },
+  async () => {
+    const compiler = await loadCompiler(new URL(`../../../${DEFAULT_WASM_PATH}`, import.meta.url).pathname);
+    const doc = JSON.parse(readFileSync(repoFile('corpus/sites/landing.json'), 'utf8'));
+    const projection = projectRoute(compiler, doc, '/');
+    const compiled = compiler.compile({ document: JSON.stringify(doc), profile: 'full' });
+    const page = compiled.files['index.html'];
+    const body = page.slice(page.indexOf('<body>') + 6, page.lastIndexOf('</body>')).trim();
+    assert.equal(projectionHtml(projection), body);
+    assert.ok(projection.index.has('hero-title'));
+  },
+);

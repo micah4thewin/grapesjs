@@ -42,10 +42,18 @@ test('a dropped block carries an IR fragment with fresh ids, not HTML', () => {
       { id: 'card-h', kind: 'heading' as const, level: 2, spans: [{ text: 'New card' }] },
     ],
   };
-  const ops = blockToOps(base, fragment, { parent: 'features', index: 1, point: { x: 0.5, y: 0 } }, () => `mint-${++n}`);
+  const ops = blockToOps(
+    base,
+    fragment,
+    { parent: 'features', index: 1, point: { x: 0.5, y: 0 } },
+    () => `mint-${++n}`,
+  );
   assert.equal(ops[0].kind, 'insertSubtree');
   const insert = ops[0] as Extract<(typeof ops)[number], { kind: 'insertSubtree' }>;
-  assert.deepEqual(insert.nodes.map((node) => node.id), ['mint-1', 'mint-2']);
+  assert.deepEqual(
+    insert.nodes.map((node) => node.id),
+    ['mint-1', 'mint-2'],
+  );
   assert.deepEqual(insert.nodes[0].children, ['mint-2']);
   assert.deepEqual(ops[1], { kind: 'setPlace', id: 'mint-1', place: { col: 7, span: 6, row: 1 } });
 
@@ -70,7 +78,10 @@ test('a resize that would leave the grid produces no op', () => {
 });
 
 test('a click anywhere inside a node resolves to that node', () => {
-  const inner = { getAttribute: () => null, parentElement: { getAttribute: (n: string) => (n === 'data-lattice-id' ? 'hero' : null), parentElement: null } };
+  const inner = {
+    getAttribute: () => null,
+    parentElement: { getAttribute: (n: string) => (n === 'data-lattice-id' ? 'hero' : null), parentElement: null },
+  };
   assert.equal(nodeIdFromElement(inner as never), 'hero');
   assert.equal(nodeIdFromElement(null), null);
 });
@@ -80,9 +91,17 @@ test('a full editing session leaves a document that still validates', () => {
   store.apply(dropToOps(store.document, 'f-mobile', { parent: 'features', index: 0, point: { x: 0, y: 0 } }));
   store.apply(textCommitToOps(store.document, 'hero-title', [{ text: 'Dispatch, sorted' }]));
   store.apply(resizeToOps(store.document, 'f-mobile', 'end', 2));
-  store.apply(blockToOps(store.document, {
-    root: 'b', nodes: [{ id: 'b', kind: 'text' as const, spans: [{ text: 'Added from the palette' }] }],
-  }, { parent: 'hero', index: 2 }, () => 'palette-1'));
+  store.apply(
+    blockToOps(
+      store.document,
+      {
+        root: 'b',
+        nodes: [{ id: 'b', kind: 'text' as const, spans: [{ text: 'Added from the palette' }] }],
+      },
+      { parent: 'hero', index: 2 },
+      () => 'palette-1',
+    ),
+  );
 
   assert.equal(validator.validate(store.document).length, 0);
   while (store.canUndo) store.undo();

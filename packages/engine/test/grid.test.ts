@@ -59,7 +59,18 @@ test('resizing stops at the grid edge instead of going invalid', () => {
 
 test('occupancy reports what a row already holds', () => {
   assert.deepEqual(grid.occupancy(base, 'features', 1), [
-    true, true, true, true, true, true, true, true, true, true, true, true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
   ]);
   assert.deepEqual(grid.occupancy(base, 'features', 2), new Array(12).fill(false));
 });

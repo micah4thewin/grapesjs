@@ -17,7 +17,13 @@ const base = loadSite('landing.json');
 
 const card = (id: string): Node[] => [
   { id, kind: 'stack', place: { col: 1, span: 4 }, children: [`${id}-h`] },
-  { id: `${id}-h`, kind: 'heading', level: 2, spans: [{ text: 'Inserted' }], style: { type: 'type.h3', fg: 'color.fg' } },
+  {
+    id: `${id}-h`,
+    kind: 'heading',
+    level: 2,
+    spans: [{ text: 'Inserted' }],
+    style: { type: 'type.h3', fg: 'color.fg' },
+  },
 ];
 
 test('undo replays a mixed sequence in reverse', () => {

@@ -94,6 +94,8 @@ export function enforce(flags: Flags): Flags {
 }
 
 export function describe(flags: Flags): string {
-  const on = Object.entries(flags).filter(([, value]) => value).map(([key]) => key);
+  const on = Object.entries(flags)
+    .filter(([, value]) => value)
+    .map(([key]) => key);
   return on.length ? `lattice flags on: ${on.join(', ')}` : 'lattice flags: none (pure GrapesJS)';
 }

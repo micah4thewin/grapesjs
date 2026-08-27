@@ -76,23 +76,17 @@
     "root": {
       "id": "root",
       "kind": "section",
-      "children": [
-        "a"
-      ]
+      "children": ["a"]
     },
     "a": {
       "id": "a",
       "kind": "stack",
-      "children": [
-        "b"
-      ]
+      "children": ["b"]
     },
     "b": {
       "id": "b",
       "kind": "stack",
-      "children": [
-        "a"
-      ]
+      "children": ["a"]
     }
   }
 }

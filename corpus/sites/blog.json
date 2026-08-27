@@ -1,0 +1,347 @@
+{
+  "schema": "lattice/1.0",
+  "id": "blog",
+  "name": "The Long Way Round",
+  "icon": "assets/icon-blog.png",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#ffffff"
+      },
+      "surface": {
+        "value": "#f6f6f4"
+      },
+      "fg": {
+        "value": "#1a1a18"
+      },
+      "muted": {
+        "value": "#55554f"
+      },
+      "accent": {
+        "value": "#7c2d12"
+      },
+      "on-accent": {
+        "value": "#fffbf7",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "3": {
+        "px": 12
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "6": {
+        "px": 32
+      },
+      "7": {
+        "px": 48
+      },
+      "8": {
+        "px": 64
+      },
+      "measure": {
+        "px": 960
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "lead": {
+        "sizePx": 20,
+        "lineHeight": 1.5,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      },
+      "h2": {
+        "sizePx": 30,
+        "lineHeight": 1.25,
+        "weight": 600
+      },
+      "h3": {
+        "sizePx": 20,
+        "lineHeight": 1.35,
+        "weight": 600
+      },
+      "small": {
+        "sizePx": 14,
+        "lineHeight": 1.5,
+        "weight": 400
+      }
+    },
+    "radius": {
+      "sm": {
+        "px": 4
+      },
+      "md": {
+        "px": 8
+      },
+      "lg": {
+        "px": 16
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "The Long Way Round",
+      "description": "Notes on repairing bicycles.",
+      "root": "home"
+    },
+    {
+      "path": "/posts/:slug",
+      "title": "{title} — The Long Way Round",
+      "description": "{excerpt}",
+      "root": "post",
+      "collection": "posts"
+    },
+    {
+      "path": "/about",
+      "title": "About — The Long Way Round",
+      "root": "about",
+      "description": "Rae has been fixing bicycles in the same Govan shop since 1998."
+    }
+  ],
+  "nodes": {
+    "home": {
+      "id": "home",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.6"
+      },
+      "children": ["masthead", "recent"]
+    },
+    "masthead": {
+      "id": "masthead",
+      "kind": "stack",
+      "tag": "header",
+      "style": {
+        "gap": "space.3"
+      },
+      "children": ["mast-title", "mast-sub"]
+    },
+    "mast-title": {
+      "id": "mast-title",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "The Long Way Round"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "mast-sub": {
+      "id": "mast-sub",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Notes on repairing bicycles, and on the people who ride them."
+        }
+      ],
+      "style": {
+        "type": "type.lead",
+        "fg": "color.muted"
+      }
+    },
+    "recent": {
+      "id": "recent",
+      "kind": "list",
+      "source": "posts",
+      "limit": 10,
+      "style": {
+        "gap": "space.6"
+      },
+      "children": ["card"]
+    },
+    "card": {
+      "id": "card",
+      "kind": "stack",
+      "style": {
+        "gap": "space.2",
+        "pad": "space.5",
+        "bg": "color.surface",
+        "radius": "radius.md"
+      },
+      "children": ["card-title", "card-date", "card-excerpt"]
+    },
+    "card-title": {
+      "id": "card-title",
+      "kind": "heading",
+      "level": 2,
+      "bind": "posts.title",
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "card-date": {
+      "id": "card-date",
+      "kind": "text",
+      "bind": "posts.published",
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "card-excerpt": {
+      "id": "card-excerpt",
+      "kind": "text",
+      "bind": "posts.excerpt",
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "post": {
+      "id": "post",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.5"
+      },
+      "children": ["post-title", "post-date", "post-body", "post-back"]
+    },
+    "post-title": {
+      "id": "post-title",
+      "kind": "heading",
+      "level": 1,
+      "bind": "posts.title",
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "post-date": {
+      "id": "post-date",
+      "kind": "text",
+      "bind": "posts.published",
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "post-body": {
+      "id": "post-body",
+      "kind": "text",
+      "bind": "posts.body",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      }
+    },
+    "post-back": {
+      "id": "post-back",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "← All posts",
+          "href": "/"
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.accent"
+      }
+    },
+    "about": {
+      "id": "about",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.4"
+      },
+      "children": ["about-h", "about-b"]
+    },
+    "about-h": {
+      "id": "about-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "About"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "about-b": {
+      "id": "about-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Rae has been fixing bicycles in the same shop since 1998. This is where the notes go."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    }
+  },
+  "collections": [
+    {
+      "name": "posts",
+      "publicRead": true,
+      "fields": [
+        {
+          "name": "slug",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "published",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "excerpt",
+          "type": "text"
+        },
+        {
+          "name": "body",
+          "type": "richtext"
+        },
+        {
+          "name": "authorEmail",
+          "type": "text",
+          "private": true
+        }
+      ]
+    }
+  ]
+}

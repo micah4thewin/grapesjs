@@ -16,7 +16,9 @@ const sites = readdirSync('corpus/sites')
   .sort();
 
 if (!existsSync(DEFAULT_WASM_PATH)) {
-  console.error(`missing ${DEFAULT_WASM_PATH}\nrun: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown`);
+  console.error(
+    `missing ${DEFAULT_WASM_PATH}\nrun: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown`,
+  );
   process.exit(1);
 }
 
@@ -43,7 +45,9 @@ for (const site of sites) {
     });
 
     if (!wasm.ok) {
-      console.error(`✗ ${site}: wasm build failed\n${wasm.diagnostics.map((d) => `  ${d.code}: ${d.message}`).join('\n')}`);
+      console.error(
+        `✗ ${site}: wasm build failed\n${wasm.diagnostics.map((d) => `  ${d.code}: ${d.message}`).join('\n')}`,
+      );
       failures++;
       continue;
     }
@@ -56,8 +60,10 @@ for (const site of sites) {
         mismatched++;
       }
     }
-    // The native build writes a manifest the wasm facade returns as structured data instead.
-    const nativeFiles = listFiles(out).filter((f) => f !== '.lattice-manifest.json');
+    // Two things the native build writes that the compiler does not emit: the manifest (the wasm
+    // facade returns it as structured data instead) and the asset copies (the compiler is given
+    // asset *sizes*, never bytes, so that the editor never has to ship pixels across the ABI).
+    const nativeFiles = listFiles(out).filter((f) => f !== '.lattice-manifest.json' && !f.startsWith('assets/'));
     const missing = nativeFiles.filter((f) => !(f in wasm.files));
     if (missing.length) {
       console.error(`✗ ${site}: native emitted files the wasm host did not: ${missing.join(', ')}`);

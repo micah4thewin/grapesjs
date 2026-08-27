@@ -26,6 +26,10 @@
       "items": { "$ref": "#/$defs/Redirect" },
       "default": []
     },
+    "icon": {
+      "type": "string",
+      "description": "Site icon asset reference. Absent means every visitor's browser asks for /favicon.ico and gets a 404, which is why the prove pass counts it."
+    },
     "budgets": { "$ref": "#/$defs/Budgets" }
   },
   "$defs": {
@@ -55,8 +59,16 @@
       "required": ["value"],
       "additionalProperties": false,
       "properties": {
-        "value": { "type": "string", "pattern": "^#[0-9a-f]{6}$", "description": "Lowercase 6-digit hex. The one place a raw color may appear." },
-        "onLight": { "type": "boolean", "default": true, "description": "Hint for the contrast prove-pass about intended usage." }
+        "value": {
+          "type": "string",
+          "pattern": "^#[0-9a-f]{6}$",
+          "description": "Lowercase 6-digit hex. The one place a raw color may appear."
+        },
+        "onLight": {
+          "type": "boolean",
+          "default": true,
+          "description": "Hint for the contrast prove-pass about intended usage."
+        }
       }
     },
     "SpaceToken": {
@@ -85,7 +97,10 @@
         "title": { "type": "string", "minLength": 1 },
         "description": { "type": "string" },
         "root": { "$ref": "#/$defs/Id" },
-        "collection": { "type": "string", "description": "Set for dynamic routes: the collection whose records the ':slug' segment addresses." }
+        "collection": {
+          "type": "string",
+          "description": "Set for dynamic routes: the collection whose records the ':slug' segment addresses."
+        }
       }
     },
     "Style": {
@@ -151,7 +166,10 @@
         "level": { "type": "integer", "minimum": 1, "maximum": 6 },
         "cols": { "type": "integer", "minimum": 1, "maximum": 12 },
         "src": { "type": "string", "description": "Asset reference. Content-addressed once the asset store exists." },
-        "alt": { "type": "string", "description": "Required on images by the typecheck pass. Non-negotiable, not a lint." },
+        "alt": {
+          "type": "string",
+          "description": "Required on images by the typecheck pass. Non-negotiable, not a lint."
+        },
         "width": { "type": "integer", "minimum": 1 },
         "height": { "type": "integer", "minimum": 1 },
         "source": { "type": "string", "description": "For `list`: the collection it repeats over." },
@@ -188,7 +206,11 @@
       "properties": {
         "name": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$" },
         "fields": { "type": "array", "items": { "$ref": "#/$defs/Field" }, "minItems": 1 },
-        "publicRead": { "type": "boolean", "default": false, "description": "Feeds the exposure prove-pass (Stage E4)." }
+        "publicRead": {
+          "type": "boolean",
+          "default": false,
+          "description": "Feeds the exposure prove-pass (Stage E4)."
+        }
       }
     },
     "Field": {
@@ -199,7 +221,11 @@
         "name": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$" },
         "type": { "enum": ["text", "richtext", "number", "boolean", "date", "image", "reference"] },
         "required": { "type": "boolean", "default": false },
-        "private": { "type": "boolean", "default": false, "description": "Never readable anonymously; the exposure diff fails the build if a route would render it." }
+        "private": {
+          "type": "boolean",
+          "default": false,
+          "description": "Never readable anonymously; the exposure diff fails the build if a route would render it."
+        }
       }
     },
     "Redirect": {

@@ -38,7 +38,8 @@ export function usages(doc: Document, ref: string): string[] {
   for (const [id, node] of Object.entries(doc.nodes)) {
     const style = node.style;
     if (!style) continue;
-    if ([style.bg, style.fg, style.pad, style.gap, style.radius, style.type, style.maxWidth].includes(ref)) out.push(id);
+    if ([style.bg, style.fg, style.pad, style.gap, style.radius, style.type, style.maxWidth].includes(ref))
+      out.push(id);
   }
   return out.sort();
 }

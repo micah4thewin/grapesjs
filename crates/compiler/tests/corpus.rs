@@ -201,6 +201,53 @@ fn the_budget_gate_names_the_route_it_fails() {
 }
 
 #[test]
+fn the_page_outline_is_proved_not_hoped_for() {
+    // These two fixtures are exactly the failures a Lighthouse run found on the corpus before the
+    // prove passes existed. Catching them at build time is the point: a browser audit you have to
+    // remember to run is not a gate.
+    let build = fixture("heading-skip.json");
+    assert!(codes(&build).iter().any(|c| c == "prove.heading-order"));
+    assert!(build.errors().any(|d| d.node.as_deref() == Some("h3")));
+
+    let build = fixture("no-description.json");
+    assert!(codes(&build).iter().any(|c| c == "prove.seo.description"));
+    assert!(build.errors().any(|d| d.route.as_deref() == Some("/")));
+}
+
+#[test]
+fn images_are_measured_against_the_asset_store() {
+    use std::collections::BTreeMap;
+    let source = fs::read_to_string(repo_root().join("corpus/sites/portfolio.json")).unwrap();
+
+    // No asset table supplied: nothing to check against, images do not count toward the budget.
+    let unmeasured = compile_str(&source, &Options::full());
+    assert!(unmeasured.ok());
+    assert!(unmeasured.route_bytes["/"].images == 0);
+
+    // A table that does not contain a referenced image fails the build, naming the node.
+    let mut assets = BTreeMap::new();
+    assets.insert("assets/pallet-jack.png".to_string(), 4477);
+    let partial = compile_str(&source, &Options::full().with_assets(assets.clone()));
+    assert!(partial
+        .errors()
+        .any(|d| d.code == "emit.missing-asset" && d.node.is_some()));
+
+    for name in ["torque-wrench", "crate", "scanner"] {
+        assets.insert(format!("assets/{name}.png"), 4477);
+    }
+    // The site icon is an asset like any other: shipped, counted, and a build error when missing.
+    assets.insert("assets/icon-portfolio.png".to_string(), 165);
+    let measured = compile_str(&source, &Options::full().with_assets(assets));
+    assert!(
+        measured.ok(),
+        "{:?}",
+        measured.errors().map(|d| d.to_string()).collect::<Vec<_>>()
+    );
+    assert_eq!(measured.route_bytes["/"].images, 4477 * 4 + 165);
+    assert_eq!(measured.assets_used.len(), 5);
+}
+
+#[test]
 fn contrast_ratio_matches_wcag_reference_values() {
     let white_on_black = lattice_compiler::prove::contrast_ratio("#ffffff", "#000000").unwrap();
     assert!((white_on_black - 21.0).abs() < 1e-6);

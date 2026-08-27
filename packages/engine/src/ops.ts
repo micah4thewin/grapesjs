@@ -12,7 +12,18 @@ export type TokenGroup = 'color' | 'space' | 'type' | 'radius';
 export type TokenValue = ColorToken | SpaceToken | TypeToken;
 
 /** Scalar node fields a panel may set directly. Styles, text and placement have their own ops. */
-export type NodeField = 'level' | 'cols' | 'alt' | 'src' | 'width' | 'height' | 'source' | 'limit' | 'component' | 'tag' | 'bind';
+export type NodeField =
+  | 'level'
+  | 'cols'
+  | 'alt'
+  | 'src'
+  | 'width'
+  | 'height'
+  | 'source'
+  | 'limit'
+  | 'component'
+  | 'tag'
+  | 'bind';
 
 export type Op =
   | { kind: 'insertSubtree'; nodes: Node[]; root: string; parent: string; index: number }
@@ -36,7 +47,7 @@ export interface StampedOp {
 
 export class OpError extends Error {}
 
-const clone = <T,>(value: T): T => (value === undefined ? value : (JSON.parse(JSON.stringify(value)) as T));
+const clone = <T>(value: T): T => (value === undefined ? value : (JSON.parse(JSON.stringify(value)) as T));
 
 function requireNode(doc: Document, id: string): Node {
   const node = doc.nodes[id];
@@ -92,7 +103,8 @@ export function apply(doc: Document, op: Op): Document {
         if (next.nodes[node.id]) throw new OpError(`insert would overwrite existing node ${JSON.stringify(node.id)}`);
         next.nodes[node.id] = clone(node);
       }
-      if (!next.nodes[op.root]) throw new OpError(`insertSubtree root ${JSON.stringify(op.root)} is not among the inserted nodes`);
+      if (!next.nodes[op.root])
+        throw new OpError(`insertSubtree root ${JSON.stringify(op.root)} is not among the inserted nodes`);
       const children = [...(parent.children ?? [])];
       children.splice(clampIndex(op.index, children.length), 0, op.root);
       next.nodes[op.parent] = { ...parent, children };
@@ -117,7 +129,9 @@ export function apply(doc: Document, op: Op): Document {
       // A move that would make a node its own ancestor is refused, not repaired. Both replicas
       // see ops in the same order, so both refuse the same move and stay converged.
       if (isAncestor(next, op.id, op.parent)) {
-        throw new OpError(`moving ${JSON.stringify(op.id)} into ${JSON.stringify(op.parent)} would make it its own ancestor`);
+        throw new OpError(
+          `moving ${JSON.stringify(op.id)} into ${JSON.stringify(op.parent)} would make it its own ancestor`,
+        );
       }
       const from = parentOf(next, op.id);
       if (from) {
@@ -257,7 +271,12 @@ export function invert(doc: Document, op: Op): Op {
 
     case 'setToken': {
       const previous = (doc.tokens[op.group] as Record<string, TokenValue> | undefined)?.[op.name];
-      return { kind: 'setToken', group: op.group, name: op.name, value: previous === undefined ? null : clone(previous) };
+      return {
+        kind: 'setToken',
+        group: op.group,
+        name: op.name,
+        value: previous === undefined ? null : clone(previous),
+      };
     }
 
     case 'setRoute': {
