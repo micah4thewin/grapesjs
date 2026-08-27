@@ -12,9 +12,9 @@ name: Lattice
 
 on:
   push:
-    branches: [dev, 'claude/**']
+    branches: [main, 'claude/**']
   pull_request:
-    branches: [dev]
+    branches: [main]
 
 jobs:
   compiler:

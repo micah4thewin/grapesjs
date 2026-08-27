@@ -1,7 +1,7 @@
 name: Publish GrapesJS core rc
 on:
   push:
-    branches: [dev]
+    branches: [main]
     paths:
       - 'packages/core/**'
 

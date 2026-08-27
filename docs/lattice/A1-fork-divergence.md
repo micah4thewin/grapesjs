@@ -50,7 +50,9 @@ Verified present in this tree, so the plan's graft points are real:
 
 ## Decision
 
-**No rebase.** Development proceeds on `claude/grapesjs-lattice-transform-k3x6o5` from the current `dev`.
+**No rebase.** Development proceeded from that commit (`2bdeda8`) on
+`claude/grapesjs-lattice-transform-k3x6o5`, which is now merged into `main`, the fork's trunk. The
+`dev` branch itself has been retired; `2bdeda8` remains in `main`'s history as the mirror point.
 Per Part IV risk 3, upstream tracking stops being a wholesale merge after the Stage C exit gate; from then on
 only `canvas/`, `utils/sorter`, and `rich_text_editor/` fixes are cherry-picked. This policy is stated in
 `docs/lattice/README.md` so nobody spends a week on a doomed rebase.

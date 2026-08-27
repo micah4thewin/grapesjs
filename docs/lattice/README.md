@@ -92,6 +92,16 @@ rather than gift.
 `canvas/`, `utils/sorter`, and `rich_text_editor/` only. `docs/lattice/A1-fork-divergence.md`
 records where the fork stood at the start (an unmodified mirror of upstream `dev` at v0.23.6).
 
+**Branches.** `main` is the trunk and the only long-lived branch; CI triggers on it. This fork no
+longer keeps a `dev` branch — the name belonged to upstream's trunk, and the pristine v0.23.6 tree
+it pointed at is still in `main`'s history at `2bdeda8`, which is what a cherry-pick or a diff
+against untouched GrapesJS starts from:
+
+```
+git diff 2bdeda8..main -- packages/core     # what the transformation changed in the fork
+git log 2bdeda8..main --oneline             # every Lattice commit
+```
+
 ## Documents
 
 * [A1 — fork divergence audit](A1-fork-divergence.md)
