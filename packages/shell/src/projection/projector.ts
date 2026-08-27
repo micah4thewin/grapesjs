@@ -16,6 +16,12 @@ import { parseBody, serialize, type Element } from './html.ts';
 export interface ProjectedNode {
   /** IR node id, or null for text runs and mark elements the compiler generated. */
   nodeId: string | null;
+  /**
+   * The node's IR kind, taken from the document rather than from the emitted HTML — the shipped
+   * page carries no editor metadata beyond the id, and the canvas needs the kind to know what may
+   * be dropped into what.
+   */
+  kind?: string;
   /** Index within a repeated list, when the node is one item of a bound list. */
   index?: number;
   tag: string;
@@ -85,13 +91,14 @@ export function projectRoute(
   const html = result.files[file];
   if (html === undefined) throw new ProjectionError(`compiler emitted no page for route ${path}`);
 
-  return fromHtml(path, html);
+  const kinds = new Map(Object.entries(doc.nodes ?? {}).map(([id, node]) => [id, node.kind as string]));
+  return fromHtml(path, html, kinds);
 }
 
 /** Build a projection from a compiled page. Exposed so tests and CI can project without WASM. */
-export function fromHtml(path: string, html: string): Projection {
+export function fromHtml(path: string, html: string, kinds?: Map<string, string>): Projection {
   const body = parseBody(html);
-  const roots = body.map(toProjected);
+  const roots = body.map((element) => toProjected(element, kinds));
   const index = new Map<string, ProjectedNode[]>();
   const collect = (node: ProjectedNode) => {
     if (node.nodeId) {
@@ -106,18 +113,20 @@ export function fromHtml(path: string, html: string): Projection {
   return { route: path, css: extractCss(html), roots, index, html };
 }
 
-function toProjected(element: Element | string): ProjectedNode {
+function toProjected(element: Element | string, kinds?: Map<string, string>): ProjectedNode {
   if (typeof element === 'string') {
     return { nodeId: null, tag: '#text', classes: [], attrs: {}, text: element, children: [] };
   }
   const { class: className, 'data-lattice-id': nodeId, 'data-lattice-index': index, ...attrs } = element.attrs;
+  const kind = nodeId ? kinds?.get(nodeId) : undefined;
   return {
     nodeId: nodeId ?? null,
+    ...(kind ? { kind } : {}),
     ...(index === undefined ? {} : { index: Number(index) }),
     tag: element.tag,
     classes: className ? className.split(' ').filter(Boolean) : [],
     attrs,
-    children: element.children.map(toProjected),
+    children: element.children.map((child) => toProjected(child, kinds)),
   };
 }
 

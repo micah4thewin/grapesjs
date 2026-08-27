@@ -96,43 +96,58 @@ export function panelForNode(doc: Document, nodeId: string): PanelSection[] {
 
   const layout: Field[] = [];
   if (node.kind === 'stack' || node.kind === 'section') {
-    layout.push(choice(node, 'align', 'Align', ['start', 'center', 'end', 'stretch'], node.style?.align, (value) => ({
-      kind: 'setStyle',
-      id: node.id,
-      key: 'align',
-      value,
-    })));
-    layout.push(choice(node, 'justify', 'Justify', ['start', 'center', 'end', 'between'], node.style?.justify, (value) => ({
-      kind: 'setStyle',
-      id: node.id,
-      key: 'justify',
-      value,
-    })));
+    layout.push(
+      choice(node, 'align', 'Align', ['start', 'center', 'end', 'stretch'], node.style?.align, (value) => ({
+        kind: 'setStyle',
+        id: node.id,
+        key: 'align',
+        value,
+      })),
+    );
+    layout.push(
+      choice(node, 'justify', 'Justify', ['start', 'center', 'end', 'between'], node.style?.justify, (value) => ({
+        kind: 'setStyle',
+        id: node.id,
+        key: 'justify',
+        value,
+      })),
+    );
   }
   if (node.kind === 'grid') {
-    layout.push(choice(node, 'cols', 'Columns', [1, 2, 3, 4, 6, 8, 12], node.cols, (value) => ({
-      kind: 'setField',
-      id: node.id,
-      key: 'cols',
-      value,
-    })));
+    layout.push(
+      choice(node, 'cols', 'Columns', [1, 2, 3, 4, 6, 8, 12], node.cols, (value) => ({
+        kind: 'setField',
+        id: node.id,
+        key: 'cols',
+        value,
+      })),
+    );
   }
   if (node.kind === 'heading') {
-    layout.push(choice(node, 'level', 'Level', [1, 2, 3, 4, 5, 6], node.level, (value) => ({
-      kind: 'setField',
-      id: node.id,
-      key: 'level',
-      value,
-    })));
+    layout.push(
+      choice(node, 'level', 'Level', [1, 2, 3, 4, 5, 6], node.level, (value) => ({
+        kind: 'setField',
+        id: node.id,
+        key: 'level',
+        value,
+      })),
+    );
   }
   if (node.kind === 'section') {
     layout.push(
-      choice(node, 'tag', 'Landmark', ['div', 'section', 'article', 'header', 'footer', 'nav', 'main', 'aside'], node.tag, (value) => ({
-        kind: 'setField',
-        id: node.id,
-        key: 'tag',
-        value,
-      })),
+      choice(
+        node,
+        'tag',
+        'Landmark',
+        ['div', 'section', 'article', 'header', 'footer', 'nav', 'main', 'aside'],
+        node.tag,
+        (value) => ({
+          kind: 'setField',
+          id: node.id,
+          key: 'tag',
+          value,
+        }),
+      ),
     );
   }
   if (layout.length) sections.push({ title: 'Layout', fields: layout });

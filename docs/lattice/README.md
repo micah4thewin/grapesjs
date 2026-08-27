@@ -48,7 +48,12 @@ just export-and-run     # npm ci --offline && npm start, fetch every route
 just wasm-parity        # native vs wasm, byte for byte
 just projection-parity  # what the canvas shows vs what ships
 CHROME_PATH=… node scripts/lattice/lighthouse.mjs    # the Stage B exit gate
+node scripts/lattice/c3-spike.mjs                    # the C3 graft gate, in a real editor
 ```
+
+The spike needs three things built first: `pnpm run build:cli && pnpm run build:core`,
+`cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown`, and a Chromium
+(`CHROME_PATH`, or `playwright install chromium`).
 
 ## The rules that are not negotiable
 
@@ -77,5 +82,6 @@ records where the fork stood at the start (an unmodified mirror of upstream `dev
 * [A1 — fork divergence audit](A1-fork-divergence.md)
 * [The determinism style guide](determinism.md)
 * [C1 — the CRDT substrate: what is built, what the spike must decide](C1-crdt-spike.md)
+* [C3 — the graft spike: does Backbone write back?](C3-graft-spike.md)
 * [Transformation status](status.md) — every step of the plan, and where it actually stands
 * [ATTRIBUTIONS](../../ATTRIBUTIONS.md) — licences, and why the engine is publishable as MIT

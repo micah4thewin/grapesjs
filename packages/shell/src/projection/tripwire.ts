@@ -19,6 +19,41 @@ export interface MutableModel {
   [key: string]: unknown;
 }
 
+/**
+ * Which model attributes are *document* state rather than view state.
+ *
+ * A component model carries both: `content` and `components` describe the page, while `status`,
+ * `hovered` and `open` describe what the editor is currently showing. Selecting a node writes the
+ * second kind on every click, so a tripwire that flagged every `set()` would fire constantly and
+ * teach everyone to ignore it — which is the one thing this instrument cannot afford.
+ *
+ * The list is an allowlist, deliberately: a write we have not thought of goes unflagged rather than
+ * drowning the real signal. If a leak is ever found that this list missed, it belongs here.
+ */
+export const DOCUMENT_KEYS = new Set([
+  'content',
+  'components',
+  'attributes',
+  'classes',
+  'tagName',
+  'type',
+  'style',
+  'styles',
+  'text',
+  'src',
+  'alt',
+  'href',
+  'name',
+  'void',
+]);
+
+function touchesDocument(args: unknown[]): boolean {
+  const [first] = args;
+  if (typeof first === 'string') return DOCUMENT_KEYS.has(first);
+  if (first && typeof first === 'object') return Object.keys(first).some((key) => DOCUMENT_KEYS.has(key));
+  return false;
+}
+
 export class ProjectionLeak extends Error {
   method: string;
   nodeId: string | null;
@@ -61,15 +96,31 @@ export function createTripwire(options: { throwOnLeak?: boolean } = {}): Tripwir
   return report;
 }
 
-/** Wrap one projected model. Returns the model, mutated in place, as GrapesJS hands it to us. */
+const GUARDED = Symbol.for('lattice.guarded');
+
+/**
+ * Wrap one projected model, in place, as GrapesJS hands it to us.
+ *
+ * `set` is filtered through [`DOCUMENT_KEYS`]; `add`/`remove` are structural and always count.
+ * Re-guarding a model is a no-op, so re-arming after a re-projection is cheap and safe.
+ */
 export function guardModel<T extends MutableModel>(model: T, nodeId: string | null, report: TripwireReport): T {
+  if (!model || (model as Record<symbol, unknown>)[GUARDED]) return model;
   for (const method of ['set', 'add', 'remove'] as const) {
     const original = model[method];
     if (typeof original !== 'function') continue;
     model[method] = function guarded(this: unknown, ...args: unknown[]) {
-      if (inProjector === 0) report.onLeak(new ProjectionLeak(method, nodeId));
+      const structural = method !== 'set';
+      if (inProjector === 0 && (structural || touchesDocument(args))) {
+        report.onLeak(new ProjectionLeak(method, nodeId));
+      }
       return (original as (...a: unknown[]) => unknown).apply(this, args);
     };
+  }
+  try {
+    Object.defineProperty(model, GUARDED, { value: true, enumerable: false });
+  } catch {
+    // A frozen model cannot be marked; guarding it twice is harmless.
   }
   return model;
 }

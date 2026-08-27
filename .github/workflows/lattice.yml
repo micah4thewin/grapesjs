@@ -81,6 +81,30 @@ jobs:
       - run: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown
       - run: node scripts/lattice/wasm-parity.mjs
 
+  graft-spike:
+    name: C3 graft spike (a real editing session, read by the tripwire)
+    runs-on: ubuntu-latest
+    # The gate the whole transformation turns on: if a projected model is written to from a path we
+    # cannot intercept, the plan says stop grafting and rebuild the canvas greenfield. That is not a
+    # judgement call anyone should make from memory, so it runs on every PR.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.2'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.10.0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - run: pnpm install
+      - run: pnpm run build:cli && pnpm run build:core
+      - run: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown
+      - run: pnpm --filter @lattice/shell exec playwright install chromium --with-deps
+      - run: node scripts/lattice/c3-spike.mjs
+
   exit-gate:
     name: Stage B exit gate (Lighthouse 95+ on every corpus route)
     runs-on: ubuntu-latest

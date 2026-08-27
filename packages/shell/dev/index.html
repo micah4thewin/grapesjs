@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lattice shell — C3 spike harness</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./grapes.min.css" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        font-family: system-ui, sans-serif;
+      }
+      #editor {
+        height: 100vh;
+      }
+      #status {
+        position: fixed;
+        right: 8px;
+        bottom: 8px;
+        z-index: 10;
+        background: #111;
+        color: #eee;
+        font: 12px/1.4 ui-monospace, monospace;
+        padding: 8px 10px;
+        border-radius: 6px;
+        max-width: 46ch;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="editor"></div>
+    <pre id="status">booting…</pre>
+    <script src="./grapes.min.js"></script>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

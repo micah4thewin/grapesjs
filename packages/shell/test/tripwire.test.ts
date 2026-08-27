@@ -61,6 +61,25 @@ test('the exemption does not leak past a throw inside the projector', () => {
   assert.throws(() => model.set('content', 'after'), ProjectionLeak);
 });
 
+test('view state is not a leak; document state is', () => {
+  // Selecting a node writes `status` on the model on every click. A tripwire that fired on that
+  // would be ignored within a day, so it distinguishes the two kinds of write.
+  const { model, calls } = fakeModel();
+  const report = createTripwire({ throwOnLeak: false });
+  guardModel(model, 'hero', report);
+  model.set('status', 'selected');
+  model.set('hovered', true);
+  model.set({ open: true, toolbar: [] });
+  assert.equal(report.leaks.length, 0, 'view-state writes are not leaks');
+  model.set('content', 'edited');
+  model.set({ attributes: { id: 'x' } });
+  assert.deepEqual(
+    report.leaks.map((l) => l.method),
+    ['set', 'set'],
+  );
+  assert.equal(calls.length, 5, 'every call still reaches the model');
+});
+
 test('soft mode collects every leaking path instead of stopping at the first', () => {
   const { model, calls } = fakeModel();
   const report = createTripwire({ throwOnLeak: false });
@@ -80,8 +99,8 @@ test('nested projector scopes unwind correctly', () => {
   const report = createTripwire();
   guardModel(model, 'n', report);
   asProjector(() => {
-    asProjector(() => model.set('a', 1));
-    model.set('b', 2);
+    asProjector(() => model.set('content', 1));
+    model.set('content', 2);
   });
-  assert.throws(() => model.set('c', 3), ProjectionLeak);
+  assert.throws(() => model.set('content', 3), ProjectionLeak);
 });

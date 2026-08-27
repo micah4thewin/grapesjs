@@ -37,10 +37,23 @@ export function nodeIdFromElement(
  * grid, the placement comes from the solver, so an illegal position is not merely discouraged —
  * there is no op that could express it.
  */
+/**
+ * Node kinds that can hold children. The compiler's typecheck pass enforces the same rule, so a
+ * gesture that would drop a heading inside a heading must produce no op at all — otherwise the
+ * canvas happily shows a page that will not build.
+ */
+const CONTAINER_KINDS = new Set(['section', 'stack', 'grid', 'frame', 'list']);
+
+export function canContain(doc: Document, parentId: string): boolean {
+  const parent = doc.nodes[parentId];
+  return !!parent && CONTAINER_KINDS.has(parent.kind);
+}
+
 export function dropToOps(doc: Document, draggedId: string, target: DropTarget): Op[] {
   const parent = doc.nodes[target.parent];
   const dragged = doc.nodes[draggedId];
   if (!parent || !dragged) return [];
+  if (!canContain(doc, target.parent)) return [];
   if (draggedId === target.parent || isAncestor(doc, draggedId, target.parent)) return [];
 
   const ops: Op[] = [];
@@ -70,7 +83,7 @@ export function blockToOps(
   mintId: () => string,
 ): Op[] {
   const parent = doc.nodes[target.parent];
-  if (!parent) return [];
+  if (!parent || !canContain(doc, target.parent)) return [];
 
   const idMap = new Map<string, string>();
   for (const node of fragment.nodes) idMap.set(node.id, mintId());

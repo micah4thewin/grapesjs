@@ -23,7 +23,8 @@ test('every option every panel offers produces a valid document', () => {
     for (const nodeId of Object.keys(doc.nodes)) {
       for (const section of panelForNode(doc, nodeId)) {
         for (const field of section.fields) {
-          const options = field.control === 'token' ? field.options.map((o) => o.ref) : field.options.map((o) => o.value);
+          const options =
+            field.control === 'token' ? field.options.map((o) => o.ref) : field.options.map((o) => o.value);
           for (const option of options) {
             const op = field.toOp(option as never);
             const next = apply(doc, op);

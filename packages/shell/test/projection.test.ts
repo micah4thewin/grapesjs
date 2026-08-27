@@ -8,6 +8,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { fromHtml, projectRoute, projectionHtml, routeFilePath, ProjectionError } from '../src/projection/projector.ts';
+import { ProjectionCanvas } from '../src/projection/canvas.ts';
 import { loadCompiler, DEFAULT_WASM_PATH } from '@lattice/engine';
 
 const repoFile = (relative: string) => new URL(`../../../${relative}`, import.meta.url);
@@ -83,3 +84,23 @@ test(
     assert.ok(projection.index.has('hero-title'));
   },
 );
+
+test('a structural change re-mounts; a content change patches', () => {
+  const projection = fromHtml('/', PAGE);
+  const calls: string[] = [];
+  const canvas = {
+    mount(p: unknown) {
+      calls.push('mount');
+      void p;
+    },
+    patch(p: unknown, touched: string[]) {
+      calls.push(`patch:${touched.join(',')}`);
+      void p;
+    },
+  };
+  // Borrow the real decision logic without a browser: it is the part that matters.
+  const applyChange = ProjectionCanvas.prototype.applyChange.bind(canvas as never);
+  applyChange(projection, { touched: ['t'], ops: [{ op: { kind: 'setText' } }] });
+  applyChange(projection, { touched: ['home', 't'], ops: [{ op: { kind: 'moveNode' } }] });
+  assert.deepEqual(calls, ['patch:t', 'mount']);
+});
