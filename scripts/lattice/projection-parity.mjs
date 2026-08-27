@@ -27,7 +27,7 @@ if (!existsSync(DEFAULT_WASM_PATH)) {
 
 const compiler = await loadCompiler(DEFAULT_WASM_PATH);
 const sites = readdirSync('corpus/sites')
-  .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json'))
+  .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json') && !f.endsWith('.exposure.json'))
   .sort();
 
 let failures = 0;

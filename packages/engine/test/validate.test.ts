@@ -13,7 +13,9 @@ const validator = await schemaValidator();
 
 test('every corpus site validates', () => {
   const dir = repoFile('corpus/sites');
-  const sites = readdirSync(dir).filter((f) => f.endsWith('.json') && !f.endsWith('.data.json'));
+  const sites = readdirSync(dir).filter(
+    (f) => f.endsWith('.json') && !f.endsWith('.data.json') && !f.endsWith('.exposure.json'),
+  );
   assert.ok(sites.length > 0);
   for (const site of sites) {
     const doc = JSON.parse(readFileSync(join(dir, site), 'utf8'));

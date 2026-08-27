@@ -1,0 +1,5 @@
+{
+  "/": ["posts.excerpt", "posts.published", "posts.title"],
+  "/about": [],
+  "/posts/:slug": ["posts.body", "posts.excerpt", "posts.published", "posts.title"]
+}

@@ -14,7 +14,9 @@ import { designDebt, expertDrawer, panelForNode } from '../src/panels.ts';
 
 const validator = await schemaValidator();
 const corpus = new URL('../../../corpus/sites/', import.meta.url).pathname;
-const sites = readdirSync(corpus).filter((f) => f.endsWith('.json') && !f.endsWith('.data.json'));
+const sites = readdirSync(corpus).filter(
+  (f) => f.endsWith('.json') && !f.endsWith('.data.json') && !f.endsWith('.exposure.json'),
+);
 
 test('every option every panel offers produces a valid document', () => {
   let applied = 0;

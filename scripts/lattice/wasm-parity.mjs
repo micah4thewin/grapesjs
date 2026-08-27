@@ -12,7 +12,7 @@ import { join } from 'node:path';
 import { loadCompiler, DEFAULT_WASM_PATH } from '../../packages/engine/src/wasm-host.ts';
 
 const sites = readdirSync('corpus/sites')
-  .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json'))
+  .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json') && !f.endsWith('.exposure.json'))
   .sort();
 
 if (!existsSync(DEFAULT_WASM_PATH)) {

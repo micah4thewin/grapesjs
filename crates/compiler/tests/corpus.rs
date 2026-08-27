@@ -19,7 +19,11 @@ fn sites() -> Vec<PathBuf> {
         .filter_map(Result::ok)
         .map(|e| e.path())
         .filter(|p| p.extension().map(|e| e == "json").unwrap_or(false))
-        .filter(|p| !p.to_string_lossy().ends_with(".data.json"))
+        .filter(|p| {
+            // Sidecars (`x.data.json`, `x.exposure.json`) live beside their site, not as sites.
+            let name = p.to_string_lossy().to_string();
+            !name.ends_with(".data.json") && !name.ends_with(".exposure.json")
+        })
         .collect();
     out.sort();
     out
@@ -245,6 +249,61 @@ fn images_are_measured_against_the_asset_store() {
     );
     assert_eq!(measured.route_bytes["/"].images, 4477 * 4 + 165);
     assert_eq!(measured.assets_used.len(), 5);
+}
+
+#[test]
+fn a_route_may_not_render_what_it_was_told_is_private() {
+    // The fixture looks like an ordinary team page. The leak is one word in the IR, which is
+    // exactly why this has to be proved rather than reviewed.
+    let build = fixture("exposed-private-field.json");
+    let leak = build
+        .errors()
+        .find(|d| d.code == "prove.exposure.private-field")
+        .expect("rendering a private field must fail the build");
+    assert_eq!(leak.node.as_deref(), Some("card-email"));
+    assert_eq!(leak.route.as_deref(), Some("/"));
+    assert!(
+        leak.message.contains("members.homeAddress"),
+        "the error must name the field: {}",
+        leak.message
+    );
+
+    // The subtler case: nothing marked private, but nothing marked public either.
+    let build = fixture("unpublished-collection.json");
+    assert!(build
+        .errors()
+        .any(|d| d.code == "prove.exposure.not-public" && d.node.as_deref() == Some("row")));
+}
+
+#[test]
+fn the_exposure_set_is_per_route_and_diffable() {
+    let source = fs::read_to_string(repo_root().join("corpus/sites/blog.json")).unwrap();
+    let build = compile_str(&source, &Options::full());
+    let exposure = &build.exposure;
+
+    assert!(exposure.routes["/"].contains(&"posts.title".to_string()));
+    assert!(
+        exposure.routes["/about"].is_empty(),
+        "a route that binds nothing exposes nothing"
+    );
+    assert!(
+        !exposure.routes["/"].contains(&"posts.authorEmail".to_string()),
+        "a field the page does not render is not exposed by it"
+    );
+
+    // A newly rendered field is a widening, named by route and field; an unchanged set is not.
+    let mut previous = exposure.clone();
+    previous
+        .routes
+        .get_mut("/")
+        .unwrap()
+        .retain(|f| f != "posts.excerpt");
+    let widened = exposure.widened_since(&previous);
+    assert_eq!(
+        widened,
+        vec![("/".to_string(), "posts.excerpt".to_string())]
+    );
+    assert!(exposure.widened_since(exposure).is_empty());
 }
 
 #[test]

@@ -18,12 +18,15 @@ USAGE:
     lattice build [SITE...] [--out DIR]   compile IR to a runnable static export
     lattice check [SITE...]               run every pass, emit nothing, report diagnostics
     lattice dev [SITE] [--port N]         build, serve, and rebuild on change
+    lattice exposure [SITE...]            print what each route makes publicly readable
 
     SITE is a path to a .json IR document, or a directory of them.
     With no SITE, every site under ./corpus/sites is used.
 
 OPTIONS:
     --out DIR     output directory (default: dist/<site id>)
+    --baseline F  compare the exposure set against a published baseline and fail on any widening
+    --accept      write the baseline instead of failing (the deliberate act of widening exposure)
     --port N      dev server port (default 8080)
     --quiet       only print errors
 ";
@@ -37,6 +40,7 @@ fn main() -> ExitCode {
         "build" => run_build(&rest, true),
         "check" => run_build(&rest, false),
         "dev" => run_dev(&rest),
+        "exposure" => run_exposure(&rest),
         "help" | "--help" | "-h" => {
             print!("{USAGE}");
             ExitCode::SUCCESS
@@ -50,6 +54,8 @@ fn main() -> ExitCode {
 
 struct Flags {
     out: Option<PathBuf>,
+    baseline: Option<PathBuf>,
+    accept: bool,
     port: u16,
     quiet: bool,
     sites: Vec<PathBuf>,
@@ -58,6 +64,8 @@ struct Flags {
 fn parse_flags(args: &[String]) -> Flags {
     let mut flags = Flags {
         out: None,
+        baseline: None,
+        accept: false,
         port: 8080,
         quiet: false,
         sites: Vec::new(),
@@ -75,6 +83,14 @@ fn parse_flags(args: &[String]) -> Flags {
             }
             "--quiet" => {
                 flags.quiet = true;
+                i += 1;
+            }
+            "--baseline" => {
+                flags.baseline = args.get(i + 1).map(PathBuf::from);
+                i += 2;
+            }
+            "--accept" => {
+                flags.accept = true;
                 i += 1;
             }
             "--corpus" => {
@@ -101,7 +117,12 @@ fn expand_sites(paths: &[PathBuf]) -> Vec<PathBuf> {
                     dir.filter_map(Result::ok)
                         .map(|e| e.path())
                         .filter(|p| p.extension().map(|e| e == "json").unwrap_or(false))
-                        .filter(|p| !p.to_string_lossy().ends_with(".data.json"))
+                        // Sidecars (`x.data.json`, `x.exposure.json`) live beside their site and
+                        // are not sites themselves.
+                        .filter(|p| {
+                            let name = p.to_string_lossy().to_string();
+                            !name.ends_with(".data.json") && !name.ends_with(".exposure.json")
+                        })
                         .collect()
                 })
                 .unwrap_or_default();
@@ -297,6 +318,83 @@ fn manifest_json(build: &lattice_compiler::Build) -> String {
         "{}\n",
         serde_json::to_string_pretty(&value).unwrap_or_default()
     )
+}
+
+/// Stage E4 — what each route makes readable to someone who is not signed in, and how that set
+/// changed since the last publish.
+///
+/// The build already refuses to render a private field. This is the other half: a set that grows
+/// is not automatically wrong, but it must be *seen*. With no baseline it prints; with `--baseline`
+/// it fails on any widening; with `--accept` it records the new set as the published one, which is
+/// the deliberate act.
+fn run_exposure(args: &[String]) -> ExitCode {
+    let flags = parse_flags(args);
+    let sites = expand_sites(&flags.sites);
+    let mut failed = false;
+
+    for site in &sites {
+        let build = match compile_site(site, false) {
+            Ok(build) => build,
+            Err(e) => {
+                eprintln!("error: {e}");
+                failed = true;
+                continue;
+            }
+        };
+        if !report(site, &build, flags.quiet) {
+            failed = true;
+            continue;
+        }
+
+        let current = &build.exposure;
+        let baseline_path = flags
+            .baseline
+            .clone()
+            .unwrap_or_else(|| site.with_extension("exposure.json"));
+        let previous: lattice_compiler::prove::Exposure = fs::read_to_string(&baseline_path)
+            .ok()
+            .and_then(|raw| serde_json::from_str(&raw).ok())
+            .unwrap_or_default();
+
+        let widened = current.widened_since(&previous);
+        println!("{}", site.display());
+        for (route, fields) in &current.routes {
+            println!(
+                "  {route}: {}",
+                if fields.is_empty() {
+                    "(nothing bound)".to_string()
+                } else {
+                    fields.join(", ")
+                }
+            );
+        }
+
+        if flags.accept {
+            let json = serde_json::to_string_pretty(current).unwrap_or_default();
+            if let Err(e) = fs::write(&baseline_path, format!("{json}\n")) {
+                eprintln!("error: {}: {e}", baseline_path.display());
+                failed = true;
+            } else {
+                println!(
+                    "  recorded {} as the published exposure set",
+                    baseline_path.display()
+                );
+            }
+        } else if !widened.is_empty() && baseline_path.exists() {
+            failed = true;
+            eprintln!("  exposure widened since the last publish:");
+            for (route, field) in &widened {
+                eprintln!("    {route} now exposes {field}");
+            }
+            eprintln!("  review it, then re-run with --accept to publish the wider set.");
+        }
+    }
+
+    if failed {
+        ExitCode::FAILURE
+    } else {
+        ExitCode::SUCCESS
+    }
 }
 
 fn run_dev(args: &[String]) -> ExitCode {

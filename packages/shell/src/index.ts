@@ -12,4 +12,5 @@ export * from './panels.ts';
 export * from './projection/projector.ts';
 export * from './projection/tripwire.ts';
 export * from './projection/canvas.ts';
+export * from './projection/scheduler.ts';
 export * as html from './projection/html.ts';

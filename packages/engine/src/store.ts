@@ -101,7 +101,12 @@ export class DocumentStore {
     }
 
     if (this.#validator) {
-      const errors = this.#validator.validate(next);
+      // Validate what the ops touched, not the whole document: ops address nodes, and full
+      // validation on every keystroke costs most of a frame on a large page (see
+      // scripts/lattice/bench.mjs). A document-wide op (tokens, routes) validates its section.
+      const errors = documentWide
+        ? [...this.#validator.validateSection(next, 'tokens'), ...this.#validator.validateSection(next, 'routes')]
+        : this.#validator.validateNodes(next, [...touched]);
       if (errors.length) throw new ValidationFailure(errors);
     }
 

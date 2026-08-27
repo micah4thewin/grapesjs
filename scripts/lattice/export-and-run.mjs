@@ -17,7 +17,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const sites = existsSync('corpus/sites')
   ? readdirSync('corpus/sites')
-      .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json'))
+      .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json') && !f.endsWith('.exposure.json'))
       .sort()
   : [];
 

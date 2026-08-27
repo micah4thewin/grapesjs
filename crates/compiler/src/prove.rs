@@ -38,6 +38,53 @@ pub fn contrast_ratio(fg: &str, bg: &str) -> Option<f64> {
     Some((lighter + 0.05) / (darker + 0.05))
 }
 
+/// What a route makes readable to an anonymous visitor: the concrete `collection.field` paths its
+/// nodes render. This is the set the publish-time exposure diff compares (Lattice §7).
+#[derive(Debug, Clone, Default, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct Exposure {
+    /// route path -> sorted `collection.field` paths readable without signing in
+    #[serde(flatten)]
+    pub routes: std::collections::BTreeMap<String, Vec<String>>,
+}
+
+impl Exposure {
+    /// Fields present in `self` that were not in `previous`. Publishing widens exposure only
+    /// deliberately, so this is what the review step shows and, in CI, what fails a build that
+    /// widens it without saying so.
+    pub fn widened_since(&self, previous: &Exposure) -> Vec<(String, String)> {
+        let mut out = Vec::new();
+        for (route, fields) in &self.routes {
+            let before = previous.routes.get(route);
+            for field in fields {
+                if before.map(|b| b.contains(field)).unwrap_or(false) {
+                    continue;
+                }
+                out.push((route.clone(), field.clone()));
+            }
+        }
+        out
+    }
+}
+
+/// Compute the anonymous-readable field set per route.
+pub fn exposure(doc: &Document, res: &Resolved) -> Exposure {
+    let mut exposure = Exposure::default();
+    for (route, nodes) in &res.route_nodes {
+        let mut fields = std::collections::BTreeSet::new();
+        for id in nodes {
+            let Some(node) = doc.nodes.get(id) else {
+                continue;
+            };
+            let Some(bind) = &node.bind else { continue };
+            fields.insert(bind.clone());
+        }
+        exposure
+            .routes
+            .insert(route.clone(), fields.into_iter().collect());
+    }
+    exposure
+}
+
 pub fn run(doc: &Document, res: &Resolved, diags: &mut Vec<Diagnostic>) {
     for (route, nodes) in &res.route_nodes {
         for id in nodes {
@@ -49,6 +96,7 @@ pub fn run(doc: &Document, res: &Resolved, diags: &mut Vec<Diagnostic>) {
         }
         prove_heading_order(doc, nodes, route, diags);
     }
+    prove_exposure(doc, res, diags);
     prove_descriptions(doc, diags);
     if doc.icon.is_none() {
         // Not fatal: a site can launch without an icon. It is counted because the cost is a 404 on
@@ -97,6 +145,57 @@ fn prove_heading_order(doc: &Document, nodes: &[String], route: &str, diags: &mu
             _ => {}
         }
         previous = Some(level);
+    }
+}
+
+/// Stage E4 (v1) — the exposure proof.
+///
+/// A field marked `private`, or any field of a collection that is not `publicRead`, must not be
+/// rendered on a route an anonymous visitor can load. The plan's flagship version of this diffs the
+/// readable set against the last published one at publish time; this is the half that needs no
+/// backend: the set is computed from the IR, and rendering a private field fails the build naming
+/// the node, the field and the route.
+fn prove_exposure(doc: &Document, res: &Resolved, diags: &mut Vec<Diagnostic>) {
+    for (route, nodes) in &res.route_nodes {
+        for id in nodes {
+            let Some(node) = doc.nodes.get(id) else {
+                continue;
+            };
+            let Some(bind) = &node.bind else { continue };
+            let Some((collection_name, field_name)) = bind.split_once('.') else {
+                continue;
+            };
+            let Some(collection) = res.collections.get(collection_name) else {
+                continue;
+            };
+            let Some(field) = collection.fields.iter().find(|f| f.name == field_name) else {
+                continue;
+            };
+
+            if field.private.unwrap_or(false) {
+                diags.push(
+                    Diagnostic::error(
+                        "prove.exposure.private-field",
+                        format!(
+                            "route {route:?} renders {bind:?}, which is marked private; anyone who can load the page can read it"
+                        ),
+                    )
+                    .at_node(node.id.clone())
+                    .at_route(route.clone()),
+                );
+            } else if !collection.public_read.unwrap_or(false) {
+                diags.push(
+                    Diagnostic::error(
+                        "prove.exposure.not-public",
+                        format!(
+                            "route {route:?} renders {bind:?}, but collection {collection_name:?} is not marked publicRead; a page anyone can load may only render fields you have said are public"
+                        ),
+                    )
+                    .at_node(node.id.clone())
+                    .at_route(route.clone()),
+                );
+            }
+        }
     }
 }
 

@@ -225,7 +225,7 @@
         "pad": "space.7",
         "gap": "space.5"
       },
-      "children": ["post-title", "post-date", "post-body", "post-back"]
+      "children": ["post-title", "post-date", "post-body", "post-back", "post-excerpt"]
     },
     "post-title": {
       "id": "post-title",
@@ -304,6 +304,15 @@
       ],
       "style": {
         "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "post-excerpt": {
+      "id": "post-excerpt",
+      "kind": "text",
+      "bind": "posts.excerpt",
+      "style": {
+        "type": "type.lead",
         "fg": "color.muted"
       }
     }

@@ -45,7 +45,7 @@ try {
   process.exit(0);
 }
 const sites = readdirSync('corpus/sites')
-  .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json'))
+  .filter((f) => f.endsWith('.json') && !f.endsWith('.data.json') && !f.endsWith('.exposure.json'))
   .sort();
 const chrome = await launch({
   chromePath: process.env.CHROME_PATH,

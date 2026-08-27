@@ -41,6 +41,8 @@ pub struct Build {
     pub route_deps: BTreeMap<String, Vec<String>>,
     /// Assets the build actually references. An export carries these and nothing else.
     pub assets_used: std::collections::BTreeSet<String>,
+    /// What each route makes readable to an anonymous visitor (Stage E4).
+    pub exposure: prove::Exposure,
     pub route_bytes: BTreeMap<String, RouteBytes>,
 }
 
@@ -185,6 +187,7 @@ pub fn compile_with_data(doc: &ir::Document, records: &emit::Records, opts: &Opt
 
     // 6. prove
     prove::run(doc, &resolved, &mut build.diagnostics);
+    build.exposure = prove::exposure(doc, &resolved);
 
     // 7. budget (terminal)
     budget::run(doc, &build.route_bytes, &mut build.diagnostics);

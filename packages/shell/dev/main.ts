@@ -8,8 +8,9 @@
  */
 
 import { DocumentStore, Validator, LatticeCompiler, grid } from '@lattice/engine';
-import type { Document, Op } from '@lattice/engine';
+import type { Change, Document, Op } from '@lattice/engine';
 import { projectRoute } from '../src/projection/projector.ts';
+import { ProjectionScheduler } from '../src/projection/scheduler.ts';
 import { ProjectionCanvas, componentTypes } from '../src/projection/canvas.ts';
 import { createTripwire } from '../src/projection/tripwire.ts';
 import { blockToOps, dropToOps, resizeToOps, textCommitToOps } from '../src/gestures.ts';
@@ -105,12 +106,21 @@ canvas.mount(project());
 canvas.attach();
 canvas.armAll();
 
-// Re-project on every change: patch what the ops touched, re-mount when the shape changed.
-store.subscribe((change) => {
-  canvas.applyChange(project(), change);
-  canvas.armAll();
-  report();
+// Ops are immediate; the picture is coalesced. A drag is dozens of ops and should cost one
+// projection, not dozens (Stage C6).
+const scheduler = new ProjectionScheduler<Change>({
+  project: (batch) => {
+    const projection = project();
+    if (batch.structural) canvas.mount(projection);
+    else canvas.patch(projection, batch.touched);
+    canvas.armAll();
+    report();
+  },
+  isStructural: (change) =>
+    change.ops.some(({ op }) => ['insertSubtree', 'removeSubtree', 'moveNode', 'setRoute'].includes(op.kind)),
+  touchedOf: (change) => change.touched,
 });
+store.subscribe((change) => scheduler.push(change));
 
 report();
 
@@ -170,6 +180,7 @@ Object.assign(window as any, {
       if (ops.length) {
         record('text', ops);
         store.apply(ops);
+        scheduler.flush();
       }
       return ops;
     },
@@ -184,6 +195,7 @@ Object.assign(window as any, {
       if (ops.length) {
         record('block', ops);
         store.apply(ops);
+        scheduler.flush();
       }
       return ops;
     },
@@ -192,6 +204,7 @@ Object.assign(window as any, {
       if (ops.length) {
         record('resize', ops);
         store.apply(ops);
+        scheduler.flush();
       }
       return ops;
     },
@@ -201,11 +214,20 @@ Object.assign(window as any, {
       if (ops.length) {
         record('drop', ops);
         store.apply(ops);
+        scheduler.flush();
       }
       return ops;
     },
-    undo: () => store.undo() !== null,
-    redo: () => store.redo() !== null,
+    undo: () => {
+      const change = store.undo();
+      scheduler.flush();
+      return change !== null;
+    },
+    redo: () => {
+      const change = store.redo();
+      scheduler.flush();
+      return change !== null;
+    },
     solveDrop: (gridId: string, x: number, span: number) => grid.solveDrop(store.document, gridId, { x, y: 0 }, span),
     /** Deliberately illegal: writes straight to a projected model, to prove the tripwire fires. */
     pokeModel(nodeId: string) {

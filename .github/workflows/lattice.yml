@@ -35,6 +35,8 @@ jobs:
         run: cargo fmt --all -- --check
       - name: Compiler tests (corpus + fixtures)
         run: cargo test --workspace
+      - name: Exposure has not widened without being accepted
+        run: cargo run -q -p lattice-cli -- exposure corpus/sites
       - name: Engine tests
         run: node --test 'packages/engine/test/*.test.ts'
       - name: Shell tests
@@ -80,6 +82,21 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown
       - run: node scripts/lattice/wasm-parity.mjs
+
+  latency:
+    name: Latency thresholds (op apply, WASM preview, projection)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.2'
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build -p lattice-compiler-wasm --release --target wasm32-unknown-unknown
+      - run: node scripts/lattice/bench.mjs
 
   graft-spike:
     name: C3 graft spike (a real editing session, read by the tripwire)

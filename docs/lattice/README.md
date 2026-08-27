@@ -49,6 +49,7 @@ just wasm-parity        # native vs wasm, byte for byte
 just projection-parity  # what the canvas shows vs what ships
 CHROME_PATH=… node scripts/lattice/lighthouse.mjs    # the Stage B exit gate
 node scripts/lattice/c3-spike.mjs                    # the C3 graft gate, in a real editor
+node scripts/lattice/bench.mjs                       # latency thresholds on a 2,000-node page
 ```
 
 The spike needs three things built first: `pnpm run build:cli && pnpm run build:core`,
@@ -83,5 +84,6 @@ records where the fork stood at the start (an unmodified mirror of upstream `dev
 * [The determinism style guide](determinism.md)
 * [C1 — the CRDT substrate: what is built, what the spike must decide](C1-crdt-spike.md)
 * [C3 — the graft spike: does Backbone write back?](C3-graft-spike.md)
+* [Latency benchmarks](benchmarks.md) — what is measured, and where the thresholds land
 * [Transformation status](status.md) — every step of the plan, and where it actually stands
 * [ATTRIBUTIONS](../../ATTRIBUTIONS.md) — licences, and why the engine is publishable as MIT
