@@ -90,7 +90,8 @@ const check = (name, ok, detail = '') => {
 };
 
 try {
-  await page.goto(`http://127.0.0.1:${port}/`);
+  // `?fresh=1` clears any persisted session, so the run starts from the corpus site every time.
+  await page.goto(`http://127.0.0.1:${port}/?fresh=1`);
   await page.waitForFunction(() => window.latticeReady === true, null, { timeout: 30000 });
 
   // 1. The projection reaches the canvas, and it is the compiled page.
@@ -231,7 +232,43 @@ try {
   });
   check('undo returns the document to where the session started', undone.same, `${undone.undos} undo(s)`);
 
-  // 6. The session's verdict: did anything write to a projected model behind our back?
+  // The interception counters belong to the page that did the dragging; read them before the
+  // reload replaces it.
+  const stats = await page.evaluate(() => window.lattice.stats());
+  console.log(`  interception stats: ${JSON.stringify(stats)}`);
+  check(
+    'the drop was refused at the model layer, not merely followed',
+    stats.intercepted >= 1,
+    JSON.stringify({ intercepted: stats.intercepted, drops: stats.drops }),
+  );
+
+  // 6. Stage C5: kill the tab mid-edit and reopen. The op log is the durable thing, so the edit
+  //    that was never explicitly saved is still there.
+  await page.evaluate(() => window.lattice.commitText('hero-sub', 'Written just before the tab died'));
+  await page.evaluate(() => window.lattice.settled());
+  // Reopening means loading the app again *without* `?fresh=1`: the session is whatever storage
+  // held when the tab went away.
+  await page.goto(`http://127.0.0.1:${port}/`);
+  await page.waitForFunction(() => window.latticeReady === true, null, { timeout: 30000 });
+  const recovered = await page.evaluate(() => ({
+    text: window.lattice.document.nodes['hero-sub'].spans?.[0]?.text,
+    persistence: window.lattice.persistence,
+  }));
+  check(
+    'an edit survives the tab dying, with no explicit save',
+    recovered.text === 'Written just before the tab died',
+    `${recovered.persistence.recovered} op(s) recovered from storage`,
+  );
+
+  const budget = await page.evaluate(() => window.lattice.budget());
+  const home = budget?.['/'];
+  check(
+    'the budget meter reads the same bytes the gate does',
+    !!home && home.html > 0 && home.css > 0,
+    home ? `html ${(home.html / 1024).toFixed(1)}KB, css ${(home.css / 1024).toFixed(1)}KB` : 'no route bytes',
+  );
+
+  // 7. The session's verdict: did anything write to a projected model behind our back?
   const sessionLeaks = await page.evaluate(() => window.lattice.leaks);
   check(
     'the tripwire saw no leaks during the session',
@@ -242,12 +279,10 @@ try {
     console.log(`    leak: ${leak.method} on ${leak.nodeId}\n${leak.stack.replace(/^/gm, '      ')}`);
   }
 
-  // 7. And is the tripwire actually armed? Poke a model deliberately; it must be caught.
+  // 8. And is the tripwire actually armed? Poke a model deliberately; it must be caught.
   const afterPoke = await page.evaluate(() => window.lattice.pokeModel('hero-title'));
   check('the tripwire catches a deliberate write, so its silence means something', afterPoke > sessionLeaks.length);
 
-  const stats = await page.evaluate(() => window.lattice.stats());
-  console.log(`  interception stats: ${JSON.stringify(stats)}`);
   check(
     'no failed requests or uncaught errors in the editor',
     consoleErrors.length === 0 && failedRequests.length === 0,

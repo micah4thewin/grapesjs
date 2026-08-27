@@ -10,6 +10,7 @@ export * from './generated/ir.ts';
 export * from './ops.ts';
 export * from './store.ts';
 export * from './validate.ts';
+export * from './persistence.ts';
 export * as grid from './grid.ts';
 export * as tokens from './tokens.ts';
 export * from './wasm-host.ts';

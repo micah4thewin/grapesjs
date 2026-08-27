@@ -7,7 +7,15 @@
  * it exposes `window.lattice` so a headless driver can run a scripted session and read the answer.
  */
 
-import { DocumentStore, Validator, LatticeCompiler, grid } from '@lattice/engine';
+import {
+  DocumentStore,
+  IndexedDbOpLogStorage,
+  LatticeCompiler,
+  SessionPersistence,
+  Validator,
+  grid,
+  restore,
+} from '@lattice/engine';
 import type { Change, Document, Op } from '@lattice/engine';
 import { projectRoute } from '../src/projection/projector.ts';
 import { ProjectionScheduler } from '../src/projection/scheduler.ts';
@@ -31,7 +39,15 @@ const [schema, site, wasm] = await Promise.all([
 
 const compiler = await LatticeCompiler.fromBytes(wasm);
 const validator = new Validator(schema);
-const store = new DocumentStore(site as Document, { replica: 'spike', validator });
+
+// Stage C5: the durable thing is the op log. A reload picks the session back up from IndexedDB;
+// `?fresh=1` starts over, which is how the spike separates "recovered" from "never happened".
+const storage = new IndexedDbOpLogStorage('lattice-spike');
+if (new URLSearchParams(location.search).has('fresh')) await storage.clear();
+const restored = await restore(storage, site as Document, { validator: { validator } });
+const store = restored.store;
+const persistence = new SessionPersistence(store, storage, { onError: (error) => console.error('persistence', error) });
+persistence.start();
 const tripwire = createTripwire({ throwOnLeak: false }); // soft: a spike lists every leak, it does not stop at the first
 const flags = LATTICE;
 
@@ -71,6 +87,7 @@ canvas.onSelect = (nodeId) => {
 
 let lastGood: ReturnType<typeof projectRoute> | null = null;
 let lastErrors: { code: string; message: string; node: string | null }[] = [];
+let lastBytes: Record<string, { html: number; css: number; js: number; images?: number }> | null = null;
 
 /**
  * Project the active route. If the document does not compile, the canvas keeps showing the last
@@ -82,12 +99,24 @@ function project() {
   try {
     lastGood = projectRoute(compiler, store.document, route);
     lastErrors = [];
+    lastBytes = compiler.compile({ document: JSON.stringify(store.document), profile: 'fast' }).route_bytes;
     return lastGood;
   } catch (error: any) {
     lastErrors = error?.diagnostics ?? [{ code: 'projection', message: String(error), node: null }];
     if (!lastGood) throw error;
     return lastGood;
   }
+}
+
+/** Stage D5 — the budget meter, from the same compile the canvas is showing. */
+function budgetLine(): string {
+  const bytes = lastBytes;
+  if (!bytes) return 'budget: —';
+  const route = store.document.routes[0].path;
+  const entry = bytes[route] ?? Object.values(bytes)[0];
+  if (!entry) return 'budget: —';
+  const kb = (entry.html + entry.css + entry.js + (entry.images ?? 0)) / 1024;
+  return `budget: ${kb.toFixed(1)}KB of 500KB (html ${(entry.html / 1024).toFixed(1)}KB, css ${(entry.css / 1024).toFixed(1)}KB)`;
 }
 
 function report() {
@@ -98,6 +127,8 @@ function report() {
       `selected: ${selected ?? '—'}`,
       `ops: ${emitted.length} batch(es), ${emitted.reduce((n, e) => n + e.ops.length, 0)} op(s)`,
       `tripwire: ${tripwire.leaks.length} leak(s)`,
+      `recovered ${restored.recoveredOps} op(s) from the last session · ${persistence.pending.length} unsent`,
+      budgetLine(),
     ].join('\n'),
   );
 }
@@ -137,6 +168,14 @@ Object.assign(window as any, {
     get errors() {
       return lastErrors;
     },
+    get persistence() {
+      return { recovered: restored.recoveredOps, pending: persistence.pending.length };
+    },
+    async settled() {
+      await persistence.settled();
+      return true;
+    },
+    budget: () => lastBytes,
     get leaks() {
       return tripwire.leaks.map((leak) => ({
         method: leak.method,

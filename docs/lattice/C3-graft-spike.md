@@ -16,11 +16,13 @@ node scripts/lattice/c3-spike.mjs --headed # watch it
 
 ## Current reading
 
-**14/14 checks pass. Every gesture in the session became an op, and nothing wrote to a projected
+**17/17 checks pass. Every gesture in the session became an op, and nothing wrote to a projected
 model behind our back.** The session covers: mounting the projection, clicking to select, a real
 drag through GrapesJS's own `tlb-move` command and sorter (ghost, placeholder, geometry and all),
-a text commit, a block insert, a resize, and undoing the whole session back to the starting
-document. The tripwire is then deliberately tripped, to prove its silence meant something.
+a text commit, a block insert, a resize, undoing the whole session back to the starting document,
+killing the tab mid-edit and reopening it (Stage C5 — the unsaved edit is still there, recovered
+from the op log in IndexedDB), and reading the budget meter off the same compile the canvas shows.
+The tripwire is then deliberately tripped, to prove its silence meant something.
 
 The instrumentation the run prints — `intercepted: 1`, `drops: 1`, `dragEnds: 1` — is what
 distinguishes a clean graft from an unarmed instrument. A run that reports zero interceptions and
