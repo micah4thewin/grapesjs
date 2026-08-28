@@ -72,23 +72,64 @@ const validator = new Validator(schema as Record<string, unknown>);
 // `?fresh=1` starts over, which is how the spike separates "recovered" from "never happened".
 // Where IndexedDB is unavailable or blocked (a sandboxed frame, a browser set to block site data),
 // the session runs in memory: everything works, nothing survives the tab.
+const stage = (name: string) => ((window as unknown as { __latticeStage?: string }).__latticeStage = name);
+
+stage('storage');
 const storage = await openStorage();
-if (new URLSearchParams(location.search).has('fresh')) await storage.clear();
-const restored = await restore(storage, site as Document, { validator: { validator } });
+if (new URLSearchParams(location.search).has('fresh')) {
+  stage('clear');
+  await settle(storage.clear(), undefined, 'clearing the stored session');
+}
+stage('restore');
+const restored = await settle(
+  restore(storage, site as Document, { validator: { validator } }),
+  { store: new DocumentStore(site as Document, { validator }), recoveredOps: 0 },
+  'reading the stored session',
+);
+stage('editor');
 const store = restored.store;
 const persistence = new SessionPersistence(store, storage, { onError: (error) => console.error('persistence', error) });
 persistence.start();
 const tripwire = createTripwire({ throwOnLeak: false }); // soft: a spike lists every leak, it does not stop at the first
 const flags = LATTICE;
 
-async function openStorage() {
+/**
+ * Persistence must never be able to stop the editor from starting.
+ *
+ * IndexedDB does not only fail — it *hangs*: a blocked upgrade, a private window, a sandboxed
+ * frame, a browser set to block site data. An editor that waits forever on storage is worse than
+ * one that forgets, so every call is raced against a short timeout and the session falls back to
+ * memory: everything works, nothing survives the tab.
+ */
+async function settle<T>(work: Promise<T>, fallback: T, what: string, ms = 1500): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    const candidate = new IndexedDbOpLogStorage('lattice-shell');
-    await candidate.loadSnapshot(); // forces the database open, and the failure, here
-    return candidate;
-  } catch {
-    return new MemoryOpLogStorage();
+    return await Promise.race([
+      work,
+      new Promise<T>((resolve) => {
+        timer = setTimeout(() => {
+          console.warn(`lattice: ${what} did not answer in ${ms}ms; continuing without it`);
+          resolve(fallback);
+        }, ms);
+      }),
+    ]);
+  } catch (error) {
+    console.warn(`lattice: ${what} failed`, error);
+    return fallback;
+  } finally {
+    clearTimeout(timer);
   }
+}
+
+async function openStorage() {
+  const candidate = new IndexedDbOpLogStorage('lattice-shell');
+  // Probing forces the database open, and any failure or hang, to happen here rather than mid-edit.
+  const probe = await settle(
+    candidate.loadSnapshot().then(() => true),
+    false,
+    'opening the session store',
+  );
+  return probe ? candidate : new MemoryOpLogStorage();
 }
 
 const editor = grapesjs.init({
@@ -155,6 +196,20 @@ function project() {
 }
 
 /** Stage D5 — the budget meter, from the same compile the canvas is showing. */
+/** The files this document would ship, from the same compiler the canvas is showing. */
+function shippedFiles(): { path: string; bytes: number; content: string }[] {
+  const result = compiler.compile({
+    document: JSON.stringify(store.document),
+    data: records,
+    profile: 'full',
+    emit_app: true,
+  });
+  if (!result.ok) return [];
+  return Object.entries(result.files)
+    .map(([path, content]) => ({ path, bytes: new TextEncoder().encode(content).length, content }))
+    .sort((a, b) => (a.path < b.path ? -1 : 1));
+}
+
 function currentBytes() {
   if (!lastBytes) return null;
   return lastBytes[activeRoute] ?? Object.values(lastBytes)[0] ?? null;
@@ -193,6 +248,7 @@ function report() {
 const shell = new Shell({
   document: () => store.document,
   issues: () => lastErrors,
+  shipped: () => shippedFiles(),
   selected: () => selected,
   activeRoute: () => activeRoute,
   routeBytes: () => currentBytes(),
@@ -263,7 +319,82 @@ canvas.mount(project());
 canvas.attach();
 canvas.armAll();
 shell.render();
+editWordsOnCanvas();
+// The canvas iframe loads asynchronously; binding only once, at boot, binds to nothing. This is
+// the same lesson the drop interception learned — a handler that silently never attached looks
+// exactly like a feature that silently does not work.
+editor.on('canvas:frame:load', () => editWordsOnCanvas());
+editor.on('load', () => editWordsOnCanvas());
 
+/**
+ * Double-click to write. The text goes through `contenteditable` on the projected element and
+ * commits **one op** on blur or Enter — the same boundary the RTE will use when it is swapped
+ * (Part IV risk 4), and the reason a paragraph edited for a minute is one entry in the shared
+ * history rather than sixty.
+ *
+ * GrapesJS's own editor never engages: projected components are `editable: false`, so nothing here
+ * writes to a model and the tripwire stays quiet. What the element shows between double-click and
+ * commit is a scratch DOM state that the next projection overwrites.
+ */
+function editWordsOnCanvas(): void {
+  const canvasDocument = editor.Canvas?.getDocument?.();
+  if (!canvasDocument || canvasDocument.__latticeWordsBound) return;
+  canvasDocument.__latticeWordsBound = true;
+
+  // Capture phase: GrapesJS's own handlers sit on the frame and would otherwise get first refusal.
+  canvasDocument.addEventListener(
+    'dblclick',
+    (event: Event) => {
+      const target = (event.target as Element)?.closest?.('[data-lattice-id]') as HTMLElement | null;
+      const nodeId = target?.getAttribute('data-lattice-id');
+      if (!target || !nodeId) return;
+      const node = store.document.nodes[nodeId];
+      if (!node || (node.kind !== 'text' && node.kind !== 'heading')) return;
+      if (node.bind) {
+        // A bound node renders a record. Typing here would edit the template for every row, which is
+        // never what the gesture means; Stage E3 makes "edit the record" its own explicit path.
+        say('this text comes from a record — edit the record, not the template');
+        return;
+      }
+
+      const original = target.textContent ?? '';
+      target.setAttribute('contenteditable', 'plaintext-only');
+      target.focus();
+      canvasDocument.getSelection?.()?.selectAllChildren?.(target);
+
+      const finish = (commit: boolean) => {
+        target.removeAttribute('contenteditable');
+        const text = (target.textContent ?? '').trim();
+        if (!commit || text === original.trim()) {
+          target.textContent = original;
+          return;
+        }
+        const ops = textCommitToOps(store.document, nodeId, [{ text }]);
+        if (!ops.length) return;
+        record('text', ops);
+        store.apply(ops);
+        scheduler.flush();
+        shell.render();
+      };
+
+      target.addEventListener('blur', () => finish(true), { once: true });
+      target.addEventListener('keydown', ((keyEvent: KeyboardEvent) => {
+        if (keyEvent.key === 'Enter' && !keyEvent.shiftKey) {
+          keyEvent.preventDefault();
+          target.blur();
+        }
+        if (keyEvent.key === 'Escape') {
+          keyEvent.preventDefault();
+          finish(false);
+          target.blur();
+        }
+      }) as EventListener);
+    },
+    true,
+  );
+}
+
+document.getElementById('shipped-toggle')?.addEventListener('click', () => shell.toggleShipped());
 document.getElementById('undo')!.addEventListener('click', () => {
   store.undo();
   scheduler.flush();
@@ -292,6 +423,7 @@ const scheduler = new ProjectionScheduler<Change>({
     if (batch.structural) canvas.mount(projection);
     else canvas.patch(projection, batch.touched);
     canvas.armAll();
+    editWordsOnCanvas();
     shell.render();
     report();
   },
@@ -324,6 +456,7 @@ Object.assign(window as any, {
       return true;
     },
     budget: () => lastBytes,
+    shipped: () => shippedFiles(),
     get leaks() {
       return tripwire.leaks.map((leak) => ({
         method: leak.method,

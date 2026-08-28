@@ -2,9 +2,9 @@
   <div class="frame-head">
     <h1>Lattice — the editor shell</h1>
     <p>
-      A real GrapesJS canvas showing a <em>projection</em>: the page you see is compiled by the same
-      binary <code>lattice build</code> runs, ported to WebAssembly and inlined into this page. Every
-      control emits an op against the IR — there is no CSS box anywhere in this UI.
+      A real GrapesJS canvas showing a <em>projection</em>: the page you see is compiled by the same binary
+      <code>lattice build</code> runs, ported to WebAssembly and inlined into this page. Every control emits an op
+      against the IR — there is no CSS box anywhere in this UI.
     </p>
   </div>
   <ul class="frame-hints">
@@ -26,6 +26,9 @@
     <div class="actions">
       <button class="btn" id="undo" title="Undo (one op batch)">Undo</button>
       <button class="btn" id="redo" title="Redo">Redo</button>
+      <button class="btn" id="shipped-toggle" aria-pressed="false" title="The files this document compiles to">
+        What ships
+      </button>
       <span class="meter" id="meter">budget —</span>
     </div>
   </header>
@@ -59,5 +62,6 @@
     </aside>
   </div>
 
+  <section class="shipped" id="shipped" hidden></section>
   <footer class="statusbar" id="status">booting…</footer>
 </div>

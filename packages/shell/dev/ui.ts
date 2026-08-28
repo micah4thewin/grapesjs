@@ -17,9 +17,16 @@ export interface CompilerIssue {
   node: string | null;
 }
 
+export interface ShippedFile {
+  path: string;
+  bytes: number;
+  content: string;
+}
+
 export interface ShellHooks {
   document(): Document;
   issues(): CompilerIssue[];
+  shipped(): ShippedFile[];
   selected(): string | null;
   activeRoute(): string;
   apply(ops: Op[], reason: string): void;
@@ -68,7 +75,16 @@ export class Shell {
     this.#hooks = hooks;
   }
 
+  #shippedOpen = false;
+  #shippedPath: string | null = null;
+
+  toggleShipped(): void {
+    this.#shippedOpen = !this.#shippedOpen;
+    this.render();
+  }
+
   render(): void {
+    this.#renderShipped();
     this.#renderIssues();
     this.#renderRoutes();
     this.#renderTree();
@@ -106,6 +122,55 @@ export class Shell {
       if (issue.node) row.onclick = () => this.#hooks.select(issue.node!);
       host.append(row);
     }
+  }
+
+  /**
+   * What ships, in bytes, from the same compile the canvas is showing.
+   *
+   * This is the part an open-world builder cannot offer: not a preview of the page, but the file
+   * list and the exact text of the artefacts — including the server that runs them with nobody's
+   * help.
+   */
+  #renderShipped(): void {
+    const drawer = document.getElementById('shipped');
+    const toggle = document.getElementById('shipped-toggle');
+    if (!drawer) return;
+    toggle?.setAttribute('aria-pressed', String(this.#shippedOpen));
+    drawer.hidden = !this.#shippedOpen;
+    if (!this.#shippedOpen) return;
+
+    const files = this.#hooks.shipped();
+    drawer.replaceChildren();
+    if (!files.length) {
+      drawer.append(el('p', 'empty', 'Nothing ships while the page does not build.'));
+      return;
+    }
+
+    const total = files.reduce((sum, file) => sum + file.bytes, 0);
+    const head = el('div', 'shipped-head');
+    head.append(
+      el('span', 'shipped-title', 'What ships'),
+      el('span', 'shipped-total', `${files.length} files · ${(total / 1024).toFixed(1)}KB · no dependencies`),
+    );
+    drawer.append(head);
+
+    const tabs = el('div', 'shipped-tabs');
+    const active = this.#shippedPath ?? files.find((file) => file.path.endsWith('index.html'))?.path ?? files[0].path;
+    for (const file of files) {
+      const tab = el('button', 'shipped-tab', `${file.path} · ${(file.bytes / 1024).toFixed(1)}KB`);
+      tab.setAttribute('aria-current', String(file.path === active));
+      tab.onclick = () => {
+        this.#shippedPath = file.path;
+        this.render();
+      };
+      tabs.append(tab);
+    }
+    drawer.append(tabs);
+
+    const body = el('pre', 'shipped-body');
+    const chosen = files.find((file) => file.path === active) ?? files[0];
+    body.textContent = chosen.content.length > 20000 ? `${chosen.content.slice(0, 20000)}\n…` : chosen.content;
+    drawer.append(body);
   }
 
   #renderRoutes(): void {
@@ -182,11 +247,67 @@ export class Shell {
   #renderField(doc: Document, field: Field): HTMLElement {
     const wrapper = el('div', 'field');
     const label = el('div', 'label');
-    label.append(el('span', undefined, field.label), el('span', 'value', String(field.value ?? '—')));
+    const shown = field.control === 'token' || field.control === 'choice' ? String(field.value ?? '—') : '';
+    label.append(el('span', undefined, field.label), el('span', 'value', shown));
     wrapper.append(label);
 
+    if (field.control === 'text') wrapper.append(this.#renderTextInput(field));
+    else if (field.control === 'number') wrapper.append(this.#renderNumberInput(field));
+    else wrapper.append(this.#renderOptions(doc, field));
+
+    if ('help' in field && field.help) wrapper.append(el('p', 'help', field.help));
+    return wrapper;
+  }
+
+  /**
+   * Content is typed, not tokenised: words, alt text and data are the author's to write. What the
+   * field still enforces is its type and, where the schema says so, that it is filled in at all.
+   */
+  #renderTextInput(field: Extract<Field, { control: 'text' }>): HTMLElement {
+    const readonly = field.key === 'bind';
+    const input = field.multiline ? document.createElement('textarea') : document.createElement('input');
+    input.className = 'input';
+    input.value = field.value ?? '';
+    if (input instanceof HTMLInputElement) input.type = 'text';
+    if (field.placeholder) input.placeholder = field.placeholder;
+    input.disabled = readonly;
+    input.toggleAttribute('required', !!field.required);
+    if (field.required && !(field.value ?? '').trim()) input.classList.add('missing');
+
+    const commit = () => {
+      const value = input.value;
+      if (value === (field.value ?? '')) return;
+      this.#hooks.apply([field.toOp(value)], `panel:${field.key}`);
+    };
+    input.addEventListener('change', commit);
+    input.addEventListener('keydown', ((event: KeyboardEvent) => {
+      if (event.key === 'Enter' && !(input instanceof HTMLTextAreaElement)) input.blur();
+      if (event.key === 'Escape') {
+        input.value = field.value ?? '';
+        input.blur();
+      }
+    }) as EventListener);
+    return input;
+  }
+
+  #renderNumberInput(field: Extract<Field, { control: 'number' }>): HTMLElement {
+    const input = document.createElement('input');
+    input.className = 'input';
+    input.type = 'number';
+    input.value = field.value === undefined ? '' : String(field.value);
+    if (field.min !== undefined) input.min = String(field.min);
+    if (field.max !== undefined) input.max = String(field.max);
+    input.addEventListener('change', () => {
+      const parsed = input.value === '' ? null : Number(input.value);
+      if (parsed !== null && !Number.isFinite(parsed)) return;
+      this.#hooks.apply([field.toOp(parsed)], `panel:${field.key}`);
+    });
+    return input;
+  }
+
+  #renderOptions(doc: Document, field: Extract<Field, { control: 'token' | 'choice' }>): HTMLElement {
     const options = el('div', 'options');
-    const entries: { key: string; label: string; pressed: boolean; swatch?: string; apply: () => Op }[] =
+    const entries =
       field.control === 'token'
         ? field.options.map((option) => ({
             key: option.ref,
@@ -199,6 +320,7 @@ export class Shell {
             key: String(option.value),
             label: option.label,
             pressed: field.value === option.value,
+            swatch: undefined as string | undefined,
             apply: () => field.toOp(option.value),
           }));
 
@@ -221,8 +343,7 @@ export class Shell {
       clear.onclick = () => this.#hooks.apply([field.toOp(null)], `panel:${field.key}`);
       options.append(clear);
     }
-    wrapper.append(options);
-    return wrapper;
+    return options;
   }
 
   #renderDebt(): void {

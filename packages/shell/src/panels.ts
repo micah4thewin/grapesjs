@@ -31,7 +31,37 @@ export interface ChoiceField {
   toOp(value: string | number | null): Op;
 }
 
-export type Field = TokenField | ChoiceField;
+/**
+ * A typed content field — alt text, an image source, a list's row limit, a component's prop.
+ *
+ * These accept free input, and that is not a hole in the constraint: **content is not style**. A
+ * page's words, its alt text and its data are the author's; what the token system closes off is
+ * the appearance. The type still holds — a number field cannot produce a string, `required` is
+ * enforced by the compiler, and every keystroke arrives as an op like anything else.
+ */
+export interface TextField {
+  control: 'text';
+  key: string;
+  label: string;
+  value?: string;
+  multiline?: boolean;
+  required?: boolean;
+  placeholder?: string;
+  help?: string;
+  toOp(value: string): Op;
+}
+
+export interface NumberField {
+  control: 'number';
+  key: string;
+  label: string;
+  value?: number;
+  min?: number;
+  max?: number;
+  toOp(value: number | null): Op;
+}
+
+export type Field = TokenField | ChoiceField | TextField | NumberField;
 
 export interface PanelSection {
   title: string;
@@ -90,6 +120,9 @@ export function panelForNode(doc: Document, nodeId: string): PanelSection[] {
   const node = doc.nodes[nodeId];
   if (!node) return [];
   const sections: PanelSection[] = [];
+
+  const content = contentFields(doc, node);
+  if (content.length) sections.push({ title: 'Content', fields: content });
 
   const styleFields = (STYLE_FIELDS[node.kind] ?? []).map((key) => tokenField(doc, node, key));
   if (styleFields.length) sections.push({ title: 'Style', fields: styleFields });
@@ -171,6 +204,148 @@ export function panelForNode(doc: Document, nodeId: string): PanelSection[] {
   }
 
   return sections;
+}
+
+/**
+ * The typed half of the inspector — the answer to "where did the trait editor go".
+ *
+ * It did not go anywhere; it got types. An image's alt text is a required string the build checks,
+ * its dimensions are integers, a list's source is one of the declared collections, and a component
+ * instance's props come from that component's own declaration rather than from a bag of strings.
+ */
+function contentFields(doc: Document, node: Node): Field[] {
+  const fields: Field[] = [];
+
+  switch (node.kind) {
+    case 'text':
+    case 'heading': {
+      if (node.bind) {
+        // A bound node shows a record's value; editing it here would edit the template, not the
+        // record, and silently for every row. That distinction is Stage E3's, and it is explicit.
+        fields.push(readonly('bind', 'Bound to', node.bind, 'Edit the record, not the template.'));
+        break;
+      }
+      fields.push({
+        control: 'text',
+        key: 'text',
+        label: 'Text',
+        multiline: node.kind === 'text',
+        value: (node.spans ?? []).map((span) => span.text).join(''),
+        toOp: (value) => ({ kind: 'setText', id: node.id, spans: [{ text: value }] }),
+      });
+      break;
+    }
+
+    case 'image': {
+      fields.push({
+        control: 'text',
+        key: 'alt',
+        label: 'Alt text',
+        required: true,
+        value: node.alt,
+        placeholder: 'What the image shows',
+        help: 'Required. The build fails without it, and again if it is a filename.',
+        toOp: (value) => ({ kind: 'setField', id: node.id, key: 'alt', value }),
+      });
+      fields.push({
+        control: 'text',
+        key: 'src',
+        label: 'Source',
+        value: node.src,
+        toOp: (value) => ({ kind: 'setField', id: node.id, key: 'src', value }),
+      });
+      fields.push(number(node, 'width', 'Width', node.width, 1));
+      fields.push(number(node, 'height', 'Height', node.height, 1));
+      break;
+    }
+
+    case 'list': {
+      const collections = (doc.collections ?? []).map((collection) => collection.name);
+      if (collections.length) {
+        fields.push({
+          control: 'choice',
+          key: 'source',
+          label: 'Repeats over',
+          value: node.source,
+          options: collections.map((name) => ({ value: name, label: name })),
+          toOp: (value) => ({ kind: 'setField', id: node.id, key: 'source', value }),
+        });
+      }
+      fields.push(number(node, 'limit', 'Show at most', node.limit, 1));
+      break;
+    }
+
+    case 'instance': {
+      const definition = (doc.components ?? []).find((component) => component.name === node.component);
+      for (const prop of definition?.props ?? []) {
+        const current = node.props?.[prop.name];
+        if (prop.type === 'number') {
+          fields.push({
+            control: 'number',
+            key: `prop:${prop.name}`,
+            label: prop.name,
+            value: current === undefined ? undefined : Number(current),
+            toOp: (value) => setProp(node, prop.name, value === null ? null : String(value)),
+          });
+        } else if (prop.type === 'boolean') {
+          fields.push({
+            control: 'choice',
+            key: `prop:${prop.name}`,
+            label: prop.name,
+            value: current,
+            options: [
+              { value: 'true', label: 'true' },
+              { value: 'false', label: 'false' },
+            ],
+            toOp: (value) => setProp(node, prop.name, value === null ? null : String(value)),
+          });
+        } else {
+          fields.push({
+            control: 'text',
+            key: `prop:${prop.name}`,
+            label: prop.name,
+            required: prop.required,
+            value: current,
+            toOp: (value) => setProp(node, prop.name, value),
+          });
+        }
+      }
+      break;
+    }
+  }
+
+  return fields;
+}
+
+function setProp(node: Node, name: string, value: string | null): Op {
+  const props = { ...(node.props ?? {}) };
+  if (value === null || value === '') delete props[name];
+  else props[name] = value;
+  // Props travel as one field so a rename or a removal is a single, invertible op.
+  return { kind: 'setField', id: node.id, key: 'props' as never, value: props };
+}
+
+function number(node: Node, key: string, label: string, value: number | undefined, min: number): NumberField {
+  return {
+    control: 'number',
+    key,
+    label,
+    value,
+    min,
+    toOp: (next) => ({ kind: 'setField', id: node.id, key: key as never, value: next }),
+  };
+}
+
+/** A value the panel shows but will not let you edit here, with the reason why. */
+function readonly(key: string, label: string, value: string, help: string): TextField {
+  return {
+    control: 'text',
+    key,
+    label,
+    value,
+    help,
+    toOp: () => ({ kind: 'setText', id: '', spans: [] }), // never called: the control renders disabled
+  };
 }
 
 function choice(

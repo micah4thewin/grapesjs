@@ -25,6 +25,9 @@ test('every option every panel offers produces a valid document', () => {
     for (const nodeId of Object.keys(doc.nodes)) {
       for (const section of panelForNode(doc, nodeId)) {
         for (const field of section.fields) {
+          // Content fields (alt text, a caption, a row limit) take free input by design and are
+          // exercised in the audit below; this walk is about the constrained ones.
+          if (field.control === 'text' || field.control === 'number') continue;
           const options =
             field.control === 'token' ? field.options.map((o) => o.ref) : field.options.map((o) => o.value);
           for (const option of options) {
@@ -47,6 +50,14 @@ test('no panel control can express a raw value', () => {
     for (const nodeId of Object.keys(doc.nodes)) {
       for (const section of panelForNode(doc, nodeId)) {
         for (const field of section.fields) {
+          if (field.control === 'text' || field.control === 'number') {
+            // Content fields take free input by design — words and alt text are the author's — but
+            // they may never reach a style, which is the property this audit is about.
+            const op = field.toOp('some value' as never);
+            assert.ok(['setText', 'setField'].includes(op.kind), `${field.key} produced ${op.kind}`);
+            assert.ok(!JSON.stringify(op).includes('"style"'), `${field.key} reached into style`);
+            continue;
+          }
           if (field.control === 'token') {
             for (const option of field.options) {
               assert.match(option.ref, /^[a-z]+\.[a-z0-9-]+$/, 'a token control offers token refs only');
@@ -69,8 +80,8 @@ test('a heading panel offers levels and type roles, not font sizes', () => {
   const doc = JSON.parse(readFileSync(join(corpus, 'landing.json'), 'utf8'));
   const sections = panelForNode(doc, 'hero-title');
   const fields = sections.flatMap((s) => s.fields.map((f) => f.key));
-  assert.deepEqual(fields.sort(), ['fg', 'level', 'type']);
-  const typeField = sections[0].fields.find((field) => field.key === 'type');
+  assert.deepEqual(fields.sort(), ['fg', 'level', 'text', 'type']);
+  const typeField = sections.flatMap((s) => s.fields).find((field) => field.key === 'type');
   assert.ok(typeField?.control === 'token', 'the type role is a token control, not a free value');
   assert.deepEqual(
     typeField.options.map((option) => option.ref),

@@ -40,7 +40,13 @@ const records = existsSync(dataPath) ? readFileSync(dataPath, 'utf8') : null;
 
 // Assets travel as data URIs: with no server there is nothing to fetch them from, and a broken
 // image in a demo of a compiler that refuses broken images would be its own joke.
-const mime = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml' };
+const mime = {
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
+};
 const inlineAsset = (reference) => {
   const file = resolve(repoRoot, 'corpus', reference);
   if (!existsSync(file)) return reference;
