@@ -1,0 +1,932 @@
+{
+  "schema": "lattice/1.0",
+  "id": "over-budget",
+  "name": "Over budget",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#ffffff"
+      },
+      "surface": {
+        "value": "#f4f5f7"
+      },
+      "fg": {
+        "value": "#16181d"
+      },
+      "muted": {
+        "value": "#585c66"
+      },
+      "faint": {
+        "value": "#b9bec9"
+      },
+      "accent": {
+        "value": "#1d4ed8"
+      },
+      "on-accent": {
+        "value": "#ffffff",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "7": {
+        "px": 48
+      },
+      "measure": {
+        "px": 960
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      }
+    },
+    "radius": {
+      "md": {
+        "px": 8
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Over budget",
+      "root": "root"
+    }
+  ],
+  "nodes": {
+    "root": {
+      "id": "root",
+      "kind": "section",
+      "children": [
+        "p0",
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6",
+        "p7",
+        "p8",
+        "p9",
+        "p10",
+        "p11",
+        "p12",
+        "p13",
+        "p14",
+        "p15",
+        "p16",
+        "p17",
+        "p18",
+        "p19",
+        "p20",
+        "p21",
+        "p22",
+        "p23",
+        "p24",
+        "p25",
+        "p26",
+        "p27",
+        "p28",
+        "p29",
+        "p30",
+        "p31",
+        "p32",
+        "p33",
+        "p34",
+        "p35",
+        "p36",
+        "p37",
+        "p38",
+        "p39",
+        "p40",
+        "p41",
+        "p42",
+        "p43",
+        "p44",
+        "p45",
+        "p46",
+        "p47",
+        "p48",
+        "p49",
+        "p50",
+        "p51",
+        "p52",
+        "p53",
+        "p54",
+        "p55",
+        "p56",
+        "p57",
+        "p58",
+        "p59"
+      ],
+      "style": {
+        "bg": "color.bg",
+        "pad": "space.7"
+      }
+    },
+    "p0": {
+      "id": "p0",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p1": {
+      "id": "p1",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p2": {
+      "id": "p2",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p3": {
+      "id": "p3",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p4": {
+      "id": "p4",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p5": {
+      "id": "p5",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p6": {
+      "id": "p6",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p7": {
+      "id": "p7",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p8": {
+      "id": "p8",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p9": {
+      "id": "p9",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p10": {
+      "id": "p10",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p11": {
+      "id": "p11",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p12": {
+      "id": "p12",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p13": {
+      "id": "p13",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p14": {
+      "id": "p14",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p15": {
+      "id": "p15",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p16": {
+      "id": "p16",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p17": {
+      "id": "p17",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p18": {
+      "id": "p18",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p19": {
+      "id": "p19",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p20": {
+      "id": "p20",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p21": {
+      "id": "p21",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p22": {
+      "id": "p22",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p23": {
+      "id": "p23",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p24": {
+      "id": "p24",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p25": {
+      "id": "p25",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p26": {
+      "id": "p26",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p27": {
+      "id": "p27",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p28": {
+      "id": "p28",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p29": {
+      "id": "p29",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p30": {
+      "id": "p30",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p31": {
+      "id": "p31",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p32": {
+      "id": "p32",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p33": {
+      "id": "p33",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p34": {
+      "id": "p34",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p35": {
+      "id": "p35",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p36": {
+      "id": "p36",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p37": {
+      "id": "p37",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p38": {
+      "id": "p38",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p39": {
+      "id": "p39",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p40": {
+      "id": "p40",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p41": {
+      "id": "p41",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p42": {
+      "id": "p42",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p43": {
+      "id": "p43",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p44": {
+      "id": "p44",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p45": {
+      "id": "p45",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p46": {
+      "id": "p46",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p47": {
+      "id": "p47",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p48": {
+      "id": "p48",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p49": {
+      "id": "p49",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p50": {
+      "id": "p50",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p51": {
+      "id": "p51",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p52": {
+      "id": "p52",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p53": {
+      "id": "p53",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p54": {
+      "id": "p54",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p55": {
+      "id": "p55",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p56": {
+      "id": "p56",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p57": {
+      "id": "p57",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p58": {
+      "id": "p58",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    },
+    "p59": {
+      "id": "p59",
+      "kind": "text",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      },
+      "spans": [
+        {
+          "text": "Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory. Budget gates are not advisory."
+        }
+      ]
+    }
+  },
+  "budgets": {
+    "htmlKb": 8,
+    "cssKb": 30,
+    "totalKb": 40
+  }
+}

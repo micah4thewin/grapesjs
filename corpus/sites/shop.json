@@ -1,0 +1,451 @@
+{
+  "schema": "lattice/1.0",
+  "id": "shop",
+  "name": "Ash & Ember",
+  "icon": "assets/icon-shop.png",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#fffefb"
+      },
+      "surface": {
+        "value": "#f5f0e6"
+      },
+      "fg": {
+        "value": "#231f1a"
+      },
+      "muted": {
+        "value": "#57514a"
+      },
+      "accent": {
+        "value": "#8a5a20"
+      },
+      "on-accent": {
+        "value": "#fffefb",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "3": {
+        "px": 12
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "6": {
+        "px": 32
+      },
+      "7": {
+        "px": 48
+      },
+      "8": {
+        "px": 64
+      },
+      "measure": {
+        "px": 1120
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "lead": {
+        "sizePx": 20,
+        "lineHeight": 1.5,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      },
+      "h2": {
+        "sizePx": 30,
+        "lineHeight": 1.25,
+        "weight": 600
+      },
+      "h3": {
+        "sizePx": 20,
+        "lineHeight": 1.35,
+        "weight": 600
+      },
+      "small": {
+        "sizePx": 14,
+        "lineHeight": 1.5,
+        "weight": 400
+      }
+    },
+    "radius": {
+      "sm": {
+        "px": 4
+      },
+      "md": {
+        "px": 8
+      },
+      "lg": {
+        "px": 16
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Ash & Ember — cast iron made in Dorset",
+      "description": "Cast iron cookware, made in Dorset.",
+      "root": "home"
+    },
+    {
+      "path": "/care",
+      "title": "Care — Ash & Ember",
+      "root": "care",
+      "description": "Hot water, a stiff brush, dry on the hob. Soap is fine; the internet is wrong about this."
+    }
+  ],
+  "nodes": {
+    "home": {
+      "id": "home",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "gap": "space.6"
+      },
+      "children": ["hero", "catalogue", "note"]
+    },
+    "hero": {
+      "id": "hero",
+      "kind": "stack",
+      "tag": "header",
+      "style": {
+        "pad": "space.7",
+        "gap": "space.3",
+        "bg": "color.surface"
+      },
+      "children": ["hero-h", "hero-b"]
+    },
+    "hero-h": {
+      "id": "hero-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Ash & Ember"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "hero-b": {
+      "id": "hero-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Cast iron, made in Dorset, sold until it runs out."
+        }
+      ],
+      "style": {
+        "type": "type.lead",
+        "fg": "color.muted"
+      }
+    },
+    "catalogue": {
+      "id": "catalogue",
+      "kind": "grid",
+      "cols": 12,
+      "style": {
+        "gap": "space.5",
+        "pad": "space.6"
+      },
+      "children": ["p1", "p2", "p3", "p4"]
+    },
+    "note": {
+      "id": "note",
+      "kind": "stack",
+      "tag": "footer",
+      "style": {
+        "pad": "space.6",
+        "gap": "space.2",
+        "bg": "color.surface"
+      },
+      "children": ["note-h", "note-b"]
+    },
+    "note-h": {
+      "id": "note-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Shipping and returns"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "note-b": {
+      "id": "note-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Two to four days in the UK. Send anything back within a year, used or not."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "care": {
+      "id": "care",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.4"
+      },
+      "children": ["care-h", "care-b"]
+    },
+    "care-h": {
+      "id": "care-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Looking after cast iron"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "care-b": {
+      "id": "care-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Hot water, a stiff brush, dry on the hob. Soap is fine; the internet is wrong about this."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "p1": {
+      "id": "p1",
+      "kind": "stack",
+      "place": {
+        "col": 1,
+        "span": 3
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["p1-img", "p1-h", "p1-d"]
+    },
+    "p1-img": {
+      "id": "p1-img",
+      "kind": "image",
+      "src": "assets/skillet.png",
+      "alt": "A ten-inch cast iron skillet with a matte black seasoned surface",
+      "width": 800,
+      "height": 800,
+      "style": {
+        "radius": "radius.md"
+      }
+    },
+    "p1-h": {
+      "id": "p1-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "10\" skillet — £68"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "p1-d": {
+      "id": "p1-d",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "The one to buy first. Pre-seasoned, 2.1kg."
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "p2": {
+      "id": "p2",
+      "kind": "stack",
+      "place": {
+        "col": 4,
+        "span": 3
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["p2-img", "p2-h", "p2-d"]
+    },
+    "p2-img": {
+      "id": "p2-img",
+      "kind": "image",
+      "src": "assets/dutch-oven.png",
+      "alt": "A five-litre cast iron dutch oven with the lid slightly ajar",
+      "width": 800,
+      "height": 800,
+      "style": {
+        "radius": "radius.md"
+      }
+    },
+    "p2-h": {
+      "id": "p2-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Dutch oven, 5L — £145"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "p2-d": {
+      "id": "p2-d",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Bread, stew, and the occasional roast."
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "p3": {
+      "id": "p3",
+      "kind": "stack",
+      "place": {
+        "col": 7,
+        "span": 3
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["p3-img", "p3-h", "p3-d"]
+    },
+    "p3-img": {
+      "id": "p3-img",
+      "kind": "image",
+      "src": "assets/griddle.png",
+      "alt": "A rectangular two-burner griddle plate, ridged on the visible side",
+      "width": 800,
+      "height": 800,
+      "style": {
+        "radius": "radius.md"
+      }
+    },
+    "p3-h": {
+      "id": "p3-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Griddle plate — £54"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "p3-d": {
+      "id": "p3-d",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Two burners, ridged one side, flat the other."
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "p4": {
+      "id": "p4",
+      "kind": "stack",
+      "place": {
+        "col": 10,
+        "span": 3
+      },
+      "style": {
+        "gap": "space.2"
+      },
+      "children": ["p4-img", "p4-h", "p4-d"]
+    },
+    "p4-img": {
+      "id": "p4-img",
+      "kind": "image",
+      "src": "assets/skimmer.png",
+      "alt": "A forged steel spider skimmer with a wooden handle",
+      "width": 800,
+      "height": 800,
+      "style": {
+        "radius": "radius.md"
+      }
+    },
+    "p4-h": {
+      "id": "p4-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Spider skimmer — £22"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "p4-d": {
+      "id": "p4-d",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Forged, not cast. Lasts about as long."
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    }
+  }
+}

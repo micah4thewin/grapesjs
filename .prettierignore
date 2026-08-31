@@ -5,3 +5,10 @@ pnpm-lock.yaml
 packages/cli/src/template/**/*.*
 **/locale/**
 stats.json
+# Rust build output
+target/
+
+# Generated from packages/engine/schema — formatting is the generator's job, and a
+# reformat here would fail the codegen freshness check in CI.
+packages/engine/src/generated/
+crates/compiler/src/generated/

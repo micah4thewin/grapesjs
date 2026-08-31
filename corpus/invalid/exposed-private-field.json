@@ -1,0 +1,151 @@
+{
+  "schema": "lattice/1.0",
+  "id": "leaky-profiles",
+  "name": "Leaky profiles",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#ffffff"
+      },
+      "surface": {
+        "value": "#f4f5f7"
+      },
+      "fg": {
+        "value": "#16181d"
+      },
+      "muted": {
+        "value": "#585c66"
+      },
+      "faint": {
+        "value": "#b9bec9"
+      },
+      "accent": {
+        "value": "#1d4ed8"
+      },
+      "on-accent": {
+        "value": "#ffffff",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "7": {
+        "px": 48
+      },
+      "measure": {
+        "px": 960
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      }
+    },
+    "radius": {
+      "md": {
+        "px": 8
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Our team",
+      "description": "The people who work here.",
+      "root": "root"
+    }
+  ],
+  "nodes": {
+    "root": {
+      "id": "root",
+      "kind": "section",
+      "tag": "main",
+      "children": ["title", "list"],
+      "style": {
+        "bg": "color.bg"
+      }
+    },
+    "title": {
+      "id": "title",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Our team"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "list": {
+      "id": "list",
+      "kind": "list",
+      "source": "members",
+      "children": ["card"]
+    },
+    "card": {
+      "id": "card",
+      "kind": "stack",
+      "children": ["card-name", "card-email"]
+    },
+    "card-name": {
+      "id": "card-name",
+      "kind": "text",
+      "bind": "members.name",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      }
+    },
+    "card-email": {
+      "id": "card-email",
+      "kind": "text",
+      "bind": "members.homeAddress",
+      "style": {
+        "type": "type.body",
+        "fg": "color.fg"
+      }
+    }
+  },
+  "collections": [
+    {
+      "name": "members",
+      "publicRead": true,
+      "fields": [
+        {
+          "name": "slug",
+          "type": "text"
+        },
+        {
+          "name": "name",
+          "type": "text"
+        },
+        {
+          "name": "homeAddress",
+          "type": "text",
+          "private": true
+        }
+      ]
+    }
+  ]
+}

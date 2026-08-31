@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lattice — editor shell</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./grapes.min.css" />
+    <link rel="stylesheet" href="./shell.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="mark" aria-hidden="true"></span>
+          <span class="name">Lattice</span>
+          <span class="site" id="site-name">—</span>
+        </div>
+        <nav class="routes" id="routes" aria-label="Routes"></nav>
+        <div class="actions">
+          <button class="btn" id="undo" title="Undo (one op batch)">Undo</button>
+          <button class="btn" id="redo" title="Redo">Redo</button>
+          <button class="btn" id="shipped-toggle" aria-pressed="false" title="The files this document compiles to">
+            What ships
+          </button>
+          <span class="meter" id="meter">budget —</span>
+        </div>
+      </header>
+
+      <div class="body">
+        <aside class="rail left">
+          <section class="panel">
+            <h2>Structure</h2>
+            <div class="tree" id="tree"></div>
+          </section>
+          <section class="panel">
+            <h2>Blocks</h2>
+            <div class="blocks" id="blocks"></div>
+          </section>
+        </aside>
+
+        <main class="canvas-wrap">
+          <div class="issues" id="issues" hidden></div>
+          <div id="canvas"></div>
+        </main>
+
+        <aside class="rail right">
+          <section class="panel">
+            <h2>Inspector <span class="node-id" id="selected-id"></span></h2>
+            <div class="inspector" id="inspector">
+              <p class="empty">Select something on the canvas.</p>
+            </div>
+          </section>
+          <section class="panel">
+            <h2>Design debt</h2>
+            <div id="debt" class="debt"></div>
+          </section>
+        </aside>
+      </div>
+
+      <section class="shipped" id="shipped" hidden></section>
+      <footer class="statusbar" id="status">booting…</footer>
+    </div>
+    <script src="./grapes.min.js"></script>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

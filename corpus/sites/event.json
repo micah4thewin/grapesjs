@@ -1,0 +1,438 @@
+{
+  "schema": "lattice/1.0",
+  "id": "event",
+  "name": "Fieldwork 2026",
+  "icon": "assets/icon-event.png",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#0b1020"
+      },
+      "surface": {
+        "value": "#141c33"
+      },
+      "fg": {
+        "value": "#f8fafc"
+      },
+      "muted": {
+        "value": "#c7d2e4"
+      },
+      "accent": {
+        "value": "#38bdf8"
+      },
+      "on-accent": {
+        "value": "#0b1020",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "3": {
+        "px": 12
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "6": {
+        "px": 32
+      },
+      "7": {
+        "px": 48
+      },
+      "8": {
+        "px": 64
+      },
+      "measure": {
+        "px": 1040
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "lead": {
+        "sizePx": 20,
+        "lineHeight": 1.5,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      },
+      "h2": {
+        "sizePx": 30,
+        "lineHeight": 1.25,
+        "weight": 600
+      },
+      "h3": {
+        "sizePx": 20,
+        "lineHeight": 1.35,
+        "weight": 600
+      },
+      "small": {
+        "sizePx": 14,
+        "lineHeight": 1.5,
+        "weight": 400
+      }
+    },
+    "radius": {
+      "sm": {
+        "px": 4
+      },
+      "md": {
+        "px": 8
+      },
+      "lg": {
+        "px": 16
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "Fieldwork 2026 — a conference about maintenance",
+      "description": "Two days for people who maintain things they did not build.",
+      "root": "home"
+    },
+    {
+      "path": "/tickets",
+      "title": "Tickets — Fieldwork 2026",
+      "root": "tickets",
+      "description": "Tickets are £90, or free if your employer will not pay. One sentence to apply."
+    }
+  ],
+  "nodes": {
+    "home": {
+      "id": "home",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "bg": "color.bg",
+        "fg": "color.fg",
+        "maxWidth": "space.measure",
+        "gap": "space.6"
+      },
+      "children": ["hero", "schedule", "cta"]
+    },
+    "hero": {
+      "id": "hero",
+      "kind": "stack",
+      "tag": "header",
+      "style": {
+        "pad": "space.8",
+        "gap": "space.3",
+        "align": "center"
+      },
+      "children": ["hero-h", "hero-b", "hero-when"]
+    },
+    "hero-h": {
+      "id": "hero-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Fieldwork 2026"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "hero-b": {
+      "id": "hero-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "A two-day conference for people who maintain things they did not build."
+        }
+      ],
+      "style": {
+        "type": "type.lead",
+        "fg": "color.muted"
+      }
+    },
+    "hero-when": {
+      "id": "hero-when",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "14–15 May 2026 · Sheffield"
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.accent"
+      }
+    },
+    "schedule": {
+      "id": "schedule",
+      "kind": "grid",
+      "cols": 12,
+      "style": {
+        "gap": "space.5",
+        "pad": "space.6"
+      },
+      "children": ["s1", "s2", "s3", "s4"]
+    },
+    "cta": {
+      "id": "cta",
+      "kind": "stack",
+      "tag": "footer",
+      "style": {
+        "pad": "space.7",
+        "gap": "space.3",
+        "align": "center",
+        "bg": "color.surface"
+      },
+      "children": ["cta-h", "cta-b"]
+    },
+    "cta-h": {
+      "id": "cta-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Tickets are £90, or free if your employer will not pay"
+        }
+      ],
+      "style": {
+        "type": "type.h2",
+        "fg": "color.fg"
+      }
+    },
+    "cta-b": {
+      "id": "cta-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Ask for a free ticket",
+          "href": "/tickets"
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.accent"
+      }
+    },
+    "tickets": {
+      "id": "tickets",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "bg": "color.bg",
+        "fg": "color.fg",
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.4"
+      },
+      "children": ["t-h", "t-b"]
+    },
+    "t-h": {
+      "id": "t-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Tickets"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "t-b": {
+      "id": "t-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Write one sentence about what you maintain. That is the whole application."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "s1": {
+      "id": "s1",
+      "kind": "stack",
+      "place": {
+        "col": 1,
+        "span": 3
+      },
+      "style": {
+        "gap": "space.2",
+        "pad": "space.5",
+        "bg": "color.surface",
+        "radius": "radius.md"
+      },
+      "children": ["s1-h", "s1-w"]
+    },
+    "s1-h": {
+      "id": "s1-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Reading a codebase you did not write"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "s1-w": {
+      "id": "s1-w",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Priya Raman"
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "s2": {
+      "id": "s2",
+      "kind": "stack",
+      "place": {
+        "col": 4,
+        "span": 3
+      },
+      "style": {
+        "gap": "space.2",
+        "pad": "space.5",
+        "bg": "color.surface",
+        "radius": "radius.md"
+      },
+      "children": ["s2-h", "s2-w"]
+    },
+    "s2-h": {
+      "id": "s2-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "The on-call handover that actually works"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "s2-w": {
+      "id": "s2-w",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Tom Bergström"
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "s3": {
+      "id": "s3",
+      "kind": "stack",
+      "place": {
+        "col": 7,
+        "span": 3
+      },
+      "style": {
+        "gap": "space.2",
+        "pad": "space.5",
+        "bg": "color.surface",
+        "radius": "radius.md"
+      },
+      "children": ["s3-h", "s3-w"]
+    },
+    "s3-h": {
+      "id": "s3-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Deleting code in a regulated industry"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "s3-w": {
+      "id": "s3-w",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Ada Nwosu"
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    },
+    "s4": {
+      "id": "s4",
+      "kind": "stack",
+      "place": {
+        "col": 10,
+        "span": 3
+      },
+      "style": {
+        "gap": "space.2",
+        "pad": "space.5",
+        "bg": "color.surface",
+        "radius": "radius.md"
+      },
+      "children": ["s4-h", "s4-w"]
+    },
+    "s4-h": {
+      "id": "s4-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "Twenty years of one Postgres cluster"
+        }
+      ],
+      "style": {
+        "type": "type.h3",
+        "fg": "color.fg"
+      }
+    },
+    "s4-w": {
+      "id": "s4-w",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Jean-Marc Fabre"
+        }
+      ],
+      "style": {
+        "type": "type.small",
+        "fg": "color.muted"
+      }
+    }
+  }
+}

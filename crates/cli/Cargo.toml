@@ -1,0 +1,15 @@
+[package]
+name = "lattice-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "The `lattice` CLI: build, check, dev."
+
+[dependencies]
+lattice-compiler.workspace = true
+serde_json.workspace = true
+
+[[bin]]
+name = "lattice"
+path = "src/main.rs"

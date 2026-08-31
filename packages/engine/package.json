@@ -1,0 +1,24 @@
+{
+  "name": "@lattice/engine",
+  "version": "0.1.0",
+  "description": "The Lattice IR store: validated documents, invertible ops, one history. No editor, no framework, no GrapesJS — the dependency arrow points one way.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./schema/lattice-ir.schema.json"
+  },
+  "files": [
+    "src",
+    "schema"
+  ],
+  "scripts": {
+    "build": "node tools/codegen.mjs",
+    "codegen:check": "node tools/codegen.mjs --check",
+    "test": "node --test 'test/*.test.ts'",
+    "ts:check": "tsc -p tsconfig.json"
+  }
+}

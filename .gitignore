@@ -22,3 +22,8 @@ grapesjs-*.tgz
 _index.html
 docs/.vuepress/dist
 dist/
+# Lattice
+target/
+corpus/**/dist/
+packages/engine/dist/
+*.wasm

@@ -1,4 +1,7 @@
 packages:
   - 'packages/cli'
   - 'packages/core'
+  - 'packages/engine'
+  - 'packages/shell'
+  - 'packages/lattice-cli'
   - 'docs/'

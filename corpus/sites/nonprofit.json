@@ -1,0 +1,417 @@
+{
+  "schema": "lattice/1.0",
+  "id": "nonprofit",
+  "name": "The Wednesday Kitchen",
+  "icon": "assets/icon-nonprofit.png",
+  "tokens": {
+    "color": {
+      "bg": {
+        "value": "#ffffff"
+      },
+      "surface": {
+        "value": "#eef6ee"
+      },
+      "fg": {
+        "value": "#14261a"
+      },
+      "muted": {
+        "value": "#41564a"
+      },
+      "accent": {
+        "value": "#166534"
+      },
+      "on-accent": {
+        "value": "#ffffff",
+        "onLight": false
+      }
+    },
+    "space": {
+      "1": {
+        "px": 4
+      },
+      "2": {
+        "px": 8
+      },
+      "3": {
+        "px": 12
+      },
+      "4": {
+        "px": 16
+      },
+      "5": {
+        "px": 24
+      },
+      "6": {
+        "px": 32
+      },
+      "7": {
+        "px": 48
+      },
+      "8": {
+        "px": 64
+      },
+      "measure": {
+        "px": 960
+      }
+    },
+    "type": {
+      "body": {
+        "sizePx": 16,
+        "lineHeight": 1.6,
+        "weight": 400
+      },
+      "lead": {
+        "sizePx": 20,
+        "lineHeight": 1.5,
+        "weight": 400
+      },
+      "h1": {
+        "sizePx": 44,
+        "lineHeight": 1.1,
+        "weight": 700
+      },
+      "h2": {
+        "sizePx": 30,
+        "lineHeight": 1.25,
+        "weight": 600
+      },
+      "h3": {
+        "sizePx": 20,
+        "lineHeight": 1.35,
+        "weight": 600
+      },
+      "small": {
+        "sizePx": 14,
+        "lineHeight": 1.5,
+        "weight": 400
+      }
+    },
+    "radius": {
+      "sm": {
+        "px": 4
+      },
+      "md": {
+        "px": 8
+      },
+      "lg": {
+        "px": 16
+      }
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "title": "The Wednesday Kitchen — Govan",
+      "description": "Six hundred hot meals a week from surplus food.",
+      "root": "home"
+    },
+    {
+      "path": "/donate",
+      "title": "Donate — The Wednesday Kitchen",
+      "root": "donate",
+      "description": "£12 is forty meals. Standing orders cost us nothing to process."
+    }
+  ],
+  "nodes": {
+    "home": {
+      "id": "home",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "gap": "space.6"
+      },
+      "children": ["hero", "numbers", "story", "give"]
+    },
+    "hero": {
+      "id": "hero",
+      "kind": "stack",
+      "tag": "header",
+      "style": {
+        "pad": "space.8",
+        "gap": "space.3",
+        "bg": "color.surface"
+      },
+      "children": ["hero-h", "hero-b"]
+    },
+    "hero-h": {
+      "id": "hero-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "The Wednesday Kitchen"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "hero-b": {
+      "id": "hero-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Six hundred hot meals a week, cooked by volunteers in a church hall in Govan."
+        }
+      ],
+      "style": {
+        "type": "type.lead",
+        "fg": "color.muted"
+      }
+    },
+    "numbers": {
+      "id": "numbers",
+      "kind": "grid",
+      "cols": 12,
+      "style": {
+        "gap": "space.5",
+        "pad": "space.6"
+      },
+      "children": ["n1", "n2", "n3"]
+    },
+    "story": {
+      "id": "story",
+      "kind": "stack",
+      "style": {
+        "pad": "space.6",
+        "gap": "space.3"
+      },
+      "children": ["story-h", "story-b", "story-img"]
+    },
+    "story-h": {
+      "id": "story-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "How it works"
+        }
+      ],
+      "style": {
+        "type": "type.h2",
+        "fg": "color.fg"
+      }
+    },
+    "story-b": {
+      "id": "story-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Surplus arrives Monday. It is sorted Tuesday, cooked Wednesday, and delivered by six. Nothing is stored longer than a week and nothing is thrown away that a person would eat."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "story-img": {
+      "id": "story-img",
+      "kind": "image",
+      "src": "assets/kitchen.png",
+      "alt": "Volunteers plating meals along a stainless steel counter",
+      "width": 1400,
+      "height": 933,
+      "style": {
+        "radius": "radius.md"
+      }
+    },
+    "give": {
+      "id": "give",
+      "kind": "stack",
+      "tag": "footer",
+      "style": {
+        "pad": "space.7",
+        "gap": "space.3",
+        "align": "center",
+        "bg": "color.surface"
+      },
+      "children": ["give-h", "give-b"]
+    },
+    "give-h": {
+      "id": "give-h",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "£12 is forty meals"
+        }
+      ],
+      "style": {
+        "type": "type.h2",
+        "fg": "color.fg"
+      }
+    },
+    "give-b": {
+      "id": "give-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Give monthly",
+          "href": "/donate"
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.accent"
+      }
+    },
+    "donate": {
+      "id": "donate",
+      "kind": "section",
+      "tag": "main",
+      "style": {
+        "maxWidth": "space.measure",
+        "pad": "space.7",
+        "gap": "space.4"
+      },
+      "children": ["d-h", "d-b"]
+    },
+    "d-h": {
+      "id": "d-h",
+      "kind": "heading",
+      "level": 1,
+      "spans": [
+        {
+          "text": "Donate"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "d-b": {
+      "id": "d-b",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "Standing orders cost us nothing to process, which is why we ask for them first."
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "n1": {
+      "id": "n1",
+      "kind": "stack",
+      "place": {
+        "col": 1,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["n1-b", "n1-l"]
+    },
+    "n1-b": {
+      "id": "n1-b",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "612"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "n1-l": {
+      "id": "n1-l",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "meals a week"
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "n2": {
+      "id": "n2",
+      "kind": "stack",
+      "place": {
+        "col": 5,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["n2-b", "n2-l"]
+    },
+    "n2-b": {
+      "id": "n2-b",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "38"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "n2-l": {
+      "id": "n2-l",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "volunteers"
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    },
+    "n3": {
+      "id": "n3",
+      "kind": "stack",
+      "place": {
+        "col": 9,
+        "span": 4
+      },
+      "style": {
+        "gap": "space.1"
+      },
+      "children": ["n3-b", "n3-l"]
+    },
+    "n3-b": {
+      "id": "n3-b",
+      "kind": "heading",
+      "level": 2,
+      "spans": [
+        {
+          "text": "1.4t"
+        }
+      ],
+      "style": {
+        "type": "type.h1",
+        "fg": "color.fg"
+      }
+    },
+    "n3-l": {
+      "id": "n3-l",
+      "kind": "text",
+      "spans": [
+        {
+          "text": "surplus food used monthly"
+        }
+      ],
+      "style": {
+        "type": "type.body",
+        "fg": "color.muted"
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+[workspace]
+resolver = "2"
+members = ["crates/compiler", "crates/compiler-wasm", "crates/cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/micah4thewin/grapesjs"
+
+[workspace.dependencies]
+lattice-compiler = { path = "crates/compiler" }
+serde = { version = "1", features = ["derive"] }
+# No `preserve_order`: map ordering comes from BTreeMap, never from input order.
+serde_json = "1"
+
+# Determinism (docs/lattice/determinism.md): release builds must not differ from debug
+# builds in emitted bytes. Nothing here may introduce parallel iteration order.
+[profile.release]
+opt-level = 3
+codegen-units = 1
