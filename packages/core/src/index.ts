@@ -1,4 +1,5 @@
 import { isElement } from 'underscore';
+import dynamicBuilderPlugin from './dynamic-builder/index.js';
 import Editor from './editor';
 import { EditorConfig } from './editor/config/config';
 import { PluginInput } from './plugin_manager/types';
@@ -14,6 +15,7 @@ polyfills();
 
 const editors: Editor[] = [];
 export const usePlugin = pluginUsePlugin;
+export const dynamicBuilder = dynamicBuilderPlugin;
 
 export const grapesjs = {
   $,
@@ -23,6 +25,8 @@ export const grapesjs = {
   plugins: legacyGlobalPlugins,
 
   usePlugin,
+
+  dynamicBuilder: dynamicBuilderPlugin,
 
   // @ts-ignore Will be replaced on build
   version: __GJS_VERSION__ as string,

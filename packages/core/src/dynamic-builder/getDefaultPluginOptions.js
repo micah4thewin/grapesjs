@@ -1,0 +1,26 @@
+const getDefaultPluginOptions = () => ({
+  icons: {},
+  theme: {},
+  shell: {},
+  devices: {},
+  styleSectors: {},
+  typography: {},
+  designTokens: {},
+  layoutComponents: {},
+  contentComponents: {},
+  mediaComponents: {},
+  interactiveComponents: {},
+  marketingComponents: {},
+  formComponents: {},
+  traits: {},
+  blocks: {},
+  seo: {},
+  schema: {},
+  audits: {},
+  dataBinding: {},
+  exporter: {},
+  persistence: {},
+  customCode: {},
+});
+
+export default getDefaultPluginOptions;

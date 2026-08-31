@@ -1,0 +1,41 @@
+const getContentIconPaths = () => ({
+  section: '<rect x="3" y="5" width="18" height="14" rx="1"/><path d="M7 9h10M7 15h10"/>',
+  columns: '<rect x="4" y="5" width="16" height="14" rx="1"/><path d="M12 5v14"/>',
+  heading: '<path d="M5 5v14M5 12h10M15 5v14M19 9v6"/>',
+  text: '<path d="M5 5h14M5 9h10M5 13h14M5 17h8"/>',
+  richText: '<path d="M4 4h16v16H4zM8 8h8M8 12h6M8 16h4"/>',
+  button: '<rect x="3" y="7" width="18" height="10" rx="3"/><path d="M8 12h8M14 9l3 3-3 3"/>',
+  hero: '<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M6 8h7M6 12h10M6 16h5"/><circle cx="17" cy="9" r="2"/>',
+  features: '<path d="m12 3 2.2 4.8L19 9l-3.5 3.5.8 5-4.3-2.4-4.3 2.4.8-5L5 9l4.8-1.2z"/>',
+  card: '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M7 8h10M7 12h6M7 16h8"/>',
+  testimonial: '<path d="M5 5h14v11H9l-4 3z"/><path d="M8 9h8M8 12h5"/>',
+  logoCloud:
+    '<rect x="4" y="6" width="6" height="6" rx="1"/><rect x="14" y="6" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/>',
+  stats: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  accordion: '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 15h8M16 7v4M16 13v4"/>',
+  tabs: '<rect x="4" y="5" width="16" height="14" rx="1"/><path d="M4 9h16M8 5v4M13 5v4"/>',
+  pricing: '<path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h5M8 16h8"/>',
+  team: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M14 16c.8-.7 1.8-1 3-1 2.2 0 4 1.8 4 4"/>',
+  contact: '<path d="M12 21s7-5.4 7-12a7 7 0 1 0-14 0c0 6.6 7 12 7 12z"/><circle cx="12" cy="9" r="2"/>',
+  navigation: '<path d="M4 6h16v12H4zM4 10h16M8 14h3M15 14h1"/>',
+  footer: '<path d="M4 5h16v14H4zM4 15h16M8 9h8"/>',
+  social:
+    '<circle cx="6" cy="12" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="m8 11 8-4M8 13l8 4"/>',
+  newsletter: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
+  callout: '<path d="M12 3 2.5 20h19z"/><path d="M12 9v4M12 17h.01"/>',
+  divider: '<path d="M4 12h16M8 8v8M16 8v8"/>',
+  quote:
+    '<path d="M6 7h5v5H8a2 2 0 0 1-2-2zM13 7h5v5h-3a2 2 0 0 1-2-2z"/><path d="M11 12v2a4 4 0 0 1-4 4M18 12v2a4 4 0 0 1-4 4"/>',
+  list: '<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/>',
+  badge: '<circle cx="12" cy="9" r="5"/><path d="m9 13-2 8 5-3 5 3-2-8"/>',
+  breadcrumb: '<path d="M4 12h5M15 12h5M9 7l5 5-5 5"/>',
+  typography: '<path d="M4 5V3h16v2M12 3v18M7 21h10"/>',
+  kerning: '<path d="M5 18 9 6l4 12M6.5 13h5M15 7v10M19 7v10"/><path d="m17 10 2-2 2 2M17 14l2 2 2-2"/>',
+  textAlign: '<path d="M4 5h16M4 9h11M4 13h16M4 17h11"/>',
+  article: '<path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h5"/>',
+  product: '<path d="M5 7h14l-1 13H6zM9 7a3 3 0 0 1 6 0"/>',
+  event: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M8 14h3"/>',
+  downloadResource: '<path d="M12 3v12M8 11l4 4 4-4M5 20h14"/>',
+});
+
+export default getContentIconPaths;

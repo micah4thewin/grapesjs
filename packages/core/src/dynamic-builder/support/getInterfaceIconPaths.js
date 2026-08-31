@@ -1,0 +1,37 @@
+const getInterfaceIconPaths = () => ({
+  appShell: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 8h18M7 4v4"/>',
+  canvas: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
+  blocks:
+    '<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
+  layers: '<path d="M12 3 4 7l8 4 8-4-8-4zM4 12l8 4 8-4M4 17l8 4 8-4"/>',
+  styles: '<path d="M4 21V3M4 7h10M4 12h16M4 17h7"/><circle cx="15" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>',
+  traits:
+    '<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="7" cy="18" r="2"/>',
+  settings:
+    '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/>',
+  commandPalette: '<circle cx="11" cy="11" r="6"/><path d="m20 20-4.2-4.2M8 11h6M11 8v6"/>',
+  search: '<circle cx="10" cy="10" r="6"/><path d="m20 20-5.2-5.2"/>',
+  undo: '<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>',
+  redo: '<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/>',
+  history: '<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5M12 8v4l3 2"/>',
+  keyboard: '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M7 14h10"/>',
+  outline: '<rect x="4" y="4" width="16" height="16" rx="2" stroke-dasharray="3 3"/>',
+  fullscreen: '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>',
+  preview: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/>',
+  save: '<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>',
+  refresh: '<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 3v5h-5"/>',
+  publish: '<path d="M12 3v12M8 7l4-4 4 4M5 14v5h14v-5"/>',
+  exportBundle: '<path d="M12 3v12M8 11l4 4 4-4M5 20h14"/>',
+  desktop: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M9 20h6M12 16v4"/>',
+  laptop: '<rect x="5" y="5" width="14" height="10" rx="1"/><path d="M3 19h18l-2-4H5z"/>',
+  tablet: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M11 18h2"/>',
+  mobile: '<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/>',
+  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  close: '<path d="m6 6 12 12M18 6 6 18"/>',
+  check: '<path d="m5 13 4 4L19 7"/>',
+  chevronDown: '<path d="m6 9 6 6 6-6"/>',
+  chevronRight: '<path d="m9 6 6 6-6 6"/>',
+});
+
+export default getInterfaceIconPaths;
