@@ -1,0 +1,37 @@
+import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
+import registerTraitTypeSet from '../support/registerTraitTypeSet.js';
+import createAnalyticsEventTraitDefinition from './createAnalyticsEventTraitDefinition.js';
+import createAriaLabelTraitDefinition from './createAriaLabelTraitDefinition.js';
+import createAssetTraitDefinition from './createAssetTraitDefinition.js';
+import createBindingPathTraitDefinition from './createBindingPathTraitDefinition.js';
+import createConditionTraitDefinition from './createConditionTraitDefinition.js';
+import createDateTraitDefinition from './createDateTraitDefinition.js';
+import createJsonTraitDefinition from './createJsonTraitDefinition.js';
+import createSliderTraitDefinition from './createSliderTraitDefinition.js';
+import createTextareaTraitDefinition from './createTextareaTraitDefinition.js';
+import createUrlTraitDefinition from './createUrlTraitDefinition.js';
+import getTraitEditorCss from './getTraitEditorCss.js';
+
+const applyTraitTypes = (editor, pluginOptions) => {
+  const moduleOptions = (pluginOptions && pluginOptions.traits) || {};
+  registerTraitTypeSet(editor, {
+    'db-slider': createSliderTraitDefinition(),
+    'db-textarea-trait': createTextareaTraitDefinition(),
+    'db-url': createUrlTraitDefinition(),
+    'db-asset': createAssetTraitDefinition(editor),
+    'db-date': createDateTraitDefinition(),
+    'db-json': createJsonTraitDefinition(),
+    'db-analytics-event': createAnalyticsEventTraitDefinition(),
+    'db-binding-path': createBindingPathTraitDefinition(editor, moduleOptions),
+    'db-condition': createConditionTraitDefinition(),
+    'db-aria-label': createAriaLabelTraitDefinition(),
+  });
+  const injectTraitEditorStyles = () => {
+    if (!editor.getContainer || !editor.getContainer()) return;
+    injectEditorStylesOnce(editor, 'db-css-traits-editor', getTraitEditorCss());
+  };
+  injectTraitEditorStyles();
+  if (editor.onReady) editor.onReady(() => injectTraitEditorStyles());
+};
+
+export default applyTraitTypes;
