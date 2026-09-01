@@ -21,6 +21,7 @@ const getDefaultPluginOptions = () => ({
   exporter: {},
   persistence: {},
   customCode: {},
+  experience: {},
 });
 
 export default getDefaultPluginOptions;

@@ -6,13 +6,16 @@ import buildInteractiveBlocks from './buildInteractiveBlocks.js';
 import buildLayoutBlocks from './buildLayoutBlocks.js';
 import buildMarketingBlocks from './buildMarketingBlocks.js';
 import buildMediaBlocks from './buildMediaBlocks.js';
+import buildTemplateBlocks from './buildTemplateBlocks.js';
 import buildTypographyBlocks from './buildTypographyBlocks.js';
+import decorateBlockLabels from './decorateBlockLabels.js';
 import registerBlockCompositionStyles from './registerBlockCompositionStyles.js';
 
 const applyBlockLibrary = (editor, pluginOptions) => {
   const moduleOptions = (pluginOptions && pluginOptions.blocks) || {};
   const excludedBlockIds = Array.isArray(moduleOptions.excludeBlockIds) ? moduleOptions.excludeBlockIds : [];
   const blockDefinitions = [
+    ...buildTemplateBlocks(),
     ...buildLayoutBlocks(),
     ...buildTypographyBlocks(),
     ...buildMediaBlocks(),
@@ -23,6 +26,7 @@ const applyBlockLibrary = (editor, pluginOptions) => {
     ...buildEmbedBlocks(),
   ].filter((blockDefinition) => excludedBlockIds.indexOf(blockDefinition.id) < 0);
   registerBlockSet(editor, blockDefinitions);
+  decorateBlockLabels(editor);
   registerBlockCompositionStyles(editor);
 };
 

@@ -6,6 +6,7 @@ import applyCustomCode from './customCode/applyCustomCode.js';
 import applyDataBinding from './dataBinding/applyDataBinding.js';
 import applyDesignTokens from './designTokens/applyDesignTokens.js';
 import applyResponsiveDevices from './devices/applyResponsiveDevices.js';
+import applyExperienceUpgrades from './experience/applyExperienceUpgrades.js';
 import applyExportSystem from './exporter/applyExportSystem.js';
 import applyFormComponents from './formComponents/applyFormComponents.js';
 import getDefaultPluginOptions from './getDefaultPluginOptions.js';
@@ -49,6 +50,7 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
     applyExportSystem,
     applyPersistence,
     applyEditorShell,
+    applyExperienceUpgrades,
   ]);
   applyAllModules(editor, mergedOptions);
 };

@@ -3,18 +3,22 @@ const buildBlockManagerCss = () => `
   padding: var(--gjs-db-gap-2) var(--gjs-db-gap-1);
 }
 .gjs-block {
-  width: 42%;
-  min-height: 74px;
-  margin: var(--gjs-db-gap-2) 4% 0;
-  padding: var(--gjs-db-gap-3) var(--gjs-db-gap-2);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  width: calc(100% - 16px);
+  min-height: 54px;
+  margin: var(--gjs-db-gap-2) 8px 0;
+  padding: var(--gjs-db-gap-2) var(--gjs-db-gap-3);
   border: none;
   border-radius: var(--gjs-db-r-3);
   background-color: var(--gjs-db-panel);
   box-shadow: var(--gjs-db-lift-1);
   color: var(--gjs-db-muted);
   font-family: var(--gjs-db-font-ui);
-  justify-content: center;
-  gap: var(--gjs-db-gap-2);
+  gap: var(--gjs-db-gap-3);
   cursor: grab;
   transition:
     box-shadow var(--gjs-db-dur-2) var(--gjs-db-ease),
@@ -35,6 +39,15 @@ const buildBlockManagerCss = () => `
 }
 .gjs-block__media {
   margin-bottom: 0;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--gjs-db-r-2);
+  background-color: var(--gjs-db-sunken);
+  box-shadow: var(--gjs-db-press-1);
 }
 .gjs-block svg[fill='none'] {
   fill: none;
@@ -44,10 +57,16 @@ const buildBlockManagerCss = () => `
   width: 42px;
 }
 .gjs-block-label {
+  flex: 1 1 auto;
+  min-width: 0;
   font-family: var(--gjs-db-font-ui);
-  font-size: 0.68rem;
-  font-weight: var(--gjs-db-w-normal);
-  letter-spacing: 0.02em;
+  font-size: 0.74rem;
+  font-weight: var(--gjs-db-w-bold);
+  letter-spacing: 0.01em;
+  color: var(--gjs-db-fg);
+}
+.gjs-block:hover .gjs-block__media {
+  color: var(--gjs-db-fg);
 }
 .gjs-block-categories {
   border: none;

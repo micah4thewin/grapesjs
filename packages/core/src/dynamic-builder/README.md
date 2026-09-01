@@ -51,7 +51,8 @@ grapesjs.init({
 | audits                | applyQualityAudits         | Accessibility, performance, and SEO audits with a report modal                             |
 | exporter              | applyExportSystem          | Full-document export, multi-page bundles, publish checklist                                |
 | persistence           | applyPersistence           | Autosave, save status, named revisions in localStorage                                     |
-| shell                 | applyEditorShell           | Top bar, command palette, keyboard shortcuts, save status                                  |
+| shell                 | applyEditorShell           | Top bar, pages manager, tools menu, command palette, theme and sound toggles               |
+| experience            | applyExperienceUpgrades    | Interface sounds, haptics, drop animations, touch drag, block search, page templates       |
 
 ## Conventions
 
