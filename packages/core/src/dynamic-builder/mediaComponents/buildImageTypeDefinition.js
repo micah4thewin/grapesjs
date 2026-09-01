@@ -10,6 +10,7 @@ const buildImageTypeDefinition = () => ({
       void: true,
       draggable: true,
       droppable: false,
+      resizable: { tl: 0, tc: 0, tr: 0, cl: 0, cr: 1, bl: 0, bc: 1, br: 1 },
       classes: ['db-image'],
       attributes: {
         'data-db-type': 'image',

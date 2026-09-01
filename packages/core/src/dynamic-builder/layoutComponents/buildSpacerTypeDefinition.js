@@ -9,6 +9,7 @@ const buildSpacerTypeDefinition = () => ({
       tagName: 'div',
       name: 'Spacer',
       droppable: false,
+      resizable: { tl: 0, tc: 0, tr: 0, cl: 0, cr: 0, bl: 0, bc: 1, br: 0 },
       classes: ['db-spacer'],
       attributes: { 'data-db-type': 'spacer', 'data-db-spacer': 'md', 'aria-hidden': 'true' },
       traits: [

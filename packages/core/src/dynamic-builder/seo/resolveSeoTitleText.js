@@ -1,5 +1,5 @@
 const resolveSeoTitleText = (siteSeoRecord, pageSeoRecord, pageName) => {
-  const baseTitle = String(pageSeoRecord.title || pageName || siteSeoRecord.siteName || 'Untitled page').trim();
+  const baseTitle = String(pageSeoRecord.title || pageName || siteSeoRecord.siteName || 'Home').trim();
   const titleTemplate = String(siteSeoRecord.titleTemplate || '');
   if (titleTemplate.includes('%s')) return titleTemplate.split('%s').join(baseTitle).trim();
   const siteName = String(siteSeoRecord.siteName || '').trim();

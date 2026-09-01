@@ -22,7 +22,12 @@ const buildFormTypeDefinition = (formTextDefaults) => ({
       components: buildFormDefaultChildren(formTextDefaults),
       script: runFormBehavior,
       traits: [
-        { type: 'db-url', name: 'action', label: 'Action URL', placeholder: 'https://example.com/submit' },
+        {
+          type: 'db-url',
+          name: 'action',
+          label: 'Send submissions to',
+          placeholder: 'https://formspree.io/f/your-form-id',
+        },
         {
           type: 'select',
           name: 'method',

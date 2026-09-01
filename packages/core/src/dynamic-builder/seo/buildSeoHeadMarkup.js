@@ -1,3 +1,4 @@
+import buildDefaultFaviconLinkMarkup from './buildDefaultFaviconLinkMarkup.js';
 import buildHeadLinkTagMarkup from './buildHeadLinkTagMarkup.js';
 import buildHeadMetaTagMarkup from './buildHeadMetaTagMarkup.js';
 import buildPageCanonicalUrl from './buildPageCanonicalUrl.js';
@@ -26,7 +27,7 @@ const buildSeoHeadMarkup = (editor, page) => {
   headTagList.push(buildHeadMetaTagMarkup('name', 'description', descriptionText));
   headTagList.push(buildHeadMetaTagMarkup('name', 'robots', robotsContent));
   headTagList.push(buildHeadLinkTagMarkup('canonical', canonicalUrl));
-  headTagList.push(buildHeadLinkTagMarkup('icon', faviconUrl));
+  headTagList.push(faviconUrl ? buildHeadLinkTagMarkup('icon', faviconUrl) : buildDefaultFaviconLinkMarkup());
   if (languageCode) headTagList.push('<meta data-db-language="' + escapeHtmlText(languageCode) + '">');
   const resolvedValues = { titleText, descriptionText, canonicalUrl };
   collectOpenGraphMetaEntries(siteSeoRecord, pageSeoRecord, resolvedValues).forEach((metaEntry) =>

@@ -8,6 +8,7 @@ import createHeadingTypeDefinition from './createHeadingTypeDefinition.js';
 import createListTypeDefinition from './createListTypeDefinition.js';
 import createQuoteTypeDefinition from './createQuoteTypeDefinition.js';
 import createTextTypeDefinition from './createTextTypeDefinition.js';
+import extendCoreLinkTraits from './extendCoreLinkTraits.js';
 import resolveContentTextDefaults from './resolveContentTextDefaults.js';
 import watchContentComponentUpdates from './watchContentComponentUpdates.js';
 
@@ -23,6 +24,7 @@ const applyContentComponents = (editor, pluginOptions) => {
     createButtonGroupTypeDefinition(contentTextDefaults),
     createListTypeDefinition(contentTextDefaults),
   ]);
+  extendCoreLinkTraits(editor);
   registerCanvasStyles(editor, 'db-css-content-base', buildContentBaseCss());
   watchContentComponentUpdates(editor);
 };

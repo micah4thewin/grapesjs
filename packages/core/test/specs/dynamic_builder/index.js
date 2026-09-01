@@ -88,6 +88,8 @@ describe('Dynamic builder plugin', () => {
     'db:publish-site',
     'db:add-page',
     'db:open-site-settings',
+    'db:open-design-kits',
+    'db:open-history',
   ];
 
   beforeEach(() => {

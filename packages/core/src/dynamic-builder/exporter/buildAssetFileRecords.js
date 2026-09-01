@@ -11,7 +11,12 @@ const buildAssetFileRecords = (editor, buildOptions, targetAssetId) => {
   const projectRecord = { projectData: editor.getProjectData(), siteMeta: siteMetaRecord };
   const siteScriptText = buildSiteScriptText(editor, buildOptions);
   const assetRecords = [
-    { assetId: 'styles', fileName: 'styles.css', mimeType: 'text/css', content: buildExportStyleText(editor, null) },
+    {
+      assetId: 'styles',
+      fileName: 'styles.css',
+      mimeType: 'text/css',
+      content: buildExportStyleText(editor, null, buildOptions),
+    },
     {
       assetId: 'project',
       fileName: 'project.json',

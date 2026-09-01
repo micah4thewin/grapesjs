@@ -1,0 +1,43 @@
+const getCssChunkDetectorRecords = () => ({
+  'db-css-icons-base': ["[data-db-type='icon']", '.db-icon'],
+  'db-css-media-base': [
+    "[data-db-type='image']",
+    "[data-db-type='gallery']",
+    "[data-db-type='carousel']",
+    "[data-db-type='video']",
+    "[data-db-type='map']",
+    'img',
+    'figure',
+  ],
+  'db-css-interactive-base': [
+    "[data-db-type='accordion']",
+    "[data-db-type='tabs']",
+    "[data-db-type='countdown']",
+    "[data-db-type='navbar']",
+    "[data-db-type='breadcrumb']",
+    "[data-db-type='social-links']",
+    "[data-db-type='announcement']",
+  ],
+  'db-css-marketing-base': [
+    "[data-db-type='hero']",
+    "[data-db-type='features']",
+    "[data-db-type='feature-card']",
+    "[data-db-type='card']",
+    "[data-db-type='testimonial']",
+    "[data-db-type='logo-cloud']",
+    "[data-db-type='stats']",
+    "[data-db-type='pricing']",
+    "[data-db-type='team-member']",
+    "[data-db-type='contact']",
+    "[data-db-type='footer']",
+  ],
+  'db-css-forms-base': ["[data-db-type='form']", "[data-db-type='form-field']", 'input', 'select', 'textarea'],
+  'db-css-databinding-base': ["[data-db-type='repeater']"],
+  'db-css-customcode-base': [
+    "[data-db-type='custom-html']",
+    "[data-db-type='custom-css']",
+    "[data-db-type='custom-script']",
+  ],
+});
+
+export default getCssChunkDetectorRecords;

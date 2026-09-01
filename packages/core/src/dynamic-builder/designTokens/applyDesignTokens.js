@@ -3,6 +3,7 @@ import openTokenManagerModal from './openTokenManagerModal.js';
 import registerCommandSet from '../support/registerCommandSet.js';
 import resolveActiveDesignTokens from './resolveActiveDesignTokens.js';
 import watchSiteMetaForTokenChanges from './watchSiteMetaForTokenChanges.js';
+import openDesignKitsModal from './openDesignKitsModal.js';
 
 const applyDesignTokens = (editor, pluginOptions) => {
   const moduleOptions = (pluginOptions && pluginOptions.designTokens) || {};
@@ -11,6 +12,9 @@ const applyDesignTokens = (editor, pluginOptions) => {
   registerCommandSet(editor, {
     'db:open-token-manager': {
       run: (editorInstance) => openTokenManagerModal(editorInstance, moduleOptions),
+    },
+    'db:open-design-kits': {
+      run: (editorInstance) => openDesignKitsModal(editorInstance, moduleOptions),
     },
   });
 };

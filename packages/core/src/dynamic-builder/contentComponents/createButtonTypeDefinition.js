@@ -12,6 +12,7 @@ const createButtonTypeDefinition = (contentTextDefaults) => ({
       classes: ['db-button'],
       components: contentTextDefaults.buttonLabelText,
       traits: [
+        { type: 'db-page-link', name: 'pageLink', label: 'Link to page' },
         { type: 'db-url', name: 'href', label: 'Link URL', placeholder: 'https://example.com/page' },
         {
           type: 'select',

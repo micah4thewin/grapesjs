@@ -7,6 +7,7 @@ import createBindingPathTraitDefinition from './createBindingPathTraitDefinition
 import createConditionTraitDefinition from './createConditionTraitDefinition.js';
 import createDateTraitDefinition from './createDateTraitDefinition.js';
 import createJsonTraitDefinition from './createJsonTraitDefinition.js';
+import createPageLinkTraitDefinition from './createPageLinkTraitDefinition.js';
 import createSliderTraitDefinition from './createSliderTraitDefinition.js';
 import createTextareaTraitDefinition from './createTextareaTraitDefinition.js';
 import createUrlTraitDefinition from './createUrlTraitDefinition.js';
@@ -25,6 +26,7 @@ const applyTraitTypes = (editor, pluginOptions) => {
     'db-binding-path': createBindingPathTraitDefinition(editor, moduleOptions),
     'db-condition': createConditionTraitDefinition(),
     'db-aria-label': createAriaLabelTraitDefinition(),
+    'db-page-link': createPageLinkTraitDefinition(editor),
   });
   const injectTraitEditorStyles = () => {
     if (!editor.getContainer || !editor.getContainer()) return;

@@ -11,7 +11,7 @@ const buildDocumentHeadMarkup = (editor, page, buildOptions) => {
   if (optionsRecord.separateAssets) {
     headParts.push('<link rel="stylesheet" href="styles.css">');
   } else {
-    const styleText = buildExportStyleText(editor, page).replace(/<\/style/gi, '<\\/style');
+    const styleText = buildExportStyleText(editor, page, optionsRecord).replace(/<\/style/gi, '<\\/style');
     if (styleText) headParts.push('<style>\n' + styleText + '\n</style>');
   }
   headParts.push(buildJsonLdScriptMarkup(editor, page));

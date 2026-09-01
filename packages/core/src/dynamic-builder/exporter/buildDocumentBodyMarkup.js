@@ -1,3 +1,4 @@
+import buildSiteScriptText from './buildSiteScriptText.js';
 import collectPageScriptText from './collectPageScriptText.js';
 import getSiteCustomCodeRecord from './getSiteCustomCodeRecord.js';
 import resolveBindingTokensInMarkup from '../dataBinding/resolveBindingTokensInMarkup.js';
@@ -20,7 +21,7 @@ const buildDocumentBodyMarkup = (editor, page, buildOptions) => {
   const endParts = [];
   if (customCodeRecord.bodyEndHtml) endParts.push(sanitizeHtmlMarkup(customCodeRecord.bodyEndHtml).trim());
   if (optionsRecord.separateAssets) {
-    endParts.push('<script src="site.js" defer></script>');
+    if (buildSiteScriptText(editor, optionsRecord)) endParts.push('<script src="site.js" defer></script>');
   } else {
     const scriptChunks = [pageScriptText, resolveCustomScriptText(editor, optionsRecord)].filter(Boolean);
     if (scriptChunks.length) {
