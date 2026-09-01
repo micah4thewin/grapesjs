@@ -3,9 +3,12 @@ import getIconMarkup from '../support/getIconMarkup.js';
 const refineDefaultPanels = (editor) => {
   const panelManager = editor.Panels;
   if (!panelManager || !panelManager.getPanel) return;
-  ['commands', 'options', 'devices-c'].forEach((redundantPanelId) => {
-    if (panelManager.getPanel(redundantPanelId)) panelManager.removePanel(redundantPanelId);
-  });
+  const removeRedundantPanels = () =>
+    ['commands', 'options', 'devices-c'].forEach((redundantPanelId) => {
+      if (panelManager.getPanel(redundantPanelId)) panelManager.removePanel(redundantPanelId);
+    });
+  removeRedundantPanels();
+  editor.on('command:run:core:open-styles', () => setTimeout(removeRedundantPanels, 30));
   const viewButtonPresentation = {
     'open-sm': { iconName: 'styles', readableLabel: 'Style manager' },
     'open-tm': { iconName: 'traits', readableLabel: 'Settings' },

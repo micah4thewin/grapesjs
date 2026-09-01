@@ -11,7 +11,7 @@ const resolvePersistenceOptions = (pluginOptions) => {
     storageKey: storageKeyText,
     autosaveDelay: Number.isFinite(moduleOptions.autosaveDelay) ? moduleOptions.autosaveDelay : 2000,
     maxRevisions: Number.isFinite(moduleOptions.maxRevisions) ? moduleOptions.maxRevisions : 25,
-    autoload: moduleOptions.autoload === true,
+    autoload: moduleOptions.autoload !== false,
   };
 };
 

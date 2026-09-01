@@ -4,9 +4,12 @@ import refineDefaultPanels from './refineDefaultPanels.js';
 import registerShellCommands from './registerShellCommands.js';
 import registerShellKeymaps from './registerShellKeymaps.js';
 import renderShellTopBar from './renderShellTopBar.js';
+import wireToastNotifications from './wireToastNotifications.js';
 
 const applyEditorShell = (editor, pluginOptions) => {
   const shellOptions = (pluginOptions && pluginOptions.shell) || {};
+  const editorConfig = editor.getConfig && editor.getConfig();
+  if (editorConfig) editorConfig.showDevices = false;
   registerShellCommands(editor);
   if (!editor.onReady) return;
   editor.onReady(() => {
@@ -16,6 +19,7 @@ const applyEditorShell = (editor, pluginOptions) => {
     refineDefaultPanels(editor);
     renderShellTopBar(editor, shellOptions);
     registerShellKeymaps(editor);
+    wireToastNotifications(editor);
   });
 };
 

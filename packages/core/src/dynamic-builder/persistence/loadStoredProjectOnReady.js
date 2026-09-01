@@ -12,6 +12,7 @@ const loadStoredProjectOnReady = (editor, moduleOptions) => {
     try {
       editor.loadProjectData(storedSnapshot.projectData);
       if (isPlainRecord(storedSnapshot.siteMeta)) updateSiteMetaRecord(editor, storedSnapshot.siteMeta);
+      editor.trigger('db:project:restored', { savedAt: storedSnapshot.savedAt });
     } catch (loadError) {
       emitSaveStatus(editor, 'error', getErrorMessageText(loadError, 'Unable to load the stored project'));
     }

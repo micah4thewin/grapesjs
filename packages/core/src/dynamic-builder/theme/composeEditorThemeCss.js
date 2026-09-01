@@ -21,6 +21,9 @@ import buildPrimitivePaletteCss from './buildPrimitivePaletteCss.js';
 import buildPrimitiveTopBarCss from './buildPrimitiveTopBarCss.js';
 import buildPrimitivePreviewCardsCss from './buildPrimitivePreviewCardsCss.js';
 import buildMenuPrimitivesCss from './buildMenuPrimitivesCss.js';
+import buildToastCss from './buildToastCss.js';
+import buildPreviewChromeFixCss from './buildPreviewChromeFixCss.js';
+import buildModalFieldRefinementsCss from './buildModalFieldRefinementsCss.js';
 
 const composeEditorThemeCss = () =>
   [
@@ -47,6 +50,9 @@ const composeEditorThemeCss = () =>
     buildPrimitiveTopBarCss,
     buildPrimitivePreviewCardsCss,
     buildMenuPrimitivesCss,
+    buildToastCss,
+    buildPreviewChromeFixCss,
+    buildModalFieldRefinementsCss,
   ]
     .map((buildSectionCss) => buildSectionCss().trim())
     .join('\n');
