@@ -20,6 +20,7 @@ import buildPrimitiveListsReportsCss from './buildPrimitiveListsReportsCss.js';
 import buildPrimitivePaletteCss from './buildPrimitivePaletteCss.js';
 import buildPrimitiveTopBarCss from './buildPrimitiveTopBarCss.js';
 import buildPrimitivePreviewCardsCss from './buildPrimitivePreviewCardsCss.js';
+import buildMenuPrimitivesCss from './buildMenuPrimitivesCss.js';
 
 const composeEditorThemeCss = () =>
   [
@@ -45,6 +46,7 @@ const composeEditorThemeCss = () =>
     buildPrimitivePaletteCss,
     buildPrimitiveTopBarCss,
     buildPrimitivePreviewCardsCss,
+    buildMenuPrimitivesCss,
   ]
     .map((buildSectionCss) => buildSectionCss().trim())
     .join('\n');

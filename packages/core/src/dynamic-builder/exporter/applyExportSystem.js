@@ -1,3 +1,4 @@
+import downloadSiteZipBundle from './downloadSiteZipBundle.js';
 import getExporterEditorCss from './getExporterEditorCss.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
 import openExportModal from './openExportModal.js';
@@ -10,6 +11,8 @@ const applyExportSystem = (editor, pluginOptions) => {
   registerCommandSet(editor, {
     'db:open-export': (commandEditor) => openExportModal(commandEditor),
     'db:open-site-settings': (commandEditor) => openSiteSettingsModal(commandEditor),
+    'db:download-site': (commandEditor, commandSender, commandOptions) =>
+      downloadSiteZipBundle(commandEditor, (commandOptions || {}).buildOptions || moduleOptions.publishBuildOptions),
     'db:publish-site': (commandEditor, commandSender, commandOptions) =>
       openPublishModal(commandEditor, commandOptions || { buildOptions: moduleOptions.publishBuildOptions }),
   });

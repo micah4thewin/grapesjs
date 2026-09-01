@@ -15,6 +15,9 @@ const getDbCommandLabelRecords = () => ({
   'db:open-custom-code': { label: 'Custom code', iconName: 'code', keywords: 'html css script embed' },
   'db:toggle-grid-overlay': { label: 'Toggle grid overlay', iconName: 'grid', keywords: 'columns guides layout' },
   'db:open-token-manager': { label: 'Design tokens', iconName: 'tokens', keywords: 'colors spacing variables' },
+  'db:download-site': { label: 'Download site (.zip)', iconName: 'download', keywords: 'zip bundle build assets' },
+  'db:publish-site': { label: 'Publish site', iconName: 'publish', keywords: 'deploy release checklist' },
+  'db:add-page': { label: 'Add page', iconName: 'plus', keywords: 'new page create' },
 });
 
 export default getDbCommandLabelRecords;

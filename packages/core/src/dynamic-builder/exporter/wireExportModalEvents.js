@@ -19,6 +19,8 @@ const wireExportModalEvents = (editor, rootElement) => {
     } else if (actionName === 'asset') {
       const targetAssetId = actionElement.getAttribute('data-db-export-asset') || '';
       downloadFileRecordList(editor, buildAssetFileRecords(editor, buildOptions, targetAssetId), 'asset');
+    } else if (actionName === 'download-zip') {
+      editor.runCommand('db:download-site', { buildOptions: { ...buildOptions, separateAssets: true } });
     } else if (actionName === 'publish') {
       editor.runCommand('db:publish-site', { buildOptions: { ...buildOptions, separateAssets: true } });
     }

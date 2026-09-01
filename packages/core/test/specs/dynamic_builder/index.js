@@ -84,6 +84,10 @@ describe('Dynamic builder plugin', () => {
     'db:open-data-sources',
     'db:open-custom-code',
     'db:open-token-manager',
+    'db:download-site',
+    'db:publish-site',
+    'db:add-page',
+    'db:open-site-settings',
   ];
 
   beforeEach(() => {

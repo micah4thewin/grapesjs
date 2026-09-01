@@ -13,7 +13,7 @@ const getShellLayoutCss = () => `
   flex: 0 0 auto;
   flex-wrap: wrap;
   position: relative;
-  z-index: 4;
+  z-index: 6;
 }
 [data-db-panel='db-top'] .gjs-db-shell-brand {
   white-space: nowrap;
@@ -27,6 +27,51 @@ const getShellLayoutCss = () => `
 [data-db-panel='db-top'] .gjs-db-panel-button[disabled] {
   opacity: 0.4;
   pointer-events: none;
+}
+.gjs-db-menu-host {
+  position: relative;
+}
+.gjs-db-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 240px;
+  max-height: 70vh;
+  overflow-y: auto;
+  z-index: 40;
+}
+.gjs-db-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  width: auto;
+  padding: 0 0.6em;
+}
+.gjs-db-menu-trigger-label {
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+[data-db-pages-label] {
+  max-width: 11rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gjs-db-menu-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.gjs-db-menu-item-grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.gjs-db-menu-item-grow .gjs-db-menu-item-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gjs-db-download-button {
+  white-space: nowrap;
 }
 `;
 

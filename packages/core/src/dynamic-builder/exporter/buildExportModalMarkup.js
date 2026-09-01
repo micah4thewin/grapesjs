@@ -9,7 +9,9 @@ const buildExportModalMarkup = (editor) =>
     buildExportAssetsSectionMarkup(editor),
     buildExportOptionsSectionMarkup(editor),
     '<div class="gjs-db-button-row">',
-    '<button type="button" class="gjs-db-button gjs-db-button-primary" data-db-export-action="publish">Publish</button>',
+    '<button type="button" class="gjs-db-button gjs-db-button-primary" data-db-export-action="download-zip">',
+    'Download site (.zip)</button>',
+    '<button type="button" class="gjs-db-button" data-db-export-action="publish">Publish</button>',
     '</div>',
     '</div>',
   ].join('');
