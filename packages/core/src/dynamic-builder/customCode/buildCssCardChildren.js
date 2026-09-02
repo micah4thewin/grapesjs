@@ -6,7 +6,7 @@ const buildCssCardChildren = (cssCode) =>
     iconName: 'styles',
     titleText: 'Custom CSS',
     previewText: getCodePreviewLine(cssCode, 'No CSS rules yet'),
-    noteText: 'Applies page-wide through the export stylesheet registry. This card never ships to the published site.',
+    noteText: 'Applies page-wide through the export stylesheet. This card never ships to the published site.',
   });
 
 export default buildCssCardChildren;

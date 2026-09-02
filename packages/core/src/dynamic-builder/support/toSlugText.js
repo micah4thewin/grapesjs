@@ -1,9 +1,15 @@
-const toSlugText = (textValue) =>
-  String(textValue || '')
+const toSlugText = (textValue) => {
+  const normalizedText = String(textValue || '')
     .toLowerCase()
     .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/[̀-ͯ]/g, '');
+  let slugText = '';
+  try {
+    slugText = normalizedText.replace(/[^\p{L}\p{N}]+/gu, '-');
+  } catch (unicodeError) {
+    slugText = normalizedText.replace(/[^a-z0-9]+/g, '-');
+  }
+  return slugText.replace(/^-+|-+$/g, '');
+};
 
 export default toSlugText;

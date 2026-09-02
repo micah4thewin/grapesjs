@@ -21,6 +21,9 @@ const createCustomScriptTypeDefinition = () => ({
         },
       ],
     },
+    toHTML() {
+      return '';
+    },
   },
 });
 

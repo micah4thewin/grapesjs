@@ -1,9 +1,9 @@
+import isSafeAttributeValue from './isSafeAttributeValue.js';
+
 const sanitizeUrlValue = (urlValue) => {
   const trimmedValue = String(urlValue || '').trim();
   if (!trimmedValue) return '';
-  const compactValue = trimmedValue.replace(/[\u0000-\u0020]+/g, '');
-  if (/^(javascript|vbscript|data:text\/html)/i.test(compactValue)) return '';
-  return trimmedValue;
+  return isSafeAttributeValue(trimmedValue) ? trimmedValue : '';
 };
 
 export default sanitizeUrlValue;

@@ -21,6 +21,13 @@ const createCustomHtmlTypeDefinition = () => ({
         },
       ],
     },
+    getAttrToHTML(opts) {
+      const exportAttributes = this.getAttributes();
+      delete exportAttributes.htmlCode;
+      const editorConfig = this.em && this.em.getConfig ? this.em.getConfig() : {};
+      if (editorConfig.avoidInlineStyle && !(opts && opts.keepInlineStyle === true)) delete exportAttributes.style;
+      return exportAttributes;
+    },
   },
 });
 
