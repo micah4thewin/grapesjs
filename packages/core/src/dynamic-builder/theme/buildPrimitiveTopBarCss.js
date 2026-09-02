@@ -58,9 +58,9 @@ const buildPrimitiveTopBarCss = () => `
 }
 .gjs-db-panel-button[aria-pressed='true'],
 .gjs-db-panel-button.gjs-pn-active {
-  color: var(--gjs-db-fg);
-  background-color: var(--gjs-db-active);
-  box-shadow: var(--gjs-db-press-1);
+  color: var(--gjs-db-accent);
+  background-color: var(--gjs-db-accent-soft);
+  box-shadow: none;
   transform: none;
 }
 .gjs-db-status {

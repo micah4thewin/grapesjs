@@ -31,9 +31,9 @@ const buildRichTextToolbarCss = () => `
   box-shadow: var(--gjs-db-press-1);
 }
 .gjs-rte-action.gjs-rte-active {
-  color: var(--gjs-db-fg);
-  background-color: var(--gjs-db-active);
-  box-shadow: var(--gjs-db-press-1);
+  color: var(--gjs-db-accent);
+  background-color: var(--gjs-db-accent-soft);
+  box-shadow: none;
 }
 .gjs-rte-action.gjs-rte-disabled {
   color: var(--gjs-db-faint);

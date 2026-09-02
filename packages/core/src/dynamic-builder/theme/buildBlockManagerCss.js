@@ -66,7 +66,9 @@ const buildBlockManagerCss = () => `
   color: var(--gjs-db-fg);
 }
 .gjs-block:hover .gjs-block__media {
-  color: var(--gjs-db-fg);
+  color: var(--gjs-db-accent);
+  background-color: var(--gjs-db-accent-soft);
+  box-shadow: none;
 }
 .gjs-block-categories {
   border: none;

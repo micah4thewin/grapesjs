@@ -1,6 +1,6 @@
 const getSchemaEditorCss = () =>
   [
-    '.gjs-db-schema-modal { display: grid; gap: 20px; max-height: 72vh; overflow-y: auto; padding-right: 4px; }',
+    '.gjs-db-schema-modal { display: grid; gap: 20px; padding-right: 4px; }',
     '.gjs-db-schema-section { display: grid; gap: 12px; align-content: start; }',
     '.gjs-db-schema-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }',
     '.gjs-db-schema-group { display: grid; gap: 12px; }',

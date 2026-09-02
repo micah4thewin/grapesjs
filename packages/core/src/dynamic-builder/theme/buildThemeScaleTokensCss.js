@@ -1,16 +1,16 @@
 const buildThemeScaleTokensCss = () => `
 .gjs-editor-cont {
-  --gjs-db-lift-1: 2px 2px 5px var(--gjs-db-shade), -1px -1px 3px var(--gjs-db-glow);
-  --gjs-db-lift-2: 4px 4px 10px var(--gjs-db-shade), -2px -2px 5px var(--gjs-db-glow);
-  --gjs-db-lift-3: 8px 8px 22px var(--gjs-db-shade), -3px -3px 10px var(--gjs-db-glow);
-  --gjs-db-lift-4: 14px 18px 44px var(--gjs-db-shade), -5px -5px 16px var(--gjs-db-glow);
-  --gjs-db-press-1: inset 2px 2px 4px var(--gjs-db-shade), inset -1px -1px 2px var(--gjs-db-glow);
-  --gjs-db-press-2: inset 3px 3px 7px var(--gjs-db-shade), inset -2px -2px 4px var(--gjs-db-glow);
+  --gjs-db-lift-1: 0 1px 2px var(--gjs-db-shade), inset 0 1px 0 var(--gjs-db-glow);
+  --gjs-db-lift-2: 0 1px 2px var(--gjs-db-shade), 0 3px 10px var(--gjs-db-shade), inset 0 1px 0 var(--gjs-db-glow);
+  --gjs-db-lift-3: 0 2px 6px var(--gjs-db-shade), 0 12px 32px var(--gjs-db-shade), inset 0 1px 0 var(--gjs-db-glow);
+  --gjs-db-lift-4: 0 6px 18px var(--gjs-db-shade), 0 28px 70px var(--gjs-db-shade), inset 0 1px 0 var(--gjs-db-glow);
+  --gjs-db-press-1: inset 0 1px 3px var(--gjs-db-shade);
+  --gjs-db-press-2: inset 0 2px 6px var(--gjs-db-shade), inset 0 1px 2px var(--gjs-db-shade);
   --gjs-db-seam: inset 0 1px 0 var(--gjs-db-glow), inset 0 -1px 0 var(--gjs-db-shade);
-  --gjs-db-r-1: 2px;
-  --gjs-db-r-2: 4px;
-  --gjs-db-r-3: 6px;
-  --gjs-db-r-4: 8px;
+  --gjs-db-r-1: 5px;
+  --gjs-db-r-2: 8px;
+  --gjs-db-r-3: 12px;
+  --gjs-db-r-4: 16px;
   --gjs-db-r-pill: 999px;
   --gjs-db-gap-1: 0.25rem;
   --gjs-db-gap-2: 0.5rem;
@@ -28,6 +28,7 @@ const buildThemeScaleTokensCss = () => `
   --gjs-db-font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --gjs-db-font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Consolas, monospace;
   --gjs-db-w-normal: 400;
+  --gjs-db-w-medium: 600;
   --gjs-db-w-bold: 700;
 }
 @media (prefers-reduced-motion: reduce) {

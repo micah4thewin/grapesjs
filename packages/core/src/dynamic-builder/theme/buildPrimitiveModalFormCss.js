@@ -1,14 +1,10 @@
 const buildPrimitiveModalFormCss = () => `
-.gjs-db-modal {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gjs-db-gap-3);
-  padding: var(--gjs-db-gap-1);
+.gjs-db-modal .gjs-mdl-content {
   color: var(--gjs-db-fg);
   font-family: var(--gjs-db-font-ui);
   font-size: 0.83rem;
   line-height: 1.55;
-  max-height: 70vh;
+  max-height: calc(100vh - 180px);
   overflow-y: auto;
 }
 .gjs-db-form {
