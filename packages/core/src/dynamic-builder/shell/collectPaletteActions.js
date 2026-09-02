@@ -2,6 +2,7 @@ import deriveLabelFromCommandId from './deriveLabelFromCommandId.js';
 import getCoreCommandLabelRecords from './getCoreCommandLabelRecords.js';
 import getDbCommandLabelRecords from './getDbCommandLabelRecords.js';
 import getDeviceIconName from './getDeviceIconName.js';
+import getPageDisplayName from './getPageDisplayName.js';
 import runShellCommand from './runShellCommand.js';
 
 const collectPaletteActions = (editor) => {
@@ -46,7 +47,7 @@ const collectPaletteActions = (editor) => {
     const pageId = pageModel.getId();
     actionRecords.push({
       actionId: `page:${pageId}`,
-      label: `Switch page: ${pageModel.getName() || pageId}`,
+      label: `Switch page: ${getPageDisplayName(pageModel)}`,
       iconName: 'webpage',
       keywords: `page navigate switch open ${pageId}`,
       runAction: () => editor.Pages.select(pageId),

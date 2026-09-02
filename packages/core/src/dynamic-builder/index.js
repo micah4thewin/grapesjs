@@ -1,5 +1,6 @@
 import applyQualityAudits from './audits/applyQualityAudits.js';
 import applyBlockLibrary from './blocks/applyBlockLibrary.js';
+import applySiteMetaFoundation from './support/applySiteMetaFoundation.js';
 import composeModuleAppliers from './composeModuleAppliers.js';
 import applyContentComponents from './contentComponents/applyContentComponents.js';
 import applyCustomCode from './customCode/applyCustomCode.js';
@@ -28,6 +29,7 @@ import applyTypographySystem from './typography/applyTypographySystem.js';
 const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
   const mergedOptions = deepMergeRecords(getDefaultPluginOptions(), pluginOptions);
   const applyAllModules = composeModuleAppliers([
+    applySiteMetaFoundation,
     applyEditorTheme,
     applyIconSystem,
     applyDesignTokens,

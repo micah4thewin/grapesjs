@@ -1,17 +1,13 @@
 import attachLongPressDrag from './attachLongPressDrag.js';
+import hasTouchSupport from './hasTouchSupport.js';
 
 const applyTouchTranslation = (editor, hapticsEnabled) => {
   const containerElement = editor.getContainer && editor.getContainer();
-  if (!containerElement || !containerElement.ownerDocument) return;
-  const editorDragSelector = '.gjs-block, .gjs-layer-move, .gjs-toolbar-item';
-  attachLongPressDrag(containerElement.ownerDocument, editorDragSelector, hapticsEnabled);
-  const wireCanvasDocument = () => {
-    const canvasDocument = editor.Canvas && editor.Canvas.getDocument && editor.Canvas.getDocument();
-    canvasDocument && attachLongPressDrag(canvasDocument, 'body *', hapticsEnabled);
-  };
-  wireCanvasDocument();
-  editor.on('canvas:frame:load:body', wireCanvasDocument);
-  editor.on('page:select', () => setTimeout(wireCanvasDocument, 120));
+  const ownerDocument = containerElement && containerElement.ownerDocument;
+  if (!ownerDocument || !hasTouchSupport(ownerDocument)) return;
+  const editorConfig = editor.getConfig && editor.getConfig();
+  if (editorConfig) editorConfig.nativeDnD = false;
+  attachLongPressDrag(editor, ownerDocument, '.gjs-block, .gjs-layer-move', hapticsEnabled);
 };
 
 export default applyTouchTranslation;

@@ -27,10 +27,16 @@ const buildPreviewChromeFixCss = () => `
 }
 .gjs-toolbar-item.fa-pencil {
   color: transparent;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e7eaee' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L20 8l-4-4L4 16z'/%3E%3Cpath d='m14 6 4 4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 13px 13px;
+  background-color: currentColor;
+  background-image: none;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L20 8l-4-4L4 16z'/%3E%3Cpath d='m14 6 4 4'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L20 8l-4-4L4 16z'/%3E%3Cpath d='m14 6 4 4'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 13px 13px;
+  mask-size: 13px 13px;
 }
 `;
 

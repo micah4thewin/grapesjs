@@ -1,14 +1,15 @@
 import filterPaletteActions from './filterPaletteActions.js';
 import renderPaletteListItems from './renderPaletteListItems.js';
 
-const wirePaletteInteractions = (editor, paletteElement, actionRecords) => {
+const wirePaletteInteractions = (editor, paletteElement, actionRecords, instanceSuffix) => {
   const inputElement = paletteElement.querySelector('[data-db-palette-input]');
   const listElement = paletteElement.querySelector('[data-db-palette-list]');
   if (!inputElement || !listElement) return;
+  const optionIdPrefix = 'db-palette-option' + (instanceSuffix || '') + '-';
   const paletteState = { records: actionRecords, activeIndex: 0 };
   const refreshList = () => {
-    renderPaletteListItems(listElement, paletteState.records, paletteState.activeIndex);
-    const activeDescendantId = paletteState.records.length ? `db-palette-option-${paletteState.activeIndex}` : '';
+    renderPaletteListItems(listElement, paletteState.records, paletteState.activeIndex, instanceSuffix);
+    const activeDescendantId = paletteState.records.length ? optionIdPrefix + paletteState.activeIndex : '';
     inputElement.setAttribute('aria-activedescendant', activeDescendantId);
   };
   const runActionAt = (recordIndex) => {

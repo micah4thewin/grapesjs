@@ -10,7 +10,7 @@ const wireToastNotifications = (editor) => {
   });
   editor.on('db:save-status', (statusPayload) => {
     const payloadRecord = statusPayload || {};
-    if (payloadRecord.state !== 'error') return;
+    if (payloadRecord.state !== 'error' || payloadRecord.repeated === true) return;
     showToastNotice(editor, payloadRecord.message || 'Saving failed', { kind: 'error', duration: 5000 });
   });
 };
