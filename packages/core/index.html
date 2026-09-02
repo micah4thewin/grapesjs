@@ -35,8 +35,17 @@
         fromElement: true,
         showOffsets: true,
         noticeOnUnload: false,
-        storageManager: { autoload: 0 },
-        plugins: [grapesjs.dynamicBuilder],
+        // The plugin keeps its own localStorage snapshot, so the core storage manager stays off here.
+        storageManager: false,
+        plugins: [
+          function (editorInstance) {
+            grapesjs.dynamicBuilder(editorInstance, {
+              shell: { brandLabel: 'Dynamic Builder' },
+              // Scope the autosave key so two demos on the same origin do not overwrite each other.
+              persistence: { storageKey: 'db-project:demo' },
+            });
+          },
+        ],
       });
     </script>
   </body>
