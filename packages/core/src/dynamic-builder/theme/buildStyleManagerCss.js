@@ -86,7 +86,8 @@ const buildStyleManagerCss = () => `
   color: var(--gjs-db-muted);
 }
 .gjs-sm-layer.gjs-sm-active {
-  background-color: var(--gjs-db-active);
+  background-color: var(--gjs-db-accent-soft);
+  box-shadow: none;
   color: var(--gjs-db-fg);
 }
 .gjs-sm-layer-preview-cnt {

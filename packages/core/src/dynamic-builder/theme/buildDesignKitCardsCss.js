@@ -22,6 +22,7 @@ const buildDesignKitCardsCss = () => `
     transform var(--gjs-db-dur-2) var(--gjs-db-ease);
 }
 .gjs-db-kit-card:hover {
+  border-color: var(--gjs-db-accent);
   box-shadow: var(--gjs-db-lift-2);
   transform: translateY(-2px);
 }

@@ -1,6 +1,6 @@
 const getSeoEditorCss = () =>
   [
-    '.gjs-db-seo-modal { display: grid; gap: 16px; max-height: 72vh; overflow-y: auto; padding-right: 4px; }',
+    '.gjs-db-seo-modal { display: grid; gap: 16px; padding-right: 4px; }',
     '.gjs-db-seo-tabs { display: flex; gap: 8px; }',
     '.gjs-db-seo-section { display: grid; gap: 14px; align-content: start; }',
     '.gjs-db-seo-section[hidden] { display: none; }',

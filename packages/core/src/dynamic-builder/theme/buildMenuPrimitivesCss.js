@@ -34,11 +34,11 @@ const buildMenuPrimitivesCss = () => `
   outline-offset: -2px;
 }
 .gjs-db-menu-item[aria-current='true'] {
-  background-color: var(--gjs-db-active);
-  box-shadow: var(--gjs-db-press-1);
+  background-color: var(--gjs-db-accent-soft);
+  font-weight: var(--gjs-db-w-medium);
 }
 .gjs-db-menu-item[aria-current='true'] svg {
-  color: var(--gjs-db-fg);
+  color: var(--gjs-db-accent);
 }
 .gjs-db-menu-icon-button {
   display: inline-flex;
@@ -74,15 +74,17 @@ const buildMenuPrimitivesCss = () => `
   color: var(--gjs-db-fg);
 }
 .gjs-db-download-button {
-  background-color: var(--gjs-db-fg);
-  color: var(--gjs-db-bg);
+  background-color: var(--gjs-db-accent);
+  color: var(--gjs-db-accent-fg);
   box-shadow: var(--gjs-db-lift-1);
+  font-weight: var(--gjs-db-w-medium);
 }
 .gjs-db-download-button:hover {
-  background-color: var(--gjs-db-fg);
-  color: var(--gjs-db-bg);
+  background-color: var(--gjs-db-accent);
+  color: var(--gjs-db-accent-fg);
   box-shadow: var(--gjs-db-lift-2);
   transform: translateY(-1px);
+  opacity: 0.92;
 }
 .gjs-db-field-invalid {
   outline: 2px solid var(--gjs-db-error);

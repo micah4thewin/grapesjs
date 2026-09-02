@@ -48,18 +48,18 @@ const buildPrimitiveButtonsCss = () => `
   transform: none;
 }
 .gjs-db-button-primary {
-  background-color: var(--gjs-db-fg);
-  color: var(--gjs-db-bg);
-  font-weight: var(--gjs-db-w-bold);
+  background-color: var(--gjs-db-accent);
+  color: var(--gjs-db-accent-fg);
+  font-weight: var(--gjs-db-w-medium);
 }
 .gjs-db-button-primary:hover:not(:disabled) {
-  background-color: var(--gjs-db-fg);
-  color: var(--gjs-db-bg);
-  opacity: 0.88;
+  background-color: var(--gjs-db-accent);
+  color: var(--gjs-db-accent-fg);
+  opacity: 0.9;
 }
 .gjs-db-button-primary:active:not(:disabled) {
-  background-color: var(--gjs-db-fg);
-  color: var(--gjs-db-bg);
+  background-color: var(--gjs-db-accent);
+  color: var(--gjs-db-accent-fg);
 }
 .gjs-db-button-danger {
   color: var(--gjs-db-error);

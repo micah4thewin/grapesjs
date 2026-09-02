@@ -24,8 +24,8 @@ const buildCanvasChromeCss = () => `
 }
 .gjs-badge,
 .gjs-com-badge {
-  background-color: var(--gjs-db-fg);
-  color: var(--gjs-db-bg);
+  background-color: var(--gjs-db-accent);
+  color: var(--gjs-db-accent-fg);
   border-radius: var(--gjs-db-r-1);
   box-shadow: var(--gjs-db-lift-1);
   font-family: var(--gjs-db-font-ui);
@@ -39,8 +39,8 @@ const buildCanvasChromeCss = () => `
   color: var(--gjs-db-bg);
 }
 .gjs-toolbar {
-  background-color: var(--gjs-db-fg);
-  color: var(--gjs-db-bg);
+  background-color: var(--gjs-db-accent);
+  color: var(--gjs-db-accent-fg);
   border-radius: var(--gjs-db-r-2);
   box-shadow: var(--gjs-db-lift-2);
   overflow: hidden;

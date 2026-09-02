@@ -40,9 +40,9 @@ body * {
   padding: 3rem 2rem;
   max-width: 30rem;
   min-height: 10rem;
-  border: 2px dashed #b6bcc4;
+  border: 2px dashed #cbc4ba;
   border-radius: 12px;
-  color: #5b6067;
+  color: #6a645c;
   font-family: system-ui, sans-serif;
   font-size: 1rem;
   line-height: 1.5;

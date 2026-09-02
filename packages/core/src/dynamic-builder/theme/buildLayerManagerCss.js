@@ -28,10 +28,10 @@ const buildLayerManagerCss = () => `
   color: var(--gjs-db-fg);
 }
 .gjs-layer.gjs-selected .gjs-layer-item {
-  background-color: var(--gjs-db-active);
-  box-shadow: var(--gjs-db-press-1);
+  background-color: var(--gjs-db-accent-soft);
+  box-shadow: none;
   color: var(--gjs-db-fg);
-  font-weight: var(--gjs-db-w-bold);
+  font-weight: var(--gjs-db-w-medium);
 }
 .gjs-layer-caret {
   color: var(--gjs-db-faint);

@@ -25,9 +25,9 @@ const buildButtonsToolbarsCss = () => `
   transition-duration: var(--gjs-db-dur-1);
 }
 .gjs-pn-btn.gjs-pn-active {
-  color: var(--gjs-db-fg);
-  background-color: var(--gjs-db-active);
-  box-shadow: var(--gjs-db-press-1);
+  color: var(--gjs-db-accent);
+  background-color: var(--gjs-db-accent-soft);
+  box-shadow: none;
   transform: none;
 }
 .gjs-pn-btn svg[fill='none'],
