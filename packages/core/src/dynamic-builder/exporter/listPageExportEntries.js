@@ -1,24 +1,12 @@
-import resolvePageFileBaseName from './resolvePageFileBaseName.js';
+import listPagePathEntries from '../support/listPagePathEntries.js';
 
-const listPageExportEntries = (editor) => {
-  const pageList = editor.Pages && editor.Pages.getAll ? editor.Pages.getAll() : [];
-  const usedNames = [];
-  return pageList.map((sitePage) => {
-    const preferredName = resolvePageFileBaseName(editor, sitePage);
-    let uniqueName = preferredName;
-    let nameSuffix = 2;
-    while (usedNames.includes(uniqueName)) {
-      uniqueName = preferredName + '-' + nameSuffix;
-      nameSuffix += 1;
-    }
-    usedNames.push(uniqueName);
-    return {
-      page: sitePage,
-      pageId: String(sitePage.getId ? sitePage.getId() : sitePage.id || ''),
-      pageName: (sitePage.getName ? sitePage.getName() : '') || uniqueName,
-      fileName: uniqueName + '.html',
-    };
-  });
-};
+const listPageExportEntries = (editor) =>
+  listPagePathEntries(editor).map((pathEntry) => ({
+    page: pathEntry.page,
+    pageId: pathEntry.pageId,
+    pageName: (pathEntry.page.getName ? pathEntry.page.getName() : '') || pathEntry.baseName,
+    fileName: pathEntry.baseName + '.html',
+    isMainPage: pathEntry.isMainPage,
+  }));
 
 export default listPageExportEntries;

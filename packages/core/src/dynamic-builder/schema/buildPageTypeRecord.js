@@ -16,7 +16,7 @@ const buildPageTypeRecord = (editor, page, pageSchemaRecord) => {
   let typeFields;
   if (pageType === 'Article') typeFields = buildArticleRecordFields(readTypeValues('article'), pageUrl);
   else if (pageType === 'Product') typeFields = buildProductRecordFields(readTypeValues('product'), pageUrl);
-  else if (pageType === 'Event') typeFields = buildEventRecordFields(readTypeValues('event'));
+  else if (pageType === 'Event') typeFields = buildEventRecordFields(readTypeValues('event'), pageUrl);
   else if (pageType === 'FAQPage') typeFields = buildFaqPageRecordFields(collectFaqEntriesFromPage(editor, page));
   else {
     const pageSeoRecord = getPageMetaRecord(editor, page).seo;

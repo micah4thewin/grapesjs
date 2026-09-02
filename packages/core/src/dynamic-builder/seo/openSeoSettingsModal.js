@@ -14,7 +14,8 @@ const openSeoSettingsModal = (editor) => {
   const modalMarkup = buildSeoModalMarkup(siteSeoRecord, pageSeoRecord);
   const rootElement = buildElementFromMarkup(containerElement.ownerDocument, modalMarkup);
   if (!rootElement) return;
-  activateSeoModalTab(rootElement, 'site');
+  const storedTabName = editor.getModel().get('dbSeoActiveTab');
+  activateSeoModalTab(rootElement, storedTabName === 'page' ? 'page' : 'site');
   wireSeoModalEvents(editor, rootElement);
   openThemedModal(editor, 'SEO settings', rootElement, { className: 'gjs-db-seo-modal-dialog' });
 };

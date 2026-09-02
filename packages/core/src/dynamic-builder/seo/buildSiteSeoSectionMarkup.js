@@ -5,7 +5,7 @@ import normalizeRobotsExtraLines from './normalizeRobotsExtraLines.js';
 
 const buildSiteSeoSectionMarkup = (siteSeoRecord) =>
   [
-    '<section class="gjs-db-seo-section" data-db-seo-section="site" role="tabpanel" aria-label="Site defaults">',
+    '<section class="gjs-db-seo-section" id="gjs-db-seo-panel-site" data-db-seo-section="site" role="tabpanel" tabindex="0" aria-labelledby="gjs-db-seo-tab-site">',
     '<div class="gjs-db-section-title">Site defaults</div>',
     buildSeoTextFieldMarkup(
       'siteName',

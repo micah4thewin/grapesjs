@@ -1,71 +1,89 @@
+import buildDosDateTimeParts from './buildDosDateTimeParts.js';
 import computeCrc32Checksum from './computeCrc32Checksum.js';
 
-const buildZipArchiveBytes = (fileRecords) => {
+const localHeaderSize = 30;
+const centralHeaderSize = 46;
+const endRecordSize = 22;
+
+const buildZipArchiveBytes = (fileRecords, archiveDate) => {
   const textEncoder = new TextEncoder();
-  const dosDate = ((2026 - 1980) << 9) | (1 << 5) | 1;
-  const outputChunks = [];
-  const centralChunks = [];
-  let writtenOffset = 0;
-  const pushUint16 = (targetChunks, numberValue) => targetChunks.push(numberValue & 0xff, (numberValue >>> 8) & 0xff);
-  const pushUint32 = (targetChunks, numberValue) => {
-    pushUint16(targetChunks, numberValue & 0xffff);
-    pushUint16(targetChunks, (numberValue >>> 16) & 0xffff);
-  };
-  const pushBytes = (targetChunks, byteArray) => byteArray.forEach((byteValue) => targetChunks.push(byteValue));
-  fileRecords.forEach((fileRecord) => {
-    const nameBytes = textEncoder.encode(fileRecord.fileName);
+  const { dosDate, dosTime } = buildDosDateTimeParts(archiveDate);
+  const entryRecords = (Array.isArray(fileRecords) ? fileRecords : []).map((fileRecord) => {
+    const nameBytes = textEncoder.encode(String(fileRecord.fileName || ''));
     const dataBytes = textEncoder.encode(String(fileRecord.content == null ? '' : fileRecord.content));
-    const checksumValue = computeCrc32Checksum(dataBytes);
-    const localOffset = writtenOffset;
-    const localChunks = [];
-    pushUint32(localChunks, 0x04034b50);
-    pushUint16(localChunks, 20);
-    pushUint16(localChunks, 0x0800);
-    pushUint16(localChunks, 0);
-    pushUint16(localChunks, 0);
-    pushUint16(localChunks, dosDate);
-    pushUint32(localChunks, checksumValue);
-    pushUint32(localChunks, dataBytes.length);
-    pushUint32(localChunks, dataBytes.length);
-    pushUint16(localChunks, nameBytes.length);
-    pushUint16(localChunks, 0);
-    pushBytes(localChunks, nameBytes);
-    pushBytes(localChunks, dataBytes);
-    outputChunks.push(localChunks);
-    writtenOffset += localChunks.length;
-    pushUint32(centralChunks, 0x02014b50);
-    pushUint16(centralChunks, 20);
-    pushUint16(centralChunks, 20);
-    pushUint16(centralChunks, 0x0800);
-    pushUint16(centralChunks, 0);
-    pushUint16(centralChunks, 0);
-    pushUint16(centralChunks, dosDate);
-    pushUint32(centralChunks, checksumValue);
-    pushUint32(centralChunks, dataBytes.length);
-    pushUint32(centralChunks, dataBytes.length);
-    pushUint16(centralChunks, nameBytes.length);
-    pushUint16(centralChunks, 0);
-    pushUint16(centralChunks, 0);
-    pushUint16(centralChunks, 0);
-    pushUint16(centralChunks, 0);
-    pushUint32(centralChunks, 0);
-    pushUint32(centralChunks, localOffset);
-    pushBytes(centralChunks, nameBytes);
+    return { nameBytes, dataBytes, checksumValue: computeCrc32Checksum(dataBytes) };
   });
-  const endChunks = [];
-  pushUint32(endChunks, 0x06054b50);
-  pushUint16(endChunks, 0);
-  pushUint16(endChunks, 0);
-  pushUint16(endChunks, fileRecords.length);
-  pushUint16(endChunks, fileRecords.length);
-  pushUint32(endChunks, centralChunks.length);
-  pushUint32(endChunks, writtenOffset);
-  pushUint16(endChunks, 0);
-  const allBytes = [];
-  outputChunks.forEach((localChunks) => pushBytes(allBytes, localChunks));
-  pushBytes(allBytes, centralChunks);
-  pushBytes(allBytes, endChunks);
-  return Uint8Array.from(allBytes);
+  const localSectionSize = entryRecords.reduce(
+    (totalSize, entryRecord) =>
+      totalSize + localHeaderSize + entryRecord.nameBytes.length + entryRecord.dataBytes.length,
+    0,
+  );
+  const centralSectionSize = entryRecords.reduce(
+    (totalSize, entryRecord) => totalSize + centralHeaderSize + entryRecord.nameBytes.length,
+    0,
+  );
+  const archiveBytes = new Uint8Array(localSectionSize + centralSectionSize + endRecordSize);
+  const archiveView = new DataView(archiveBytes.buffer);
+  let writeOffset = 0;
+  const writeUint16 = (numberValue) => {
+    archiveView.setUint16(writeOffset, numberValue & 0xffff, true);
+    writeOffset += 2;
+  };
+  const writeUint32 = (numberValue) => {
+    archiveView.setUint32(writeOffset, numberValue >>> 0, true);
+    writeOffset += 4;
+  };
+  const writeBytes = (byteArray) => {
+    archiveBytes.set(byteArray, writeOffset);
+    writeOffset += byteArray.length;
+  };
+  entryRecords.forEach((entryRecord) => {
+    entryRecord.localOffset = writeOffset;
+    writeUint32(0x04034b50);
+    writeUint16(20);
+    writeUint16(0x0800);
+    writeUint16(0);
+    writeUint16(dosTime);
+    writeUint16(dosDate);
+    writeUint32(entryRecord.checksumValue);
+    writeUint32(entryRecord.dataBytes.length);
+    writeUint32(entryRecord.dataBytes.length);
+    writeUint16(entryRecord.nameBytes.length);
+    writeUint16(0);
+    writeBytes(entryRecord.nameBytes);
+    writeBytes(entryRecord.dataBytes);
+  });
+  const centralStartOffset = writeOffset;
+  entryRecords.forEach((entryRecord) => {
+    writeUint32(0x02014b50);
+    writeUint16(20);
+    writeUint16(20);
+    writeUint16(0x0800);
+    writeUint16(0);
+    writeUint16(dosTime);
+    writeUint16(dosDate);
+    writeUint32(entryRecord.checksumValue);
+    writeUint32(entryRecord.dataBytes.length);
+    writeUint32(entryRecord.dataBytes.length);
+    writeUint16(entryRecord.nameBytes.length);
+    writeUint16(0);
+    writeUint16(0);
+    writeUint16(0);
+    writeUint16(0);
+    writeUint32(0);
+    writeUint32(entryRecord.localOffset);
+    writeBytes(entryRecord.nameBytes);
+  });
+  const entryCountField = Math.min(entryRecords.length, 0xffff);
+  writeUint32(0x06054b50);
+  writeUint16(0);
+  writeUint16(0);
+  writeUint16(entryCountField);
+  writeUint16(entryCountField);
+  writeUint32(writeOffset - centralStartOffset);
+  writeUint32(centralStartOffset);
+  writeUint16(0);
+  return archiveBytes;
 };
 
 export default buildZipArchiveBytes;

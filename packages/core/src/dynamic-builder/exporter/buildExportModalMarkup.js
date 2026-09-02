@@ -6,7 +6,7 @@ const buildExportModalMarkup = (editor) =>
   [
     '<div class="gjs-db-form" data-db-export-root>',
     buildExportPagesSectionMarkup(editor),
-    buildExportAssetsSectionMarkup(editor),
+    buildExportAssetsSectionMarkup(),
     buildExportOptionsSectionMarkup(editor),
     '<div class="gjs-db-button-row">',
     '<button type="button" class="gjs-db-button gjs-db-button-primary" data-db-export-action="download-zip">',

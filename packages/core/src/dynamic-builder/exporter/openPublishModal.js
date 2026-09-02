@@ -1,7 +1,6 @@
 import buildElementFromMarkup from '../support/buildElementFromMarkup.js';
-import buildExportBundleRecords from './buildExportBundleRecords.js';
 import buildPublishSummaryMarkup from './buildPublishSummaryMarkup.js';
-import downloadFileRecordList from './downloadFileRecordList.js';
+import downloadSiteZipBundle from './downloadSiteZipBundle.js';
 import getExporterEditorCss from './getExporterEditorCss.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
 import openThemedModal from '../support/openThemedModal.js';
@@ -19,7 +18,7 @@ const openPublishModal = (editor, commandOptions) => {
   const continueButton = rootElement.querySelector('[data-db-publish-continue]');
   if (continueButton) {
     continueButton.addEventListener('click', () => {
-      downloadFileRecordList(editor, buildExportBundleRecords(editor, buildOptions), 'publish');
+      downloadSiteZipBundle(editor, buildOptions);
       editor.Modal.close();
     });
   }

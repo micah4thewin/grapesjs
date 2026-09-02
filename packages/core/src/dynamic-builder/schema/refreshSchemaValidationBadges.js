@@ -24,7 +24,10 @@ const refreshSchemaValidationBadges = (editor, rootElement) => {
   const faqEntryCount =
     pageType === 'FAQPage' ? collectFaqEntriesFromPage(editor, resolveSchemaTargetPage(editor)).length : 0;
   const pageValidationValues = resolvePageValidationValues(pageType, pageFormValues, faqEntryCount);
-  setBadgeMarkup('page', evaluateSchemaValidation(pageValidationValues, resolvePageTypeValidationRules(pageType)));
+  setBadgeMarkup(
+    'page',
+    evaluateSchemaValidation(pageValidationValues, resolvePageTypeValidationRules(pageType, pageValidationValues)),
+  );
   const faqCountElement = rootElement.querySelector('[data-db-schema-faq-count]');
   if (faqCountElement && pageType === 'FAQPage') {
     faqCountElement.textContent = faqEntryCount + ' question and answer pairs found';

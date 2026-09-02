@@ -9,6 +9,7 @@ const getSiteCustomCodeRecord = (editor) => {
     bodyStartHtml: String(storedRecord.bodyStartHtml || ''),
     bodyEndHtml: String(storedRecord.bodyEndHtml || ''),
     allowScripts: storedRecord.allowScripts === true,
+    scriptOriginAllowlist: Array.isArray(storedRecord.scriptOriginAllowlist) ? storedRecord.scriptOriginAllowlist : [],
   };
 };
 

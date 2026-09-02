@@ -9,6 +9,7 @@ const handleSeoModalClick = (editor, rootElement, clickEvent) => {
   const tabButton = clickedElement.closest('[data-db-seo-tab]');
   if (tabButton) {
     activateSeoModalTab(rootElement, tabButton.dataset.dbSeoTab);
+    editor.getModel().set('dbSeoActiveTab', tabButton.dataset.dbSeoTab);
     return;
   }
   const saveButton = clickedElement.closest('[data-db-seo-save]');

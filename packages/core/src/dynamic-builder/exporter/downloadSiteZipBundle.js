@@ -6,7 +6,7 @@ const downloadSiteZipBundle = (editor, buildOptions) => {
   const resolvedOptions = { separateAssets: true, resolveBindings: true, ...(buildOptions || {}) };
   const bundleRecords = buildExportBundleRecords(editor, resolvedOptions).filter(Boolean);
   if (!bundleRecords.length) return false;
-  const archiveBytes = buildZipArchiveBytes(bundleRecords);
+  const archiveBytes = buildZipArchiveBytes(bundleRecords, new Date());
   downloadBlobFile('site.zip', new Blob([archiveBytes], { type: 'application/zip' }));
   editor.trigger('db:export:complete', {
     kind: 'zip',

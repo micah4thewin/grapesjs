@@ -8,7 +8,7 @@ import buildSocialPreviewCardMarkup from './buildSocialPreviewCardMarkup.js';
 
 const buildPageSeoSectionMarkup = (pageSeoRecord) =>
   [
-    '<section class="gjs-db-seo-section" data-db-seo-section="page" role="tabpanel" aria-label="This page" hidden>',
+    '<section class="gjs-db-seo-section" id="gjs-db-seo-panel-page" data-db-seo-section="page" role="tabpanel" tabindex="0" aria-labelledby="gjs-db-seo-tab-page" hidden>',
     '<div class="gjs-db-section-title">This page</div>',
     buildPageBasicsFieldsMarkup(pageSeoRecord),
     '<div class="gjs-db-grid-two gjs-db-seo-previews">',
