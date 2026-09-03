@@ -1,4 +1,5 @@
 import applyQualityAudits from './audits/applyQualityAudits.js';
+import applyScrollAnimations from './animations/applyScrollAnimations.js';
 import applyBlockLibrary from './blocks/applyBlockLibrary.js';
 import applySiteMetaFoundation from './support/applySiteMetaFoundation.js';
 import composeModuleAppliers from './composeModuleAppliers.js';
@@ -12,11 +13,13 @@ import applyExportSystem from './exporter/applyExportSystem.js';
 import applyFormComponents from './formComponents/applyFormComponents.js';
 import getDefaultPluginOptions from './getDefaultPluginOptions.js';
 import applyIconSystem from './icons/applyIconSystem.js';
+import applyInteractionFlows from './interactions/applyInteractionFlows.js';
 import applyInteractiveComponents from './interactiveComponents/applyInteractiveComponents.js';
 import applyLayoutComponents from './layoutComponents/applyLayoutComponents.js';
 import applyMarketingComponents from './marketingComponents/applyMarketingComponents.js';
 import applyMediaComponents from './mediaComponents/applyMediaComponents.js';
 import applyPersistence from './persistence/applyPersistence.js';
+import applyReusableComponents from './symbols/applyReusableComponents.js';
 import applySchemaManager from './schema/applySchemaManager.js';
 import applySeoManager from './seo/applySeoManager.js';
 import applyEditorShell from './shell/applyEditorShell.js';
@@ -24,6 +27,7 @@ import applyStyleSectors from './styleSectors/applyStyleSectors.js';
 import deepMergeRecords from './support/deepMergeRecords.js';
 import applyEditorTheme from './theme/applyEditorTheme.js';
 import applyTraitTypes from './traits/applyTraitTypes.js';
+import attachSharedComponentTraits from './support/attachSharedComponentTraits.js';
 import applyTypographySystem from './typography/applyTypographySystem.js';
 
 const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
@@ -45,6 +49,9 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
     applyFormComponents,
     applyDataBinding,
     applyCustomCode,
+    applyScrollAnimations,
+    applyInteractionFlows,
+    applyReusableComponents,
     applyBlockLibrary,
     applySeoManager,
     applySchemaManager,
@@ -53,6 +60,7 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
     applyPersistence,
     applyEditorShell,
     applyExperienceUpgrades,
+    attachSharedComponentTraits,
   ]);
   applyAllModules(editor, mergedOptions);
 };

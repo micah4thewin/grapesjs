@@ -38,6 +38,9 @@ const getCssChunkDetectorRecords = () => ({
     "[data-db-type='custom-css']",
     "[data-db-type='custom-script']",
   ],
+  'db-css-animations-base': ['[data-db-aos]'],
+  'db-css-interactions-base': ['[data-db-flows]', "[data-db-type='alert-button']"],
+  'db-css-symbols-base': ["[data-db-type='symbol']"],
 });
 
 export default getCssChunkDetectorRecords;

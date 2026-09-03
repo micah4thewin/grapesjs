@@ -14,10 +14,11 @@ const createCustomCssTypeDefinition = () => ({
       components: buildCssCardChildren(''),
       traits: [
         {
-          type: 'db-textarea-trait',
+          type: 'db-code',
           name: 'cssCode',
+          language: 'css',
           label: 'CSS code',
-          placeholder: '.db-example { color: inherit; }',
+          helpText: 'Applies to the whole site. Design tokens are available as --db-* variables.',
         },
       ],
     },

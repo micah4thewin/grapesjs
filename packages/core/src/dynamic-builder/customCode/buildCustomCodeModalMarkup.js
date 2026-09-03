@@ -1,8 +1,36 @@
-import buildCodeSlotFieldMarkup from './buildCodeSlotFieldMarkup.js';
+import buildCodeFieldMarkup from '../codeEditor/buildCodeFieldMarkup.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
+import getCustomCodeSlotRecords from './getCustomCodeSlotRecords.js';
 import getIconMarkup from '../support/getIconMarkup.js';
 
+const buildTabButtonMarkup = (slotRecord, slotIndex) =>
+  [
+    '<button type="button" class="gjs-db-code-tab" role="tab" data-db-code-tab="' + slotRecord.name + '"',
+    ' id="gjs-db-code-tab-' + slotRecord.name + '"',
+    ' aria-controls="gjs-db-code-panel-' + slotRecord.name + '"',
+    ' aria-selected="' + (slotIndex === 0 ? 'true' : 'false') + '"',
+    ' tabindex="' + (slotIndex === 0 ? '0' : '-1') + '">',
+    escapeHtmlText(slotRecord.label),
+    '</button>',
+  ].join('');
+
+const buildTabPanelMarkup = (slotRecord, slotIndex) =>
+  [
+    '<div class="gjs-db-code-panel" role="tabpanel" data-db-code-panel="' + slotRecord.name + '"',
+    ' id="gjs-db-code-panel-' + slotRecord.name + '"',
+    ' aria-labelledby="gjs-db-code-tab-' + slotRecord.name + '"',
+    slotIndex === 0 ? '>' : ' hidden>',
+    buildCodeFieldMarkup({
+      name: slotRecord.name,
+      label: slotRecord.label,
+      language: slotRecord.language,
+      helpText: slotRecord.helpText,
+    }),
+    '</div>',
+  ].join('');
+
 const buildCustomCodeModalMarkup = (customCodeSettings) => {
+  const slotRecords = getCustomCodeSlotRecords();
   const warningText =
     'Injected code runs with full access to your published pages and your visitors. ' +
     'Only paste code you trust. Script tags are stripped from every slot unless you allow scripts below.';
@@ -14,24 +42,10 @@ const buildCustomCodeModalMarkup = (customCodeSettings) => {
     getIconMarkup('warning', { size: 16 }),
     '<span>' + escapeHtmlText(warningText) + '</span>',
     '</p>',
-    buildCodeSlotFieldMarkup(
-      'headHtml',
-      'Head HTML',
-      'Injected before the closing head tag on every exported page.',
-      customCodeSettings.headHtml,
-    ),
-    buildCodeSlotFieldMarkup(
-      'bodyStartHtml',
-      'Body start HTML',
-      'Injected right after the opening body tag on every exported page.',
-      customCodeSettings.bodyStartHtml,
-    ),
-    buildCodeSlotFieldMarkup(
-      'bodyEndHtml',
-      'Body end HTML',
-      'Injected right before the closing body tag on every exported page.',
-      customCodeSettings.bodyEndHtml,
-    ),
+    '<div class="gjs-db-code-tabs" role="tablist" aria-label="Code slots">',
+    slotRecords.map(buildTabButtonMarkup).join(''),
+    '</div>',
+    slotRecords.map(buildTabPanelMarkup).join(''),
     '<div class="gjs-db-field">',
     '<label class="gjs-db-field-label gjs-db-custom-code-toggle">',
     '<input type="checkbox" data-db-allow-scripts' + checkedAttribute + '>',
@@ -44,7 +58,7 @@ const buildCustomCodeModalMarkup = (customCodeSettings) => {
     '</div>',
     '<div class="gjs-db-field">',
     '<label class="gjs-db-field-label" for="gjs-db-custom-code-origins">External script origin allowlist</label>',
-    '<textarea class="gjs-db-field-input" id="gjs-db-custom-code-origins" data-db-script-origins rows="4">',
+    '<textarea class="gjs-db-field-input" id="gjs-db-custom-code-origins" data-db-script-origins rows="3">',
     escapeHtmlText(allowlistValue),
     '</textarea>',
     '<span class="gjs-db-field-help">One origin per line, for example https://cdn.example.com. ',

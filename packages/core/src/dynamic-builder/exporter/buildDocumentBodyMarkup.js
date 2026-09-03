@@ -1,4 +1,5 @@
 import buildSiteScriptText from './buildSiteScriptText.js';
+import collectFeatureRuntimeScriptText from './collectFeatureRuntimeScriptText.js';
 import collectPageScriptText from './collectPageScriptText.js';
 import getSiteCustomCodeRecord from './getSiteCustomCodeRecord.js';
 import resolveBindingTokensInMarkup from '../dataBinding/resolveBindingTokensInMarkup.js';
@@ -28,7 +29,11 @@ const buildDocumentBodyMarkup = (editor, page, buildOptions) => {
         : buildSiteScriptText(editor, optionsRecord);
     if (siteScriptText) endParts.push('<script src="site.js" defer></script>');
   } else {
-    const scriptChunks = [pageScriptText, resolveCustomScriptText(editor, optionsRecord, page)].filter(Boolean);
+    const scriptChunks = [
+      collectFeatureRuntimeScriptText(editor, page),
+      pageScriptText,
+      resolveCustomScriptText(editor, optionsRecord, page),
+    ].filter(Boolean);
     if (scriptChunks.length) {
       const inlineScriptText = scriptChunks.join('\n\n').replace(/<\/script/gi, '<\\/script');
       endParts.push('<script>\n' + inlineScriptText + '\n</script>');

@@ -14,10 +14,11 @@ const createCustomHtmlTypeDefinition = () => ({
       components: getDefaultCustomHtmlCode(),
       traits: [
         {
-          type: 'db-textarea-trait',
+          type: 'db-code',
           name: 'htmlCode',
+          language: 'html',
           label: 'HTML code',
-          placeholder: '<div>Your markup here</div>',
+          helpText: 'Sanitized on save unless you allow script tags in Custom code.',
         },
       ],
     },

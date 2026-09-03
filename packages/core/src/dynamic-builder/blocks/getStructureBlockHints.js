@@ -37,6 +37,7 @@ const getStructureBlockHints = () => ({
   'db-icon': 'A small symbol',
   'db-icon-text-row': 'A symbol next to a line of text',
   'db-icon-row': 'A row of symbols',
+  'db-alert-button': 'A button that pops up a message',
   'db-accordion': 'Rows that expand to show more',
   'db-accordion-faq': 'Questions that expand to show answers',
   'db-tabs': 'Content organized into tabs',

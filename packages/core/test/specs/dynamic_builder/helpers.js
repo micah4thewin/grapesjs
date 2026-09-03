@@ -1,8 +1,11 @@
+import buildAlertButtonFlowRecord from '../../../src/dynamic-builder/interactions/buildAlertButtonFlowRecord';
 import buildDosDateTimeParts from '../../../src/dynamic-builder/exporter/buildDosDateTimeParts';
 import buildZipArchiveBytes from '../../../src/dynamic-builder/exporter/buildZipArchiveBytes';
 import computeContrastRatio from '../../../src/dynamic-builder/support/computeContrastRatio';
 import computeCrc32Checksum from '../../../src/dynamic-builder/exporter/computeCrc32Checksum';
+import countUnbalancedPairs from '../../../src/dynamic-builder/codeEditor/countUnbalancedPairs';
 import deepMergeRecords from '../../../src/dynamic-builder/support/deepMergeRecords';
+import describeFlowSummary from '../../../src/dynamic-builder/interactions/describeFlowSummary';
 import enforceScriptOriginAllowlist from '../../../src/dynamic-builder/customCode/enforceScriptOriginAllowlist';
 import escapeHtmlText from '../../../src/dynamic-builder/support/escapeHtmlText';
 import evaluateConditionRecord from '../../../src/dynamic-builder/dataBinding/evaluateConditionRecord';
@@ -12,6 +15,7 @@ import joinCanonicalBaseWithSlug from '../../../src/dynamic-builder/seo/joinCano
 import minifyCssText from '../../../src/dynamic-builder/exporter/minifyCssText';
 import normalizeTwitterHandle from '../../../src/dynamic-builder/seo/normalizeTwitterHandle';
 import parseColorToRgb from '../../../src/dynamic-builder/support/parseColorToRgb';
+import parseFlowRecords from '../../../src/dynamic-builder/interactions/parseFlowRecords';
 import parseOriginAllowlist from '../../../src/dynamic-builder/customCode/parseOriginAllowlist';
 import replaceBindingTokensInText from '../../../src/dynamic-builder/dataBinding/replaceBindingTokensInText';
 import resolveBindingPath from '../../../src/dynamic-builder/dataBinding/resolveBindingPath';
@@ -19,10 +23,15 @@ import sanitizeCssCode from '../../../src/dynamic-builder/customCode/sanitizeCss
 import sanitizeHtmlMarkup from '../../../src/dynamic-builder/support/sanitizeHtmlMarkup';
 import sanitizeSvgMarkup from '../../../src/dynamic-builder/support/sanitizeSvgMarkup';
 import sanitizeUrlValue from '../../../src/dynamic-builder/support/sanitizeUrlValue';
+import serializeComponentDefinition from '../../../src/dynamic-builder/symbols/serializeComponentDefinition';
+import serializeFlowRecords from '../../../src/dynamic-builder/interactions/serializeFlowRecords';
 import serializeJsonForScript from '../../../src/dynamic-builder/support/serializeJsonForScript';
 import setNestedSchemaValue from '../../../src/dynamic-builder/schema/setNestedSchemaValue';
+import stripDefinitionElementIds from '../../../src/dynamic-builder/symbols/stripDefinitionElementIds';
+import stripNestedSymbolChildren from '../../../src/dynamic-builder/symbols/stripNestedSymbolChildren';
 import toSlugText from '../../../src/dynamic-builder/support/toSlugText';
 import trimCanonicalBaseUrl from '../../../src/dynamic-builder/seo/trimCanonicalBaseUrl';
+import validateCodeText from '../../../src/dynamic-builder/codeEditor/validateCodeText';
 
 describe('Dynamic builder helpers', () => {
   describe('sanitizeHtmlMarkup', () => {
@@ -279,6 +288,176 @@ describe('Dynamic builder helpers', () => {
   describe('escapeHtmlText', () => {
     test('escapes every dangerous character', () => {
       expect(escapeHtmlText('<a href="x">&\'</a>')).toBe('&lt;a href=&quot;x&quot;&gt;&amp;&#39;&lt;/a&gt;');
+    });
+  });
+
+  describe('parseFlowRecords', () => {
+    test('drops malformed payloads instead of throwing', () => {
+      expect(parseFlowRecords('not json')).toEqual([]);
+      expect(parseFlowRecords('{"trigger":"click"}')).toEqual([]);
+      expect(parseFlowRecords('')).toEqual([]);
+    });
+
+    test('keeps known actions and discards unknown ones', () => {
+      const parsed = parseFlowRecords(
+        JSON.stringify([
+          { trigger: 'click', actions: [{ type: 'nope' }, { type: 'hide', options: { target: '#x', junk: 1 } }] },
+        ]),
+      );
+      expect(parsed[0].actions).toEqual([{ type: 'hide', options: { target: '#x' } }]);
+      expect(parsed[0].id).toMatch(/^flow-/);
+    });
+
+    test('falls back to the first trigger when the stored one is unknown', () => {
+      const parsed = parseFlowRecords(JSON.stringify([{ trigger: 'telepathy', actions: [{ type: 'show' }] }]));
+      expect(parsed[0].trigger).toBe('click');
+    });
+  });
+
+  describe('serializeFlowRecords', () => {
+    test('drops flows with no steps so empty attributes are never written', () => {
+      expect(serializeFlowRecords([{ id: 'a', trigger: 'click', actions: [] }])).toBe('');
+      expect(serializeFlowRecords([])).toBe('');
+      const serialized = serializeFlowRecords([
+        { id: 'a', trigger: 'click', actions: [{ type: 'show', options: {} }] },
+      ]);
+      expect(JSON.parse(serialized)[0].actions[0].type).toBe('show');
+    });
+  });
+
+  describe('buildAlertButtonFlowRecord', () => {
+    test('builds a click flow and keeps the existing flow id', () => {
+      const flowRecord = buildAlertButtonFlowRecord({ 'data-db-alert-title': 'Hi' }, 'flow-keep');
+      expect(flowRecord.id).toBe('flow-keep');
+      expect(flowRecord.trigger).toBe('click');
+      expect(flowRecord.actions[0].options.title).toBe('Hi');
+    });
+
+    test('ignores a follow-up step when no target was given', () => {
+      const flowRecord = buildAlertButtonFlowRecord({ 'data-db-alert-then': 'open-url', 'data-db-alert-url': '' });
+      expect(flowRecord.actions.length).toBe(1);
+    });
+  });
+
+  describe('describeFlowSummary', () => {
+    test('summarises one flow and counts several', () => {
+      expect(describeFlowSummary([])).toBe('No flows yet');
+      expect(describeFlowSummary([{ trigger: 'click', actions: [{ type: 'alert' }, { type: 'hide' }] }])).toBe(
+        'When clicked: Show a dialog +1 more',
+      );
+      expect(
+        describeFlowSummary([
+          { trigger: 'click', actions: [{ type: 'alert' }] },
+          { trigger: 'hover', actions: [{ type: 'hide' }] },
+        ]),
+      ).toBe('2 flows, 2 steps');
+    });
+  });
+
+  describe('countUnbalancedPairs and validateCodeText', () => {
+    test('ignores brackets that live inside strings', () => {
+      expect(countUnbalancedPairs('a("{") ', '{', '}').depth).toBe(0);
+      expect(countUnbalancedPairs("a('}')", '{', '}').lowestDepth).toBe(0);
+    });
+
+    test('ignores brackets inside comments so valid code stays valid', () => {
+      expect(validateCodeText('css', ".a { /* don't */ color: red; }").valid).toBe(true);
+      expect(validateCodeText('javascript', "if (a) { // don't\n b(); }").valid).toBe(true);
+      expect(validateCodeText('css', '.a { background: url(http://x/y.png); }').valid).toBe(true);
+      expect(countUnbalancedPairs('a /* { */ b', '{', '}').depth).toBe(0);
+      expect(countUnbalancedPairs('a // {\nb', '{', '}', { lineComments: true }).depth).toBe(0);
+    });
+
+    test('walks past escaped quotes without losing the string state', () => {
+      expect(countUnbalancedPairs('var a = "\\\\"; if (b) { c(); }', '{', '}').depth).toBe(0);
+    });
+
+    test('uses no regex lookbehind so older engines can parse the bundle', () => {
+      const validatorSource = String(validateCodeText);
+      expect(validatorSource).not.toContain('(?<');
+    });
+
+    test('counts self-closing html tags as open tags', () => {
+      expect(validateCodeText('html', '<img src="x"/><br />').valid).toBe(true);
+      expect(validateCodeText('html', '<div><p>hi</p></div>').valid).toBe(true);
+    });
+
+    test('reports the real problem per language', () => {
+      expect(validateCodeText('css', '.a { color: red; }').valid).toBe(true);
+      expect(validateCodeText('css', '.a { color: red;').message).toContain('never closed');
+      expect(validateCodeText('css', '.a { }\n/* open').message).toContain('comment');
+      expect(validateCodeText('javascript', 'if (a) { b(); }').valid).toBe(true);
+      expect(validateCodeText('javascript', 'f(1;').message).toContain('bracket');
+      expect(validateCodeText('json', '{"a":1}').valid).toBe(true);
+      expect(validateCodeText('json', '{a:1}').valid).toBe(false);
+      expect(validateCodeText('html', '</div>').message).toContain('closing tags');
+      expect(validateCodeText('html', '   ').valid).toBe(true);
+    });
+  });
+
+  describe('stripNestedSymbolChildren', () => {
+    test('keeps a nested symbol as a reference so it still tracks its own master', () => {
+      const stripped = stripNestedSymbolChildren({
+        type: 'db-section',
+        components: [
+          {
+            type: 'db-symbol',
+            attributes: { 'data-db-symbol': 'sym-nav' },
+            components: [{ type: 'db-text', components: 'stale copy' }],
+          },
+          { type: 'db-text', components: 'kept' },
+        ],
+      });
+      expect(stripped.components[0].components).toBeUndefined();
+      expect(stripped.components[0].attributes['data-db-symbol']).toBe('sym-nav');
+      expect(stripped.components[1].components).toBe('kept');
+    });
+
+    test('recognises a symbol by its data attribute alone', () => {
+      const stripped = stripNestedSymbolChildren({
+        attributes: { 'data-db-type': 'symbol' },
+        components: [{ type: 'db-text' }],
+      });
+      expect(stripped.components).toBeUndefined();
+    });
+  });
+
+  describe('stripDefinitionElementIds', () => {
+    test('removes ids at every depth so instances get fresh ones', () => {
+      const stripped = stripDefinitionElementIds({
+        id: 'a',
+        attributes: { id: 'a', 'data-db-type': 'navbar' },
+        components: [{ attributes: { id: 'b', class: 'x' } }],
+      });
+      expect(stripped.id).toBeUndefined();
+      expect(stripped.attributes.id).toBeUndefined();
+      expect(stripped.attributes['data-db-type']).toBe('navbar');
+      expect(stripped.components[0].attributes.id).toBeUndefined();
+      expect(stripped.components[0].attributes.class).toBe('x');
+    });
+  });
+
+  describe('serializeComponentDefinition', () => {
+    test('returns null for anything that cannot be serialised', () => {
+      expect(serializeComponentDefinition(null)).toBeNull();
+      expect(serializeComponentDefinition({})).toBeNull();
+    });
+
+    test('drops editor-only keys from the stored definition', () => {
+      const definition = serializeComponentDefinition({
+        toJSON: () => ({
+          type: 'db-text',
+          status: 'selected',
+          toolbar: [{ command: 'x' }],
+          __symbol: 'abc',
+          components: [{ type: 'textnode', content: 'hi', status: 'selected' }],
+        }),
+      });
+      expect(definition.status).toBeUndefined();
+      expect(definition.toolbar).toBeUndefined();
+      expect(definition.__symbol).toBeUndefined();
+      expect(definition.components[0].status).toBeUndefined();
+      expect(definition.components[0].content).toBe('hi');
     });
   });
 });

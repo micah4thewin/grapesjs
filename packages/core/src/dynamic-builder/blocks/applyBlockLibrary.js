@@ -1,3 +1,4 @@
+import applyBlockPreviews from './applyBlockPreviews.js';
 import registerBlockSet from '../support/registerBlockSet.js';
 import buildDataBlocks from './buildDataBlocks.js';
 import buildEmbedBlocks from './buildEmbedBlocks.js';
@@ -27,6 +28,7 @@ const applyBlockLibrary = (editor, pluginOptions) => {
   ].filter((blockDefinition) => excludedBlockIds.indexOf(blockDefinition.id) < 0);
   registerBlockSet(editor, blockDefinitions);
   decorateBlockLabels(editor);
+  applyBlockPreviews(editor);
   registerBlockCompositionStyles(editor);
 };
 

@@ -20,6 +20,24 @@ const getDbCommandLabelRecords = () => ({
   'db:download-site': { label: 'Download site (.zip)', iconName: 'download', keywords: 'zip bundle build assets' },
   'db:publish-site': { label: 'Publish site', iconName: 'publish', keywords: 'deploy release checklist' },
   'db:add-page': { label: 'Add page', iconName: 'plus', keywords: 'new page create' },
+  'db:open-symbols': {
+    label: 'Reusable components',
+    iconName: 'symbols',
+    keywords: 'symbol nav header footer shared global reuse',
+  },
+  'db:create-symbol': { label: 'Make selection reusable', iconName: 'symbols', keywords: 'symbol shared global' },
+  'db:edit-symbol': { label: 'Edit reusable component', iconName: 'edit', keywords: 'symbol shared everywhere' },
+  'db:detach-symbol': { label: 'Detach reusable copy', iconName: 'unlock', keywords: 'symbol unlink independent' },
+  'db:open-flow-builder': {
+    label: 'Interactions',
+    iconName: 'flow',
+    keywords: 'flow javascript click hover onclick trigger action',
+  },
+  'db:preview-animations': {
+    label: 'Preview animations',
+    iconName: 'motion',
+    keywords: 'aos animate scroll motion replay',
+  },
 });
 
 export default getDbCommandLabelRecords;

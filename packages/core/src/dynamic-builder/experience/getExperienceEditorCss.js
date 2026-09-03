@@ -36,6 +36,9 @@ const getExperienceEditorCss = () => `
   font-size: 0.64rem;
   line-height: 1.35;
 }
+.gjs-db-blocks-empty {
+  grid-column: 1 / -1;
+}
 .gjs-block {
   cursor: grab;
 }

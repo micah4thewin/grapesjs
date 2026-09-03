@@ -67,6 +67,8 @@ describe('Dynamic builder plugin', () => {
     'db-custom-html',
     'db-custom-css',
     'db-custom-script',
+    'db-symbol',
+    'db-alert-button',
   ];
 
   const contractedCommandIds = [
@@ -90,6 +92,12 @@ describe('Dynamic builder plugin', () => {
     'db:open-site-settings',
     'db:open-design-kits',
     'db:open-history',
+    'db:open-symbols',
+    'db:create-symbol',
+    'db:edit-symbol',
+    'db:detach-symbol',
+    'db:open-flow-builder',
+    'db:preview-animations',
   ];
 
   beforeEach(() => {

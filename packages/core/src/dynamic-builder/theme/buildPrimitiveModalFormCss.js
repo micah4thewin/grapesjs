@@ -25,7 +25,9 @@ const buildPrimitiveModalFormCss = () => `
   letter-spacing: 0.1em;
 }
 .gjs-db-field-input {
+  box-sizing: border-box;
   width: 100%;
+  max-width: 100%;
   padding: 0.55em 0.85em;
   border: none;
   border-radius: var(--gjs-db-r-2);

@@ -23,7 +23,7 @@ const buildMarketingCardBlocks = () => [
     ]),
   ),
   buildBlockDefinition('db-logo-cloud', 'Logo cloud', 'Marketing', 'logoCloud', { type: 'db-logo-cloud' }),
-  buildBlockDefinition('db-stats-row', 'Stats row', 'Marketing', 'stats', { type: 'db-stats' }),
+  buildBlockDefinition('db-stats-row', 'Stats', 'Marketing', 'stats', { type: 'db-stats' }),
   buildBlockDefinition('db-pricing', 'Pricing', 'Marketing', 'pricing', { type: 'db-pricing' }),
   buildBlockDefinition(
     'db-team-grid',
