@@ -20,6 +20,14 @@ const createCustomScriptTypeDefinition = () => ({
           label: 'Script code',
           helpText: 'Stays inert until you turn on "Allow script tags" in Custom code.',
         },
+        {
+          type: 'button',
+          name: 'dbOpenCustomCode',
+          label: '',
+          text: 'Open custom code settings',
+          full: true,
+          command: 'db:open-custom-code',
+        },
       ],
     },
     toHTML() {

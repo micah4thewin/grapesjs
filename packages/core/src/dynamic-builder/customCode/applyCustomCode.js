@@ -7,6 +7,7 @@ import getCustomCodeEditorCss from './getCustomCodeEditorCss.js';
 import injectCanvasEditorOnlyStyles from './injectCanvasEditorOnlyStyles.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
 import openCustomCodeModal from './openCustomCodeModal.js';
+import warnAboutBlockedScripts from './warnAboutBlockedScripts.js';
 import registerCanvasStyles from '../support/registerCanvasStyles.js';
 import registerCommandSet from '../support/registerCommandSet.js';
 import registerComponentTypeSet from '../support/registerComponentTypeSet.js';
@@ -23,6 +24,7 @@ const applyCustomCode = (editor, pluginOptions) => {
   registerCanvasStyles(editor, 'db-css-customcode-base', buildCustomCodeSiteCss());
   watchCustomCodeComponents(editor);
   seedCustomCodeSiteMeta(editor, moduleOptions);
+  warnAboutBlockedScripts(editor);
   registerCommandSet(editor, {
     'db:open-custom-code': (commandEditor) => openCustomCodeModal(commandEditor, moduleOptions),
   });

@@ -74,13 +74,14 @@ const buildZipArchiveBytes = (fileRecords, archiveDate) => {
     writeUint32(entryRecord.localOffset);
     writeBytes(entryRecord.nameBytes);
   });
+  const centralSectionBytes = writeOffset - centralStartOffset;
   const entryCountField = Math.min(entryRecords.length, 0xffff);
   writeUint32(0x06054b50);
   writeUint16(0);
   writeUint16(0);
   writeUint16(entryCountField);
   writeUint16(entryCountField);
-  writeUint32(writeOffset - centralStartOffset);
+  writeUint32(centralSectionBytes);
   writeUint32(centralStartOffset);
   writeUint16(0);
   return archiveBytes;

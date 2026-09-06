@@ -12,6 +12,7 @@ import createJsonTraitDefinition from './createJsonTraitDefinition.js';
 import createMenuItemsTraitDefinition from './createMenuItemsTraitDefinition.js';
 import createPageLinkTraitDefinition from './createPageLinkTraitDefinition.js';
 import createSliderTraitDefinition from './createSliderTraitDefinition.js';
+import createSocialProfilesTraitDefinition from './createSocialProfilesTraitDefinition.js';
 import createTextareaTraitDefinition from './createTextareaTraitDefinition.js';
 import createUrlTraitDefinition from './createUrlTraitDefinition.js';
 import getCodeEditorCss from '../codeEditor/getCodeEditorCss.js';
@@ -34,6 +35,7 @@ const applyTraitTypes = (editor, pluginOptions) => {
     'db-page-link': createPageLinkTraitDefinition(editor),
     'db-icon-picker': createIconPickerTraitDefinition(editor),
     'db-menu-items': createMenuItemsTraitDefinition(),
+    'db-social-profiles': createSocialProfilesTraitDefinition(),
   });
   const injectTraitEditorStyles = () => {
     if (!editor.getContainer || !editor.getContainer()) return;

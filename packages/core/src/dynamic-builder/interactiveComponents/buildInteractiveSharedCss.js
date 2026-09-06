@@ -1,4 +1,7 @@
 const buildInteractiveSharedCss = () => `
+[hidden] {
+  display: none !important;
+}
 .db-visually-hidden {
   position: absolute;
   width: 1px;

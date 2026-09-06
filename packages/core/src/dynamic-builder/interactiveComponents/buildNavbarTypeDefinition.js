@@ -22,7 +22,16 @@ const buildNavbarTypeDefinition = (interactiveTextDefaults) => ({
       components: buildNavbarInnerMarkup(interactiveTextDefaults),
       script: runNavbarBehavior,
       traits: [
-        { type: 'db-menu-items', name: 'dbMenuItems', label: 'Menu items' },
+        {
+          type: 'db-menu-items',
+          name: 'dbMenuItems',
+          label: 'Menu items',
+          listSelector: '[data-db-navbar-menu]',
+          itemMarkup:
+            '<li class="db-navbar-item" data-db-navbar-item="true"><a class="db-navbar-link" href="#">New link</a></li>',
+          addLabel: 'Add menu item',
+          emptyMessage: 'No menu items yet. Add your first link below.',
+        },
         {
           type: 'select',
           name: 'data-db-layout',

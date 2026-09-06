@@ -274,6 +274,41 @@ describe('Dynamic builder helpers', () => {
       expect(archiveView.getUint16(endOffset + 10, true)).toBe(1);
     });
 
+    test('records a central directory size and offset that match the written bytes', () => {
+      const archiveBytes = buildZipArchiveBytes(
+        [
+          { fileName: 'index.html', content: '<p>Ada Lovelace, 12 GBP</p>' },
+          { fileName: 'styles.css', content: '.a{content:"em dash"}' },
+          { fileName: 'robots.txt', content: 'User-agent: *' },
+        ],
+        new Date('2024-05-06T07:08:09Z'),
+      );
+      const archiveView = new DataView(archiveBytes.buffer);
+      const endOffset = archiveBytes.length - 22;
+      const centralSize = archiveView.getUint32(endOffset + 12, true);
+      const centralOffset = archiveView.getUint32(endOffset + 16, true);
+      expect(centralOffset + centralSize).toBe(endOffset);
+      expect(archiveView.getUint32(centralOffset, true)).toBe(0x02014b50);
+    });
+
+    test('keeps offsets correct when entries hold multi byte characters', () => {
+      const archiveBytes = buildZipArchiveBytes(
+        [
+          { fileName: 'page.html', content: 'price 25 \u20ac and \u201cquoted\u201d text \u2014 done' },
+          { fileName: 'notes.txt', content: 'plain' },
+        ],
+        new Date('2024-05-06T07:08:09Z'),
+      );
+      const archiveView = new DataView(archiveBytes.buffer);
+      const endOffset = archiveBytes.length - 22;
+      const centralOffset = archiveView.getUint32(endOffset + 16, true);
+      expect(archiveView.getUint32(endOffset + 12, true) + centralOffset).toBe(endOffset);
+      expect(archiveView.getUint32(centralOffset, true)).toBe(0x02014b50);
+      const firstLocalNameLength = archiveView.getUint16(26, true);
+      const firstLocalDataLength = archiveView.getUint32(18, true);
+      expect(archiveView.getUint32(30 + firstLocalNameLength + firstLocalDataLength, true)).toBe(0x04034b50);
+    });
+
     test('stamps the supplied date instead of a fixed constant', () => {
       const firstParts = buildDosDateTimeParts(new Date('2024-05-06T07:08:10Z'));
       const secondParts = buildDosDateTimeParts(new Date('2030-01-02T03:04:05Z'));

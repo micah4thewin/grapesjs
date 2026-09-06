@@ -12,6 +12,7 @@ const buildSocialLinksTypeDefinition = () => ({
       classes: ['db-social-links'],
       attributes: { 'data-db-type': 'social-links' },
       components: buildSocialLinkChildren(),
+      traits: [{ type: 'db-social-profiles', name: 'dbSocialProfiles', label: 'Profiles' }],
     },
   },
 });

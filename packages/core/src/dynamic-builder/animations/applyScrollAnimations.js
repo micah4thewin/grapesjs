@@ -6,6 +6,7 @@ import registerCanvasStyles from '../support/registerCanvasStyles.js';
 import registerCommandSet from '../support/registerCommandSet.js';
 import registerRuntimeScript from '../support/registerRuntimeScript.js';
 import showToastNotice from '../support/showToastNotice.js';
+import watchPreviewAnimationMode from './watchPreviewAnimationMode.js';
 
 const applyScrollAnimations = (editor) => {
   registerCanvasStyles(editor, 'db-css-animations-base', buildAnimationSiteCss());
@@ -13,6 +14,7 @@ const applyScrollAnimations = (editor) => {
     detect: (runtimeEditor, page) => hasScrollAnimations(runtimeEditor, page),
     source: () => getAnimationRuntimeSource(),
   });
+  watchPreviewAnimationMode(editor);
   registerCommandSet(editor, {
     'db:preview-animations': (commandEditor) => {
       const previewCount = previewAnimationsOnCanvas(commandEditor);

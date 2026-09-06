@@ -22,6 +22,17 @@ const buildBreadcrumbTypeDefinition = (interactiveTextDefaults) => {
         classes: ['db-breadcrumb'],
         attributes: { 'data-db-type': 'breadcrumb', 'aria-label': 'Breadcrumb' },
         components: `<ol>${breadcrumbItemsMarkup}</ol>`,
+        traits: [
+          {
+            type: 'db-menu-items',
+            name: 'dbBreadcrumbItems',
+            label: 'Trail steps',
+            listSelector: 'ol',
+            itemMarkup: '<li><a href="/">New step</a></li>',
+            addLabel: 'Add trail step',
+            emptyMessage: 'No steps yet. Add the first one below.',
+          },
+        ],
       },
     },
   };

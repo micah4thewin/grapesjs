@@ -1,0 +1,26 @@
+const getSocialNetworkRecords = () => [
+  { networkName: 'x', networkLabel: 'X', iconName: 'twitterX', profileUrl: 'https://x.com/' },
+  { networkName: 'facebook', networkLabel: 'Facebook', iconName: 'facebook', profileUrl: 'https://facebook.com/' },
+  { networkName: 'instagram', networkLabel: 'Instagram', iconName: 'instagram', profileUrl: 'https://instagram.com/' },
+  { networkName: 'linkedin', networkLabel: 'LinkedIn', iconName: 'linkedin', profileUrl: 'https://linkedin.com/' },
+  { networkName: 'youtube', networkLabel: 'YouTube', iconName: 'youtube', profileUrl: 'https://youtube.com/' },
+  { networkName: 'github', networkLabel: 'GitHub', iconName: 'github', profileUrl: 'https://github.com/' },
+  { networkName: 'tiktok', networkLabel: 'TikTok', iconName: 'tiktok', profileUrl: 'https://tiktok.com/' },
+  { networkName: 'whatsapp', networkLabel: 'WhatsApp', iconName: 'whatsapp', profileUrl: 'https://wa.me/' },
+  { networkName: 'telegram', networkLabel: 'Telegram', iconName: 'telegram', profileUrl: 'https://t.me/' },
+  { networkName: 'pinterest', networkLabel: 'Pinterest', iconName: 'pinterest', profileUrl: 'https://pinterest.com/' },
+  { networkName: 'discord', networkLabel: 'Discord', iconName: 'discord', profileUrl: 'https://discord.gg/' },
+  { networkName: 'reddit', networkLabel: 'Reddit', iconName: 'reddit', profileUrl: 'https://reddit.com/' },
+  { networkName: 'twitch', networkLabel: 'Twitch', iconName: 'twitch', profileUrl: 'https://twitch.tv/' },
+  { networkName: 'threads', networkLabel: 'Threads', iconName: 'threads', profileUrl: 'https://threads.net/' },
+  { networkName: 'mastodon', networkLabel: 'Mastodon', iconName: 'mastodon', profileUrl: 'https://mastodon.social/' },
+  { networkName: 'medium', networkLabel: 'Medium', iconName: 'medium', profileUrl: 'https://medium.com/' },
+  { networkName: 'behance', networkLabel: 'Behance', iconName: 'behance', profileUrl: 'https://behance.net/' },
+  { networkName: 'dribbble', networkLabel: 'Dribbble', iconName: 'dribbble', profileUrl: 'https://dribbble.com/' },
+  { networkName: 'snapchat', networkLabel: 'Snapchat', iconName: 'snapchat', profileUrl: 'https://snapchat.com/' },
+  { networkName: 'slack', networkLabel: 'Slack', iconName: 'slack', profileUrl: 'https://slack.com/' },
+  { networkName: 'email', networkLabel: 'Email', iconName: 'mail', profileUrl: 'mailto:hello@example.com' },
+  { networkName: 'website', networkLabel: 'Website', iconName: 'globe', profileUrl: 'https://example.com/' },
+];
+
+export default getSocialNetworkRecords;

@@ -1,14 +1,11 @@
 import getSocialIconMarkup from './getSocialIconMarkup.js';
+import getSocialNetworkRecords from './getSocialNetworkRecords.js';
 
 const buildSocialLinkChildren = () => {
-  const socialNetworkRecords = [
-    { networkName: 'x', networkLabel: 'X (formerly Twitter)', profileUrl: 'https://x.com/' },
-    { networkName: 'facebook', networkLabel: 'Facebook', profileUrl: 'https://facebook.com/' },
-    { networkName: 'instagram', networkLabel: 'Instagram', profileUrl: 'https://instagram.com/' },
-    { networkName: 'linkedin', networkLabel: 'LinkedIn', profileUrl: 'https://linkedin.com/' },
-    { networkName: 'youtube', networkLabel: 'YouTube', profileUrl: 'https://youtube.com/' },
-    { networkName: 'github', networkLabel: 'GitHub', profileUrl: 'https://github.com/' },
-  ];
+  const defaultNetworkNames = ['x', 'facebook', 'instagram', 'linkedin', 'youtube', 'github'];
+  const socialNetworkRecords = getSocialNetworkRecords().filter(
+    (networkRecord) => defaultNetworkNames.indexOf(networkRecord.networkName) >= 0,
+  );
   return socialNetworkRecords.map((networkRecord) => ({
     tagName: 'li',
     draggable: '[data-db-type=social-links]',
