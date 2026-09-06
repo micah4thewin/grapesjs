@@ -2,7 +2,9 @@ import buildLightPaletteCssDeclarations from './buildLightPaletteCssDeclarations
 import buildDarkPaletteCssDeclarations from './buildDarkPaletteCssDeclarations.js';
 
 const buildThemePaletteCss = () => `
-.gjs-editor-cont {
+.gjs-editor-cont,
+[data-theme='light'] .gjs-editor-cont:not([data-theme='dark']),
+.gjs-editor-cont[data-theme='light'] {
 ${buildLightPaletteCssDeclarations()}
 }
 @media (prefers-color-scheme: dark) {
@@ -10,15 +12,7 @@ ${buildLightPaletteCssDeclarations()}
 ${buildDarkPaletteCssDeclarations()}
   }
 }
-[data-theme='light'] .gjs-editor-cont:not([data-theme='dark']) {
-${buildLightPaletteCssDeclarations()}
-}
-[data-theme='dark'] .gjs-editor-cont:not([data-theme='light']) {
-${buildDarkPaletteCssDeclarations()}
-}
-.gjs-editor-cont[data-theme='light'] {
-${buildLightPaletteCssDeclarations()}
-}
+[data-theme='dark'] .gjs-editor-cont:not([data-theme='light']),
 .gjs-editor-cont[data-theme='dark'] {
 ${buildDarkPaletteCssDeclarations()}
 }

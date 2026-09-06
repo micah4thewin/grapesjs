@@ -47,6 +47,9 @@ const getStructureBlockHints = () => ({
   'db-social-links': 'Icon links to social profiles',
   'db-announcement-bar': 'A slim notice across the page',
   'db-announcement': 'A dismissible notice',
+  'db-cover-photo': 'Full screen photo with your headline on top',
+  'db-cover-video': 'Muted looping video behind your headline',
+  'db-button': 'A link styled as a button',
 });
 
 export default getStructureBlockHints;

@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildTabsDefaultChildren from './buildTabsDefaultChildren.js';
 import runTabsBehavior from './runTabsBehavior.js';
 
@@ -8,7 +9,7 @@ const buildTabsTypeDefinition = (interactiveTextDefaults) => ({
     defaults: {
       tagName: 'div',
       name: 'Tabs',
-      draggable: true,
+      draggable: getDropTargetSelectors().anyLayout,
       droppable: '[data-db-type=tab-list], [data-db-type=tab-panel]',
       classes: ['db-tabs'],
       attributes: { 'data-db-type': 'tabs', 'data-db-tabs': 'true', 'data-db-orientation': 'horizontal' },

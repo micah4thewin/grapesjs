@@ -5,8 +5,10 @@ import registerShellCommands from './registerShellCommands.js';
 import registerShellKeymaps from './registerShellKeymaps.js';
 import renderShellTopBar from './renderShellTopBar.js';
 import wireToastNotifications from './wireToastNotifications.js';
+import restoreCanvasAfterPageUndo from './restoreCanvasAfterPageUndo.js';
 
 const applyEditorShell = (editor, pluginOptions) => {
+  restoreCanvasAfterPageUndo(editor);
   const shellOptions = (pluginOptions && pluginOptions.shell) || {};
   const themeOptions = (pluginOptions && pluginOptions.theme) || {};
   const editorConfig = editor.getConfig && editor.getConfig();

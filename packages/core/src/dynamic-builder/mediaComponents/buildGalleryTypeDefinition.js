@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import runGalleryLightboxBehavior from './runGalleryLightboxBehavior.js';
 
 const buildGalleryTypeDefinition = () => ({
@@ -7,7 +8,7 @@ const buildGalleryTypeDefinition = () => ({
     defaults: {
       tagName: 'div',
       name: 'Gallery',
-      draggable: true,
+      draggable: getDropTargetSelectors().anyLayout,
       droppable: '[data-db-type=gallery-item]',
       classes: ['db-gallery'],
       attributes: {

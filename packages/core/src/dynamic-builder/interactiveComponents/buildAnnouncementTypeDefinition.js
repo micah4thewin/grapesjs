@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
 import getIconMarkup from '../support/getIconMarkup.js';
 import runAnnouncementBehavior from './runAnnouncementBehavior.js';
@@ -9,7 +10,7 @@ const buildAnnouncementTypeDefinition = (interactiveTextDefaults) => ({
     defaults: {
       tagName: 'div',
       name: 'Announcement bar',
-      draggable: true,
+      draggable: getDropTargetSelectors().pageOnly,
       droppable: false,
       classes: ['db-announcement'],
       attributes: {

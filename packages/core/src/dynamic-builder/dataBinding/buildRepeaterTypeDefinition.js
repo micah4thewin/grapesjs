@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildRepeaterDefaultChildren from './buildRepeaterDefaultChildren.js';
 import buildRepeaterTraitDefinitions from './buildRepeaterTraitDefinitions.js';
 import listDataSourceNames from './listDataSourceNames.js';
@@ -9,7 +10,7 @@ const buildRepeaterTypeDefinition = () => ({
     defaults: {
       tagName: 'div',
       name: 'Repeater',
-      draggable: true,
+      draggable: getDropTargetSelectors().anyLayout,
       droppable: '[data-db-type=repeater-item]',
       classes: ['db-repeater'],
       attributes: {

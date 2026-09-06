@@ -1,7 +1,10 @@
+import buildStructuralDragCanvasCss from './buildStructuralDragCanvasCss.js';
+import registerEditorOnlyCanvasStyles from '../support/registerEditorOnlyCanvasStyles.js';
 import registerLayoutCanvasStyles from './registerLayoutCanvasStyles.js';
 import registerLayoutComponentTypes from './registerLayoutComponentTypes.js';
 import watchColumnPresetUpdates from './watchColumnPresetUpdates.js';
 import wireSectionToolbarAddButton from './wireSectionToolbarAddButton.js';
+import wireStructuralDragFeedback from './wireStructuralDragFeedback.js';
 import watchSectionBackgroundUpdates from './watchSectionBackgroundUpdates.js';
 import watchStackMobileClassUpdates from './watchStackMobileClassUpdates.js';
 
@@ -13,6 +16,8 @@ const applyLayoutComponents = (editor, pluginOptions) => {
   watchStackMobileClassUpdates(editor);
   watchColumnPresetUpdates(editor);
   wireSectionToolbarAddButton(editor);
+  registerEditorOnlyCanvasStyles(editor, 'db-css-layout-drag-feedback', buildStructuralDragCanvasCss());
+  wireStructuralDragFeedback(editor);
 };
 
 export default applyLayoutComponents;

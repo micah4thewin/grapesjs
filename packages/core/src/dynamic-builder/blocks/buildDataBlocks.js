@@ -23,7 +23,7 @@ const buildDataBlocks = () => [
     'testimonial',
     buildRepeaterContentRecord('testimonials', [
       buildTextContentRecord('"{{db:item.quote}}"', 'lead'),
-      buildTextContentRecord('{{db:item.author}}, {{db:item.role}}', 'small'),
+      buildTextContentRecord('{{db:item.author}}, {{db:item.company}}', 'small'),
     ]),
   ),
   buildBlockDefinition(

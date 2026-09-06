@@ -47,9 +47,13 @@ const openPageNameModal = (editor, modalTitle, initialValue, submitLabel, onSubm
   formElement.querySelector('[data-db-page-modal-cancel]').addEventListener('click', () => editor.Modal.close());
   inputElement.addEventListener('keydown', (keyEvent) => {
     if (keyEvent.key === 'Enter') submitPageName();
+    if (keyEvent.key === 'Escape') editor.Modal.close();
   });
   openThemedModal(editor, modalTitle, formElement, { className: 'gjs-db-page-modal' });
-  setTimeout(() => inputElement.focus(), 50);
+  setTimeout(() => {
+    inputElement.focus();
+    if (initialValue && inputElement.select) inputElement.select();
+  }, 50);
 };
 
 export default openPageNameModal;

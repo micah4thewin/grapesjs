@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildAccordionDefaultChildren from './buildAccordionDefaultChildren.js';
 import runAccordionBehavior from './runAccordionBehavior.js';
 
@@ -8,7 +9,7 @@ const buildAccordionTypeDefinition = (interactiveTextDefaults) => ({
     defaults: {
       tagName: 'div',
       name: 'Accordion',
-      draggable: true,
+      draggable: getDropTargetSelectors().anyLayout,
       droppable: '[data-db-type=accordion-item]',
       classes: ['db-accordion'],
       attributes: { 'data-db-type': 'accordion', 'data-db-accordion': 'true', 'data-db-single': 'true' },

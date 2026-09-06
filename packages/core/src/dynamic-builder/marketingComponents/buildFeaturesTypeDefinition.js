@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildFeatureCardChildComponents from './buildFeatureCardChildComponents.js';
 
 const buildFeaturesTypeDefinition = () => ({
@@ -7,7 +8,7 @@ const buildFeaturesTypeDefinition = () => ({
     defaults: {
       tagName: 'div',
       name: 'Features grid',
-      draggable: true,
+      draggable: getDropTargetSelectors().sectionBody,
       droppable: '[data-db-type=feature-card]',
       classes: ['db-features'],
       attributes: { 'data-db-type': 'features', 'data-db-columns': '3' },

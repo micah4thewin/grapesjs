@@ -9,10 +9,14 @@ const buildHistoryListMarkup = (editor) => {
   }
   const undoManager = editor.UndoManager;
   const currentPointer = typeof undoManager.getPointer === 'function' ? undoManager.getPointer() : 0;
+  const appliedIndexes = historyGroups
+    .map((undoGroup) => undoGroup.index)
+    .filter((groupIndex) => groupIndex <= currentPointer);
+  const currentGroupIndex = appliedIndexes.length ? Math.max(...appliedIndexes) : -1;
   const historyRows = historyGroups
     .map((undoGroup, groupIndex) => {
-      const isCurrent = undoGroup.index === currentPointer - 1 || (currentPointer === 0 && groupIndex === 0);
-      const isFuture = undoGroup.index >= currentPointer;
+      const isCurrent = undoGroup.index === currentGroupIndex;
+      const isFuture = undoGroup.index > currentPointer;
       const stateClass = isCurrent ? ' gjs-db-history-current' : isFuture ? ' gjs-db-history-future' : '';
       const currentBadge = isCurrent ? '<span class="gjs-db-badge gjs-db-badge-success">Current</span>' : '';
       return [

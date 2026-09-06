@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildFormDefaultChildren from './buildFormDefaultChildren.js';
 import runFormBehavior from './runFormBehavior.js';
 
@@ -8,13 +9,14 @@ const buildFormTypeDefinition = (formTextDefaults) => ({
     defaults: {
       tagName: 'form',
       name: 'Form',
-      draggable: true,
+      draggable: getDropTargetSelectors().anyLayout,
       droppable: '[data-db-form-child]',
       classes: ['db-form'],
       attributes: {
         'data-db-type': 'form',
         'data-db-form': 'true',
         method: 'post',
+        enctype: 'multipart/form-data',
         novalidate: 'novalidate',
         'data-db-success-message': formTextDefaults.successMessage,
         'data-db-error-message': formTextDefaults.errorMessage,

@@ -1,5 +1,12 @@
 const getDbCommandLabelRecords = () => ({
   'db:open-command-palette': { label: 'Open command palette', iconName: 'commandPalette', keywords: 'search actions' },
+  'db:open-site-identity': {
+    label: 'Site identity and colours',
+    iconName: 'palette',
+    keywords: 'brand name logo palette colors',
+  },
+  'db:open-font-library': { label: 'Fonts', iconName: 'typography', keywords: 'font family typeface heading body' },
+  'db:open-photo-editor': { label: 'Photo editor', iconName: 'sliders', keywords: 'image crop resize optimise filter' },
   'db:open-shortcut-help': { label: 'Keyboard shortcuts', iconName: 'keyboard', keywords: 'help keys bindings' },
   'db:open-seo-settings': { label: 'SEO settings', iconName: 'seo', keywords: 'meta title description search' },
   'db:open-schema-manager': { label: 'Schema manager', iconName: 'schema', keywords: 'structured data json-ld' },

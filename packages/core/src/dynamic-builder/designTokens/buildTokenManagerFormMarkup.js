@@ -22,11 +22,14 @@ const buildTokenManagerFormMarkup = (tokenRecord) => {
     .join('');
   return [
     '<form class="gjs-db-form" data-db-token-form>',
-    '<p class="gjs-db-muted">Tokens publish as --db-* custom properties on :root of every page.</p>',
+    '<p class="gjs-db-muted">',
+    'These values drive every block on every page. Change a value and press Apply to see the whole site update.',
+    ' Developers can reference each value through the CSS variable shown under its field.',
+    '</p>',
     groupSectionsMarkup,
     '<div class="gjs-db-button-row">',
     '<button type="button" class="gjs-db-button" data-db-token-reset>Reset to defaults</button>',
-    '<button type="button" class="gjs-db-button gjs-db-button-primary" data-db-token-apply>Apply</button>',
+    '<button type="submit" class="gjs-db-button gjs-db-button-primary" data-db-token-apply>Apply</button>',
     '</div>',
     '</form>',
   ].join('');

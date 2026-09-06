@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildCarouselDefaultChildren from './buildCarouselDefaultChildren.js';
 import runCarouselBehavior from './runCarouselBehavior.js';
 
@@ -8,7 +9,7 @@ const buildCarouselTypeDefinition = () => ({
     defaults: {
       tagName: 'div',
       name: 'Carousel',
-      draggable: true,
+      draggable: getDropTargetSelectors().anyLayout,
       droppable: false,
       classes: ['db-carousel'],
       attributes: {

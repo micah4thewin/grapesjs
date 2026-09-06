@@ -8,6 +8,7 @@ const buildTypographyBlocks = () => [
     type: 'db-text',
     attributes: { 'data-db-variant': 'lead' },
   }),
+  buildBlockDefinition('db-button', 'Button', 'Typography', 'button', { type: 'db-button' }),
   buildBlockDefinition('db-quote', 'Quote', 'Typography', 'quote', { type: 'db-quote' }),
   buildBlockDefinition('db-list', 'List', 'Typography', 'list', { type: 'db-list' }),
   buildBlockDefinition('db-callout-info', 'Info note', 'Typography', 'info', { type: 'db-callout' }),

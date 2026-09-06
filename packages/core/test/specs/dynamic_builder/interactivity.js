@@ -168,7 +168,7 @@ describe('Dynamic builder interactivity', () => {
 
     test('previews fall back by category and stay valid svg', () => {
       expect(resolveBlockPreviewMarkup('db-hero-centered', 'Marketing')).toContain('viewBox="0 0 96 60"');
-      expect(resolveBlockPreviewMarkup('not-a-block', 'Layout')).toContain('<svg');
+      expect(resolveBlockPreviewMarkup('not-a-block', 'layout')).toContain('<svg');
       expect(resolveBlockPreviewMarkup('not-a-block', 'Not a category')).toBe('');
     });
   });

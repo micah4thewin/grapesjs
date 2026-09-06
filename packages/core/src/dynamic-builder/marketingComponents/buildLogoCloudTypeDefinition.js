@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildLogoCloudDefaultChildren from './buildLogoCloudDefaultChildren.js';
 
 const buildLogoCloudTypeDefinition = () => ({
@@ -7,7 +8,7 @@ const buildLogoCloudTypeDefinition = () => ({
     defaults: {
       tagName: 'ul',
       name: 'Logo cloud',
-      draggable: true,
+      draggable: getDropTargetSelectors().sectionBody,
       droppable: false,
       classes: ['db-logo-cloud'],
       attributes: { 'data-db-type': 'logo-cloud', 'aria-label': 'Trusted by these companies' },

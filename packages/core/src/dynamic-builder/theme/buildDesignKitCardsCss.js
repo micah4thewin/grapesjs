@@ -26,6 +26,14 @@ const buildDesignKitCardsCss = () => `
   box-shadow: var(--gjs-db-lift-2);
   transform: translateY(-2px);
 }
+.gjs-db-kit-card[aria-pressed='true'] {
+  border-color: var(--gjs-db-accent);
+  background-color: var(--gjs-db-accent-soft);
+}
+.gjs-db-kit-name .gjs-db-badge {
+  margin-left: var(--gjs-db-gap-2);
+  vertical-align: middle;
+}
 .gjs-db-kit-card:focus-visible {
   outline: 2px solid var(--gjs-db-focus);
   outline-offset: 2px;

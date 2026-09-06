@@ -92,6 +92,9 @@ describe('Dynamic builder plugin', () => {
     'db:open-site-settings',
     'db:open-design-kits',
     'db:open-history',
+    'db:open-site-identity',
+    'db:open-font-library',
+    'db:open-photo-editor',
     'db:open-symbols',
     'db:create-symbol',
     'db:edit-symbol',
@@ -137,7 +140,7 @@ describe('Dynamic builder plugin', () => {
         return category && category.id ? category.id : category;
       }),
     );
-    ['Layout', 'Typography', 'Media', 'Interactive', 'Marketing', 'Forms', 'Data', 'Embeds'].forEach((expectedName) =>
+    ['pages', 'sections', 'layout', 'elements', 'interactive', 'forms', 'data', 'advanced'].forEach((expectedName) =>
       expect([...categoryNames]).toContain(expectedName),
     );
   });

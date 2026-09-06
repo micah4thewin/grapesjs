@@ -68,20 +68,6 @@ const buildButtonsToolbarsCss = () => `
   box-shadow: var(--gjs-db-press-1);
   transform: translateY(0);
 }
-.gjs-off-prv {
-  background-color: var(--gjs-db-panel);
-  color: var(--gjs-db-muted);
-  border-radius: var(--gjs-db-r-2);
-  box-shadow: var(--gjs-db-lift-2);
-  padding: var(--gjs-db-gap-2);
-  transition:
-    color var(--gjs-db-dur-2) var(--gjs-db-ease-soft),
-    box-shadow var(--gjs-db-dur-2) var(--gjs-db-ease);
-}
-.gjs-off-prv:hover {
-  color: var(--gjs-db-fg);
-  box-shadow: var(--gjs-db-lift-3);
-}
 `;
 
 export default buildButtonsToolbarsCss;

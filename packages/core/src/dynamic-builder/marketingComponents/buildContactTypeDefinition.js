@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildContactDefaultChildren from './buildContactDefaultChildren.js';
 
 const buildContactTypeDefinition = () => ({
@@ -7,7 +8,7 @@ const buildContactTypeDefinition = () => ({
     defaults: {
       tagName: 'div',
       name: 'Contact details',
-      draggable: true,
+      draggable: getDropTargetSelectors().sectionBody,
       droppable: false,
       classes: ['db-contact'],
       attributes: { 'data-db-type': 'contact' },

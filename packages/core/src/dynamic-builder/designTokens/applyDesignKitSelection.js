@@ -1,11 +1,13 @@
 import applyTokenRecordUpdate from './applyTokenRecordUpdate.js';
-import buildDesignKitFontImportCss from './buildDesignKitFontImportCss.js';
-import registerCanvasStyles from '../support/registerCanvasStyles.js';
+import buildDesignKitTokenPatch from './buildDesignKitTokenPatch.js';
+import syncDesignKitFontStyles from './syncDesignKitFontStyles.js';
+import updateSiteMetaRecord from '../support/updateSiteMetaRecord.js';
 
 const applyDesignKitSelection = (editor, moduleOptions, kitRecord) => {
-  const fontImportCss = buildDesignKitFontImportCss(kitRecord.fontFamilies);
-  if (fontImportCss) registerCanvasStyles(editor, 'db-css-designtokens-fonts', fontImportCss);
-  applyTokenRecordUpdate(editor, moduleOptions, kitRecord.tokens);
+  const fontFamilies = Array.isArray(kitRecord.fontFamilies) ? kitRecord.fontFamilies.slice() : [];
+  updateSiteMetaRecord(editor, { designKit: { kitId: kitRecord.kitId, fontFamilies } });
+  syncDesignKitFontStyles(editor);
+  applyTokenRecordUpdate(editor, moduleOptions, buildDesignKitTokenPatch(moduleOptions, kitRecord.tokens));
   editor.trigger('db:design-kit:applied', { kitId: kitRecord.kitId });
 };
 

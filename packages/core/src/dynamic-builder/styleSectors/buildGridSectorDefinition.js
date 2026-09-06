@@ -6,6 +6,7 @@ const buildGridSectorDefinition = () => {
   const gridDisplayRequirement = { display: ['grid', 'inline-grid'] };
   const placementOptions = ['start', 'center', 'end', 'stretch'];
   const distributionOptions = placementOptions.concat(['space-between', 'space-around', 'space-evenly']);
+  const selfPlacementOptions = ['auto'].concat(placementOptions);
   return {
     id: 'grid',
     name: 'Grid',
@@ -43,6 +44,16 @@ const buildGridSectorDefinition = () => {
       buildChoicePropertyRecord('select', 'align-content', 'Align content', 'start', distributionOptions, {
         id: 'grid-align-content',
         requires: gridDisplayRequirement,
+      }),
+      buildTextPropertyRecord('grid-column', 'Column span', 'auto', { requiresParent: gridDisplayRequirement }),
+      buildTextPropertyRecord('grid-row', 'Row span', 'auto', { requiresParent: gridDisplayRequirement }),
+      buildChoicePropertyRecord('select', 'justify-self', 'Justify self', 'auto', selfPlacementOptions, {
+        id: 'grid-justify-self',
+        requiresParent: gridDisplayRequirement,
+      }),
+      buildChoicePropertyRecord('select', 'align-self', 'Align self', 'auto', selfPlacementOptions, {
+        id: 'grid-align-self',
+        requiresParent: gridDisplayRequirement,
       }),
     ],
   };

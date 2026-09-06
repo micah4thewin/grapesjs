@@ -4,12 +4,14 @@ import applyBlockLibrary from './blocks/applyBlockLibrary.js';
 import applySiteMetaFoundation from './support/applySiteMetaFoundation.js';
 import composeModuleAppliers from './composeModuleAppliers.js';
 import applyContentComponents from './contentComponents/applyContentComponents.js';
+import applyCoverSections from './coverSections/applyCoverSections.js';
 import applyCustomCode from './customCode/applyCustomCode.js';
 import applyDataBinding from './dataBinding/applyDataBinding.js';
 import applyDesignTokens from './designTokens/applyDesignTokens.js';
 import applyResponsiveDevices from './devices/applyResponsiveDevices.js';
 import applyExperienceUpgrades from './experience/applyExperienceUpgrades.js';
 import applyExportSystem from './exporter/applyExportSystem.js';
+import applyFontLibrary from './fontLibrary/applyFontLibrary.js';
 import applyFormComponents from './formComponents/applyFormComponents.js';
 import getDefaultPluginOptions from './getDefaultPluginOptions.js';
 import applyIconSystem from './icons/applyIconSystem.js';
@@ -19,9 +21,11 @@ import applyLayoutComponents from './layoutComponents/applyLayoutComponents.js';
 import applyMarketingComponents from './marketingComponents/applyMarketingComponents.js';
 import applyMediaComponents from './mediaComponents/applyMediaComponents.js';
 import applyPersistence from './persistence/applyPersistence.js';
+import applyPhotoEditor from './photoEditor/applyPhotoEditor.js';
 import applyReusableComponents from './symbols/applyReusableComponents.js';
 import applySchemaManager from './schema/applySchemaManager.js';
 import applySeoManager from './seo/applySeoManager.js';
+import applySiteIdentity from './siteIdentity/applySiteIdentity.js';
 import applyEditorShell from './shell/applyEditorShell.js';
 import applyStyleSectors from './styleSectors/applyStyleSectors.js';
 import deepMergeRecords from './support/deepMergeRecords.js';
@@ -46,6 +50,7 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
     applyMediaComponents,
     applyInteractiveComponents,
     applyMarketingComponents,
+    applyCoverSections,
     applyFormComponents,
     applyDataBinding,
     applyCustomCode,
@@ -58,6 +63,9 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
     applyQualityAudits,
     applyExportSystem,
     applyPersistence,
+    applySiteIdentity,
+    applyFontLibrary,
+    applyPhotoEditor,
     applyEditorShell,
     applyExperienceUpgrades,
     attachSharedComponentTraits,

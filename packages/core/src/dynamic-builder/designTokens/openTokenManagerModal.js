@@ -1,10 +1,11 @@
 import applyTokenRecordUpdate from './applyTokenRecordUpdate.js';
-import buildBaselineTokenRecord from './buildBaselineTokenRecord.js';
 import buildElementFromMarkup from '../support/buildElementFromMarkup.js';
 import buildTokenManagerFormMarkup from './buildTokenManagerFormMarkup.js';
 import collectTokenValuesFromForm from './collectTokenValuesFromForm.js';
 import openThemedModal from '../support/openThemedModal.js';
+import resetDesignTokens from './resetDesignTokens.js';
 import resolveActiveDesignTokens from './resolveActiveDesignTokens.js';
+import showToastNotice from '../support/showToastNotice.js';
 
 const openTokenManagerModal = (editor, moduleOptions) => {
   const containerElement = editor.getContainer && editor.getContainer();
@@ -12,22 +13,26 @@ const openTokenManagerModal = (editor, moduleOptions) => {
   const activeRecord = resolveActiveDesignTokens(editor, moduleOptions);
   const formElement = buildElementFromMarkup(containerElement.ownerDocument, buildTokenManagerFormMarkup(activeRecord));
   if (!formElement) return;
-  formElement.addEventListener('submit', (submitEvent) => submitEvent.preventDefault());
-  const applyButton = formElement.querySelector('[data-db-token-apply]');
+  const applyFormValues = () => {
+    applyTokenRecordUpdate(editor, moduleOptions, collectTokenValuesFromForm(formElement));
+    editor.Modal.close();
+    showToastNotice(editor, 'Design tokens applied', { kind: 'success' });
+  };
+  formElement.addEventListener('submit', (submitEvent) => {
+    submitEvent.preventDefault();
+    applyFormValues();
+  });
   const resetButton = formElement.querySelector('[data-db-token-reset]');
-  if (applyButton) {
-    applyButton.addEventListener('click', () => {
-      applyTokenRecordUpdate(editor, moduleOptions, collectTokenValuesFromForm(formElement));
-      editor.Modal.close();
-    });
-  }
   if (resetButton) {
     resetButton.addEventListener('click', () => {
-      applyTokenRecordUpdate(editor, moduleOptions, buildBaselineTokenRecord(moduleOptions));
+      resetDesignTokens(editor, moduleOptions);
       editor.Modal.close();
+      showToastNotice(editor, 'Design tokens reset to defaults', { kind: 'success' });
     });
   }
   openThemedModal(editor, 'Design tokens', formElement, { className: 'gjs-db-token-manager' });
+  const firstInput = formElement.querySelector('input');
+  if (firstInput && firstInput.focus) firstInput.focus();
 };
 
 export default openTokenManagerModal;

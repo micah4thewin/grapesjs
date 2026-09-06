@@ -33,6 +33,13 @@ const buildNavbarBaseCss = () => `
   color: var(--db-color-text);
   text-decoration: none;
 }
+.db-navbar-logo {
+  display: block;
+  width: auto;
+  height: 2.1rem;
+  max-width: 10rem;
+  object-fit: contain;
+}
 .db-navbar-links {
   display: flex;
   align-items: center;

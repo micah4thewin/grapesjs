@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildNavbarInnerMarkup from './buildNavbarInnerMarkup.js';
 import runNavbarBehavior from './runNavbarBehavior.js';
 
@@ -8,7 +9,7 @@ const buildNavbarTypeDefinition = (interactiveTextDefaults) => ({
     defaults: {
       tagName: 'header',
       name: 'Navbar',
-      draggable: true,
+      draggable: getDropTargetSelectors().pageOnly,
       droppable: false,
       classes: ['db-navbar'],
       attributes: {

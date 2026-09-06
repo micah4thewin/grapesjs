@@ -1,5 +1,8 @@
 const getToolsMenuCommandIds = () => [
   'db:open-command-palette',
+  'db:open-site-identity',
+  'db:open-font-library',
+  'db:open-photo-editor',
   'db:open-symbols',
   'db:open-flow-builder',
   'db:preview-animations',

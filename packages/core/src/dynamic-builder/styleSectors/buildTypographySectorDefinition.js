@@ -1,11 +1,12 @@
 import buildChoicePropertyRecord from './buildChoicePropertyRecord.js';
+import buildFontFamilyPropertyRecord from './buildFontFamilyPropertyRecord.js';
 
-const buildTypographySectorDefinition = () => ({
+const buildTypographySectorDefinition = (editor) => ({
   id: 'typography',
   name: 'Typography',
   open: true,
   properties: [
-    'font-family',
+    buildFontFamilyPropertyRecord(editor),
     'font-size',
     'font-weight',
     buildChoicePropertyRecord('radio', 'font-style', 'Font style', 'normal', ['normal', 'italic', 'oblique']),

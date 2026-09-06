@@ -8,7 +8,7 @@ import buildSizingSectorDefinition from './buildSizingSectorDefinition.js';
 import buildSpacingSectorDefinition from './buildSpacingSectorDefinition.js';
 import buildTypographySectorDefinition from './buildTypographySectorDefinition.js';
 
-const getStyleSectorDefinitions = (moduleOptions) => {
+const getStyleSectorDefinitions = (moduleOptions, editor) => {
   const safeOptions = moduleOptions || {};
   const baseDefinitions = [
     buildLayoutSectorDefinition(),
@@ -16,12 +16,13 @@ const getStyleSectorDefinitions = (moduleOptions) => {
     buildGridSectorDefinition(),
     buildSpacingSectorDefinition(),
     buildSizingSectorDefinition(),
-    buildTypographySectorDefinition(),
+    buildTypographySectorDefinition(editor),
     buildBackgroundsSectorDefinition(),
     buildBordersSectorDefinition(),
     buildEffectsSectorDefinition(),
   ];
-  const extraSectors = Array.isArray(safeOptions.extraSectors) ? safeOptions.extraSectors : [];
+  const extraSectorOption = Array.isArray(safeOptions.extraSectors) ? safeOptions.extraSectors : safeOptions.extra;
+  const extraSectors = Array.isArray(extraSectorOption) ? extraSectorOption : [];
   const validExtraSectors = extraSectors.filter((sector) => sector && sector.id && sector.name);
   const allDefinitions = baseDefinitions.concat(validExtraSectors);
   const openSectorIds = Array.isArray(safeOptions.openSectorIds) ? safeOptions.openSectorIds : null;

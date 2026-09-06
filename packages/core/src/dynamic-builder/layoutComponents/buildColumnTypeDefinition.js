@@ -1,3 +1,5 @@
+import buildDropRule from '../support/buildDropRule.js';
+import getPageLevelComponentTypes from '../support/getPageLevelComponentTypes.js';
 import buildLayoutPlaceholderChildren from './buildLayoutPlaceholderChildren.js';
 
 const buildColumnTypeDefinition = () => ({
@@ -8,7 +10,7 @@ const buildColumnTypeDefinition = () => ({
       tagName: 'div',
       name: 'Column',
       draggable: '[data-db-type=columns]',
-      droppable: true,
+      droppable: buildDropRule(getPageLevelComponentTypes()),
       classes: ['db-column'],
       attributes: { 'data-db-type': 'column' },
       components: buildLayoutPlaceholderChildren('column'),

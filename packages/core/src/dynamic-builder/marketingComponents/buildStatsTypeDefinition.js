@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildStatChildComponents from './buildStatChildComponents.js';
 import runStatCountUpBehavior from './runStatCountUpBehavior.js';
 
@@ -8,7 +9,7 @@ const buildStatsTypeDefinition = () => ({
     defaults: {
       tagName: 'div',
       name: 'Stats row',
-      draggable: true,
+      draggable: getDropTargetSelectors().sectionBody,
       droppable: '[data-db-type=stat]',
       classes: ['db-stats'],
       attributes: { 'data-db-type': 'stats' },
