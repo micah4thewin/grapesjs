@@ -1,11 +1,8 @@
-import getIconLibraryNames from './getIconLibraryNames.js';
-
 const getIconTraitDefinitions = (defaultSettings) => [
   {
-    type: 'select',
+    type: 'db-icon-picker',
     name: 'data-db-icon-name',
-    label: 'Icon name',
-    options: getIconLibraryNames().map((iconName) => ({ id: iconName, name: iconName })),
+    label: 'Icon',
     default: defaultSettings.iconName,
   },
   {

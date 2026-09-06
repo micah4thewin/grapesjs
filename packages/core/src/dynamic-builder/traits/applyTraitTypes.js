@@ -6,7 +6,9 @@ import createAssetTraitDefinition from './createAssetTraitDefinition.js';
 import createBindingPathTraitDefinition from './createBindingPathTraitDefinition.js';
 import createConditionTraitDefinition from './createConditionTraitDefinition.js';
 import createDateTraitDefinition from './createDateTraitDefinition.js';
+import createIconPickerTraitDefinition from './createIconPickerTraitDefinition.js';
 import createJsonTraitDefinition from './createJsonTraitDefinition.js';
+import createMenuItemsTraitDefinition from './createMenuItemsTraitDefinition.js';
 import createPageLinkTraitDefinition from './createPageLinkTraitDefinition.js';
 import createSliderTraitDefinition from './createSliderTraitDefinition.js';
 import createTextareaTraitDefinition from './createTextareaTraitDefinition.js';
@@ -27,6 +29,8 @@ const applyTraitTypes = (editor, pluginOptions) => {
     'db-condition': createConditionTraitDefinition(),
     'db-aria-label': createAriaLabelTraitDefinition(),
     'db-page-link': createPageLinkTraitDefinition(editor),
+    'db-icon-picker': createIconPickerTraitDefinition(editor),
+    'db-menu-items': createMenuItemsTraitDefinition(),
   });
   const injectTraitEditorStyles = () => {
     if (!editor.getContainer || !editor.getContainer()) return;

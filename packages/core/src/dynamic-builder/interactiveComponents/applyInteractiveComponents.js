@@ -1,4 +1,6 @@
+import buildNavbarEditorCanvasCss from './buildNavbarEditorCanvasCss.js';
 import registerCanvasStyles from '../support/registerCanvasStyles.js';
+import registerEditorOnlyCanvasStyles from '../support/registerEditorOnlyCanvasStyles.js';
 import registerComponentTypeSet from '../support/registerComponentTypeSet.js';
 import buildAccordionItemTypeDefinition from './buildAccordionItemTypeDefinition.js';
 import buildAccordionTypeDefinition from './buildAccordionTypeDefinition.js';
@@ -31,6 +33,7 @@ const applyInteractiveComponents = (editor, pluginOptions) => {
     buildAnnouncementTypeDefinition(interactiveTextDefaults),
   ]);
   registerCanvasStyles(editor, 'db-css-interactive-base', buildInteractiveBaseCss());
+  registerEditorOnlyCanvasStyles(editor, 'db-css-navbar-editor', buildNavbarEditorCanvasCss());
 };
 
 export default applyInteractiveComponents;
