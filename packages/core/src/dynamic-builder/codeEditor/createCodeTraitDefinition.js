@@ -6,7 +6,7 @@ import resolveTraitInnerElement from '../traits/resolveTraitInnerElement.js';
 const buildPreviewText = (codeText) => {
   const trimmedText = String(codeText || '').trim();
   if (!trimmedText) return 'Nothing here yet.';
-  return trimmedText.length > 220 ? trimmedText.slice(0, 220) + '…' : trimmedText;
+  return trimmedText.length > 220 ? trimmedText.slice(0, 220) + '\u2026' : trimmedText;
 };
 
 const createCodeTraitDefinition = (editor) => ({

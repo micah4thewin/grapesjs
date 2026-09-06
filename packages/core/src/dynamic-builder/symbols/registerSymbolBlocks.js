@@ -17,7 +17,7 @@ const registerSymbolBlocks = (editor) => {
       category: 'Reusable',
       media: resolveBlockPreviewMarkup('db-symbol', 'Reusable'),
       select: true,
-      attributes: { title: 'Reusable — edit once, updates everywhere' },
+      attributes: { title: 'Reusable \u2014 edit once, updates everywhere' },
       content: { type: 'db-symbol', attributes: { 'data-db-type': 'symbol', 'data-db-symbol': symbolRecord.id } },
     });
   });

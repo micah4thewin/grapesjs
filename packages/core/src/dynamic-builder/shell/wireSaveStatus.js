@@ -9,7 +9,7 @@ const wireSaveStatus = (editor, stripElement) => {
     const statusState = payloadRecord.state || 'idle';
     const timeText = formatStatusTimeText(payloadRecord.at);
     const stateTexts = {
-      saving: 'Saving…',
+      saving: 'Saving\u2026',
       saved: `Saved ${timeText}`,
       error: `Error ${timeText}`,
     };

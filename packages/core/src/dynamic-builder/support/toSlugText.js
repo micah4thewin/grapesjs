@@ -2,7 +2,7 @@ const toSlugText = (textValue) => {
   const normalizedText = String(textValue || '')
     .toLowerCase()
     .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '');
+    .replace(/[\u0300-\u036f]/g, '');
   let slugText = '';
   try {
     slugText = normalizedText.replace(/[^\p{L}\p{N}]+/gu, '-');
