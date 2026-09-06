@@ -15,9 +15,10 @@ const resolveBindingPath = (registry, pathText) => {
       continue;
     }
     if (typeof currentValue !== 'object') return undefined;
+    if (!Object.prototype.hasOwnProperty.call(currentValue, pathSegment)) return undefined;
     currentValue = currentValue[pathSegment];
   }
-  return currentValue;
+  return typeof currentValue === 'function' ? undefined : currentValue;
 };
 
 export default resolveBindingPath;

@@ -8,6 +8,7 @@ import wireToastNotifications from './wireToastNotifications.js';
 
 const applyEditorShell = (editor, pluginOptions) => {
   const shellOptions = (pluginOptions && pluginOptions.shell) || {};
+  const themeOptions = (pluginOptions && pluginOptions.theme) || {};
   const editorConfig = editor.getConfig && editor.getConfig();
   if (editorConfig) editorConfig.showDevices = false;
   registerShellCommands(editor);
@@ -17,7 +18,7 @@ const applyEditorShell = (editor, pluginOptions) => {
     if (!containerElement || !containerElement.ownerDocument) return;
     injectEditorStylesOnce(editor, 'db-css-shell-layout', getShellLayoutCss());
     refineDefaultPanels(editor);
-    renderShellTopBar(editor, shellOptions);
+    renderShellTopBar(editor, shellOptions, themeOptions);
     registerShellKeymaps(editor);
     wireToastNotifications(editor);
   });

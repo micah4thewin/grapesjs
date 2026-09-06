@@ -1,5 +1,3 @@
-import decodeBasicHtmlEntities from './decodeBasicHtmlEntities.js';
-
 const collectComponentPlainText = (rootComponent) => {
   const textFragments = [];
   const visitComponent = (visitedComponent) => {
@@ -13,13 +11,15 @@ const collectComponentPlainText = (rootComponent) => {
       return;
     }
     const childComponents = visitedComponent.components ? visitedComponent.components() : null;
-    childComponents && childComponents.forEach((childComponent) => visitComponent(childComponent));
+    if (childComponents && childComponents.length) {
+      childComponents.forEach((childComponent) => visitComponent(childComponent));
+      return;
+    }
+    const contentValue = visitedComponent.get ? visitedComponent.get('content') : '';
+    if (contentValue) textFragments.push(String(contentValue));
   };
   visitComponent(rootComponent);
-  return decodeBasicHtmlEntities(textFragments.join(' '))
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  return textFragments.join(' ').replace(/\s+/g, ' ').trim();
 };
 
 export default collectComponentPlainText;

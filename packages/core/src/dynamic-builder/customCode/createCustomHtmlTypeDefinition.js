@@ -14,12 +14,20 @@ const createCustomHtmlTypeDefinition = () => ({
       components: getDefaultCustomHtmlCode(),
       traits: [
         {
-          type: 'db-textarea-trait',
+          type: 'db-code',
           name: 'htmlCode',
+          language: 'html',
           label: 'HTML code',
-          placeholder: '<div>Your markup here</div>',
+          helpText: 'Sanitized on save unless you allow script tags in Custom code.',
         },
       ],
+    },
+    getAttrToHTML(opts) {
+      const exportAttributes = this.getAttributes();
+      delete exportAttributes.htmlCode;
+      const editorConfig = this.em && this.em.getConfig ? this.em.getConfig() : {};
+      if (editorConfig.avoidInlineStyle && !(opts && opts.keepInlineStyle === true)) delete exportAttributes.style;
+      return exportAttributes;
     },
   },
 });

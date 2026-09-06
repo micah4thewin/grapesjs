@@ -1,7 +1,8 @@
 import escapeHtmlText from '../support/escapeHtmlText.js';
 import getIconMarkup from '../support/getIconMarkup.js';
 
-const renderPaletteListItems = (listElement, actionRecords, activeIndex) => {
+const renderPaletteListItems = (listElement, actionRecords, activeIndex, instanceSuffix) => {
+  const optionIdPrefix = 'db-palette-option' + (instanceSuffix || '') + '-';
   const emptyMarkup = [
     '<li class="gjs-db-palette-item gjs-db-muted" role="option" aria-selected="false" aria-disabled="true">',
     'No matching actions</li>',
@@ -10,7 +11,7 @@ const renderPaletteListItems = (listElement, actionRecords, activeIndex) => {
     .map((actionRecord, itemIndex) => {
       const selectedText = itemIndex === activeIndex ? 'true' : 'false';
       return [
-        `<li class="gjs-db-palette-item" role="option" id="db-palette-option-${itemIndex}"`,
+        `<li class="gjs-db-palette-item" role="option" id="${optionIdPrefix}${itemIndex}"`,
         ` data-db-palette-index="${itemIndex}" aria-selected="${selectedText}">`,
         getIconMarkup(actionRecord.iconName, { size: 16 }),
         `<span>${escapeHtmlText(actionRecord.label)}</span>`,

@@ -21,6 +21,13 @@ const buildExportOptionsSectionMarkup = (editor) => {
       false,
     ),
     buildExportCheckboxMarkup(
+      'includeProjectBackup',
+      'Include project backup files',
+      'Adds project.json and design-tokens.json. These expose your full editor project, so leave this off for public hosting.',
+      false,
+      false,
+    ),
+    buildExportCheckboxMarkup(
       'includeCustomScripts',
       'Include custom scripts',
       'Read only. Mirrors the allow scripts flag from the Custom code settings.',

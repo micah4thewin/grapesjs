@@ -1,16 +1,22 @@
 import ensureAudioContext from './ensureAudioContext.js';
 import getSoundPreference from './getSoundPreference.js';
 
+const gestureEventNames = ['pointerup', 'touchend', 'click', 'keydown'];
+
 const wireAudioUnlockGesture = (editor) => {
   const containerElement = editor.getContainer && editor.getContainer();
-  if (!containerElement || !containerElement.ownerDocument) return;
-  const unlockAudioOnce = () => {
-    getSoundPreference() && ensureAudioContext(editor);
-    containerElement.ownerDocument.removeEventListener('pointerdown', unlockAudioOnce, true);
-    containerElement.ownerDocument.removeEventListener('keydown', unlockAudioOnce, true);
-  };
-  containerElement.ownerDocument.addEventListener('pointerdown', unlockAudioOnce, true);
-  containerElement.ownerDocument.addEventListener('keydown', unlockAudioOnce, true);
+  const ownerDocument = containerElement && containerElement.ownerDocument;
+  if (!ownerDocument) return;
+  const removeUnlockListeners = () =>
+    gestureEventNames.forEach((eventName) => ownerDocument.removeEventListener(eventName, unlockAudioOnce, true));
+  function unlockAudioOnce() {
+    if (!getSoundPreference()) return;
+    const audioContext = ensureAudioContext(editor, { allowCreate: true });
+    if (!audioContext) return;
+    removeUnlockListeners();
+  }
+  gestureEventNames.forEach((eventName) => ownerDocument.addEventListener(eventName, unlockAudioOnce, true));
+  editor.on('destroy', removeUnlockListeners);
 };
 
 export default wireAudioUnlockGesture;

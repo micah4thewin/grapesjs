@@ -2,6 +2,7 @@ import buildCustomCodeSiteCss from './buildCustomCodeSiteCss.js';
 import createCustomCssTypeDefinition from './createCustomCssTypeDefinition.js';
 import createCustomHtmlTypeDefinition from './createCustomHtmlTypeDefinition.js';
 import createCustomScriptTypeDefinition from './createCustomScriptTypeDefinition.js';
+import getCodeEditorCss from '../codeEditor/getCodeEditorCss.js';
 import getCustomCodeEditorCss from './getCustomCodeEditorCss.js';
 import injectCanvasEditorOnlyStyles from './injectCanvasEditorOnlyStyles.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
@@ -27,6 +28,7 @@ const applyCustomCode = (editor, pluginOptions) => {
   });
   const injectEditorSideStyles = () => {
     injectEditorStylesOnce(editor, 'db-css-customcode-editor', getCustomCodeEditorCss());
+    injectEditorStylesOnce(editor, 'db-css-code-editor', getCodeEditorCss());
     injectCanvasEditorOnlyStyles(editor);
   };
   injectEditorSideStyles();

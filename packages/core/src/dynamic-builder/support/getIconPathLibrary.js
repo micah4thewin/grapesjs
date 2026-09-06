@@ -8,6 +8,7 @@ import getDirectionIconPaths from './getDirectionIconPaths.js';
 import getEducationIconPaths from './getEducationIconPaths.js';
 import getFoodIconPaths from './getFoodIconPaths.js';
 import getHealthIconPaths from './getHealthIconPaths.js';
+import getInteractionIconPaths from './getInteractionIconPaths.js';
 import getInterfaceIconPaths from './getInterfaceIconPaths.js';
 import getMediaLibraryIconPaths from './getMediaLibraryIconPaths.js';
 import getNatureIconPaths from './getNatureIconPaths.js';
@@ -22,6 +23,7 @@ const getIconPathLibrary = () => ({
   ...getActionIconPaths(),
   ...getContentIconPaths(),
   ...getSystemIconPaths(),
+  ...getInteractionIconPaths(),
   ...getDirectionIconPaths(),
   ...getShapeIconPaths(),
   ...getCommunicationIconPaths(),

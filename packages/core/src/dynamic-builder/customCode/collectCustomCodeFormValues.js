@@ -1,8 +1,5 @@
-const collectCustomCodeFormValues = (formElement) => {
-  const readCodeSlot = (slotName) => {
-    const slotElement = formElement.querySelector('[data-db-code-slot="' + slotName + '"]');
-    return slotElement ? slotElement.value : '';
-  };
+const collectCustomCodeFormValues = (formElement, codeSurfaces) => {
+  const readCodeSlot = (slotName) => (codeSurfaces[slotName] ? codeSurfaces[slotName].getValue() : '');
   const allowScriptsElement = formElement.querySelector('[data-db-allow-scripts]');
   const originsElement = formElement.querySelector('[data-db-script-origins]');
   return {

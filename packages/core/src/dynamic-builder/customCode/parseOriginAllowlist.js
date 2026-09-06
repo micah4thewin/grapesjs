@@ -1,9 +1,9 @@
-import sanitizeUrlValue from '../support/sanitizeUrlValue.js';
+import resolveUrlOrigin from './resolveUrlOrigin.js';
 
 const parseOriginAllowlist = (allowlistText) =>
   String(allowlistText || '')
     .split('\n')
-    .map((originLine) => sanitizeUrlValue(originLine.trim()).replace(/\/+$/, ''))
+    .map((originLine) => resolveUrlOrigin(originLine))
     .filter((originValue, originIndex, allOrigins) => !!originValue && allOrigins.indexOf(originValue) === originIndex);
 
 export default parseOriginAllowlist;

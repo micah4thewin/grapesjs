@@ -1,12 +1,11 @@
 import parseOriginAllowlist from './parseOriginAllowlist.js';
-import sanitizeHtmlMarkup from '../support/sanitizeHtmlMarkup.js';
+import sanitizeCodeSlotMarkup from './sanitizeCodeSlotMarkup.js';
 import updateSiteMetaRecord from '../support/updateSiteMetaRecord.js';
 
 const saveCustomCodeSettings = (editor, formValues) => {
   const resolveSlotValue = (slotValue) => {
     if (formValues.allowScripts) return String(slotValue || '');
-    if (typeof DOMParser === 'undefined') return '';
-    return sanitizeHtmlMarkup(slotValue, { allowIframes: true });
+    return sanitizeCodeSlotMarkup(slotValue);
   };
   const savedRecord = updateSiteMetaRecord(editor, {
     customCode: {

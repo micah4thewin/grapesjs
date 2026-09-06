@@ -1,9 +1,10 @@
 import buildSiteScriptText from './buildSiteScriptText.js';
+import collectFeatureRuntimeScriptText from './collectFeatureRuntimeScriptText.js';
 import collectPageScriptText from './collectPageScriptText.js';
 import getSiteCustomCodeRecord from './getSiteCustomCodeRecord.js';
 import resolveBindingTokensInMarkup from '../dataBinding/resolveBindingTokensInMarkup.js';
 import resolveCustomScriptText from './resolveCustomScriptText.js';
-import sanitizeHtmlMarkup from '../support/sanitizeHtmlMarkup.js';
+import resolveExportSlotMarkup from './resolveExportSlotMarkup.js';
 import spliceBodyEdgeMarkup from './spliceBodyEdgeMarkup.js';
 
 const buildDocumentBodyMarkup = (editor, page, buildOptions) => {
@@ -17,13 +18,22 @@ const buildDocumentBodyMarkup = (editor, page, buildOptions) => {
   }
   if (optionsRecord.resolveBindings !== false) pageMarkup = resolveBindingTokensInMarkup(editor, pageMarkup);
   const customCodeRecord = getSiteCustomCodeRecord(editor);
-  const startMarkup = customCodeRecord.bodyStartHtml ? sanitizeHtmlMarkup(customCodeRecord.bodyStartHtml).trim() : '';
+  const startMarkup = resolveExportSlotMarkup(customCodeRecord, customCodeRecord.bodyStartHtml);
   const endParts = [];
-  if (customCodeRecord.bodyEndHtml) endParts.push(sanitizeHtmlMarkup(customCodeRecord.bodyEndHtml).trim());
+  const endSlotMarkup = resolveExportSlotMarkup(customCodeRecord, customCodeRecord.bodyEndHtml);
+  if (endSlotMarkup) endParts.push(endSlotMarkup);
   if (optionsRecord.separateAssets) {
-    if (buildSiteScriptText(editor, optionsRecord)) endParts.push('<script src="site.js" defer></script>');
+    const siteScriptText =
+      optionsRecord.siteScriptText !== undefined
+        ? optionsRecord.siteScriptText
+        : buildSiteScriptText(editor, optionsRecord);
+    if (siteScriptText) endParts.push('<script src="site.js" defer></script>');
   } else {
-    const scriptChunks = [pageScriptText, resolveCustomScriptText(editor, optionsRecord)].filter(Boolean);
+    const scriptChunks = [
+      collectFeatureRuntimeScriptText(editor, page),
+      pageScriptText,
+      resolveCustomScriptText(editor, optionsRecord, page),
+    ].filter(Boolean);
     if (scriptChunks.length) {
       const inlineScriptText = scriptChunks.join('\n\n').replace(/<\/script/gi, '<\\/script');
       endParts.push('<script>\n' + inlineScriptText + '\n</script>');

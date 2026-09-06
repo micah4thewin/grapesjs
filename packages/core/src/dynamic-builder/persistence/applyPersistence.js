@@ -9,7 +9,7 @@ import resolvePersistenceOptions from './resolvePersistenceOptions.js';
 import watchAutosaveUpdates from './watchAutosaveUpdates.js';
 
 const applyPersistence = (editor, pluginOptions) => {
-  const moduleOptions = resolvePersistenceOptions(pluginOptions);
+  const moduleOptions = resolvePersistenceOptions(pluginOptions, editor);
   registerCommandSet(editor, {
     'db:save-revision': (commandEditor) => openSaveRevisionModal(commandEditor, moduleOptions),
     'db:open-revisions': (commandEditor) => openRevisionsModal(commandEditor, moduleOptions),

@@ -14,12 +14,16 @@ const createCustomScriptTypeDefinition = () => ({
       components: buildScriptCardChildren(''),
       traits: [
         {
-          type: 'db-textarea-trait',
+          type: 'db-code',
           name: 'scriptCode',
+          language: 'javascript',
           label: 'Script code',
-          placeholder: 'document.querySelectorAll(...)',
+          helpText: 'Stays inert until you turn on "Allow script tags" in Custom code.',
         },
       ],
+    },
+    toHTML() {
+      return '';
     },
   },
 });

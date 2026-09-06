@@ -1,6 +1,6 @@
 const updateCharacterCounterBadge = (badgeElement, valueLength) => {
   const warnLimit = Number(badgeElement.dataset.dbSeoLimit || '0');
-  badgeElement.textContent = valueLength + ' / ' + warnLimit;
+  badgeElement.textContent = valueLength + ' / ' + warnLimit + ' characters';
   const isOverLimit = warnLimit > 0 && valueLength > warnLimit;
   const isFarOverLimit = warnLimit > 0 && valueLength > warnLimit + 20;
   badgeElement.classList.toggle('gjs-db-badge-success', valueLength > 0 && !isOverLimit);

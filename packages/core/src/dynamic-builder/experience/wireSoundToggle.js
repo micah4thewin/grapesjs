@@ -22,7 +22,7 @@ const wireSoundToggle = (editor) => {
     setSoundPreference(nextEnabled);
     syncToggleAppearance();
     if (nextEnabled) {
-      ensureAudioContext(editor);
+      ensureAudioContext(editor, { allowCreate: true });
       setTimeout(() => playFeedbackTone(editor, 'toggle'), 30);
     }
     editor.trigger('db:sound:update', nextEnabled);

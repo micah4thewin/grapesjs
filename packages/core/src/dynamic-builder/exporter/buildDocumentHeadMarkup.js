@@ -2,7 +2,7 @@ import buildExportStyleText from './buildExportStyleText.js';
 import buildJsonLdScriptMarkup from './buildJsonLdScriptMarkup.js';
 import buildSeoHeadMarkup from '../seo/buildSeoHeadMarkup.js';
 import getSiteCustomCodeRecord from './getSiteCustomCodeRecord.js';
-import sanitizeHtmlMarkup from '../support/sanitizeHtmlMarkup.js';
+import resolveExportSlotMarkup from './resolveExportSlotMarkup.js';
 
 const buildDocumentHeadMarkup = (editor, page, buildOptions) => {
   const optionsRecord = buildOptions || {};
@@ -15,8 +15,9 @@ const buildDocumentHeadMarkup = (editor, page, buildOptions) => {
     if (styleText) headParts.push('<style>\n' + styleText + '\n</style>');
   }
   headParts.push(buildJsonLdScriptMarkup(editor, page));
-  const customHeadHtml = getSiteCustomCodeRecord(editor).headHtml;
-  if (customHeadHtml) headParts.push(sanitizeHtmlMarkup(customHeadHtml).trim());
+  const customCodeRecord = getSiteCustomCodeRecord(editor);
+  const headSlotMarkup = resolveExportSlotMarkup(customCodeRecord, customCodeRecord.headHtml);
+  if (headSlotMarkup) headParts.push(headSlotMarkup);
   return headParts.filter(Boolean).join('\n');
 };
 

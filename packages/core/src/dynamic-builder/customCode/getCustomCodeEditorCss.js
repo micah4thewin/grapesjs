@@ -7,7 +7,7 @@ const getCustomCodeEditorCss = () =>
     '.gjs-db-custom-code-warning svg { flex: none; margin-top: 2px; }',
     '.gjs-db-custom-code-form textarea.gjs-db-field-input {',
     '  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px;',
-    '  min-height: 88px; resize: vertical; }',
+    '  min-height: 68px; resize: vertical; }',
     '.gjs-db-custom-code-toggle { display: flex; gap: 8px; align-items: center; cursor: pointer; }',
   ].join('\n');
 

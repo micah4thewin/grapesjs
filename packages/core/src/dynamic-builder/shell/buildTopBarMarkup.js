@@ -8,7 +8,7 @@ import buildViewGroupMarkup from './buildViewGroupMarkup.js';
 
 const buildTopBarMarkup = (editor, shellOptions) =>
   [
-    '<div id="db-top" class="gjs-db-panel-top" data-db-panel="db-top" role="toolbar"',
+    '<div class="gjs-db-panel-top" data-db-panel="db-top" role="toolbar"',
     ' aria-label="Dynamic Builder toolbar">',
     buildBrandGroupMarkup(shellOptions.brandLabel || 'Dynamic Builder'),
     buildPagesMenuMarkup(editor),

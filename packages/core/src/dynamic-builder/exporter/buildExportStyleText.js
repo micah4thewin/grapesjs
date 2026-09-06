@@ -1,6 +1,7 @@
 import collectCssMatchDocuments from './collectCssMatchDocuments.js';
 import filterRegistryCssChunks from './filterRegistryCssChunks.js';
 import getRegistryCssText from './getRegistryCssText.js';
+import hoistCssImportRules from './hoistCssImportRules.js';
 import minifyCssText from './minifyCssText.js';
 
 const buildExportStyleText = (editor, page, buildOptions) => {
@@ -13,7 +14,9 @@ const buildExportStyleText = (editor, page, buildOptions) => {
   const registryCss = optimizeEnabled
     ? filterRegistryCssChunks(editor, collectCssMatchDocuments(editor, page))
     : getRegistryCssText(editor);
-  const combinedCss = [registryCss, String(generatedCss || '').trim()].filter(Boolean).join('\n\n');
+  const combinedCss = hoistCssImportRules(
+    [registryCss, String(generatedCss || '').trim()].filter(Boolean).join('\n\n'),
+  );
   return optimizeEnabled ? minifyCssText(combinedCss) : combinedCss;
 };
 

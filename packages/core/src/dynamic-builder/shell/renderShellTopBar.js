@@ -11,11 +11,11 @@ import wireThemeToggle from './wireThemeToggle.js';
 import wireTopBarClickActions from './wireTopBarClickActions.js';
 import wireViewToggleButtons from './wireViewToggleButtons.js';
 
-const renderShellTopBar = (editor, shellOptions) => {
+const renderShellTopBar = (editor, shellOptions, themeOptions) => {
   const containerElement = editor.getContainer && editor.getContainer();
   if (!containerElement || !containerElement.ownerDocument) return;
   if (containerElement.querySelector('[data-db-panel="db-top"]')) return;
-  applyStoredThemePreference(editor);
+  applyStoredThemePreference(editor, themeOptions);
   const stripElement = buildElementFromMarkup(containerElement.ownerDocument, buildTopBarMarkup(editor, shellOptions));
   if (!stripElement) return;
   containerElement.classList.add('gjs-db-shell-host');
@@ -29,6 +29,7 @@ const renderShellTopBar = (editor, shellOptions) => {
   wireSaveStatus(editor, stripElement);
   wireThemeToggle(editor, stripElement);
   updatePagesTriggerLabel(editor, stripElement);
+  editor.on('destroy', () => stripElement.remove());
 };
 
 export default renderShellTopBar;

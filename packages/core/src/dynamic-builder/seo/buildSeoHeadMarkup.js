@@ -28,7 +28,7 @@ const buildSeoHeadMarkup = (editor, page) => {
   headTagList.push(buildHeadMetaTagMarkup('name', 'robots', robotsContent));
   headTagList.push(buildHeadLinkTagMarkup('canonical', canonicalUrl));
   headTagList.push(faviconUrl ? buildHeadLinkTagMarkup('icon', faviconUrl) : buildDefaultFaviconLinkMarkup());
-  if (languageCode) headTagList.push('<meta data-db-language="' + escapeHtmlText(languageCode) + '">');
+  if (languageCode) headTagList.push(buildHeadMetaTagMarkup('property', 'og:locale', languageCode.replace('-', '_')));
   const resolvedValues = { titleText, descriptionText, canonicalUrl };
   collectOpenGraphMetaEntries(siteSeoRecord, pageSeoRecord, resolvedValues).forEach((metaEntry) =>
     headTagList.push(buildHeadMetaTagMarkup('property', metaEntry[0], metaEntry[1])),

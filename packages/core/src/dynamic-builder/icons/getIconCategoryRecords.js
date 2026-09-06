@@ -8,6 +8,7 @@ import getDirectionIconPaths from '../support/getDirectionIconPaths.js';
 import getEducationIconPaths from '../support/getEducationIconPaths.js';
 import getFoodIconPaths from '../support/getFoodIconPaths.js';
 import getHealthIconPaths from '../support/getHealthIconPaths.js';
+import getInteractionIconPaths from '../support/getInteractionIconPaths.js';
 import getInterfaceIconPaths from '../support/getInterfaceIconPaths.js';
 import getMediaLibraryIconPaths from '../support/getMediaLibraryIconPaths.js';
 import getNatureIconPaths from '../support/getNatureIconPaths.js';
@@ -22,6 +23,7 @@ const categorySourceRecords = [
   ['arrows', 'Arrows', getDirectionIconPaths],
   ['shapes', 'Shapes', getShapeIconPaths],
   ['actions', 'Actions', getActionIconPaths],
+  ['interaction', 'Interactions', getInteractionIconPaths],
   ['communication', 'Communication', getCommunicationIconPaths],
   ['social', 'Social', getSocialIconPaths],
   ['business', 'Business', getBusinessIconPaths],

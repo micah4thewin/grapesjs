@@ -9,6 +9,7 @@ const readExportBuildOptions = (editor, rootElement) => {
   return {
     separateAssets: readOptionFlag('separateAssets', false),
     resolveBindings: readOptionFlag('resolveBindings', true),
+    includeProjectBackup: readOptionFlag('includeProjectBackup', false),
     includeCustomScripts: getSiteCustomCodeRecord(editor).allowScripts,
   };
 };

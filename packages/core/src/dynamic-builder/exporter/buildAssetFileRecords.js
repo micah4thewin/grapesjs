@@ -4,48 +4,36 @@ import buildSiteScriptText from './buildSiteScriptText.js';
 import buildSitemapXmlContent from '../seo/buildSitemapXmlContent.js';
 import getSiteMetaRecord from '../support/getSiteMetaRecord.js';
 import isPlainRecord from '../support/isPlainRecord.js';
+import listAssetDescriptorRecords from './listAssetDescriptorRecords.js';
 
 const buildAssetFileRecords = (editor, buildOptions, targetAssetId) => {
-  const siteMetaRecord = getSiteMetaRecord(editor);
-  const designTokens = isPlainRecord(siteMetaRecord.designTokens) ? siteMetaRecord.designTokens : {};
-  const projectRecord = { projectData: editor.getProjectData(), siteMeta: siteMetaRecord };
-  const siteScriptText = buildSiteScriptText(editor, buildOptions);
-  const assetRecords = [
-    {
-      assetId: 'styles',
-      fileName: 'styles.css',
-      mimeType: 'text/css',
-      content: buildExportStyleText(editor, null, buildOptions),
-    },
-    {
-      assetId: 'project',
-      fileName: 'project.json',
-      mimeType: 'application/json',
-      content: JSON.stringify(projectRecord, null, 2),
-    },
-    {
-      assetId: 'tokens',
-      fileName: 'design-tokens.json',
-      mimeType: 'application/json',
-      content: JSON.stringify(designTokens, null, 2),
-    },
-    {
-      assetId: 'sitemap',
-      fileName: 'sitemap.xml',
-      mimeType: 'application/xml',
-      content: buildSitemapXmlContent(editor),
-    },
-    { assetId: 'robots', fileName: 'robots.txt', mimeType: 'text/plain', content: buildRobotsTxtContent(editor) },
-  ];
-  if (siteScriptText) {
-    assetRecords.splice(1, 0, {
-      assetId: 'siteScript',
-      fileName: 'site.js',
-      mimeType: 'text/javascript',
-      content: siteScriptText,
-    });
-  }
-  return assetRecords.filter((assetRecord) => !targetAssetId || assetRecord.assetId === targetAssetId);
+  const optionsRecord = buildOptions || {};
+  const siteScriptText =
+    optionsRecord.siteScriptText !== undefined
+      ? optionsRecord.siteScriptText
+      : buildSiteScriptText(editor, optionsRecord);
+  const includeBackupFiles = optionsRecord.includeProjectBackup === true;
+  const buildAssetContent = (assetId) => {
+    if (assetId === 'styles') return buildExportStyleText(editor, null, optionsRecord);
+    if (assetId === 'siteScript') return siteScriptText;
+    if (assetId === 'sitemap') return buildSitemapXmlContent(editor);
+    if (assetId === 'robots') return buildRobotsTxtContent(editor);
+    const siteMetaRecord = getSiteMetaRecord(editor);
+    if (assetId === 'project') {
+      return JSON.stringify({ projectData: editor.getProjectData(), siteMeta: siteMetaRecord }, null, 2);
+    }
+    const designTokens = isPlainRecord(siteMetaRecord.designTokens) ? siteMetaRecord.designTokens : {};
+    return JSON.stringify(designTokens, null, 2);
+  };
+  return listAssetDescriptorRecords(!!siteScriptText)
+    .filter((assetDescriptor) => (targetAssetId ? assetDescriptor.assetId === targetAssetId : true))
+    .filter((assetDescriptor) => (targetAssetId ? true : includeBackupFiles || !assetDescriptor.isBackup))
+    .map((assetDescriptor) => ({
+      assetId: assetDescriptor.assetId,
+      fileName: assetDescriptor.fileName,
+      mimeType: assetDescriptor.mimeType,
+      content: buildAssetContent(assetDescriptor.assetId),
+    }));
 };
 
 export default buildAssetFileRecords;
