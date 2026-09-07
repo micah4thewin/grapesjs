@@ -5,9 +5,9 @@ import getFlowRuntimeHelperSource from './getFlowRuntimeHelperSource.js';
 import getFlowRuntimeStorageActionSource from './getFlowRuntimeStorageActionSource.js';
 import getFlowRuntimeWatchSource from './getFlowRuntimeWatchSource.js';
 
-const getFlowRuntimeSource = (allowScripts) =>
+const getFlowRuntimeSource = () =>
   [
-    ...getFlowRuntimeHelperSource(allowScripts),
+    ...getFlowRuntimeHelperSource(),
     ...getFlowRuntimeDialogActionSource(),
     ...getFlowRuntimeStorageActionSource(),
     ...getFlowRuntimeElementActionSource(),

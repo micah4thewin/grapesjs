@@ -1,5 +1,4 @@
-const getFlowRuntimeHelperSource = (allowScripts) => [
-  'var allowCustomJs = ' + (allowScripts === true ? 'true' : 'false') + ';',
+const getFlowRuntimeHelperSource = () => [
   'var previewMode = window.dbFlowsPreview === true;',
   'var registry = { listeners: [], timers: [], observers: [], touched: [], runFlow: null };',
   'window.dbFlows = registry;',

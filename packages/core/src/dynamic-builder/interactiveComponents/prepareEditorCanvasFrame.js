@@ -9,7 +9,7 @@ const prepareEditorCanvasFrame = (editor) => {
   Promise.resolve().then(() => {
     if (!isEditorLive(editor)) return;
     patchComponentTypeViews();
-    if (false) ensureEditorCanvasFrame(editor);
+    ensureEditorCanvasFrame(editor);
   });
 };
 
