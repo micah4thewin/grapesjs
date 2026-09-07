@@ -39,8 +39,8 @@ const buildGrapesVariableBridgeCss = () => `
   outline: none;
 }
 .gjs-editor-cont :focus-visible {
-  outline: 2px solid var(--gjs-db-focus);
-  outline-offset: 1px;
+  outline: 2px solid var(--gjs-db-ring);
+  outline-offset: 2px;
   border-radius: var(--gjs-db-r-1);
 }
 .gjs-one-bg {

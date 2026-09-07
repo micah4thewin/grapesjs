@@ -40,13 +40,13 @@ const buildToastCss = () => `
   transform: translateY(0);
 }
 .gjs-db-toast-success {
-  box-shadow: var(--gjs-db-lift-3), inset 3px 0 0 var(--gjs-db-success);
+  box-shadow: var(--gjs-db-lift-3), 0 0 0 2px var(--gjs-db-success);
 }
 .gjs-db-toast-warning {
-  box-shadow: var(--gjs-db-lift-3), inset 3px 0 0 var(--gjs-db-warning);
+  box-shadow: var(--gjs-db-lift-3), 0 0 0 2px var(--gjs-db-warning);
 }
 .gjs-db-toast-error {
-  box-shadow: var(--gjs-db-lift-3), inset 3px 0 0 var(--gjs-db-error);
+  box-shadow: var(--gjs-db-lift-3), 0 0 0 2px var(--gjs-db-error);
 }
 .gjs-db-toast-actionable {
   padding-right: 6px;

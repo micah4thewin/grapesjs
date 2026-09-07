@@ -7,7 +7,7 @@ const buildPanelsTopBarCss = () => `
 .gjs-pn-devices-c {
   background-color: var(--gjs-db-panel);
   border: none;
-  box-shadow: var(--gjs-db-seam), 0 1px 0 var(--gjs-db-shade);
+  box-shadow: var(--gjs-db-seam);
   min-height: 42px;
 }
 .gjs-pn-views {
@@ -19,7 +19,7 @@ const buildPanelsTopBarCss = () => `
 .gjs-pn-views-container {
   background-color: var(--gjs-db-panel);
   border: none;
-  box-shadow: -4px 0 12px var(--gjs-db-shade);
+  box-shadow: var(--gjs-db-lift-2);
   padding-top: 42px;
 }
 .gjs-pn-panel .gjs-pn-buttons {
@@ -38,7 +38,7 @@ const buildPanelsTopBarCss = () => `
 .gjs-pn-devices-c .gjs-add-trasp {
   background: transparent;
   border: none;
-  border-radius: var(--gjs-db-r-1);
+  border-radius: var(--gjs-db-r-2);
   color: var(--gjs-db-faint);
   cursor: pointer;
   transition:

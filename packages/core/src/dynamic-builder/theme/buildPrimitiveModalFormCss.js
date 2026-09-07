@@ -80,8 +80,10 @@ input[type='checkbox'].gjs-db-field-input {
   gap: var(--gjs-db-gap-3);
 }
 .gjs-db-section-title {
-  font-size: 0.9rem;
+  font-family: var(--gjs-db-font-display);
+  font-size: 0.95rem;
   font-weight: var(--gjs-db-w-bold);
+  letter-spacing: -0.01em;
   color: var(--gjs-db-fg);
   margin-top: var(--gjs-db-gap-2);
   padding-bottom: var(--gjs-db-gap-1);

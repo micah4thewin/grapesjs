@@ -48,7 +48,7 @@ const getWorkspaceFrameCss = () => `
   overflow: hidden;
 }
 .gjs-db-ws-dock {
-  margin: var(--gjs-db-gap-2) 0;
+  margin: var(--gjs-db-gap-2) 0 var(--gjs-db-gap-2) var(--gjs-db-gap-1);
 }
 .gjs-db-ws-inspector {
   margin: var(--gjs-db-gap-2) var(--gjs-db-gap-2) var(--gjs-db-gap-2) 0;

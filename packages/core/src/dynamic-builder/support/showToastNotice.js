@@ -1,21 +1,10 @@
-const resolveToastHost = (containerElement, ownerDocument) => {
-  const existingHost = containerElement.querySelector('[data-db-toast-host]');
-  if (existingHost) return existingHost;
-  const toastHost = ownerDocument.createElement('div');
-  toastHost.setAttribute('data-db-toast-host', 'true');
-  toastHost.setAttribute('role', 'status');
-  toastHost.setAttribute('aria-live', 'polite');
-  toastHost.setAttribute('aria-atomic', 'false');
-  toastHost.className = 'gjs-db-toast-host';
-  containerElement.appendChild(toastHost);
-  return toastHost;
-};
+import ensureToastHostElement from './ensureToastHostElement.js';
 
 const showToastNotice = (editor, messageText, options = {}) => {
   const containerElement = editor.getContainer && editor.getContainer();
   if (!containerElement || !containerElement.ownerDocument) return;
   const ownerDocument = containerElement.ownerDocument;
-  const toastHost = resolveToastHost(containerElement, ownerDocument);
+  const toastHost = ensureToastHostElement(containerElement);
   const toastElement = ownerDocument.createElement('div');
   toastElement.className = `gjs-db-toast${options.kind ? ` gjs-db-toast-${options.kind}` : ''}`;
   toastHost.appendChild(toastElement);

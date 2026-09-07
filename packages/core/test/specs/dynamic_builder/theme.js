@@ -10,13 +10,13 @@ import computeContrastRatio from '../../../src/dynamic-builder/support/computeCo
 
 const readDeclarations = (cssText) => {
   const declarationRecords = {};
-  cssText.split(';').forEach((declarationText) => {
-    const separatorIndex = declarationText.indexOf(':');
-    if (separatorIndex < 0) return;
-    const nameText = declarationText.slice(0, separatorIndex).trim();
-    if (nameText.indexOf('--gjs-db-') !== 0) return;
-    declarationRecords[nameText] = declarationText.slice(separatorIndex + 1).trim();
-  });
+  const declarationPattern = /(--gjs-db-[a-z0-9-]+)\s*:\s*([^;}]+)/g;
+  let matchRecord = declarationPattern.exec(cssText);
+  while (matchRecord) {
+    const nameText = matchRecord[1];
+    if (!declarationRecords[nameText]) declarationRecords[nameText] = matchRecord[2].trim();
+    matchRecord = declarationPattern.exec(cssText);
+  }
   return declarationRecords;
 };
 
@@ -29,18 +29,7 @@ const paletteRecords = [
 ];
 const surfaceNames = ['bg', 'panel', 'page', 'sunken', 'hover', 'active', 'canvas-ground'];
 const textNames = ['fg', 'muted', 'faint', 'success', 'warning', 'error'];
-const syntaxNames = [
-  'keyword',
-  'type',
-  'def',
-  'string',
-  'literal',
-  'comment',
-  'meta',
-  'heading',
-  'added',
-  'removed',
-];
+const syntaxNames = ['keyword', 'type', 'def', 'string', 'literal', 'comment', 'meta', 'heading', 'added', 'removed'];
 
 describe('Dynamic builder theme', () => {
   describe('house palette', () => {
@@ -212,9 +201,7 @@ describe('Dynamic builder theme', () => {
 
   describe('shape, depth, motion and type', () => {
     test('elevation uses the house dual shadows', () => {
-      expect(scaleTokens['--gjs-db-lift-1']).toBe(
-        '2px 2px 5px var(--gjs-db-shade), -1px -1px 3px var(--gjs-db-glow)',
-      );
+      expect(scaleTokens['--gjs-db-lift-1']).toBe('2px 2px 5px var(--gjs-db-shade), -1px -1px 3px var(--gjs-db-glow)');
       expect(scaleTokens['--gjs-db-lift-4']).toBe(
         '14px 18px 44px var(--gjs-db-shade), -5px -5px 16px var(--gjs-db-glow)',
       );
@@ -224,9 +211,7 @@ describe('Dynamic builder theme', () => {
       expect(scaleTokens['--gjs-db-press-2']).toBe(
         'inset 3px 3px 7px var(--gjs-db-shade), inset -2px -2px 4px var(--gjs-db-glow)',
       );
-      expect(scaleTokens['--gjs-db-seam']).toBe(
-        'inset 0 1px 0 var(--gjs-db-glow), inset 0 -1px 0 var(--gjs-db-shade)',
-      );
+      expect(scaleTokens['--gjs-db-seam']).toBe('inset 0 1px 0 var(--gjs-db-glow), inset 0 -1px 0 var(--gjs-db-shade)');
     });
 
     test('radii, gaps, easing and durations follow the house scale', () => {
@@ -237,11 +222,11 @@ describe('Dynamic builder theme', () => {
         scaleTokens['--gjs-db-r-4'],
         scaleTokens['--gjs-db-r-pill'],
       ]).toEqual(['2px', '4px', '6px', '8px', '999px']);
-      expect([
-        scaleTokens['--gjs-db-gap-1'],
-        scaleTokens['--gjs-db-gap-3'],
-        scaleTokens['--gjs-db-gap-6'],
-      ]).toEqual(['0.25rem', '0.75rem', '2.25rem']);
+      expect([scaleTokens['--gjs-db-gap-1'], scaleTokens['--gjs-db-gap-3'], scaleTokens['--gjs-db-gap-6']]).toEqual([
+        '0.25rem',
+        '0.75rem',
+        '2.25rem',
+      ]);
       expect(scaleTokens['--gjs-db-ease']).toBe('cubic-bezier(0.22, 1, 0.36, 1)');
       expect(scaleTokens['--gjs-db-ease-spring']).toBe('cubic-bezier(0.34, 1.4, 0.64, 1)');
       expect([
@@ -253,9 +238,7 @@ describe('Dynamic builder theme', () => {
     });
 
     test('the type stack asks for the house faces and keeps a real fallback', () => {
-      expect(scaleTokens['--gjs-db-font-display']).toBe(
-        "'Gilroy', 'Avenir Next LT Pro', system-ui, sans-serif",
-      );
+      expect(scaleTokens['--gjs-db-font-display']).toBe("'Gilroy', 'Avenir Next LT Pro', system-ui, sans-serif");
       expect(scaleTokens['--gjs-db-font-ui']).toBe(
         "'Avenir Next LT Pro', system-ui, -apple-system, 'Segoe UI', sans-serif",
       );

@@ -10,8 +10,10 @@ const buildPrimitivePreviewCardsCss = () => `
   font-family: var(--gjs-db-font-ui);
 }
 .gjs-db-preview-title {
+  font-family: var(--gjs-db-font-display);
   font-size: 0.95rem;
   font-weight: var(--gjs-db-w-bold);
+  letter-spacing: -0.01em;
   color: var(--gjs-db-fg);
   line-height: 1.35;
   overflow: hidden;

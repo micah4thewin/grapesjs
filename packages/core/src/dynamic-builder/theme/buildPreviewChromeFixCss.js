@@ -25,7 +25,7 @@ const buildPreviewChromeFixCss = () => `
   bottom: 1.25rem;
   left: 1.25rem;
   border-radius: var(--gjs-db-r-pill);
-  background-color: var(--gjs-db-panel);
+  background-color: var(--gjs-db-solid);
   box-shadow: var(--gjs-db-lift-2);
   color: transparent;
   overflow: hidden;
@@ -36,7 +36,7 @@ const buildPreviewChromeFixCss = () => `
   display: block;
   width: 100%;
   height: 100%;
-  background-color: var(--gjs-db-muted);
+  background-color: var(--gjs-db-text-on-solid);
   -webkit-mask-image: ${eyeOffDataUri};
   mask-image: ${eyeOffDataUri};
   -webkit-mask-repeat: no-repeat;
@@ -50,7 +50,7 @@ const buildPreviewChromeFixCss = () => `
   box-shadow: var(--gjs-db-lift-3);
 }
 .gjs-off-prv:hover::before {
-  background-color: var(--gjs-db-fg);
+  background-color: var(--gjs-db-text-on-solid);
 }
 .gjs-toolbar-item.fa-pencil:hover {
   background-color: var(--gjs-db-fg);
