@@ -21,6 +21,7 @@ const buildAccordionInteractiveCss = () => `
   justify-content: space-between;
   gap: var(--db-space-3);
   width: 100%;
+  min-height: 2.75rem;
   padding: var(--db-space-4);
   background: transparent;
   border: 0;

@@ -5,6 +5,7 @@ const resolvePaletteGroupTitle = (commandId) => {
   if (menuSection) return menuSection.sectionTitle;
   const extraGroups = {
     'db:save-revision': 'Publish',
+    'db:persist-now': 'Publish',
     'db:download-site': 'Publish',
     'db:run-accessibility-audit': 'Publish',
     'db:run-performance-audit': 'Publish',

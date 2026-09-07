@@ -5,6 +5,7 @@ import buildPageDocumentMarkup from '../../../src/dynamic-builder/exporter/build
 import convertMillisecondsToSeconds from '../../../src/dynamic-builder/interactions/convertMillisecondsToSeconds';
 import convertSecondsToMilliseconds from '../../../src/dynamic-builder/interactions/convertSecondsToMilliseconds';
 import describeFlowPreviewWarnings from '../../../src/dynamic-builder/interactions/describeFlowPreviewWarnings';
+import describeFlowSaveNotice from '../../../src/dynamic-builder/interactions/describeFlowSaveNotice';
 import describeTargetMatches from '../../../src/dynamic-builder/interactions/describeTargetMatches';
 import getDialogRuntimeSource from '../../../src/dynamic-builder/interactions/getDialogRuntimeSource';
 import getFlowRuntimeSource from '../../../src/dynamic-builder/interactions/getFlowRuntimeSource';
@@ -16,6 +17,12 @@ import updateSiteMetaRecord from '../../../src/dynamic-builder/support/updateSit
 import validateCodeText from '../../../src/dynamic-builder/codeEditor/validateCodeText';
 import walkHtmlTagStack from '../../../src/dynamic-builder/codeEditor/walkHtmlTagStack';
 import writeComponentFlows from '../../../src/dynamic-builder/interactions/writeComponentFlows';
+
+const waitForCanvasRender = async (component) => {
+  for (let attempt = 0; attempt < 60 && !component.getEl(); attempt += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+};
 
 describe('Dynamic builder motion', () => {
   let editor;
@@ -198,6 +205,17 @@ describe('Dynamic builder motion', () => {
       );
       expect(warnings.length).toBe(2);
     });
+
+    test('a blocked script step is called out on save and again when the visitor clicks', () => {
+      const scriptFlows = [{ actions: [{ type: 'custom-js', options: { code: 'x' } }] }];
+      expect(describeFlowSaveNotice([], false).text).toBe('Flows cleared.');
+      expect(describeFlowSaveNotice(scriptFlows, false).kind).toBe('warning');
+      expect(describeFlowSaveNotice(scriptFlows, true).text).toBe('Flows saved.');
+      const runtimeSource = getFlowRuntimeSource(false);
+      expect(runtimeSource).toContain('window.dbFlowsNotice(messageText)');
+      expect(runtimeSource).toContain('Allow script tags turned on in Custom code');
+      expect(runtimeSource).toContain('Links are not opened while you preview');
+    });
   });
 
   describe('custom code', () => {
@@ -226,7 +244,7 @@ describe('Dynamic builder motion', () => {
     test('the script card says when it will not ship', async () => {
       const scriptComponent = editor.getWrapper().append({ type: 'db-custom-script' })[0];
       expect(scriptComponent.toHTML()).toBe('');
-      await new Promise((resolve) => setTimeout(resolve, 400));
+      await waitForCanvasRender(scriptComponent);
       const noteTexts = () =>
         scriptComponent
           .find('.db-code-card-note')

@@ -2,6 +2,8 @@ const runNavbarBehavior = () => {
   document.querySelectorAll('[data-db-navbar]').forEach((navbarElement) => {
     if (navbarElement.dataset.dbNavbarReady) return;
     navbarElement.dataset.dbNavbarReady = 'true';
+    const isEditorCanvas = () =>
+      document.body.hasAttribute('data-db-editor-canvas') && !document.body.hasAttribute('data-db-editor-preview');
     const normalizePath = (pathValue) => pathValue.replace(/\/index\.html$/, '/').replace(/\/+$/, '') || '/';
     const currentPath = normalizePath(window.location.pathname);
     navbarElement.querySelectorAll('[data-db-navbar-menu] a[href]').forEach((linkElement) => {
@@ -30,7 +32,7 @@ const runNavbarBehavior = () => {
     const isDrawerLayout = () => window.matchMedia('(max-width: 900px)').matches;
     const menuState = { previousOverflow: null };
     const setMenuOpen = (shouldOpen) => {
-      if (shouldOpen === isMenuOpen()) return;
+      if (isEditorCanvas() || shouldOpen === isMenuOpen()) return;
       navbarElement.setAttribute('data-db-open', shouldOpen ? 'true' : 'false');
       toggleElement.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
       const ownerBody = navbarElement.ownerDocument.body;

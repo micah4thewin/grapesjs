@@ -5,6 +5,7 @@ import resolveComponentPage from './resolveComponentPage.js';
 import syncAccordionHeadingLevel from './syncAccordionHeadingLevel.js';
 import syncAnnouncementLink from './syncAnnouncementLink.js';
 import syncNavbarLogo from './syncNavbarLogo.js';
+import syncSocialProfileFromHref from './syncSocialProfileFromHref.js';
 
 const readType = (component) => (component && typeof component.get === 'function' ? String(component.get('type')) : '');
 const readAttribute = (component, attributeName) => String((component.getAttributes() || {})[attributeName] || '');
@@ -35,6 +36,11 @@ const watchInteractiveAttributeUpdates = (editor) => {
     const logoSource = readAttribute(component, 'src');
     if (navbarComponent && readAttribute(navbarComponent, 'data-db-logo') !== logoSource) {
       navbarComponent.addAttributes({ 'data-db-logo': logoSource });
+    }
+  });
+  editor.on('component:update:attributes:href', (component) => {
+    if (component.getClasses && component.getClasses().indexOf('db-social-link') >= 0) {
+      syncSocialProfileFromHref(component);
     }
   });
   editor.on('component:update:attributes:data-db-scroll', (component) => {

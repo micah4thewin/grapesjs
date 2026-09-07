@@ -14,6 +14,7 @@ import buildTabPanelTypeDefinition from './buildTabPanelTypeDefinition.js';
 import buildTabsTypeDefinition from './buildTabsTypeDefinition.js';
 import createAccordionItemsTraitDefinition from './createAccordionItemsTraitDefinition.js';
 import createBreadcrumbStepsTraitDefinition from './createBreadcrumbStepsTraitDefinition.js';
+import createSocialProfilePasteTraitDefinition from './createSocialProfilePasteTraitDefinition.js';
 import createTabItemsTraitDefinition from './createTabItemsTraitDefinition.js';
 import createTextWithHelpTraitDefinition from './createTextWithHelpTraitDefinition.js';
 import createTimeTraitDefinition from './createTimeTraitDefinition.js';
@@ -45,6 +46,7 @@ const applyInteractiveComponents = (editor, pluginOptions) => {
     'db-accordion-items': createAccordionItemsTraitDefinition(editor, interactiveTextDefaults),
     'db-tab-items': createTabItemsTraitDefinition(editor, interactiveTextDefaults),
     'db-breadcrumb-steps': createBreadcrumbStepsTraitDefinition(editor),
+    'db-social-paste': createSocialProfilePasteTraitDefinition(),
   });
   registerComponentTypeSet(editor, [
     buildAccordionItemTypeDefinition(interactiveTextDefaults),

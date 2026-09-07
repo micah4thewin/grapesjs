@@ -3,6 +3,7 @@ import attachFlowTargetHints from './attachFlowTargetHints.js';
 import buildElementFromMarkup from '../support/buildElementFromMarkup.js';
 import buildFlowBuilderMarkup from './buildFlowBuilderMarkup.js';
 import createModalHostElement from '../support/createModalHostElement.js';
+import describeFlowSaveNotice from './describeFlowSaveNotice.js';
 import guardModalDismiss from '../codeEditor/guardModalDismiss.js';
 import pickFlowTargetOnCanvas from './pickFlowTargetOnCanvas.js';
 import readComponentFlows from './readComponentFlows.js';
@@ -62,7 +63,8 @@ const openFlowBuilderModal = (editor, targetComponent, openOptions = {}) => {
       onSave: (nextFlows) => {
         saveFlows(nextFlows);
         closeBuilder();
-        showToastNotice(editor, nextFlows.length ? 'Flows saved.' : 'Flows cleared.', { kind: 'success' });
+        const noticeRecord = describeFlowSaveNotice(nextFlows, allowScripts);
+        showToastNotice(editor, noticeRecord.text, { kind: noticeRecord.kind, duration: noticeRecord.duration });
       },
       onCancel: () => {
         if (isDirty && !discardArmed) {

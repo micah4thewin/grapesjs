@@ -8,7 +8,7 @@ import applySocialProfileUrl from '../../../src/dynamic-builder/interactiveCompo
 import buildBreadcrumbFromPages from '../../../src/dynamic-builder/interactiveComponents/buildBreadcrumbFromPages';
 import buildInteractiveBaseCss from '../../../src/dynamic-builder/interactiveComponents/buildInteractiveBaseCss';
 import buildNavbarLinksFromPages from '../../../src/dynamic-builder/interactiveComponents/buildNavbarLinksFromPages';
-import buildNavbarMenuRowsMarkup from '../../../src/dynamic-builder/interactiveComponents/buildNavbarMenuRowsMarkup';
+import buildMenuItemRowsMarkup from '../../../src/dynamic-builder/traits/buildMenuItemRowsMarkup';
 import detectSocialNetworkFromUrl from '../../../src/dynamic-builder/interactiveComponents/detectSocialNetworkFromUrl';
 import getTimeZoneOffsetOptions from '../../../src/dynamic-builder/interactiveComponents/getTimeZoneOffsetOptions';
 import insertBreadcrumbStep from '../../../src/dynamic-builder/interactiveComponents/insertBreadcrumbStep';
@@ -55,7 +55,11 @@ describe('Dynamic builder interactive components', () => {
       expect(names).toContain('Menu backdrop');
       expect(names).toContain('Menu panel');
       expect(names).toContain('Close menu button');
-      const burger = navbar.components().at(0).components().find((child) => child.getName() === 'Menu button');
+      const burger = navbar
+        .components()
+        .at(0)
+        .components()
+        .find((child) => child.getName() === 'Menu button');
       expect(burger.get('selectable')).toBe(false);
       expect(burger.get('removable')).toBe(false);
       expect(burger.components().at(0).get('selectable')).toBe(false);
@@ -78,7 +82,9 @@ describe('Dynamic builder interactive components', () => {
       editor.Pages.add({ name: 'About' });
       const navbar = editor.getWrapper().append({ type: 'db-navbar' })[0];
       const hrefs = navbar.find ? [] : [];
-      navbar.onAll((child) => child.getClasses().indexOf('db-navbar-link') >= 0 && hrefs.push(child.getAttributes().href));
+      navbar.onAll(
+        (child) => child.getClasses().indexOf('db-navbar-link') >= 0 && hrefs.push(child.getAttributes().href),
+      );
       expect(hrefs).toEqual(['index.html', 'about.html']);
       expect(navbar.getAttributes()['data-db-menu-auto']).toBe('true');
       editor.Pages.getAll()[1].set('name', 'Team');
@@ -104,10 +110,12 @@ describe('Dynamic builder interactive components', () => {
       const firstLink = [];
       navbar.onAll((child) => child.getClasses().indexOf('db-navbar-link') >= 0 && firstLink.push(child));
       writeComponentTextContent(firstLink[0], 'Tips & Tricks');
-      const rowsMarkup = buildNavbarMenuRowsMarkup(navbar, '[data-db-navbar-menu]', 'empty');
+      const menuTrait = navbar.getTraits().filter((trait) => trait.get('type') === 'db-menu-items')[0];
+      expect(menuTrait.get('listSelector')).toBe('[data-db-navbar-menu]');
+      const rowsMarkup = buildMenuItemRowsMarkup(editor, navbar, menuTrait.get('listSelector'), 'empty');
       expect(rowsMarkup).toContain('value="Tips &amp; Tricks"');
       expect(rowsMarkup).not.toContain('&amp;amp;');
-      expect(rowsMarkup).toContain('data-db-menu-page-picker');
+      expect(rowsMarkup).toContain('data-db-menu-field="pageLink"');
     });
 
     test('the logo attribute inserts and removes an image inside the brand link', () => {
@@ -186,7 +194,9 @@ describe('Dynamic builder interactive components', () => {
     test('digits are not editable text and time zone options include local and UTC', () => {
       const countdown = editor.getWrapper().append({ type: 'db-countdown' })[0];
       const valueTypes = [];
-      countdown.onAll((child) => child.getClasses().indexOf('db-countdown-value') >= 0 && valueTypes.push(child.get('type')));
+      countdown.onAll(
+        (child) => child.getClasses().indexOf('db-countdown-value') >= 0 && valueTypes.push(child.get('type')),
+      );
       expect(valueTypes).toEqual(['default', 'default', 'default', 'default']);
       const traitTypes = countdown.getTraits().map((trait) => trait.get('type'));
       expect(traitTypes).toContain('db-time');

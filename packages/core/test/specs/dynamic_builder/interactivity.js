@@ -66,7 +66,7 @@ describe('Dynamic builder interactivity', () => {
       const symbolRecord = saveSymbolRecord(editor, {
         id: 'sym-locked',
         name: 'Header',
-        components: [{ tagName: 'p', type: 'text', components: 'hello' }],
+        components: [{ tagName: 'div', components: [{ tagName: 'p', type: 'text', components: 'hello' }] }],
       });
       const instanceComponent = insertSymbolInstance(editor, symbolRecord.id);
       const childComponent = instanceComponent.components().at(0);

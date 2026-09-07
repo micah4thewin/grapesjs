@@ -20,7 +20,6 @@ const getSectionTemplateCopyRecords = () => ({
   ctaBand: {
     headingText: 'Ready when you are',
     introText: 'One short line that makes the next step feel easy, then a single button.',
-    anchorId: 'contact',
   },
 });
 

@@ -11,9 +11,7 @@ const markTemplatePlaceholderCopy = (contentRecord) => {
     placeholderLeafTypes.indexOf(String(contentRecord.type || '')) >= 0 && typeof contentRecord.components === 'string';
   return {
     ...contentRecord,
-    ...(isTextLeaf
-      ? { attributes: { ...(contentRecord.attributes || {}), 'data-db-placeholder': 'true' } }
-      : {}),
+    ...(isTextLeaf ? { attributes: { ...(contentRecord.attributes || {}), 'data-db-placeholder': 'true' } } : {}),
     ...(Array.isArray(contentRecord.components)
       ? { components: contentRecord.components.map((childRecord) => markTemplatePlaceholderCopy(childRecord)) }
       : {}),

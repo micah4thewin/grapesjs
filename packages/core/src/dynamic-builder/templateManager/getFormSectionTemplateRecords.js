@@ -19,6 +19,7 @@ const getFormSectionTemplateRecords = () =>
       description: 'A form on the left with your address and hours on the right.',
       buildContent: () => [
         buildContactSplitSectionRecord({
+          anchorId: '',
           headingText: 'Get in touch',
           introText: 'Send a message or use the details beside it, whichever you prefer.',
         }),

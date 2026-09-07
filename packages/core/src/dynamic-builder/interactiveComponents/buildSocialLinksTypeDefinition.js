@@ -15,6 +15,13 @@ const buildSocialLinksTypeDefinition = () => ({
       traits: [
         { type: 'db-social-profiles', name: 'dbSocialProfiles', label: 'Profiles' },
         {
+          type: 'db-social-paste',
+          name: 'dbSocialPaste',
+          label: 'Add from a link',
+          placeholder: 'https://instagram.com/yourname',
+          help: 'Paste a profile link and we add it with the right icon.',
+        },
+        {
           type: 'select',
           name: 'data-db-icon-style',
           label: 'Icon style',
