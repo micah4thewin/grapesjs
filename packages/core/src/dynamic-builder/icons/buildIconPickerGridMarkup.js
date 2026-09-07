@@ -1,7 +1,7 @@
+import buildIconMarkupForName from '../customAssets/buildIconMarkupForName.js';
 import collectIconPickerEntries from './collectIconPickerEntries.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
-import getIconMarkup from '../support/getIconMarkup.js';
-import splitIconNameWords from './splitIconNameWords.js';
+import resolveIconDisplayLabel from '../customAssets/resolveIconDisplayLabel.js';
 
 const buildIconPickerGridMarkup = (activeCategoryId, searchQuery, selectedIconName) => {
   const categoryEntries = collectIconPickerEntries(activeCategoryId, searchQuery);
@@ -12,12 +12,12 @@ const buildIconPickerGridMarkup = (activeCategoryId, searchQuery, selectedIconNa
     .map((categoryEntry) => {
       const iconButtonsMarkup = categoryEntry.iconNames
         .map((iconName) => {
-          const readableName = escapeHtmlText(splitIconNameWords(iconName));
+          const readableName = escapeHtmlText(resolveIconDisplayLabel(iconName));
           const selectedClass = iconName === selectedIconName ? ' gjs-db-icon-cell-active' : '';
           return [
             `<button type="button" class="gjs-db-icon-cell${selectedClass}"`,
             ` data-db-icon-choice="${escapeHtmlText(iconName)}" title="${readableName}">`,
-            getIconMarkup(iconName, { size: 22 }),
+            buildIconMarkupForName(iconName, { size: 22 }),
             `<span class="gjs-db-icon-cell-name">${readableName}</span>`,
             '</button>',
           ].join('');

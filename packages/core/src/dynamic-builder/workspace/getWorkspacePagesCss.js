@@ -32,15 +32,16 @@ const getWorkspacePagesCss = () => `
 }
 .gjs-db-page-row[aria-current='true'] {
   color: var(--gjs-db-fg);
-  background-color: var(--gjs-db-accent-soft);
-  font-weight: var(--gjs-db-w-medium);
+  background-color: var(--gjs-db-active);
+  box-shadow: var(--gjs-db-press-1);
+  font-weight: var(--gjs-db-w-bold);
 }
 .gjs-db-page-row svg {
   flex: 0 0 auto;
   color: var(--gjs-db-faint);
 }
 .gjs-db-page-row[aria-current='true'] svg {
-  color: var(--gjs-db-accent);
+  color: var(--gjs-db-fg);
 }
 .gjs-db-page-name {
   flex: 1 1 auto;
@@ -62,6 +63,7 @@ const getWorkspacePagesCss = () => `
   padding: 1px 6px;
   border-radius: var(--gjs-db-r-pill);
   background-color: var(--gjs-db-sunken);
+  box-shadow: var(--gjs-db-press-1);
   color: var(--gjs-db-faint);
   font-size: var(--gjs-db-fs-1);
 }

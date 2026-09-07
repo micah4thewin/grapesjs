@@ -15,8 +15,10 @@ const getWorkspaceInspectorBodyCss = () => `
 .gjs-db-inspector-empty {
   margin: var(--gjs-db-gap-5) var(--gjs-db-gap-4);
   padding: var(--gjs-db-gap-4);
-  border: 1px dashed var(--gjs-db-line);
-  border-radius: var(--gjs-db-r-2);
+  border: none;
+  border-radius: var(--gjs-db-r-3);
+  background-color: var(--gjs-db-sunken);
+  box-shadow: var(--gjs-db-press-1);
   color: var(--gjs-db-faint);
   font-size: var(--gjs-db-fs-2);
   line-height: var(--gjs-db-lh);

@@ -1,8 +1,8 @@
 const buildMenuPrimitivesCss = () => `
 .gjs-db-menu {
   padding: 6px;
-  border: 1px solid var(--gjs-db-line);
-  border-radius: var(--gjs-db-r-3);
+  border: none;
+  border-radius: var(--gjs-db-r-4);
   background-color: var(--gjs-db-panel);
   box-shadow: var(--gjs-db-lift-3);
 }
@@ -34,11 +34,12 @@ const buildMenuPrimitivesCss = () => `
   outline-offset: -2px;
 }
 .gjs-db-menu-item[aria-current='true'] {
-  background-color: var(--gjs-db-accent-soft);
-  font-weight: var(--gjs-db-w-medium);
+  background-color: var(--gjs-db-active);
+  box-shadow: var(--gjs-db-press-1);
+  font-weight: var(--gjs-db-w-bold);
 }
 .gjs-db-menu-item[aria-current='true'] svg {
-  color: var(--gjs-db-accent);
+  color: var(--gjs-db-fg);
 }
 .gjs-db-menu-icon-button {
   display: inline-flex;

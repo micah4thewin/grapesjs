@@ -14,8 +14,10 @@ const getWorkspaceInspectorCss = () => `
 }
 .gjs-db-inspector-title {
   margin: 0;
+  font-family: var(--gjs-db-font-display);
   font-size: var(--gjs-db-fs-4);
   font-weight: var(--gjs-db-w-bold);
+  letter-spacing: -0.01em;
   line-height: var(--gjs-db-lh-tight);
   color: var(--gjs-db-fg);
   overflow-wrap: anywhere;
@@ -69,7 +71,7 @@ const getWorkspaceInspectorCss = () => `
 .gjs-db-ws-inspector .gjs-sm-sector-title,
 .gjs-db-ws-inspector .gjs-trait-category .gjs-title {
   font-size: var(--gjs-db-fs-2);
-  font-weight: var(--gjs-db-w-medium);
+  font-weight: var(--gjs-db-w-bold);
   color: var(--gjs-db-muted);
 }
 .gjs-db-ws-inspector .gjs-trait-category.gjs-open .gjs-title,

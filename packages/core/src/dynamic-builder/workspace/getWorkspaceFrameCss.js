@@ -41,14 +41,17 @@ const getWorkspaceFrameCss = () => `
   display: flex;
   flex-direction: column;
   min-height: 0;
+  border: none;
+  border-radius: var(--gjs-db-r-3);
   background-color: var(--gjs-db-panel);
+  box-shadow: var(--gjs-db-lift-1);
   overflow: hidden;
 }
 .gjs-db-ws-dock {
-  border-right: 1px solid var(--gjs-db-line);
+  margin: var(--gjs-db-gap-2) 0;
 }
 .gjs-db-ws-inspector {
-  border-left: 1px solid var(--gjs-db-line);
+  margin: var(--gjs-db-gap-2) var(--gjs-db-gap-2) var(--gjs-db-gap-2) 0;
 }
 .gjs-db-ws-mounted .gjs-pn-panels,
 .gjs-db-ws-mounted .gjs-db-device-readout,

@@ -37,7 +37,7 @@ const buildPrimitiveListsReportsCss = () => `
   flex-direction: column;
   gap: var(--gjs-db-gap-2);
   padding: var(--gjs-db-gap-3);
-  border-radius: var(--gjs-db-r-3);
+  border-radius: var(--gjs-db-r-4);
   background-color: var(--gjs-db-sunken);
   box-shadow: var(--gjs-db-press-1);
 }
@@ -52,7 +52,7 @@ const buildPrimitiveListsReportsCss = () => `
   color: var(--gjs-db-muted);
   font-family: var(--gjs-db-font-ui);
   font-size: var(--gjs-db-fs-1);
-  font-weight: var(--gjs-db-w-medium);
+  font-weight: var(--gjs-db-w-bold);
   letter-spacing: 0;
   white-space: nowrap;
 }

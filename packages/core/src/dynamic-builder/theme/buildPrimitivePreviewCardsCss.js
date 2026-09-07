@@ -4,7 +4,7 @@ const buildPrimitivePreviewCardsCss = () => `
   flex-direction: column;
   gap: var(--gjs-db-gap-1);
   padding: var(--gjs-db-gap-3);
-  border-radius: var(--gjs-db-r-3);
+  border-radius: var(--gjs-db-r-4);
   background-color: var(--gjs-db-sunken);
   box-shadow: var(--gjs-db-press-1);
   font-family: var(--gjs-db-font-ui);

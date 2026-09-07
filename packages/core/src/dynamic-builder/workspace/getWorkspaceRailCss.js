@@ -5,8 +5,8 @@ const getWorkspaceRailCss = () => `
   align-items: center;
   gap: var(--gjs-db-gap-1);
   padding: var(--gjs-db-gap-2) 0;
-  background-color: var(--gjs-db-bg);
-  border-right: 1px solid var(--gjs-db-line);
+  background-color: transparent;
+  border: none;
   overflow: visible;
 }
 .gjs-db-rail-button {
@@ -20,22 +20,33 @@ const getWorkspaceRailCss = () => `
   min-width: var(--gjs-db-tap);
   padding: 0;
   border: none;
-  border-radius: var(--gjs-db-r-2);
+  border-radius: var(--gjs-db-r-3);
   background-color: transparent;
+  box-shadow: none;
   color: var(--gjs-db-faint);
   cursor: pointer;
   transition:
-    color var(--gjs-db-dur-1) var(--gjs-db-ease-soft),
-    background-color var(--gjs-db-dur-1) var(--gjs-db-ease-soft);
+    color var(--gjs-db-dur-2) var(--gjs-db-ease-soft),
+    background-color var(--gjs-db-dur-2) var(--gjs-db-ease-soft),
+    box-shadow var(--gjs-db-dur-2) var(--gjs-db-ease),
+    transform var(--gjs-db-dur-2) var(--gjs-db-ease);
 }
 .gjs-db-rail-button:hover {
   color: var(--gjs-db-fg);
   background-color: var(--gjs-db-hover);
+  box-shadow: var(--gjs-db-lift-1);
+  transform: translateY(-1px);
+}
+.gjs-db-rail-button:active {
+  box-shadow: var(--gjs-db-press-1);
+  transform: translateY(0);
 }
 .gjs-db-rail-button[aria-pressed='true'],
 .gjs-db-rail-button[aria-selected='true'] {
-  color: var(--gjs-db-accent);
-  background-color: var(--gjs-db-accent-soft);
+  color: var(--gjs-db-fg);
+  background-color: var(--gjs-db-active);
+  box-shadow: var(--gjs-db-press-1);
+  transform: none;
 }
 .gjs-db-rail-tip {
   position: absolute;
@@ -43,11 +54,12 @@ const getWorkspaceRailCss = () => `
   top: 50%;
   transform: translateY(-50%) translateX(-4px);
   padding: 4px 8px;
-  border-radius: var(--gjs-db-r-1);
-  background-color: var(--gjs-db-fg);
-  color: var(--gjs-db-bg);
+  border-radius: var(--gjs-db-r-2);
+  background-color: var(--gjs-db-solid);
+  box-shadow: var(--gjs-db-lift-2);
+  color: var(--gjs-db-text-on-solid);
   font-size: var(--gjs-db-fs-2);
-  font-weight: var(--gjs-db-w-medium);
+  font-weight: var(--gjs-db-w-bold);
   line-height: 1.2;
   white-space: nowrap;
   opacity: 0;

@@ -26,10 +26,10 @@ const buildCanvasChromeCss = () => `
 }
 .gjs-badge,
 .gjs-com-badge {
-  background-color: var(--gjs-db-accent);
-  color: var(--gjs-db-accent-fg);
+  background-color: var(--gjs-db-solid);
+  color: var(--gjs-db-text-on-solid);
   border-radius: var(--gjs-db-r-1);
-  box-shadow: none;
+  box-shadow: var(--gjs-db-lift-1);
   font-family: var(--gjs-db-font-ui);
   font-size: var(--gjs-db-fs-1);
   font-weight: var(--gjs-db-w-medium);
@@ -48,9 +48,9 @@ const buildCanvasChromeCss = () => `
   padding: 2px;
   background-color: var(--gjs-db-panel);
   color: var(--gjs-db-fg);
-  border: 1px solid var(--gjs-db-line);
-  border-radius: var(--gjs-db-r-2);
-  box-shadow: var(--gjs-db-float);
+  border: none;
+  border-radius: var(--gjs-db-r-3);
+  box-shadow: var(--gjs-db-lift-2);
   overflow: hidden;
 }
 .gjs-toolbar-item {
@@ -68,8 +68,9 @@ const buildCanvasChromeCss = () => `
 }
 .gjs-toolbar-item:hover {
   opacity: 1;
-  color: var(--gjs-db-accent);
-  background-color: var(--gjs-db-accent-soft);
+  color: var(--gjs-db-fg);
+  background-color: var(--gjs-db-active);
+  box-shadow: var(--gjs-db-press-1);
 }
 ${buildCanvasOverlayCss()}
 `;

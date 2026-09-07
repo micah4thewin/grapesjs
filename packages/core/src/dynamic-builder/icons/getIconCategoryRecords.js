@@ -9,6 +9,7 @@ import getEducationIconPaths from '../support/getEducationIconPaths.js';
 import getFoodIconPaths from '../support/getFoodIconPaths.js';
 import getHealthIconPaths from '../support/getHealthIconPaths.js';
 import getHiddenPickerIconNames from './getHiddenPickerIconNames.js';
+import listCustomIconNames from '../customAssets/listCustomIconNames.js';
 import getInteractionIconPaths from '../support/getInteractionIconPaths.js';
 import getInterfaceIconPaths from '../support/getInterfaceIconPaths.js';
 import getMediaLibraryIconPaths from '../support/getMediaLibraryIconPaths.js';
@@ -49,7 +50,15 @@ const readPickerIconNames = (readIconPaths) => {
     .sort((firstName, secondName) => firstName.localeCompare(secondName));
 };
 
+const buildCustomCategoryRecords = () => {
+  const customIconNames = listCustomIconNames();
+  return customIconNames.length
+    ? [{ categoryId: 'custom', categoryLabel: 'My icons', iconNames: customIconNames }]
+    : [];
+};
+
 const getIconCategoryRecords = () => [
+  ...buildCustomCategoryRecords(),
   { categoryId: 'popular', categoryLabel: 'Popular', iconNames: getPopularIconNames() },
   ...categorySourceRecords.map(([categoryId, categoryLabel, readIconPaths]) => ({
     categoryId,

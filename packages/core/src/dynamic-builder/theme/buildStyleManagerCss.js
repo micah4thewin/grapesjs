@@ -85,9 +85,10 @@ const buildStyleManagerCss = () => `
   color: var(--gjs-db-muted);
 }
 .gjs-sm-layer.gjs-sm-active {
-  background-color: var(--gjs-db-accent-soft);
-  box-shadow: none;
+  background-color: var(--gjs-db-active);
+  box-shadow: var(--gjs-db-press-1);
   color: var(--gjs-db-fg);
+  font-weight: var(--gjs-db-w-bold);
 }
 .gjs-sm-layer-preview-cnt {
   border-radius: var(--gjs-db-r-1);

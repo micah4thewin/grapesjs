@@ -10,6 +10,7 @@ const buildModalDialogCss = () => `
   border: none;
   border-radius: var(--gjs-db-r-4);
   box-shadow: var(--gjs-db-lift-4);
+  font-family: var(--gjs-db-font-ui);
   color: var(--gjs-db-fg);
   overflow: hidden;
 }
@@ -20,8 +21,10 @@ const buildModalDialogCss = () => `
 }
 .gjs-mdl-title {
   color: var(--gjs-db-fg);
-  font-size: 0.92rem;
+  font-family: var(--gjs-db-font-display);
+  font-size: 1rem;
   font-weight: var(--gjs-db-w-bold);
+  letter-spacing: -0.01em;
 }
 .gjs-mdl-btn-close {
   display: inline-flex;
@@ -40,6 +43,8 @@ const buildModalDialogCss = () => `
 }
 .gjs-mdl-btn-close:hover {
   color: var(--gjs-db-fg);
+  background-color: var(--gjs-db-hover);
+  box-shadow: var(--gjs-db-lift-1);
 }
 .gjs-mdl-content {
   background-color: transparent;

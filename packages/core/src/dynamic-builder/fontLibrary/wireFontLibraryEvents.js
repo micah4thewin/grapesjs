@@ -42,6 +42,11 @@ const wireFontLibraryEvents = (editor, designTokenOptions, modalElement, initial
       renderLists();
       return;
     }
+    if (target.closest('[data-db-font-upload]')) {
+      editor.Modal.close();
+      if (editor.Commands.has('db:open-custom-assets')) editor.runCommand('db:open-custom-assets', { tabId: 'fonts' });
+      return;
+    }
     if (target.closest('[data-db-font-reset]')) {
       viewState.choices = { display: '', body: '' };
       renderLists();

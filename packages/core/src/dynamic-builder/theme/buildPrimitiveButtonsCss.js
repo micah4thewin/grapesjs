@@ -6,10 +6,10 @@ const buildPrimitiveButtonsCss = () => `
   gap: var(--gjs-db-gap-2);
   min-height: var(--gjs-db-tap);
   padding: 0.45em 1em;
-  border: 1px solid var(--gjs-db-line);
-  border-radius: var(--gjs-db-r-1);
+  border: none;
+  border-radius: var(--gjs-db-r-2);
   background-color: var(--gjs-db-panel);
-  box-shadow: none;
+  box-shadow: var(--gjs-db-lift-1);
   color: var(--gjs-db-fg);
   font-family: var(--gjs-db-font-ui);
   font-size: var(--gjs-db-fs-3);
@@ -32,12 +32,13 @@ const buildPrimitiveButtonsCss = () => `
 }
 .gjs-db-button:hover:not(:disabled) {
   background-color: var(--gjs-db-hover);
-  border-color: var(--gjs-db-faint);
-  box-shadow: none;
+  box-shadow: var(--gjs-db-lift-2);
+  transform: translateY(-1px);
 }
 .gjs-db-button:active:not(:disabled) {
   background-color: var(--gjs-db-active);
-  box-shadow: none;
+  box-shadow: var(--gjs-db-press-1);
+  transform: translateY(0);
   transition-duration: var(--gjs-db-dur-1);
 }
 .gjs-db-button:disabled {
@@ -48,20 +49,21 @@ const buildPrimitiveButtonsCss = () => `
   transform: none;
 }
 .gjs-db-button-primary {
-  background-color: var(--gjs-db-accent);
-  border-color: var(--gjs-db-accent);
-  color: var(--gjs-db-accent-fg);
-  font-weight: var(--gjs-db-w-medium);
+  background-color: var(--gjs-db-solid);
+  color: var(--gjs-db-text-on-solid);
+  font-weight: var(--gjs-db-w-bold);
 }
 .gjs-db-button-primary:hover:not(:disabled) {
-  background-color: var(--gjs-db-accent);
-  border-color: var(--gjs-db-accent);
-  color: var(--gjs-db-accent-fg);
-  opacity: 0.9;
+  background-color: var(--gjs-db-solid);
+  color: var(--gjs-db-text-on-solid);
+  box-shadow: var(--gjs-db-lift-2);
+  opacity: 0.88;
 }
 .gjs-db-button-primary:active:not(:disabled) {
-  background-color: var(--gjs-db-accent);
-  color: var(--gjs-db-accent-fg);
+  background-color: var(--gjs-db-solid);
+  color: var(--gjs-db-text-on-solid);
+  box-shadow: var(--gjs-db-press-1);
+  opacity: 1;
 }
 .gjs-db-button-danger {
   color: var(--gjs-db-error);

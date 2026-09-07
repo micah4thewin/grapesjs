@@ -39,6 +39,7 @@ const buildSelectorManagerCss = () => `
   box-shadow: var(--gjs-db-lift-1);
   border: none;
   border-radius: var(--gjs-db-r-2);
+  min-height: var(--gjs-db-tap);
   color: var(--gjs-db-muted);
   cursor: pointer;
   transition:

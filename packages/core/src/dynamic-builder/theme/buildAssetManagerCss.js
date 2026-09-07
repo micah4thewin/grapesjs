@@ -8,7 +8,7 @@ const buildAssetManagerCss = () => `
 }
 .gjs-am-asset {
   border: none;
-  border-radius: var(--gjs-db-r-3);
+  border-radius: var(--gjs-db-r-4);
   background-color: var(--gjs-db-panel);
   box-shadow: var(--gjs-db-lift-1);
   margin-bottom: var(--gjs-db-gap-2);
@@ -26,6 +26,10 @@ const buildAssetManagerCss = () => `
   background-color: var(--gjs-db-active);
   box-shadow: var(--gjs-db-press-1);
   transform: none;
+}
+.gjs-am-asset:focus-visible {
+  outline: 2px solid var(--gjs-db-ring);
+  outline-offset: 2px;
 }
 .gjs-am-preview-cont {
   border-radius: var(--gjs-db-r-2);

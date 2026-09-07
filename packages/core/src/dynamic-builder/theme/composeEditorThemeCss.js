@@ -1,5 +1,6 @@
 import buildThemePaletteCss from './buildThemePaletteCss.js';
 import buildThemeScaleTokensCss from './buildThemeScaleTokensCss.js';
+import buildThemeAliasTokensCss from './buildThemeAliasTokensCss.js';
 import buildGrapesVariableBridgeCss from './buildGrapesVariableBridgeCss.js';
 import buildPanelsTopBarCss from './buildPanelsTopBarCss.js';
 import buildButtonsToolbarsCss from './buildButtonsToolbarsCss.js';
@@ -32,6 +33,7 @@ const composeEditorThemeCss = () =>
   [
     buildThemePaletteCss,
     buildThemeScaleTokensCss,
+    buildThemeAliasTokensCss,
     buildGrapesVariableBridgeCss,
     buildPanelsTopBarCss,
     buildButtonsToolbarsCss,

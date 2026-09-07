@@ -26,8 +26,9 @@ const getWorkspaceResponsiveCss = () => `
   left: var(--gjs-db-rail-w);
   width: 288px;
   max-width: calc(100% - var(--gjs-db-rail-w));
+  margin: var(--gjs-db-gap-2) 0;
   visibility: visible;
-  box-shadow: var(--gjs-db-float);
+  box-shadow: var(--gjs-db-lift-3);
 }
 .gjs-db-ws[data-db-size='sm'][data-db-dock-open='0'] .gjs-db-ws-dock {
   display: none;

@@ -10,8 +10,9 @@ const getWorkspacePhoneCss = () => `
   justify-content: space-around;
   gap: 0;
   padding: var(--gjs-db-gap-1) var(--gjs-db-gap-2);
-  border-right: none;
-  border-top: 1px solid var(--gjs-db-line);
+  border: none;
+  background-color: var(--gjs-db-panel);
+  box-shadow: var(--gjs-db-seam);
   overflow-x: auto;
   z-index: 40;
 }
@@ -30,11 +31,11 @@ const getWorkspacePhoneCss = () => `
   width: auto;
   max-width: none;
   height: 58%;
+  margin: 0;
   visibility: visible;
   border: none;
-  border-top: 1px solid var(--gjs-db-line);
   border-radius: var(--gjs-db-r-4) var(--gjs-db-r-4) 0 0;
-  box-shadow: var(--gjs-db-float);
+  box-shadow: var(--gjs-db-lift-4);
   animation: gjs-db-sheet-up var(--gjs-db-dur-3) var(--gjs-db-ease);
 }
 @keyframes gjs-db-sheet-up {

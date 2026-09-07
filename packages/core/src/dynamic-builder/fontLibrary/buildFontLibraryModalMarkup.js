@@ -30,6 +30,7 @@ const buildFontLibraryModalMarkup = (currentChoices) => {
     pane('body', 'Body text'),
     '</div>',
     '<div class="gjs-db-button-row">',
+    '<button type="button" class="gjs-db-button" data-db-font-upload>Add a font of my own</button>',
     '<button type="button" class="gjs-db-button" data-db-font-reset>Back to site defaults</button>',
     '<button type="button" class="gjs-db-button gjs-db-button-primary" data-db-font-apply>Apply fonts</button>',
     '</div>',

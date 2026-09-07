@@ -1,0 +1,32 @@
+const buildCustomIconFormMarkup = () =>
+  [
+    '<form class="gjs-db-form" data-db-custom-icon-form>',
+    '<div class="gjs-db-grid-two">',
+    '<div class="gjs-db-field">',
+    '<label class="gjs-db-field-label" for="db-custom-icon-name">Icon name</label>',
+    '<input id="db-custom-icon-name" class="gjs-db-field-input" data-db-custom-icon-name',
+    ' placeholder="Brand mark" autocomplete="off">',
+    '<span class="gjs-db-field-help">Shown under the icon in the picker.</span>',
+    '</div>',
+    '<div class="gjs-db-field">',
+    '<label class="gjs-db-field-label" for="db-custom-icon-file">Icon file</label>',
+    '<input id="db-custom-icon-file" type="file" class="gjs-db-field-input" data-db-custom-icon-file',
+    ' accept=".svg,image/svg+xml">',
+    '<span class="gjs-db-field-help">SVG files only.</span>',
+    '</div>',
+    '</div>',
+    '<div class="gjs-db-field">',
+    '<label class="gjs-db-field-label" for="db-custom-icon-keywords">Words to search by</label>',
+    '<input id="db-custom-icon-keywords" class="gjs-db-field-input" data-db-custom-icon-keywords',
+    ' placeholder="logo mark badge" autocomplete="off">',
+    '</div>',
+    '<p class="gjs-db-field-help gjs-db-custom-warning">',
+    'An SVG that carries code, click handlers or outside links is refused, so your visitors stay safe.',
+    '</p>',
+    '<div class="gjs-db-button-row">',
+    '<button type="submit" class="gjs-db-button gjs-db-button-primary" data-db-custom-icon-add>Add icon</button>',
+    '</div>',
+    '</form>',
+  ].join('');
+
+export default buildCustomIconFormMarkup;

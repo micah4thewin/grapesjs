@@ -19,7 +19,7 @@ const buildPrimitiveModalFormCss = () => `
 }
 .gjs-db-field-label {
   font-size: var(--gjs-db-fs-2);
-  font-weight: var(--gjs-db-w-medium);
+  font-weight: var(--gjs-db-w-bold);
   color: var(--gjs-db-muted);
   letter-spacing: 0;
 }
@@ -29,10 +29,10 @@ const buildPrimitiveModalFormCss = () => `
   max-width: 100%;
   min-height: var(--gjs-db-tap);
   padding: 0.5em 0.75em;
-  border: 1px solid var(--gjs-db-line);
-  border-radius: var(--gjs-db-r-1);
+  border: none;
+  border-radius: var(--gjs-db-r-2);
   background-color: var(--gjs-db-sunken);
-  box-shadow: none;
+  box-shadow: var(--gjs-db-press-1);
   color: var(--gjs-db-fg);
   font-family: var(--gjs-db-font-ui);
   font-size: 0.83rem;
@@ -44,8 +44,9 @@ const buildPrimitiveModalFormCss = () => `
 .gjs-db-field-input:focus,
 .gjs-db-field-input:focus-visible {
   outline: none;
-  border-color: var(--gjs-db-accent);
-  box-shadow: 0 0 0 3px var(--gjs-db-accent-soft);
+  box-shadow:
+    var(--gjs-db-press-1),
+    0 0 0 2px var(--gjs-db-ring);
 }
 textarea.gjs-db-field-input {
   font-family: var(--gjs-db-font-ui);

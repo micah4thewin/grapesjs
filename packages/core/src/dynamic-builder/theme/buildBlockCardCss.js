@@ -29,10 +29,10 @@ const buildBlockCardCss = () => `
   margin: 0;
   padding: 0;
   overflow: hidden;
-  border: 1px solid var(--gjs-db-line);
-  border-radius: var(--gjs-db-r-2);
+  border: none;
+  border-radius: var(--gjs-db-r-3);
   background-color: var(--gjs-db-panel);
-  box-shadow: none;
+  box-shadow: var(--gjs-db-lift-1);
   color: var(--gjs-db-muted);
   font-family: var(--gjs-db-font-ui);
   cursor: grab;
@@ -45,7 +45,7 @@ const buildBlockCardCss = () => `
 .gjs-block:hover {
   box-shadow: var(--gjs-db-lift-2);
   transform: translateY(-1px);
-  border-color: var(--gjs-db-accent-line);
+  background-color: var(--gjs-db-hover);
   color: var(--gjs-db-fg);
 }
 .gjs-block:active {
@@ -100,7 +100,7 @@ const buildBlockCardCss = () => `
   min-height: 2.6em;
 }
 .gjs-block:hover .gjs-block__media {
-  background-color: var(--gjs-db-accent-soft);
+  background-color: var(--gjs-db-active);
 }
 `;
 

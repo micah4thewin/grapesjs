@@ -9,7 +9,7 @@ const buildDesignKitCardsCss = () => `
   align-items: center;
   gap: var(--gjs-db-gap-3);
   padding: var(--gjs-db-gap-3);
-  border: 1px solid var(--gjs-db-line);
+  border: none;
   border-radius: var(--gjs-db-r-3);
   background-color: var(--gjs-db-panel);
   box-shadow: var(--gjs-db-lift-1);
@@ -22,13 +22,14 @@ const buildDesignKitCardsCss = () => `
     transform var(--gjs-db-dur-2) var(--gjs-db-ease);
 }
 .gjs-db-kit-card:hover {
-  border-color: var(--gjs-db-accent);
+  background-color: var(--gjs-db-hover);
   box-shadow: var(--gjs-db-lift-2);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 .gjs-db-kit-card[aria-pressed='true'] {
-  border-color: var(--gjs-db-accent);
-  background-color: var(--gjs-db-accent-soft);
+  background-color: var(--gjs-db-active);
+  box-shadow: var(--gjs-db-press-1);
+  transform: none;
 }
 .gjs-db-kit-name .gjs-db-badge {
   margin-left: var(--gjs-db-gap-2);
@@ -69,7 +70,7 @@ const buildDesignKitCardsCss = () => `
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 1px solid var(--gjs-db-line);
+  box-shadow: var(--gjs-db-lift-1);
 }
 @media (max-width: 640px) {
   .gjs-db-kit-grid {

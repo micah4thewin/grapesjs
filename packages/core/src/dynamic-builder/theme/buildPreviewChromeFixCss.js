@@ -53,7 +53,7 @@ const buildPreviewChromeFixCss = () => `
   background-color: var(--gjs-db-fg);
 }
 .gjs-toolbar-item.fa-pencil:hover {
-  background-color: var(--gjs-db-accent);
+  background-color: var(--gjs-db-fg);
 }
 .gjs-toolbar-item.fa-pencil {
   color: transparent;

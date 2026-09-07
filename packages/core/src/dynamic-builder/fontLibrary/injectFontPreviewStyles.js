@@ -3,7 +3,7 @@ import getFontLibraryRecords from './getFontLibraryRecords.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
 
 const injectFontPreviewStyles = (editor) => {
-  const fontRecords = getFontLibraryRecords();
+  const fontRecords = getFontLibraryRecords().filter((fontRecord) => fontRecord.category !== 'custom');
   const chunkSize = 12;
   for (let chunkIndex = 0; chunkIndex * chunkSize < fontRecords.length; chunkIndex += 1) {
     const chunkRecords = fontRecords.slice(chunkIndex * chunkSize, chunkIndex * chunkSize + chunkSize);

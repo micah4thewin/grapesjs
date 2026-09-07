@@ -1,17 +1,18 @@
 const buildInputFieldsCss = () => `
 .gjs-field {
   background-color: var(--gjs-db-sunken);
-  box-shadow: none;
-  border: 1px solid var(--gjs-db-line);
-  border-radius: var(--gjs-db-r-1);
+  box-shadow: var(--gjs-db-press-1);
+  border: none;
+  border-radius: var(--gjs-db-r-2);
   color: var(--gjs-db-fg);
   font-family: var(--gjs-db-font-ui);
   font-size: 0.78rem;
   transition: box-shadow var(--gjs-db-dur-2) var(--gjs-db-ease-soft);
 }
 .gjs-field:focus-within {
-  border-color: var(--gjs-db-accent);
-  box-shadow: 0 0 0 3px var(--gjs-db-accent-soft);
+  box-shadow:
+    var(--gjs-db-press-1),
+    0 0 0 2px var(--gjs-db-ring);
 }
 .gjs-field input,
 .gjs-field select,
@@ -80,10 +81,10 @@ const buildInputFieldsCss = () => `
   background-color: var(--gjs-db-hover);
 }
 .gjs-radio-item input:checked + .gjs-radio-item-label {
-  background-color: var(--gjs-db-page);
-  box-shadow: var(--gjs-db-lift-1);
+  background-color: var(--gjs-db-active);
+  box-shadow: var(--gjs-db-press-1);
   color: var(--gjs-db-fg);
-  font-weight: var(--gjs-db-w-medium);
+  font-weight: var(--gjs-db-w-bold);
 }
 .gjs-radio-item-label {
   color: var(--gjs-db-muted);
@@ -91,11 +92,11 @@ const buildInputFieldsCss = () => `
   border-radius: var(--gjs-db-r-1);
 }
 .gjs-field-checkbox input {
-  accent-color: var(--gjs-db-accent);
+  accent-color: var(--gjs-db-solid);
   cursor: pointer;
 }
 .gjs-field input[type='range'] {
-  accent-color: var(--gjs-db-accent);
+  accent-color: var(--gjs-db-solid);
 }
 `;
 

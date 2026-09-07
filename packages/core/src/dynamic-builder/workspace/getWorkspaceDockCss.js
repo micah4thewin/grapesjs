@@ -11,9 +11,10 @@ const getWorkspaceDockCss = () => `
 .gjs-db-dock-title {
   flex: 1 1 auto;
   margin: 0;
-  font-size: var(--gjs-db-fs-3);
+  font-family: var(--gjs-db-font-display);
+  font-size: var(--gjs-db-fs-4);
   font-weight: var(--gjs-db-w-bold);
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--gjs-db-fg);
 }
 .gjs-db-dock-hint {
@@ -38,20 +39,29 @@ const getWorkspaceDockCss = () => `
   gap: var(--gjs-db-gap-1);
   min-height: var(--gjs-db-tap);
   padding: 0 var(--gjs-db-gap-2);
-  border: 1px solid var(--gjs-db-line);
-  border-radius: var(--gjs-db-r-1);
-  background-color: transparent;
+  border: none;
+  border-radius: var(--gjs-db-r-2);
+  background-color: var(--gjs-db-panel);
+  box-shadow: var(--gjs-db-lift-1);
   color: var(--gjs-db-muted);
   font-family: var(--gjs-db-font-ui);
   font-size: var(--gjs-db-fs-2);
   cursor: pointer;
   transition:
-    color var(--gjs-db-dur-1) var(--gjs-db-ease-soft),
-    background-color var(--gjs-db-dur-1) var(--gjs-db-ease-soft);
+    color var(--gjs-db-dur-2) var(--gjs-db-ease-soft),
+    background-color var(--gjs-db-dur-2) var(--gjs-db-ease-soft),
+    box-shadow var(--gjs-db-dur-2) var(--gjs-db-ease),
+    transform var(--gjs-db-dur-2) var(--gjs-db-ease);
 }
 .gjs-db-dock-action:hover {
   color: var(--gjs-db-fg);
   background-color: var(--gjs-db-hover);
+  box-shadow: var(--gjs-db-lift-2);
+  transform: translateY(-1px);
+}
+.gjs-db-dock-action:active {
+  box-shadow: var(--gjs-db-press-1);
+  transform: translateY(0);
 }
 .gjs-db-dock-body {
   flex: 1 1 auto;

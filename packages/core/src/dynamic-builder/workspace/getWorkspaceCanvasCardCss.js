@@ -12,7 +12,7 @@ const getWorkspaceCanvasCardCss = () => `
   width: 100%;
   height: 100%;
   border-radius: var(--gjs-db-r-3);
-  box-shadow: 0 0 0 1px var(--gjs-db-line), var(--gjs-db-float);
+  box-shadow: var(--gjs-db-press-2);
   background-color: var(--gjs-db-canvas-ground);
   overflow: hidden;
 }
@@ -21,7 +21,7 @@ const getWorkspaceCanvasCardCss = () => `
 }
 .gjs-db-ws .gjs-frame-wrapper .gjs-frame {
   background-color: #ffffff;
-  box-shadow: none;
+  box-shadow: var(--gjs-db-lift-2);
 }
 `;
 
