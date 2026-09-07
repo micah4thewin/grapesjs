@@ -1,7 +1,13 @@
 const getToolsMenuSections = () => [
   {
     sectionTitle: 'Design',
-    commandIds: ['db:open-site-identity', 'db:open-font-library', 'db:open-token-manager', 'db:open-design-kits'],
+    commandIds: [
+      'db:open-site-identity',
+      'db:open-font-library',
+      'db:open-custom-assets',
+      'db:open-token-manager',
+      'db:open-design-kits',
+    ],
   },
   {
     sectionTitle: 'Content',

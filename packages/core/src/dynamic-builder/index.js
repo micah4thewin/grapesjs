@@ -6,6 +6,7 @@ import applySiteMetaFoundation from './support/applySiteMetaFoundation.js';
 import composeModuleAppliers from './composeModuleAppliers.js';
 import applyContentComponents from './contentComponents/applyContentComponents.js';
 import applyCoverSections from './coverSections/applyCoverSections.js';
+import applyCustomAssets from './customAssets/applyCustomAssets.js';
 import applyCustomCode from './customCode/applyCustomCode.js';
 import applyDataBinding from './dataBinding/applyDataBinding.js';
 import applyDesignTokens from './designTokens/applyDesignTokens.js';
@@ -73,6 +74,7 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
     applySiteManager,
     applySiteIdentity,
     applyFontLibrary,
+    applyCustomAssets,
     applyPhotoEditor,
     applyStockPhotos,
     applyEditorShell,

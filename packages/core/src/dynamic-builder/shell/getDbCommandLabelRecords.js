@@ -11,6 +11,11 @@ const getDbCommandLabelRecords = () => ({
   },
   'db:open-font-library': { label: 'Fonts', iconName: 'typography', keywords: 'font family typeface heading body' },
   'db:open-photo-editor': { label: 'Photo editor', iconName: 'sliders', keywords: 'image crop resize optimise filter' },
+  'db:open-custom-assets': {
+    label: 'My fonts and icons',
+    iconName: 'upload',
+    keywords: 'upload font icon svg woff2 brand custom own',
+  },
   'db:open-stock-photos': {
     label: 'Free photos',
     iconName: 'image',
