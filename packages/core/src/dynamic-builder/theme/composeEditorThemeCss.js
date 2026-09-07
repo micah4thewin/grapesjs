@@ -26,6 +26,7 @@ import buildToastCss from './buildToastCss.js';
 import buildPreviewChromeFixCss from './buildPreviewChromeFixCss.js';
 import buildModalFieldRefinementsCss from './buildModalFieldRefinementsCss.js';
 import buildDesignKitCardsCss from './buildDesignKitCardsCss.js';
+import buildSentenceCaseLabelCss from './buildSentenceCaseLabelCss.js';
 
 const composeEditorThemeCss = () =>
   [
@@ -57,6 +58,7 @@ const composeEditorThemeCss = () =>
     buildPreviewChromeFixCss,
     buildModalFieldRefinementsCss,
     buildDesignKitCardsCss,
+    buildSentenceCaseLabelCss,
   ]
     .map((buildSectionCss) => buildSectionCss().trim())
     .join('\n');

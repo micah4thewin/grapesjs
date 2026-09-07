@@ -67,9 +67,8 @@ const buildModalDialogCss = () => `
   background-color: transparent;
   color: var(--gjs-db-faint);
   font-family: var(--gjs-db-font-ui);
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  font-size: var(--gjs-db-fs-2);
+  letter-spacing: 0;
   padding: var(--gjs-db-gap-2) 0;
 }
 `;

@@ -21,6 +21,7 @@ const resolveSiteManagerOptions = (pluginOptions) => {
       : createLocalStorageSiteAdapter(),
     user: resolveOwnerRecord(moduleOptions.user),
     openOnStart: moduleOptions.openOnStart !== false,
+    enabled: moduleOptions.enabled !== false,
   };
 };
 

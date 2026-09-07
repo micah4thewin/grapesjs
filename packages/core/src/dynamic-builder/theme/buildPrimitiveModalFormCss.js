@@ -18,21 +18,21 @@ const buildPrimitiveModalFormCss = () => `
   gap: var(--gjs-db-gap-1);
 }
 .gjs-db-field-label {
-  font-size: 0.7rem;
-  font-weight: var(--gjs-db-w-bold);
+  font-size: var(--gjs-db-fs-2);
+  font-weight: var(--gjs-db-w-medium);
   color: var(--gjs-db-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0;
 }
 .gjs-db-field-input {
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  padding: 0.55em 0.85em;
-  border: none;
-  border-radius: var(--gjs-db-r-2);
+  min-height: var(--gjs-db-tap);
+  padding: 0.5em 0.75em;
+  border: 1px solid var(--gjs-db-line);
+  border-radius: var(--gjs-db-r-1);
   background-color: var(--gjs-db-sunken);
-  box-shadow: var(--gjs-db-press-1);
+  box-shadow: none;
   color: var(--gjs-db-fg);
   font-family: var(--gjs-db-font-ui);
   font-size: 0.83rem;
@@ -44,9 +44,11 @@ const buildPrimitiveModalFormCss = () => `
 .gjs-db-field-input:focus,
 .gjs-db-field-input:focus-visible {
   outline: none;
-  box-shadow: var(--gjs-db-press-1), 0 0 0 2px var(--gjs-db-focus);
+  border-color: var(--gjs-db-accent);
+  box-shadow: 0 0 0 3px var(--gjs-db-accent-soft);
 }
 textarea.gjs-db-field-input {
+  font-family: var(--gjs-db-font-ui);
   resize: vertical;
   min-height: 4.5rem;
   line-height: 1.6;

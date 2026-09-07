@@ -81,6 +81,7 @@ const getWorkspaceDockCss = () => `
   }
 }
 .gjs-db-ws-dock .gjs-db-block-search {
+  box-sizing: border-box;
   margin: 0;
   width: 100%;
 }

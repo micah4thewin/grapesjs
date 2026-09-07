@@ -41,12 +41,11 @@ const buildTraitManagerCss = () => `
 }
 .gjs-trait-category .gjs-title {
   background-color: transparent;
-  border-bottom: 1px solid var(--gjs-db-line);
-  color: var(--gjs-db-faint);
-  font-size: 0.68rem;
+  border-bottom: 1px solid var(--gjs-db-line-soft);
+  color: var(--gjs-db-fg);
+  font-size: var(--gjs-db-fs-3);
   font-weight: var(--gjs-db-w-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0;
   padding: var(--gjs-db-gap-3) var(--gjs-db-gap-2);
   transition:
     color var(--gjs-db-dur-1) var(--gjs-db-ease-soft),

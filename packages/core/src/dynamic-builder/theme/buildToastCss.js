@@ -1,3 +1,5 @@
+import buildToastResponsiveCss from './buildToastResponsiveCss.js';
+
 const buildToastCss = () => `
 .gjs-db-toast-host {
   position: absolute;
@@ -97,6 +99,7 @@ const buildToastCss = () => `
     transform: none;
   }
 }
+${buildToastResponsiveCss()}
 `;
 
 export default buildToastCss;

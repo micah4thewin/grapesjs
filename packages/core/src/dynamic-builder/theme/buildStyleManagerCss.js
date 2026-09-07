@@ -1,17 +1,16 @@
 const buildStyleManagerCss = () => `
 .gjs-sm-sector {
   border: none;
-  border-bottom: 1px solid var(--gjs-db-line);
+  border-bottom: 1px solid var(--gjs-db-line-soft);
   font-family: var(--gjs-db-font-ui);
 }
 .gjs-sm-sector-title {
   background-color: transparent;
   border: none;
-  color: var(--gjs-db-faint);
-  font-size: 0.68rem;
+  color: var(--gjs-db-fg);
+  font-size: var(--gjs-db-fs-3);
   font-weight: var(--gjs-db-w-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0;
   padding: var(--gjs-db-gap-3) var(--gjs-db-gap-2);
   transition:
     color var(--gjs-db-dur-1) var(--gjs-db-ease-soft),

@@ -14,6 +14,7 @@ const applySiteManager = (editor, pluginOptions) => {
   if (editorModel && editorModel.get('dbSiteManagerReady')) return;
   if (editorModel) editorModel.set('dbSiteManagerReady', true);
   const managerOptions = resolveSiteManagerOptions(pluginOptions);
+  if (!managerOptions.enabled) return;
   registerCommandSet(editor, {
     'db:open-site-manager': (commandEditor) => openSiteManagerModal(commandEditor, managerOptions),
     'db:create-site': (commandEditor, commandSender, commandOptions) =>

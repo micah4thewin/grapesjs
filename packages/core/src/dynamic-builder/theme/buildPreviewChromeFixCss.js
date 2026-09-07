@@ -11,13 +11,16 @@ const pencilDataUri =
 
 const buildPreviewChromeFixCss = () => `
 .gjs-off-prv {
+  position: absolute;
+  z-index: 12;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2.75rem;
   height: 2.75rem;
-  top: 3rem;
-  left: 0.5rem;
+  top: auto;
+  bottom: 1.25rem;
+  left: 1.25rem;
   border-radius: var(--gjs-db-r-pill);
   background-color: var(--gjs-db-panel);
   box-shadow: var(--gjs-db-lift-2);
@@ -46,9 +49,12 @@ const buildPreviewChromeFixCss = () => `
 .gjs-off-prv:hover::before {
   background-color: var(--gjs-db-fg);
 }
+.gjs-toolbar-item.fa-pencil:hover {
+  background-color: var(--gjs-db-accent);
+}
 .gjs-toolbar-item.fa-pencil {
   color: transparent;
-  background-color: var(--gjs-db-accent-fg);
+  background-color: var(--gjs-db-muted);
   -webkit-mask-image: ${pencilDataUri};
   mask-image: ${pencilDataUri};
   -webkit-mask-repeat: no-repeat;

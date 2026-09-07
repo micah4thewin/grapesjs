@@ -1,19 +1,17 @@
 const buildInputFieldsCss = () => `
 .gjs-field {
   background-color: var(--gjs-db-sunken);
-  box-shadow: var(--gjs-db-press-1);
-  border: none;
-  border-radius: var(--gjs-db-r-2);
+  box-shadow: none;
+  border: 1px solid var(--gjs-db-line);
+  border-radius: var(--gjs-db-r-1);
   color: var(--gjs-db-fg);
   font-family: var(--gjs-db-font-ui);
   font-size: 0.78rem;
   transition: box-shadow var(--gjs-db-dur-2) var(--gjs-db-ease-soft);
 }
 .gjs-field:focus-within {
-  box-shadow:
-    var(--gjs-db-press-1),
-    0 0 0 2px var(--gjs-db-accent),
-    0 0 0 5px var(--gjs-db-accent-soft);
+  border-color: var(--gjs-db-accent);
+  box-shadow: 0 0 0 3px var(--gjs-db-accent-soft);
 }
 .gjs-field input,
 .gjs-field select,

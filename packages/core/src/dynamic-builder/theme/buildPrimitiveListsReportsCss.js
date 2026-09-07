@@ -51,10 +51,9 @@ const buildPrimitiveListsReportsCss = () => `
   box-shadow: var(--gjs-db-lift-1);
   color: var(--gjs-db-muted);
   font-family: var(--gjs-db-font-ui);
-  font-size: 0.66rem;
-  font-weight: var(--gjs-db-w-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
+  font-size: var(--gjs-db-fs-1);
+  font-weight: var(--gjs-db-w-medium);
+  letter-spacing: 0;
   white-space: nowrap;
 }
 .gjs-db-badge-success {

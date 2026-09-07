@@ -1,15 +1,21 @@
 const buildBlockCardCss = () => `
 .gjs-blocks-c {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
   gap: var(--gjs-db-gap-2);
   box-sizing: border-box;
   width: 100%;
-  padding: var(--gjs-db-gap-3) var(--gjs-db-gap-2) var(--gjs-db-gap-4);
+  padding: var(--gjs-db-gap-2) var(--gjs-db-gap-3) var(--gjs-db-gap-4);
 }
 .gjs-block,
 .gjs-block * {
   box-sizing: border-box;
+}
+.gjs-db-block-hint {
+  font-size: var(--gjs-db-fs-1);
+  line-height: 1.35;
+  max-height: 2.75em;
+  color: var(--gjs-db-faint);
 }
 .gjs-block {
   display: flex;
@@ -17,15 +23,16 @@ const buildBlockCardCss = () => `
   align-items: stretch;
   justify-content: flex-start;
   width: auto;
+  height: 100%;
   min-width: 0;
   min-height: 0;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  border: 1px solid transparent;
-  border-radius: var(--gjs-db-r-3);
+  border: 1px solid var(--gjs-db-line);
+  border-radius: var(--gjs-db-r-2);
   background-color: var(--gjs-db-panel);
-  box-shadow: var(--gjs-db-lift-1);
+  box-shadow: none;
   color: var(--gjs-db-muted);
   font-family: var(--gjs-db-font-ui);
   cursor: grab;
@@ -37,8 +44,8 @@ const buildBlockCardCss = () => `
 }
 .gjs-block:hover {
   box-shadow: var(--gjs-db-lift-2);
-  transform: translateY(-2px);
-  border-color: var(--gjs-db-accent-soft);
+  transform: translateY(-1px);
+  border-color: var(--gjs-db-accent-line);
   color: var(--gjs-db-fg);
 }
 .gjs-block:active {
@@ -51,7 +58,7 @@ const buildBlockCardCss = () => `
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 62px;
+  height: 58px;
   margin: 0;
   padding: 6px;
   border-radius: 0;
@@ -79,10 +86,10 @@ const buildBlockCardCss = () => `
   width: 100%;
   padding: var(--gjs-db-gap-2) var(--gjs-db-gap-2) calc(var(--gjs-db-gap-2) + 1px);
   font-family: var(--gjs-db-font-ui);
-  font-size: 0.7rem;
-  font-weight: var(--gjs-db-w-bold);
+  font-size: var(--gjs-db-fs-2);
+  font-weight: var(--gjs-db-w-medium);
   line-height: 1.3;
-  letter-spacing: 0.005em;
+  letter-spacing: 0;
   text-align: center;
   color: var(--gjs-db-fg);
   display: -webkit-box;

@@ -112,7 +112,7 @@ describe('Dynamic builder shell input', () => {
         storageManager: { autoload: false, autosave: false, type: '' },
         plugins: [
           fixJsDom,
-          (editorInstance) => grapesjs.dynamicBuilder(editorInstance, { siteManager: { openOnStart: false } }),
+          (editorInstance) => grapesjs.dynamicBuilder(editorInstance, { siteManager: { enabled: false } }),
         ],
       });
       fixJsDomIframe(editor.getModel().shallow);

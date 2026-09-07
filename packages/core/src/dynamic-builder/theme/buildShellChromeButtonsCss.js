@@ -2,14 +2,13 @@ const buildShellChromeButtonsCss = () => `
 .gjs-db-download-button {
   background-color: var(--gjs-db-accent);
   color: var(--gjs-db-accent-fg);
-  box-shadow: var(--gjs-db-lift-1);
+  box-shadow: none;
   font-weight: var(--gjs-db-w-medium);
 }
 .gjs-db-download-button:hover {
   background-color: var(--gjs-db-accent);
   color: var(--gjs-db-accent-fg);
-  box-shadow: var(--gjs-db-lift-2);
-  transform: translateY(-1px);
+  box-shadow: none;
   opacity: 0.92;
 }
 @media (pointer: coarse) {

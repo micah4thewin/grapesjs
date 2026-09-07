@@ -36,6 +36,7 @@ import applyEditorTheme from './theme/applyEditorTheme.js';
 import applyTraitTypes from './traits/applyTraitTypes.js';
 import attachSharedComponentTraits from './support/attachSharedComponentTraits.js';
 import applyTypographySystem from './typography/applyTypographySystem.js';
+import applyWorkspaceLayout from './workspace/applyWorkspaceLayout.js';
 
 const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
   const mergedOptions = deepMergeRecords(getDefaultPluginOptions(), pluginOptions);
@@ -75,6 +76,7 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
     applyEditorShell,
     applyExperienceUpgrades,
     attachSharedComponentTraits,
+    applyWorkspaceLayout,
   ]);
   applyAllModules(editor, mergedOptions);
 };

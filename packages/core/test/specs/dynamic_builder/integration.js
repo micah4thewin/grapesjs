@@ -16,7 +16,10 @@ describe('Dynamic builder integration', () => {
     editor = grapesjs.init({
       container: '#db-editor',
       storageManager: { autoload: false, autosave: false, type: '' },
-      plugins: [fixJsDom, grapesjs.dynamicBuilder],
+      plugins: [
+        fixJsDom,
+        (editorInstance) => grapesjs.dynamicBuilder(editorInstance, { siteManager: { enabled: false } }),
+      ],
     });
     fixJsDomIframe(editor.getModel().shallow);
   });
