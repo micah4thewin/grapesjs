@@ -86,7 +86,11 @@ const runCountdownBehavior = () => {
       const minuteStamp = Math.floor(remainingMs / 60000);
       if (countdownState.lastSummaryStamp !== minuteStamp) {
         countdownState.lastSummaryStamp = minuteStamp;
-        const summaryParts = [segmentValues.days + ' days', segmentValues.hours + ' hours', segmentValues.minutes + ' minutes'];
+        const summaryParts = [
+          segmentValues.days + ' days',
+          segmentValues.hours + ' hours',
+          segmentValues.minutes + ' minutes',
+        ];
         writeSummary('Time remaining: ' + summaryParts.join(', '));
       }
     };

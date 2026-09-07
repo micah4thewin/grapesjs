@@ -16,13 +16,22 @@ const buildBreadcrumbInteractiveCss = () => `
   display: flex;
   align-items: center;
   gap: var(--db-space-2);
+  min-height: 2.75rem;
   color: var(--db-color-text-muted);
 }
 .db-breadcrumb li + li::before {
-  content: "/";
-  color: var(--db-color-line);
+  content: "\\203A";
+  content: "\\203A" / "";
+  color: var(--db-color-text-muted);
+  font-size: 1.15em;
+  line-height: 1;
 }
 .db-breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 var(--db-space-1);
+  border-radius: var(--db-radius-sm);
   color: var(--db-color-text-muted);
   text-decoration: none;
 }

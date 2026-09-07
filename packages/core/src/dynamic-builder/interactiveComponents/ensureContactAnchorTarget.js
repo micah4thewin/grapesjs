@@ -1,7 +1,8 @@
 import walkComponentTree from '../support/walkComponentTree.js';
 
 const ensureContactAnchorTarget = (editor, sitePage) => {
-  const mainComponent = sitePage && typeof sitePage.getMainComponent === 'function' ? sitePage.getMainComponent() : null;
+  const mainComponent =
+    sitePage && typeof sitePage.getMainComponent === 'function' ? sitePage.getMainComponent() : null;
   if (!mainComponent) return false;
   let hasContactAnchor = false;
   let hasContactCta = false;

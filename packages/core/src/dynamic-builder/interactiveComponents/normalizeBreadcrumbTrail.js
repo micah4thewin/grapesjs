@@ -7,7 +7,8 @@ const normalizeBreadcrumbTrail = (breadcrumbComponent) => {
     const { itemComponent, linkComponent, labelText, isCurrent } = stepRecord;
     if (isCurrent) {
       if (linkComponent) itemComponent.components(escapeHtmlText(labelText));
-      if (itemComponent.getAttributes()['aria-current'] !== 'page') itemComponent.addAttributes({ 'aria-current': 'page' });
+      if (itemComponent.getAttributes()['aria-current'] !== 'page')
+        itemComponent.addAttributes({ 'aria-current': 'page' });
       return;
     }
     if (itemComponent.getAttributes()['aria-current'] !== undefined) itemComponent.removeAttributes(['aria-current']);

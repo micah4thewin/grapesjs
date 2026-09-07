@@ -18,7 +18,8 @@ const validateTokenValue = (groupKey, tokenName, rawValue) => {
   const isLength = lengthPattern.test(value) || cssFunctionPattern.test(value);
   if (sizeMessages[groupKey]) return isLength ? '' : sizeMessages[groupKey];
   if (groupKey === 'color') {
-    const isColor = !!parseColorToRgb(value) || cssFunctionPattern.test(value) || /^(transparent|currentcolor)$/i.test(value);
+    const isColor =
+      !!parseColorToRgb(value) || cssFunctionPattern.test(value) || /^(transparent|currentcolor)$/i.test(value);
     return isColor ? '' : 'Enter a colour like #1f5eff or rgb(31, 94, 255)';
   }
   if (groupKey === 'font') return /[a-z]/i.test(value) ? '' : 'Enter one or more font names separated by commas';

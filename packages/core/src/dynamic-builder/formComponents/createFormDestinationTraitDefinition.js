@@ -60,8 +60,9 @@ const createFormDestinationTraitDefinition = () => ({
     if (!eventTarget || !component) return;
     const selectElement = resolveTraitInnerElement(elInput, '[data-db-destination-recipe]');
     const urlElement = resolveTraitInnerElement(elInput, '[data-db-destination-url]');
-    if (eventTarget === selectElement) applySubmissionRecipe(component, selectElement.value);
-    else if (eventTarget === urlElement) writeEndpoint(component, urlElement);
+    if (eventTarget === selectElement && event.type === 'change') applySubmissionRecipe(component, selectElement.value);
+    else if (eventTarget === urlElement && event.type !== 'click') writeEndpoint(component, urlElement);
+    else if (eventTarget === selectElement || eventTarget === urlElement) return;
     else if (!writeCustomSettings(component, elInput, eventTarget)) return;
     syncFormDestinationControls(elInput, component);
   },

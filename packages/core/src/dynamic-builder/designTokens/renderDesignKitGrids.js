@@ -9,7 +9,11 @@ const renderDesignKitGrids = (kitsElement, kitState, activeKitId, moduleOptions)
     if (!gridElement) return;
     gridElement.innerHTML = kitRecords
       .map((kitRecord) =>
-        buildDesignKitCardMarkup(kitRecord, activeKitId, resolveKitPreviewTokens(baselineRecord, moduleOptions, kitRecord)),
+        buildDesignKitCardMarkup(
+          kitRecord,
+          activeKitId,
+          resolveKitPreviewTokens(baselineRecord, moduleOptions, kitRecord),
+        ),
       )
       .join('');
   };

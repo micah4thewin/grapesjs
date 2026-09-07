@@ -12,7 +12,8 @@ const getTimeZoneOffsetOptions = () => {
   );
   offsetValues.sort((leftOffset, rightOffset) => {
     const toMinutes = (offsetValue) =>
-      (offsetValue.charAt(0) === '-' ? -1 : 1) * (Number(offsetValue.slice(1, 3)) * 60 + Number(offsetValue.slice(4, 6)));
+      (offsetValue.charAt(0) === '-' ? -1 : 1) *
+      (Number(offsetValue.slice(1, 3)) * 60 + Number(offsetValue.slice(4, 6)));
     return toMinutes(leftOffset) - toMinutes(rightOffset);
   });
   return [

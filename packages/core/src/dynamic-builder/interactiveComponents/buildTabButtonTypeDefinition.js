@@ -8,8 +8,10 @@ const buildTabButtonTypeDefinition = (interactiveTextDefaults) => ({
     defaults: {
       tagName: 'button',
       name: 'Tab button',
-      draggable: '[data-db-type=tab-list]',
+      draggable: false,
       droppable: false,
+      copyable: false,
+      removable: false,
       classes: ['db-tab-button'],
       attributes: {
         'data-db-type': 'tab-button',
@@ -19,6 +21,16 @@ const buildTabButtonTypeDefinition = (interactiveTextDefaults) => ({
         tabindex: '-1',
       },
       components: escapeHtmlText(interactiveTextDefaults.tabLabel),
+      traits: [
+        {
+          type: 'checkbox',
+          name: 'aria-selected',
+          label: 'Shown first',
+          valueTrue: 'true',
+          valueFalse: 'false',
+          default: 'false',
+        },
+      ],
     },
   },
 });

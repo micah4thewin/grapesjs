@@ -15,8 +15,16 @@ const getInteractiveInnerPartRules = () => {
       inertRule('db-navbar-burger', 'Menu button'),
       { className: 'db-navbar-panel', name: 'Menu panel', flags: fixedBoxFlags },
       inertRule('db-navbar-close', 'Close menu button'),
-      { className: 'db-navbar-links', name: 'Menu links', flags: { ...fixedFlags, droppable: '[data-db-navbar-item]' } },
-      { className: 'db-navbar-item', name: 'Menu item', flags: { draggable: '[data-db-navbar-menu]', droppable: false } },
+      {
+        className: 'db-navbar-links',
+        name: 'Menu links',
+        flags: { ...fixedFlags, droppable: '[data-db-navbar-item]' },
+      },
+      {
+        className: 'db-navbar-item',
+        name: 'Menu item',
+        flags: { draggable: '[data-db-navbar-menu]', droppable: false },
+      },
       { className: 'db-navbar-link', name: 'Menu link', flags: fixedBoxFlags },
       { className: 'db-navbar-cta', name: 'Call to action', flags: fixedBoxFlags },
       inertRule('db-navbar-scrim', 'Menu backdrop'),
@@ -43,11 +51,19 @@ const getInteractiveInnerPartRules = () => {
     ],
     'db-breadcrumb': [
       { tagName: 'ol', name: 'Trail', flags: fixedBoxFlags },
-      { tagName: 'li', name: 'Trail step', flags: { draggable: '.db-breadcrumb ol', droppable: false, copyable: false } },
+      {
+        tagName: 'li',
+        name: 'Trail step',
+        flags: { draggable: '.db-breadcrumb ol', droppable: false, copyable: false },
+      },
       { tagName: 'a', name: 'Step link', flags: fixedBoxFlags },
     ],
     'db-social-links': [
-      { tagName: 'li', name: 'Profile', flags: { draggable: '[data-db-type=social-links]', droppable: false, copyable: false } },
+      {
+        tagName: 'li',
+        name: 'Profile',
+        flags: { draggable: '[data-db-type=social-links]', droppable: false, copyable: false },
+      },
       { className: 'db-social-link', flags: fixedBoxFlags },
     ],
   };

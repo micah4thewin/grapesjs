@@ -9,7 +9,8 @@ import walkComponentTree from '../support/walkComponentTree.js';
 
 const watchCustomCodeComponents = (editor) => {
   const hasType = (component, typeName) => !!component && !!component.get && component.get('type') === typeName;
-  const buildScriptCard = (scriptCode) => buildScriptCardChildren(scriptCode, getSiteCustomCodeRecord(editor).allowScripts);
+  const buildScriptCard = (scriptCode) =>
+    buildScriptCardChildren(scriptCode, getSiteCustomCodeRecord(editor).allowScripts);
   const syncCssComponent = (component) => {
     syncCodeCardFromAttribute(component, 'cssCode', buildCssCardChildren);
     applyCustomCssRegistration(editor, component);

@@ -21,7 +21,12 @@ const buildTestimonialDefaultChildren = (presetRecord) => {
           tagName: 'span',
           name: 'Star rating',
           classes: ['db-testimonial-rating'],
-          attributes: { 'data-db-testimonial-rating': 'true', 'data-db-rating-value': '0', role: 'img', 'aria-label': 'No rating' },
+          attributes: {
+            'data-db-testimonial-rating': 'true',
+            'data-db-rating-value': '0',
+            role: 'img',
+            'aria-label': 'No rating',
+          },
           components: buildTestimonialRatingMarkup(0),
         },
       ],

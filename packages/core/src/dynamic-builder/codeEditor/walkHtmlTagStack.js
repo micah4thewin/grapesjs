@@ -1,5 +1,18 @@
 const voidTagNames = [
-  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr',
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
 ];
 const optionalCloseTagNames = ['li', 'p', 'td', 'tr', 'th', 'option', 'dt', 'dd', 'thead', 'tbody', 'tfoot'];
 
@@ -26,7 +39,9 @@ const walkHtmlTagStack = (codeText) => {
       const skippedTags = openStack.splice(openIndex + 1);
       const strictSkipped = skippedTags.filter((skippedName) => optionalCloseTagNames.indexOf(skippedName) < 0);
       if (strictSkipped.length) {
-        return { problem: 'Found </' + tagName + '> but <' + strictSkipped[strictSkipped.length - 1] + '> is still open.' };
+        return {
+          problem: 'Found </' + tagName + '> but <' + strictSkipped[strictSkipped.length - 1] + '> is still open.',
+        };
       }
       openStack.pop();
     } else if (!isSelfClosing) {

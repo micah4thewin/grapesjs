@@ -11,7 +11,8 @@ const runNavbarBuildMenuCommand = (editor) => {
     return 0;
   }
   const linkCount = buildNavbarLinksFromPages(editor, navbarComponent);
-  const noticeText = linkCount === 1 ? 'Menu rebuilt with 1 page link' : 'Menu rebuilt with ' + linkCount + ' page links';
+  const noticeText =
+    linkCount === 1 ? 'Menu rebuilt with 1 page link' : 'Menu rebuilt with ' + linkCount + ' page links';
   showToastNotice(editor, noticeText, { kind: 'success' });
   return linkCount;
 };

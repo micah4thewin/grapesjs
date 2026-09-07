@@ -23,7 +23,10 @@ const wireCustomKitActions = (editor, moduleOptions, kitsElement, kitState, rend
       if (nameInput) nameInput.focus();
       return;
     }
-    persistKits(kitState.custom.concat([buildCustomKitRecord(editor, moduleOptions, kitName)]), `${kitName} saved to My kits`);
+    persistKits(
+      kitState.custom.concat([buildCustomKitRecord(editor, moduleOptions, kitName)]),
+      `${kitName} saved to My kits`,
+    );
     if (nameInput) nameInput.value = '';
   };
   const importKitsFromText = (jsonText) => {

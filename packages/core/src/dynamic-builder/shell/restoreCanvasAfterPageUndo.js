@@ -1,12 +1,17 @@
+import isEditorLive from '../support/isEditorLive.js';
+
 const restoreCanvasAfterPageUndo = (editor) => {
   editor.on('page:add', (addedPage) => {
     setTimeout(() => {
+      if (!isEditorLive(editor)) return;
       const canvasDocument = editor.Canvas && editor.Canvas.getDocument && editor.Canvas.getDocument();
       if (canvasDocument && canvasDocument.body) return;
-      const selectedPage = editor.Pages.getSelected() || addedPage;
-      const otherPage = editor.Pages.getAll().filter((pageModel) => pageModel !== selectedPage)[0];
-      if (otherPage) editor.Pages.select(otherPage);
-      editor.Pages.select(selectedPage);
+      const pageManager = editor.Pages;
+      if (!pageManager || !pageManager.getSelected) return;
+      const selectedPage = pageManager.getSelected() || addedPage;
+      const otherPage = pageManager.getAll().filter((pageModel) => pageModel !== selectedPage)[0];
+      if (otherPage) pageManager.select(otherPage);
+      pageManager.select(selectedPage);
     }, 0);
   });
 };

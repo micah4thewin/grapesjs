@@ -8,6 +8,18 @@ const buildCountdownInteractiveCss = () => `
   flex-wrap: wrap;
   gap: var(--db-space-3);
 }
+.db-countdown[data-db-align="center"] {
+  text-align: center;
+}
+.db-countdown[data-db-align="center"] .db-countdown-grid {
+  justify-content: center;
+}
+.db-countdown[data-db-align="end"] {
+  text-align: right;
+}
+.db-countdown[data-db-align="end"] .db-countdown-grid {
+  justify-content: flex-end;
+}
 .db-countdown-segment {
   display: grid;
   gap: var(--db-space-1);
@@ -31,7 +43,13 @@ const buildCountdownInteractiveCss = () => `
   color: var(--db-color-text-muted);
 }
 .db-countdown-message {
+  display: inline-flex;
+  align-items: center;
   margin: 0;
+  padding: var(--db-space-3) var(--db-space-4);
+  background: var(--db-color-surface-alt);
+  border: 1px solid var(--db-color-line);
+  border-radius: var(--db-radius-md);
   font-size: var(--db-type-lg);
   font-weight: 600;
 }

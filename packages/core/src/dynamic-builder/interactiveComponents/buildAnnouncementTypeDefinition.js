@@ -1,5 +1,6 @@
-import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
+import buildAnnouncementTraitDefinitions from './buildAnnouncementTraitDefinitions.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import getIconMarkup from '../support/getIconMarkup.js';
 import runAnnouncementBehavior from './runAnnouncementBehavior.js';
 
@@ -18,9 +19,11 @@ const buildAnnouncementTypeDefinition = (interactiveTextDefaults) => ({
         'data-db-announcement': 'true',
         role: 'status',
         'data-db-dismissible': 'true',
-        'data-db-storage-key': 'db-announcement-default',
+        'data-db-storage-key': '',
         'data-db-start-date': '',
         'data-db-end-date': '',
+        'data-db-link-text': '',
+        'data-db-link-href': '',
       },
       components:
         `<p class="db-announcement-text">${escapeHtmlText(interactiveTextDefaults.announcementText)}</p>` +
@@ -29,19 +32,7 @@ const buildAnnouncementTypeDefinition = (interactiveTextDefaults) => ({
         getIconMarkup('close', { size: 16 }) +
         '</button>',
       script: runAnnouncementBehavior,
-      traits: [
-        {
-          type: 'checkbox',
-          name: 'data-db-dismissible',
-          label: 'Dismissible',
-          valueTrue: 'true',
-          valueFalse: 'false',
-          default: 'true',
-        },
-        { type: 'text', name: 'data-db-storage-key', label: 'Dismissal storage key' },
-        { type: 'db-date', name: 'data-db-start-date', label: 'Show from' },
-        { type: 'db-date', name: 'data-db-end-date', label: 'Show until' },
-      ],
+      traits: buildAnnouncementTraitDefinitions(),
     },
   },
 });

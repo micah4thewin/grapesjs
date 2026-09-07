@@ -13,7 +13,7 @@ const updateInheritedFontLabel = (editor) => {
     }
     const familyName = String(canvasWindow.getComputedStyle(selectedElement).fontFamily || '')
       .split(',')[0]
-      .replace(/["']/g, '')
+      .replace(/[\u0022\u0027]/g, '')
       .trim();
     optionElement.textContent = familyName ? `Inherited: ${familyName}` : 'Site default (inherited)';
   };

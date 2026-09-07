@@ -10,7 +10,8 @@ const applySocialNetworkChoice = (rootComponent, itemIndex, networkName) => {
   const currentAriaLabel = String((targetRecord.linkComponent.getAttributes() || {})['aria-label'] || '');
   targetRecord.linkComponent.addAttributes({
     'data-db-network': networkRecord.networkName,
-    'aria-label': !currentAriaLabel || currentAriaLabel === previousLabel ? networkRecord.networkLabel : currentAriaLabel,
+    'aria-label':
+      !currentAriaLabel || currentAriaLabel === previousLabel ? networkRecord.networkLabel : currentAriaLabel,
   });
   targetRecord.linkComponent.components(getSocialIconMarkup(networkRecord.networkName));
   targetRecord.linkComponent.set('name', networkRecord.networkLabel + ' link');

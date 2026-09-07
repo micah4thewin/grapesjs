@@ -13,7 +13,8 @@ import sanitizeUrlValue from '../support/sanitizeUrlValue.js';
 import writeComponentTextContent from './writeComponentTextContent.js';
 
 const detachFromPages = (component) => {
-  if ((component.getAttributes() || {})['data-db-auto'] === 'true') component.addAttributes({ 'data-db-auto': 'false' });
+  if ((component.getAttributes() || {})['data-db-auto'] === 'true')
+    component.addAttributes({ 'data-db-auto': 'false' });
 };
 
 const handleStepField = (component, rowIndex, fieldName, fieldElement) => {

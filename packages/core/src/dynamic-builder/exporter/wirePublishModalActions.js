@@ -1,5 +1,6 @@
 import buildExportBundleRecords from './buildExportBundleRecords.js';
 import openModalCommandAndReturn from './openModalCommandAndReturn.js';
+import isEditorUsable from './isEditorUsable.js';
 import runWithBusyButton from './runWithBusyButton.js';
 
 const wirePublishModalActions = (editor, rootElement, context) => {
@@ -9,6 +10,7 @@ const wirePublishModalActions = (editor, rootElement, context) => {
   if (continueButton) {
     continueButton.addEventListener('click', () =>
       runWithBusyButton(continueButton, () => {
+        if (!isEditorUsable(editor)) return;
         if (publishHook) {
           const bundleRecords = buildExportBundleRecords(editor, buildOptions);
           const hookResult = publishHook(editor, bundleRecords, { buildOptions, preflight: preflightRecord });

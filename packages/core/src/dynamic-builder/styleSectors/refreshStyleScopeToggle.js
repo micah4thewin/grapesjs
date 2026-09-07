@@ -1,6 +1,10 @@
 const refreshStyleScopeToggle = (editor, toggleElement) => {
   const selectorManager = editor.SelectorManager;
-  const isElementFirst = !!(selectorManager && selectorManager.getComponentFirst && selectorManager.getComponentFirst());
+  const isElementFirst = !!(
+    selectorManager &&
+    selectorManager.getComponentFirst &&
+    selectorManager.getComponentFirst()
+  );
   const selectedComponent = editor.getSelected && editor.getSelected();
   const classNames = selectedComponent && selectedComponent.getClasses ? selectedComponent.getClasses() : [];
   const primaryClass = classNames.filter((className) => !/^gjs-/.test(className))[0] || '';

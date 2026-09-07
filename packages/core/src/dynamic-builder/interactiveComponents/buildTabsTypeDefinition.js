@@ -1,5 +1,5 @@
-import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildTabsDefaultChildren from './buildTabsDefaultChildren.js';
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import runTabsBehavior from './runTabsBehavior.js';
 
 const buildTabsTypeDefinition = (interactiveTextDefaults) => ({
@@ -10,12 +10,13 @@ const buildTabsTypeDefinition = (interactiveTextDefaults) => ({
       tagName: 'div',
       name: 'Tabs',
       draggable: getDropTargetSelectors().anyLayout,
-      droppable: '[data-db-type=tab-list], [data-db-type=tab-panel]',
+      droppable: false,
       classes: ['db-tabs'],
       attributes: { 'data-db-type': 'tabs', 'data-db-tabs': 'true', 'data-db-orientation': 'horizontal' },
       components: buildTabsDefaultChildren(interactiveTextDefaults),
       script: runTabsBehavior,
       traits: [
+        { type: 'db-tab-items', name: 'dbTabItems', label: 'Tabs' },
         {
           type: 'select',
           name: 'data-db-orientation',

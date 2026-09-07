@@ -13,7 +13,11 @@ const getColumnPresetRecord = () => ({
     gridTemplate: 'minmax(0, 2.5fr) minmax(0, 1fr)',
   },
   asymmetric: { label: 'Wide + narrow (60/40)', columnCount: 2, gridTemplate: 'minmax(0, 3fr) minmax(0, 2fr)' },
-  custom: { label: 'Custom widths', columnCount: 0, gridTemplate: 'var(--db-col-template, repeat(2, minmax(0, 1fr)))' },
+  custom: {
+    label: 'Custom widths (drag between columns)',
+    columnCount: 0,
+    gridTemplate: 'var(--db-col-template, repeat(2, minmax(0, 1fr)))',
+  },
 });
 
 export default getColumnPresetRecord;

@@ -7,8 +7,10 @@ const buildTabPanelTypeDefinition = (interactiveTextDefaults) => ({
     defaults: {
       tagName: 'div',
       name: 'Tab panel',
-      draggable: '[data-db-type=tabs]',
+      draggable: false,
       droppable: true,
+      copyable: false,
+      removable: false,
       classes: ['db-tab-panel'],
       attributes: { 'data-db-type': 'tab-panel', role: 'tabpanel', tabindex: '0', hidden: 'hidden' },
       components: `<p>${escapeHtmlText(interactiveTextDefaults.tabPanelText)}</p>`,

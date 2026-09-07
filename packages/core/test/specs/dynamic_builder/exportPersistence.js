@@ -11,6 +11,7 @@ import doesCssChunkMatchDocuments from '../../../src/dynamic-builder/exporter/do
 import extractCssRuleSelectors from '../../../src/dynamic-builder/exporter/extractCssRuleSelectors';
 import formatRelativeTimeText from '../../../src/dynamic-builder/persistence/formatRelativeTimeText';
 import listPageExportEntries from '../../../src/dynamic-builder/exporter/listPageExportEntries';
+import minifyScriptText from '../../../src/dynamic-builder/exporter/minifyScriptText';
 import normalizePreflightResult from '../../../src/dynamic-builder/exporter/normalizePreflightResult';
 import parseImportedRevisionPayload from '../../../src/dynamic-builder/persistence/parseImportedRevisionPayload';
 import readLocalDraftRecord from '../../../src/dynamic-builder/persistence/readLocalDraftRecord';
@@ -21,6 +22,7 @@ import runExportPreflight from '../../../src/dynamic-builder/exporter/runExportP
 import saveProjectSnapshot from '../../../src/dynamic-builder/persistence/saveProjectSnapshot';
 import saveRevisionRecord from '../../../src/dynamic-builder/persistence/saveRevisionRecord';
 import saveSafetyRevision from '../../../src/dynamic-builder/persistence/saveSafetyRevision';
+import stripEditorOnlyAttributes from '../../../src/dynamic-builder/exporter/stripEditorOnlyAttributes';
 import updateSiteMetaRecord from '../../../src/dynamic-builder/support/updateSiteMetaRecord';
 import validateSiteSettingsValues from '../../../src/dynamic-builder/exporter/validateSiteSettingsValues';
 import writeStoredJsonRecord from '../../../src/dynamic-builder/persistence/writeStoredJsonRecord';
@@ -228,6 +230,23 @@ describe('Dynamic builder export and persistence helpers', () => {
       }
     });
   });
+
+  describe('minifyScriptText and stripEditorOnlyAttributes', () => {
+    test('strips comments and indentation but leaves strings and regexes alone', () => {
+      const compact = minifyScriptText(
+        '(function () {\n  // note\n  var a = "x // y"; /* b */\n  var r = /\\/\\//g;\n  return a.replace(r, \'\');\n})();',
+      );
+      expect(compact).toBe('(function () {\nvar a = "x // y";\nvar r = /\\/\\//g;\nreturn a.replace(r, \'\');\n})();');
+      expect(minifyScriptText('var c = 10 / 2 / 5;')).toBe('var c = 10 / 2 / 5;');
+    });
+
+    test('removes editor-only attributes and keeps site attributes', () => {
+      const cleaned = stripEditorOnlyAttributes(
+        '<div data-gjs-type="wrapper" class="a" draggable="true" contenteditable><p id="x" data-db-type="text" data-db-aos="fade">hi</p></div>',
+      );
+      expect(cleaned).toBe('<div class="a"><p id="x" data-db-type="text" data-db-aos="fade">hi</p></div>');
+    });
+  });
 });
 
 describe('Dynamic builder export and persistence with an editor', () => {
@@ -393,6 +412,19 @@ describe('Dynamic builder export and persistence with an editor', () => {
       const draftRecord = readLocalDraftRecord(editor, { ...moduleOptions, autoload: false });
       expect(draftRecord.kind).toBe('draft');
       expect(draftRecord.meta.pageCount).toBe(1);
+    });
+
+    test('follows the dbStorageKey override and persists on demand', () => {
+      editor.getModel().set('dbStorageKey', storageKey + '-site-b');
+      expect(editor.runCommand('db:persist-now')).toBe(true);
+      expect(JSON.parse(localStorage.getItem(storageKey + '-site-b')).projectData).toBeTruthy();
+      expect(localStorage.getItem(storageKey)).toBeUndefined();
+      expect(saveRevisionRecord(editor, moduleOptions, 'Site B').label).toBe('Site B');
+      expect(JSON.parse(localStorage.getItem(storageKey + '-site-b:revisions'))[0].label).toBe('Site B');
+      editor.getModel().set('dbStorageKey', '');
+      expect(readRevisionList(editor, moduleOptions)).toEqual([]);
+      expect(editor.runCommand('db:persist-now')).toBe(true);
+      expect(JSON.parse(localStorage.getItem(storageKey)).projectData).toBeTruthy();
     });
   });
 

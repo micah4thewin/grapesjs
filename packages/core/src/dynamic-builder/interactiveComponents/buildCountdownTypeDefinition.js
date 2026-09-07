@@ -1,4 +1,5 @@
 import buildCountdownInnerMarkup from './buildCountdownInnerMarkup.js';
+import buildCountdownTraitDefinitions from './buildCountdownTraitDefinitions.js';
 import runCountdownBehavior from './runCountdownBehavior.js';
 
 const buildCountdownTypeDefinition = (interactiveTextDefaults) => ({
@@ -18,26 +19,15 @@ const buildCountdownTypeDefinition = (interactiveTextDefaults) => ({
         'aria-live': 'off',
         'data-db-deadline-date': '',
         'data-db-deadline-time': '00:00',
+        'data-db-deadline-offset': '',
         'data-db-expiry-action': 'message',
         'data-db-expiry-message': interactiveTextDefaults.countdownExpiryMessage,
+        'data-db-align': 'start',
+        'data-db-hide-days': 'false',
       },
       components: buildCountdownInnerMarkup(interactiveTextDefaults),
       script: runCountdownBehavior,
-      traits: [
-        { type: 'db-date', name: 'data-db-deadline-date', label: 'Deadline date' },
-        { type: 'text', name: 'data-db-deadline-time', label: 'Deadline time (HH:MM)' },
-        {
-          type: 'select',
-          name: 'data-db-expiry-action',
-          label: 'When expired',
-          default: 'message',
-          options: [
-            { id: 'message', label: 'Show message' },
-            { id: 'hide', label: 'Hide countdown' },
-          ],
-        },
-        { type: 'text', name: 'data-db-expiry-message', label: 'Expiry message' },
-      ],
+      traits: buildCountdownTraitDefinitions(),
     },
   },
 });

@@ -2,6 +2,7 @@ import walkComponentTree from '../support/walkComponentTree.js';
 import ensureFieldControlId from './ensureFieldControlId.js';
 import ensureFormStatusChild from './ensureFormStatusChild.js';
 import ensureFormStepsNav from './ensureFormStepsNav.js';
+import syncSubmitButtonClasses from './syncSubmitButtonClasses.js';
 import wrapOrphanFormChild from './wrapOrphanFormChild.js';
 
 const settleFormTree = (rootComponent) => {
@@ -12,6 +13,7 @@ const settleFormTree = (rootComponent) => {
       ensureFormStepsNav(visitedComponent);
     }
     if (visitedComponent.is('db-form-field')) ensureFieldControlId(visitedComponent);
+    if (visitedComponent.is('db-submit-button')) syncSubmitButtonClasses(visitedComponent);
   });
 };
 
@@ -20,14 +22,17 @@ const watchFormStructureUpdates = (editor) => {
     if (!addedComponent || !addedComponent.is) return;
     if (addedComponent.is('db-form')) settleFormTree(addedComponent);
     if (addedComponent.is('db-form-field')) ensureFieldControlId(addedComponent);
+    if (addedComponent.is('db-submit-button')) syncSubmitButtonClasses(addedComponent);
     if (!addedComponent.is('db-form-step')) return;
     const formComponent = addedComponent.closestType('db-form');
     if (formComponent) ensureFormStepsNav(formComponent);
   });
   editor.on('component:remove', (removedComponent) => {
     if (!removedComponent || !removedComponent.is || !removedComponent.is('db-form-step')) return;
-    const formComponent = removedComponent.closestType && removedComponent.closestType('db-form');
-    if (formComponent && formComponent.findType('db-form-step').length === 0) ensureFormStepsNav(formComponent);
+    editor
+      .getWrapper()
+      .findType('db-form')
+      .forEach((formComponent) => ensureFormStepsNav(formComponent));
   });
   const wrapDroppedComponent = (droppedComponent) => setTimeout(() => wrapOrphanFormChild(editor, droppedComponent), 0);
   editor.on('block:drag:stop', wrapDroppedComponent);

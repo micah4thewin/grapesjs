@@ -6,12 +6,12 @@ const buildTestimonialMarketingCss = () => `
   border: 1px solid transparent;
   border-radius: var(--db-radius-lg, 1rem);
 }
-.db-testimonial-rating { display: inline-flex; gap: 0.15rem; margin-bottom: var(--db-space-3, 0.75rem); color: var(--db-color-warning, #b7791f); }
+.db-testimonial-rating { order: -1; display: inline-flex; gap: 0.15rem; margin-bottom: var(--db-space-3, 0.75rem); color: var(--db-color-warning, #b7791f); }
 .db-testimonial-rating[data-db-rating-value='0'], .db-testimonial-rating:empty { display: none; }
 .db-star { display: inline-flex; }
 .db-star[data-db-star='filled'] svg { fill: currentColor; }
 .db-star[data-db-star='empty'] { opacity: 0.45; }
-.db-testimonial-quote { margin: 0; }
+.db-testimonial-quote { display: flex; flex-direction: column; margin: 0; }
 .db-testimonial-quote p {
   margin: 0;
   font-family: var(--db-font-display, inherit);

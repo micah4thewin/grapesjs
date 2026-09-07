@@ -5,7 +5,8 @@ import readTabPairRecords from './readTabPairRecords.js';
 const buildTabRowsMarkup = (tabsComponent) => {
   const pairRecords = readTabPairRecords(tabsComponent);
   if (!pairRecords.length) return '<p class="gjs-db-muted">No tabs yet. Add the first one below.</p>';
-  const radioGroupName = 'db-tab-shown-first-' + escapeHtmlText(String(tabsComponent.getId ? tabsComponent.getId() : ''));
+  const radioGroupName =
+    'db-tab-shown-first-' + escapeHtmlText(String(tabsComponent.getId ? tabsComponent.getId() : ''));
   return pairRecords
     .map((pairRecord, pairIndex) =>
       buildListRowMarkup(

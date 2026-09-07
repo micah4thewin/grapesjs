@@ -39,20 +39,8 @@ const buildContactDefaultChildren = (contactRecord) => {
           attributes: { 'data-db-field': 'address' },
           components: safeRecord.address,
         },
-        buildContactLink(
-          'phone',
-          safeRecord.phone,
-          buildPhoneHref(safeRecord.phone),
-          'Phone',
-          'Phone link (tel:)',
-        ),
-        buildContactLink(
-          'email',
-          safeRecord.email,
-          'mailto:' + safeRecord.email,
-          'Email',
-          'Email link (mailto:)',
-        ),
+        buildContactLink('phone', safeRecord.phone, buildPhoneHref(safeRecord.phone), 'Phone', 'Phone link (tel:)'),
+        buildContactLink('email', safeRecord.email, 'mailto:' + safeRecord.email, 'Email', 'Email link (mailto:)'),
       ],
     },
     {

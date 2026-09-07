@@ -21,19 +21,72 @@ describe('probe', () => {
     saveSymbolRecord(editor, {
       id: 'sym-nav',
       name: 'Navbar',
-      components: [{ tagName: 'div', components: [{ tagName: 'p', type: 'text', components: 'Nav text' }, { type: 'db-heading', components: 'Head' }, { type: 'db-image' }, { type: 'db-button' }] }],
+      components: [
+        {
+          tagName: 'div',
+          components: [
+            { tagName: 'p', type: 'text', components: 'Nav text' },
+            { type: 'db-heading', components: 'Head' },
+            { type: 'db-image' },
+            { type: 'db-button' },
+          ],
+        },
+      ],
     });
     const inst = insertSymbolInstance(editor, 'sym-nav');
     const container = inst.components().at(0);
     const leaf = container.components().at(0);
     const log = [];
-    ['component:add', 'component:remove', 'component:update', 'component:input', 'component:update:components', 'component:update:attributes', 'component:update:status'].forEach((ev) => {
-      editor.on(ev, (c) => log.push(ev + ':' + (c && c.get ? c.get('type') + '/' + c.get('tagName') : '?') + ':' + Object.keys((c && c.changedAttributes && c.changedAttributes()) || {}).join('|')));
+    [
+      'component:add',
+      'component:remove',
+      'component:update',
+      'component:input',
+      'component:update:components',
+      'component:update:attributes',
+      'component:update:status',
+    ].forEach((ev) => {
+      editor.on(ev, (c) =>
+        log.push(
+          ev +
+            ':' +
+            (c && c.get ? c.get('type') + '/' + c.get('tagName') : '?') +
+            ':' +
+            Object.keys((c && c.changedAttributes && c.changedAttributes()) || {}).join('|'),
+        ),
+      );
     });
-    log.push('--- kinds ' + container.components().map((c) => c.get('type') + '=' + getOverridableLeafKind(c)).join(','));
-    log.push('--- equiv leaf ' + areDefinitionsEquivalent({ tagName: 'p', type: 'text', components: 'Nav text' }, captureSymbolLeafDefinition(leaf)) + ' ' + JSON.stringify(captureSymbolLeafDefinition(leaf)));
-    log.push('--- equiv heading ' + areDefinitionsEquivalent({ type: 'db-heading', components: 'Head' }, captureSymbolLeafDefinition(container.components().at(1))) + ' ' + JSON.stringify(captureSymbolLeafDefinition(container.components().at(1))));
-    log.push('--- equiv image ' + areDefinitionsEquivalent({ type: 'db-image' }, captureSymbolLeafDefinition(container.components().at(2))) + ' ' + JSON.stringify(captureSymbolLeafDefinition(container.components().at(2))));
+    log.push(
+      '--- kinds ' +
+        container
+          .components()
+          .map((c) => c.get('type') + '=' + getOverridableLeafKind(c))
+          .join(','),
+    );
+    log.push(
+      '--- equiv leaf ' +
+        areDefinitionsEquivalent(
+          { tagName: 'p', type: 'text', components: 'Nav text' },
+          captureSymbolLeafDefinition(leaf),
+        ) +
+        ' ' +
+        JSON.stringify(captureSymbolLeafDefinition(leaf)),
+    );
+    log.push(
+      '--- equiv heading ' +
+        areDefinitionsEquivalent(
+          { type: 'db-heading', components: 'Head' },
+          captureSymbolLeafDefinition(container.components().at(1)),
+        ) +
+        ' ' +
+        JSON.stringify(captureSymbolLeafDefinition(container.components().at(1))),
+    );
+    log.push(
+      '--- equiv image ' +
+        areDefinitionsEquivalent({ type: 'db-image' }, captureSymbolLeafDefinition(container.components().at(2))) +
+        ' ' +
+        JSON.stringify(captureSymbolLeafDefinition(container.components().at(2))),
+    );
     log.push('--- 1 content');
     leaf.components('New text');
     log.push('--- 2 status');
@@ -46,7 +99,13 @@ describe('probe', () => {
     leaf.addAttributes({ title: 'x' });
     log.push('--- 6 selectable');
     leaf.set({ selectable: false, hoverable: false }, { avoidStore: true });
-    log.push('--- 7 nav capture equiv ' + areDefinitionsEquivalent(navJson, JSON.parse(JSON.stringify(editor.getWrapper().append({ type: 'db-navbar' })[0].toJSON()))));
+    log.push(
+      '--- 7 nav capture equiv ' +
+        areDefinitionsEquivalent(
+          navJson,
+          JSON.parse(JSON.stringify(editor.getWrapper().append({ type: 'db-navbar' })[0].toJSON())),
+        ),
+    );
     console.log(log.join('\n'));
     editor.destroy();
   });

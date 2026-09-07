@@ -6,6 +6,8 @@ const readComponentPlainText = (rootComponent) => {
     if (!visitedComponent || !visitedComponent.is || !visitedComponent.is('textnode')) return;
     textParts.push(String(visitedComponent.get('content') || ''));
   });
+  if (!textParts.length && rootComponent && rootComponent.get)
+    textParts.push(String(rootComponent.get('content') || ''));
   return textParts.join('').replace(/\s+/g, ' ').trim();
 };
 

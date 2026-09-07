@@ -8,7 +8,11 @@ const wireCustomHtmlEditing = (editor) => {
     if (!selectedComponent || typeof selectedComponent.get !== 'function') return;
     if (selectedComponent.get('type') !== 'db-custom-html') return;
     const toolbarItems = [...(selectedComponent.get('toolbar') || [])];
-    if (toolbarItems.some((toolbarEntry) => toolbarEntry && toolbarEntry.attributes && toolbarEntry.attributes[toolbarMarker])) {
+    if (
+      toolbarItems.some(
+        (toolbarEntry) => toolbarEntry && toolbarEntry.attributes && toolbarEntry.attributes[toolbarMarker],
+      )
+    ) {
       return;
     }
     toolbarItems.unshift({

@@ -5,7 +5,10 @@ const resolveTokenGroupForProperty = (propertyModel) => {
   if (propertyType === 'color') return 'color';
   if (propertyName === 'font-size') return 'type';
   if (/radius/.test(propertyName)) return 'radius';
-  if (propertyType === 'number' && /^(margin|padding|gap|row-gap|column-gap|top|right|bottom|left)/.test(propertyName)) {
+  if (
+    propertyType === 'number' &&
+    /^(margin|padding|gap|row-gap|column-gap|top|right|bottom|left)/.test(propertyName)
+  ) {
     return 'space';
   }
   return '';

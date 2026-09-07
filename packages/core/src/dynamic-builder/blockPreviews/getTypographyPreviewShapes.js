@@ -50,6 +50,10 @@ const getTypographyPreviewShapes = () => ({
     buildPreviewShapeMarkup(32, 34, 38, 4, { opacity: 0.18 }),
   ].join(''),
   'db-icon': [buildPreviewCircleMarkup(48, 30, 13, { opacity: 0.3, accent: true })].join(''),
+  'db-button': [
+    buildPreviewShapeMarkup(22, 20, 52, 20, { opacity: 0.55, accent: true, radius: 10 }),
+    buildPreviewShapeMarkup(34, 28, 28, 4, { opacity: 0.9, radius: 2 }),
+  ].join(''),
 });
 
 export default getTypographyPreviewShapes;

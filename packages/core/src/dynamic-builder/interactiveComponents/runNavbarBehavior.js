@@ -42,7 +42,8 @@ const runNavbarBehavior = () => {
         menuState.previousOverflow = null;
       }
       if (!shouldOpen) return;
-      const firstLink = panelElement.querySelector('[data-db-navbar-menu] a') || panelElement.querySelector('a, button');
+      const firstLink =
+        panelElement.querySelector('[data-db-navbar-menu] a') || panelElement.querySelector('a, button');
       if (firstLink) setTimeout(() => firstLink.focus(), 60);
     };
     const closeAndRefocus = () => {

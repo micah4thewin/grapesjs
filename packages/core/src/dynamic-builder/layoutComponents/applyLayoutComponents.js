@@ -1,5 +1,6 @@
 import registerEditorOnlyCanvasStyles from '../support/registerEditorOnlyCanvasStyles.js';
 import registerTraitTypeSet from '../support/registerTraitTypeSet.js';
+import buildGutterDragCanvasCss from './buildGutterDragCanvasCss.js';
 import buildLayoutEditorCanvasCss from './buildLayoutEditorCanvasCss.js';
 import buildStructuralDragCanvasCss from './buildStructuralDragCanvasCss.js';
 import createAnchorTraitDefinition from './createAnchorTraitDefinition.js';
@@ -12,6 +13,7 @@ import watchLayoutMigrations from './watchLayoutMigrations.js';
 import watchSectionBackgroundUpdates from './watchSectionBackgroundUpdates.js';
 import watchSpacerResizeUpdates from './watchSpacerResizeUpdates.js';
 import wireAddBelowToolbarButton from './wireAddBelowToolbarButton.js';
+import wireColumnGutterDrag from './wireColumnGutterDrag.js';
 import wireLayoutDropWrapping from './wireLayoutDropWrapping.js';
 import wireSectionToolbarAddButton from './wireSectionToolbarAddButton.js';
 import wireStructuralDragFeedback from './wireStructuralDragFeedback.js';
@@ -23,6 +25,7 @@ const applyLayoutComponents = (editor, pluginOptions) => {
   registerLayoutCanvasStyles(editor, moduleOptions);
   registerEditorOnlyCanvasStyles(editor, 'db-css-layout-drag-feedback', buildStructuralDragCanvasCss());
   registerEditorOnlyCanvasStyles(editor, 'db-css-layout-editor-hints', buildLayoutEditorCanvasCss());
+  registerEditorOnlyCanvasStyles(editor, 'db-css-layout-gutter-drag', buildGutterDragCanvasCss());
   watchLayoutMigrations(editor);
   watchSectionBackgroundUpdates(editor);
   watchColumnPresetUpdates(editor);
@@ -31,6 +34,7 @@ const applyLayoutComponents = (editor, pluginOptions) => {
   watchAnchorUpdates(editor);
   wireSectionToolbarAddButton(editor);
   wireAddBelowToolbarButton(editor);
+  wireColumnGutterDrag(editor);
   wireLayoutDropWrapping(editor);
   wireStructuralDragFeedback(editor);
 };

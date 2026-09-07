@@ -61,7 +61,9 @@ const buildCustomCodeModalMarkup = (customCodeSettings, idToken) => {
     '</div>',
     '<div class="gjs-db-field" data-db-origins-field>',
     '<label class="gjs-db-field-label" for="' + idToken + '-origins">Only load scripts from these sites</label>',
-    '<textarea class="gjs-db-field-input" id="' + idToken + '-origins" data-db-script-origins rows="3"' +
+    '<textarea class="gjs-db-field-input" id="' +
+      idToken +
+      '-origins" data-db-script-origins rows="3"' +
       (allowScripts ? '' : ' disabled') +
       '>',
     escapeHtmlText(allowlistValue),

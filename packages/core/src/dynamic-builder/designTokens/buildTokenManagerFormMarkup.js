@@ -13,7 +13,9 @@ const buildTokenManagerFormMarkup = (tokenRecord, baselineRecord) => {
       const groupRecord = safeRecord[groupKey];
       const baselineGroup = isPlainRecord(safeBaseline[groupKey]) ? safeBaseline[groupKey] : {};
       const fieldsMarkup = Object.keys(groupRecord)
-        .map((tokenName) => buildTokenFieldMarkup(groupKey, tokenName, groupRecord[tokenName], baselineGroup[tokenName]))
+        .map((tokenName) =>
+          buildTokenFieldMarkup(groupKey, tokenName, groupRecord[tokenName], baselineGroup[tokenName]),
+        )
         .join('');
       const safeGroup = escapeHtmlText(groupKey);
       return [

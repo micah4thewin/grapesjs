@@ -1,5 +1,6 @@
 import buildPageLinkRecords from './buildPageLinkRecords.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
+import listComponentsMatching from './listComponentsMatching.js';
 import setTextLeafContent from './setTextLeafContent.js';
 
 const appendSkeletonNavbar = (editor, homePage, siteName) => {
@@ -8,12 +9,12 @@ const appendSkeletonNavbar = (editor, homePage, siteName) => {
   const navbarComponent = rootComponent.append({ type: 'db-navbar' }, { at: 0 })[0];
   if (!navbarComponent) return null;
   const linkRecords = buildPageLinkRecords(editor);
-  const brandComponent = navbarComponent.find('.db-navbar-brand')[0];
+  const brandComponent = listComponentsMatching(navbarComponent, { className: 'db-navbar-brand' })[0];
   if (brandComponent) {
     setTextLeafContent(brandComponent, siteName);
     brandComponent.addAttributes({ href: 'index.html' });
   }
-  const menuComponent = navbarComponent.find('[data-db-navbar-menu]')[0];
+  const menuComponent = listComponentsMatching(navbarComponent, { attributeName: 'data-db-navbar-menu' })[0];
   if (menuComponent) {
     menuComponent.components().reset();
     linkRecords.forEach((linkRecord) => {
@@ -23,7 +24,7 @@ const appendSkeletonNavbar = (editor, homePage, siteName) => {
     });
   }
   const contactRecord = linkRecords.find((linkRecord) => /contact/i.test(linkRecord.labelText));
-  const ctaComponent = navbarComponent.find('[data-db-navbar-cta]')[0];
+  const ctaComponent = listComponentsMatching(navbarComponent, { attributeName: 'data-db-navbar-cta' })[0];
   if (ctaComponent && contactRecord) ctaComponent.addAttributes({ href: contactRecord.hrefValue });
   else navbarComponent.addAttributes({ 'data-db-cta': 'false' });
   return navbarComponent;

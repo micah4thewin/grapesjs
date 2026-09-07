@@ -4,6 +4,7 @@ import downloadFileRecordList from './downloadFileRecordList.js';
 import openExportPreview from './openExportPreview.js';
 import openModalCommandAndReturn from './openModalCommandAndReturn.js';
 import readExportBuildOptions from './readExportBuildOptions.js';
+import isEditorUsable from './isEditorUsable.js';
 import runWithBusyButton from './runWithBusyButton.js';
 
 const wireExportModalEvents = (editor, rootElement) => {
@@ -38,7 +39,10 @@ const wireExportModalEvents = (editor, rootElement) => {
       'custom-code': () =>
         openModalCommandAndReturn(editor, 'db:open-custom-code', () => editor.runCommand('db:open-export')),
     };
-    if (busyHandlers[actionName]) runWithBusyButton(actionElement, busyHandlers[actionName]);
+    const guardedHandler = (handlerAction) => () => {
+      if (isEditorUsable(editor)) handlerAction();
+    };
+    if (busyHandlers[actionName]) runWithBusyButton(actionElement, guardedHandler(busyHandlers[actionName]));
     else if (directHandlers[actionName]) directHandlers[actionName]();
   });
 };

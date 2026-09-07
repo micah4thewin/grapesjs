@@ -13,7 +13,12 @@ const openCodeEditorModal = (editor, modalOptions) => {
   const fieldLabel = modalOptions.label === modalTitle ? '' : modalOptions.label || '';
   const formMarkup = [
     '<form class="gjs-db-form gjs-db-code-editor-form">',
-    buildCodeFieldMarkup({ name: 'code', label: fieldLabel, language: modalOptions.language, helpText: modalOptions.helpText || '' }),
+    buildCodeFieldMarkup({
+      name: 'code',
+      label: fieldLabel,
+      language: modalOptions.language,
+      helpText: modalOptions.helpText || '',
+    }),
     '<div class="gjs-db-button-row">',
     '<span class="gjs-db-muted gjs-db-code-shortcut-hint">Ctrl or Cmd + Enter saves</span>',
     '<button type="button" class="gjs-db-button" data-db-code-cancel>Cancel</button>',

@@ -26,7 +26,9 @@ const buildSocialRowsMarkup = (rootComponent) => {
         profileIndex,
         `<select class="gjs-db-field-input" data-db-social-field="network" aria-label="Network">${optionsMarkup}</select>` +
           `<input class="gjs-db-field-input" data-db-social-field="href" value="${escapeHtmlText(profileRecord.linkHref)}" placeholder="${escapeHtmlText(placeholderText)}" aria-label="Profile URL">` +
-          (profileRecord.linkHref ? '' : '<span class="gjs-db-field-help">Hidden on the live site until you add the link</span>'),
+          (profileRecord.linkHref
+            ? ''
+            : '<span class="gjs-db-field-help">Hidden on the live site until you add the link</span>'),
       );
     })
     .join('');

@@ -13,8 +13,6 @@ const buildFieldLabelTypeDefinition = () => ({
       droppable: false,
       copyable: false,
       removable: false,
-      classes: ['db-field-label'],
-      attributes: { 'data-db-field-label': 'true' },
       traits: [],
     },
   },

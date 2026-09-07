@@ -57,9 +57,6 @@ form[data-db-form] .db-honeypot {
 .db-form-progress-bar {
   width: 40%;
 }
-.db-form-sent > :not(.db-form-status) {
-  display: revert;
-}
 `;
 
 export default buildFormEditorCanvasCss;

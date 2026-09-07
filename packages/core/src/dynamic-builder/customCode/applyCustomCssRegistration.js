@@ -13,7 +13,11 @@ const applyCustomCssRegistration = (editor, component) => {
     return;
   }
   const keepAsWritten = String(attributesRecord.cssPriority || 'boost') === 'as-written';
-  registerCanvasStyles(editor, buildCustomCodeStyleId(component), keepAsWritten ? safeCssCode : boostCssSpecificity(safeCssCode));
+  registerCanvasStyles(
+    editor,
+    buildCustomCodeStyleId(component),
+    keepAsWritten ? safeCssCode : boostCssSpecificity(safeCssCode),
+  );
 };
 
 export default applyCustomCssRegistration;

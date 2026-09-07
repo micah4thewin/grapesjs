@@ -17,7 +17,7 @@ const buildPresetPropertyElement = (ownerDocument, propertyProps, change) => {
       '<div class="gjs-db-preset-field">',
       '<div class="gjs-field gjs-select">',
       `<select class="gjs-db-preset-select" aria-label="Preset">${optionsMarkup}`,
-      '<option value="__custom">Custom value…</option></select>',
+      '<option value="__custom">Custom value...</option></select>',
       '<div class="gjs-sel-arrow"><div class="gjs-d-s-arrow"></div></div>',
       '</div>',
       '<div class="gjs-field gjs-db-preset-custom" hidden>',
@@ -38,7 +38,9 @@ const buildPresetPropertyElement = (ownerDocument, propertyProps, change) => {
     customWrapper.hidden = true;
     change({ event: changeEvent, value: selectElement.value });
   });
-  inputElement.addEventListener('change', (changeEvent) => change({ event: changeEvent, value: inputElement.value.trim() }));
+  inputElement.addEventListener('change', (changeEvent) =>
+    change({ event: changeEvent, value: inputElement.value.trim() }),
+  );
   inputElement.addEventListener('input', (inputEvent) =>
     change({ event: inputEvent, value: inputElement.value.trim(), partial: true }),
   );

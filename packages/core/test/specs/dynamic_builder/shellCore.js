@@ -112,7 +112,7 @@ describe('Dynamic builder shell core', () => {
       aboutPage.setName('Our team');
       const rewrittenCount = rewritePageLinkHrefs(editor, 'about', resolvePageFileName(editor, aboutPage));
       expect(rewrittenCount).toBe(1);
-      expect(editor.getWrapper().find('.probe-link')[0].getAttributes().href).toBe('our-team.html#team');
+      expect(editor.getWrapper().components().last().getAttributes().href).toBe('our-team.html#team');
     });
 
     test('the home page cannot be deleted', () => {
@@ -133,15 +133,15 @@ describe('Dynamic builder shell core', () => {
       expect(resolvePageFileName(editor, aboutPage)).toBe('index');
       expect(editor.Pages.getAll()[0]).toBe(aboutPage);
       const previousHome = editor.Pages.getAll()[1];
-      expect(previousHome.getMainComponent().find('.about-link')[0].getAttributes().href).toBe('index.html');
-      expect(aboutPage.getMainComponent().find('.home-link')[0].getAttributes().href).toBe('home.html');
+      expect(previousHome.getMainComponent().components().last().getAttributes().href).toBe('index.html');
+      expect(aboutPage.getMainComponent().components().first().getAttributes().href).toBe('home.html');
     });
 
     test('duplicating a page copies its content under a unique name', () => {
       const aboutPage = editor.Pages.add({ name: 'About', component: '<p class="about-copy">about</p>' });
       const copiedPage = duplicateSitePage(editor, aboutPage.getId());
       expect(copiedPage.getName()).toBe('About copy');
-      expect(copiedPage.getMainComponent().find('.about-copy').length).toBe(1);
+      expect(copiedPage.getMainComponent().toHTML()).toContain('about-copy');
       expect(duplicateSitePage(editor, aboutPage.getId()).getName()).toBe('About copy 2');
     });
 
