@@ -7,13 +7,15 @@ import resolveBindingTokensInMarkup from '../dataBinding/resolveBindingTokensInM
 import resolveCustomScriptText from './resolveCustomScriptText.js';
 import resolveExportSlotMarkup from './resolveExportSlotMarkup.js';
 import spliceBodyEdgeMarkup from './spliceBodyEdgeMarkup.js';
+import stripAppendedPageScript from './stripAppendedPageScript.js';
 import stripEditorOnlyAttributes from './stripEditorOnlyAttributes.js';
 
 const buildDocumentBodyMarkup = (editor, page, buildOptions) => {
   const optionsRecord = buildOptions || {};
   const mainComponent = page && page.getMainComponent ? page.getMainComponent() : null;
   const pageScriptText = collectPageScriptText(editor, page);
-  let pageMarkup = stripEditorOnlyAttributes(mainComponent ? editor.getHtml({ component: mainComponent }) : '');
+  const rawPageMarkup = mainComponent ? String(editor.getHtml({ component: mainComponent }) || '') : '';
+  let pageMarkup = stripEditorOnlyAttributes(stripAppendedPageScript(rawPageMarkup, pageScriptText));
   if (optionsRecord.resolveBindings !== false) pageMarkup = resolveBindingTokensInMarkup(editor, pageMarkup);
   const customCodeRecord = getSiteCustomCodeRecord(editor);
   const startMarkup = resolveExportSlotMarkup(customCodeRecord, customCodeRecord.bodyStartHtml);
