@@ -1,9 +1,7 @@
 import listFocusableElements from '../support/listFocusableElements.js';
 
 const trapTourFocus = (popoverElement, keyEvent) => {
-  const focusableElements = listFocusableElements(popoverElement).filter(
-    (candidateElement) => !candidateElement.hidden,
-  );
+  const focusableElements = listFocusableElements(popoverElement);
   if (!focusableElements.length) return false;
   const firstElement = focusableElements[0];
   const lastElement = focusableElements[focusableElements.length - 1];

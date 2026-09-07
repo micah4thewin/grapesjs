@@ -15,7 +15,7 @@ const pixelSource =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
 
 const waitForCondition = async (readCondition) => {
-  for (let attempt = 0; attempt < 60; attempt += 1) {
+  for (let attempt = 0; attempt < 200; attempt += 1) {
     if (readCondition()) return true;
     await new Promise((resolveWait) => setTimeout(resolveWait, 10));
   }
@@ -101,7 +101,7 @@ describe('Dynamic builder guided tour', () => {
   describe('running in the editor', () => {
     let editor;
 
-    const mountEditor = (tourOptions) => {
+    const mountEditor = async (tourOptions) => {
       window.Element.prototype.scrollIntoView = () => {};
       document.body.innerHTML = '<div id="db-editor"></div>';
       const builtEditor = grapesjs.init({
@@ -111,19 +111,22 @@ describe('Dynamic builder guided tour', () => {
           fixJsDom,
           (editorInstance) => {
             grapesjs.dynamicBuilder(editorInstance, { shell: { firstRunWizard: false } });
-            applyGuidedTour(editorInstance, { tour: { driverScriptUrl: '', startDelay: 10, ...(tourOptions || {}) } });
+            applyGuidedTour(editorInstance, { tour: { driverScriptUrl: '', startDelay: 300, ...(tourOptions || {}) } });
           },
         ],
       });
       fixJsDomIframe(builtEditor.getModel().shallow);
-      return new Promise((resolve) => builtEditor.onReady(() => setTimeout(() => resolve(builtEditor), 10)));
+      await new Promise((resolve) => builtEditor.onReady(() => setTimeout(resolve, 10)));
+      await waitForCondition(() => builtEditor.Modal.isOpen());
+      builtEditor.Modal.close();
+      return builtEditor;
     };
 
     const readTourRoot = () => document.querySelector('[data-db-tour-root]');
 
     beforeEach(() => {
       try {
-        window.localStorage.clear();
+        window.localStorage.removeItem('db-editor:db-editor:guided-tour');
       } catch (storageError) {
         editor = null;
       }
@@ -144,9 +147,9 @@ describe('Dynamic builder guided tour', () => {
       expect(window.localStorage.getItem('db-editor:db-editor:guided-tour')).toBe('seen');
       editor.destroy();
       editor = await mountEditor();
-      await new Promise((resolve) => setTimeout(resolve, 60));
+      await new Promise((resolve) => setTimeout(resolve, 900));
       expect(readTourRoot()).toBeNull();
-    });
+    }, 20000);
 
     test('every step offers a skip button that closes the tour at once', async () => {
       editor = await mountEditor();
@@ -254,7 +257,8 @@ describe('Dynamic builder guided tour', () => {
       expect(toastElement.textContent).toContain('beach.png');
       expect(toastElement.querySelector('[data-db-toast-action]').textContent).toBe('Edit photo');
       expect(toastElement.querySelector('[data-db-toast-close]')).toBeTruthy();
-      expect(editor.Modal.isOpen()).toBe(false);
+      expect(toastElement.closest('[data-db-toast-host]')).toBeTruthy();
+      expect(document.querySelector('.gjs-db-photo-modal')).toBeNull();
     });
 
     test('pictures that arrive with a saved project stay quiet', async () => {

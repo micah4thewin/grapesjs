@@ -17,7 +17,7 @@ const renderTourStepView = (rootElement, stepRecords, activeIndex) => {
   rootElement.querySelector('[data-db-tour-title]').textContent = stepRecord.title;
   rootElement.querySelector('[data-db-tour-text]').textContent = stepRecord.description;
   const previousButton = rootElement.querySelector('[data-db-tour-prev]');
-  previousButton.hidden = activeIndex === 0;
+  previousButton.disabled = activeIndex === 0;
   const isLastStep = activeIndex === stepRecords.length - 1;
   const nextButton = rootElement.querySelector('[data-db-tour-next]');
   nextButton.textContent = isLastStep ? 'Done' : 'Next';

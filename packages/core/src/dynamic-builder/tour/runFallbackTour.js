@@ -34,6 +34,7 @@ const runFallbackTour = (containerElement, stepRecords, onFinish) => {
     if (isClosed) return;
     if (keyEvent.key === 'Escape') {
       keyEvent.preventDefault();
+      keyEvent.stopPropagation();
       closeTour();
       return;
     }

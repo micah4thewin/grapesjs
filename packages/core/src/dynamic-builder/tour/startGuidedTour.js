@@ -23,12 +23,16 @@ const startGuidedTour = (editor, tourSettings, notifyWhenUnavailable) => {
   containerElement.setAttribute(runningMarker, 'true');
   mirrorTourThemeTokens(containerElement);
   let activeSession = null;
+  const refreshThemeTokens = () => isEditorLive(editor) && mirrorTourThemeTokens(containerElement);
+  const closeOnDestroy = () => activeSession && activeSession.close && activeSession.close();
   const finishTour = () => {
     containerElement.removeAttribute(runningMarker);
     activeSession = null;
+    editor.off('db:theme:update', refreshThemeTokens);
+    editor.off('destroy', closeOnDestroy);
     editor.trigger('db:tour:end');
   };
-  const closeOnDestroy = () => activeSession && activeSession.close && activeSession.close();
+  editor.on('db:theme:update', refreshThemeTokens);
   editor.on('destroy', closeOnDestroy);
   waitForDriverLibrary(containerElement.ownerDocument, tourSettings, 4000).then((driverFactory) => {
     if (!isEditorLive(editor) || !containerElement.hasAttribute(runningMarker)) return;

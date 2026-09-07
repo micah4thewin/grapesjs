@@ -9,8 +9,9 @@ const getTourOverlayCss = () => `
   position: fixed;
   border-radius: var(--gjs-db-r-2, 8px);
   box-shadow:
+    0 0 0 2px var(--gjs-db-accent, #9d4a26),
     0 0 0 9999px var(--gjs-db-overlay, rgba(28, 26, 23, 0.45)),
-    0 0 0 2px var(--gjs-db-accent, #9d4a26);
+    0 0 0 9999px var(--gjs-db-overlay, rgba(28, 26, 23, 0.45));
   transition: all var(--gjs-db-dur-3, 220ms) var(--gjs-db-ease, ease);
   pointer-events: none;
 }

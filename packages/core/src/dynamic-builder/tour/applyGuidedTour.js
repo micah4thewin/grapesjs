@@ -5,6 +5,7 @@ import readShellPreference from '../shell/readShellPreference.js';
 import registerCommandSet from '../support/registerCommandSet.js';
 import resolveTourSettings from './resolveTourSettings.js';
 import startGuidedTour from './startGuidedTour.js';
+import startTourWhenIdle from './startTourWhenIdle.js';
 import wireTourHelpControl from './wireTourHelpControl.js';
 import writeShellPreference from '../shell/writeShellPreference.js';
 
@@ -14,11 +15,9 @@ const applyGuidedTour = (editor, pluginOptions) => {
   const tourSettings = resolveTourSettings(pluginOptions);
   if (!tourSettings.enabled) return;
   registerCommandSet(editor, {
-    'db:open-tour': (commandEditor) => {
-      writeShellPreference(commandEditor, pluginOptions, preferenceName, 'seen');
-      startGuidedTour(commandEditor, tourSettings, true);
-    },
+    'db:open-tour': (commandEditor) => startGuidedTour(commandEditor, tourSettings, true),
   });
+  editor.on('db:tour:start', () => writeShellPreference(editor, pluginOptions, preferenceName, 'seen'));
   const injectTourStyles = () =>
     isEditorLive(editor) && injectEditorStylesOnce(editor, 'db-css-tour', getTourEditorCss());
   injectTourStyles();
@@ -28,12 +27,8 @@ const applyGuidedTour = (editor, pluginOptions) => {
     injectTourStyles();
     if (tourSettings.showHelpControl) wireTourHelpControl(editor);
     if (!tourSettings.autoStart) return;
-    if (readShellPreference(editor, pluginOptions, preferenceName) !== '') return;
-    setTimeout(() => {
-      if (!isEditorLive(editor)) return;
-      writeShellPreference(editor, pluginOptions, preferenceName, 'seen');
-      startGuidedTour(editor, tourSettings, false);
-    }, tourSettings.startDelay);
+    if (readShellPreference(editor, pluginOptions, preferenceName)) return;
+    setTimeout(() => startTourWhenIdle(editor, tourSettings), tourSettings.startDelay);
   });
 };
 
