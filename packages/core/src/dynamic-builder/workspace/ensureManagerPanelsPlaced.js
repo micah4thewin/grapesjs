@@ -1,4 +1,5 @@
 import collectWorkspaceZoneElements from './collectWorkspaceZoneElements.js';
+import ensureInspectorCommandsActive from './ensureInspectorCommandsActive.js';
 import getManagerRelocationRecords from './getManagerRelocationRecords.js';
 import placeManagerPanel from './placeManagerPanel.js';
 
@@ -10,6 +11,7 @@ const ensureManagerPanelsPlaced = (editor, workspaceElement) => {
   const placedFlags = getManagerRelocationRecords().map((relocationRecord) =>
     placeManagerPanel(editor, viewsContainerElement, zoneElements[relocationRecord.zoneKey], relocationRecord),
   );
+  ensureInspectorCommandsActive(editor);
   const allPlaced = placedFlags.indexOf(false) < 0;
   if (allPlaced) containerElement.classList.add('gjs-db-ws-mounted');
   return allPlaced;

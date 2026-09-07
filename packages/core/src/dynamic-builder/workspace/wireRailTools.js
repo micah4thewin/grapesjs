@@ -26,8 +26,9 @@ const wireRailTools = (editor, workspaceElement) => {
     const closeButton = clickEvent.target.closest && clickEvent.target.closest('[data-db-dock-close]');
     if (closeButton && workspaceElement.contains(closeButton)) closeDock();
   });
-  const followCommand = (toolId) => () => {
+  const followCommand = (toolId) => (commandData) => {
     if (!isEditorLive(editor) || !workspaceElement.isConnected) return;
+    if (!commandData || !commandData.options || !commandData.options.sender) return;
     if (workspaceElement.getAttribute('data-db-active-tool') === toolId) return;
     activateWorkspaceTool(editor, workspaceElement, toolId);
   };

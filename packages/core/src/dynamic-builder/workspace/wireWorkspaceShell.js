@@ -14,13 +14,14 @@ const wireWorkspaceShell = (editor, workspaceElement, pluginOptions, workspaceOp
   wirePagesPane(editor, workspaceElement);
   wireInspectorGroups(editor, workspaceElement, pluginOptions);
   wireInspectorSelection(editor, workspaceElement);
-  wireInspectorToggle(editor, workspaceElement);
   wireDeviceSegment(editor, workspaceElement);
   wireZoomControls(editor, workspaceElement);
   wireStagePreviewToggle(editor, workspaceElement);
+  const requestedTool = workspaceOptions.defaultTool;
+  const startTool = requestedTool === 'layers' || requestedTool === 'pages' ? requestedTool : 'blocks';
+  activateWorkspaceTool(editor, workspaceElement, startTool);
   wireWorkspaceSize(editor, workspaceElement);
-  const startTool = workspaceOptions.defaultTool === 'layers' || workspaceOptions.defaultTool === 'pages';
-  activateWorkspaceTool(editor, workspaceElement, startTool ? workspaceOptions.defaultTool : 'blocks');
+  wireInspectorToggle(editor, workspaceElement);
 };
 
 export default wireWorkspaceShell;
