@@ -27,6 +27,7 @@ import applyReusableComponents from './symbols/applyReusableComponents.js';
 import applySchemaManager from './schema/applySchemaManager.js';
 import applySeoManager from './seo/applySeoManager.js';
 import applySiteIdentity from './siteIdentity/applySiteIdentity.js';
+import applyStockPhotos from './stockPhotos/applyStockPhotos.js';
 import applySiteManager from './siteManager/applySiteManager.js';
 import applyTemplateManager from './templateManager/applyTemplateManager.js';
 import applyEditorShell from './shell/applyEditorShell.js';
@@ -73,6 +74,7 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
     applySiteIdentity,
     applyFontLibrary,
     applyPhotoEditor,
+    applyStockPhotos,
     applyEditorShell,
     applyExperienceUpgrades,
     attachSharedComponentTraits,

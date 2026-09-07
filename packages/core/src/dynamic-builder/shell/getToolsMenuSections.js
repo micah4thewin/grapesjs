@@ -11,6 +11,7 @@ const getToolsMenuSections = () => [
       'db:open-flow-builder',
       'db:preview-animations',
       'db:open-photo-editor',
+      'db:open-stock-photos',
       'db:open-data-sources',
     ],
   },

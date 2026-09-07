@@ -11,6 +11,11 @@ const getDbCommandLabelRecords = () => ({
   },
   'db:open-font-library': { label: 'Fonts', iconName: 'typography', keywords: 'font family typeface heading body' },
   'db:open-photo-editor': { label: 'Photo editor', iconName: 'sliders', keywords: 'image crop resize optimise filter' },
+  'db:open-stock-photos': {
+    label: 'Free photos',
+    iconName: 'image',
+    keywords: 'stock photo image search unsplash pexels openverse free',
+  },
   'db:open-shortcut-help': { label: 'Keyboard shortcuts', iconName: 'keyboard', keywords: 'help keys bindings' },
   'db:open-seo-settings': { label: 'SEO settings', iconName: 'seo', keywords: 'meta title description search' },
   'db:open-schema-manager': { label: 'Schema manager', iconName: 'schema', keywords: 'structured data json-ld' },

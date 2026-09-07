@@ -1,3 +1,5 @@
+import isEditorLive from '../support/isEditorLive.js';
+
 const restrictAssetUploadToImages = (editor) => {
   const applyAcceptAttribute = () => {
     const assetManager = editor.AssetManager;
@@ -7,8 +9,12 @@ const restrictAssetUploadToImages = (editor) => {
       .querySelectorAll('input[type=file]')
       .forEach((inputElement) => inputElement.setAttribute('accept', 'image/*'));
   };
+  const applyAfterRender = () => {
+    if (!isEditorLive(editor)) return;
+    setTimeout(() => isEditorLive(editor) && applyAcceptAttribute(), 0);
+  };
   editor.on('asset:open', applyAcceptAttribute);
-  editor.on('run:open-assets', () => setTimeout(applyAcceptAttribute, 0));
+  editor.on('command:run:core:open-assets', applyAfterRender);
 };
 
 export default restrictAssetUploadToImages;
