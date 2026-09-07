@@ -130,7 +130,6 @@ describe('Dynamic builder site manager', () => {
           fixJsDom,
           (editorInstance) => {
             grapesjs.dynamicBuilder(editorInstance, pluginOptions);
-            applySiteManager(editorInstance, pluginOptions);
           },
         ],
       });

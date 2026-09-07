@@ -10,6 +10,9 @@ import runSwitchSiteCommand from './runSwitchSiteCommand.js';
 import startSiteManagerSession from './startSiteManagerSession.js';
 
 const applySiteManager = (editor, pluginOptions) => {
+  const editorModel = editor.getModel && editor.getModel();
+  if (editorModel && editorModel.get('dbSiteManagerReady')) return;
+  if (editorModel) editorModel.set('dbSiteManagerReady', true);
   const managerOptions = resolveSiteManagerOptions(pluginOptions);
   registerCommandSet(editor, {
     'db:open-site-manager': (commandEditor) => openSiteManagerModal(commandEditor, managerOptions),

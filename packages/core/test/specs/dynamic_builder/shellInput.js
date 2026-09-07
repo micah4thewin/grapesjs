@@ -110,7 +110,10 @@ describe('Dynamic builder shell input', () => {
       editor = grapesjs.init({
         container: '#db-editor',
         storageManager: { autoload: false, autosave: false, type: '' },
-        plugins: [fixJsDom, grapesjs.dynamicBuilder],
+        plugins: [
+          fixJsDom,
+          (editorInstance) => grapesjs.dynamicBuilder(editorInstance, { siteManager: { openOnStart: false } }),
+        ],
       });
       fixJsDomIframe(editor.getModel().shallow);
       return new Promise((resolve) => editor.onReady(() => resolve()));
