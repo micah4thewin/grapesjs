@@ -241,7 +241,7 @@ describe('Dynamic builder interactivity', () => {
       });
     });
 
-    test('custom JavaScript steps stay inert until scripts are allowed', () => {
+    test('custom JavaScript steps ship whatever the custom code switch says', () => {
       const buttonComponent = editor.getWrapper().append({ type: 'db-button' })[0];
       writeComponentFlows(buttonComponent, [
         {
@@ -252,9 +252,11 @@ describe('Dynamic builder interactivity', () => {
         },
       ]);
       const selectedPage = editor.Pages.getSelected();
-      expect(buildPageDocumentMarkup(editor, selectedPage, {})).toContain('var allowCustomJs = false');
+      const blockedMarkup = buildPageDocumentMarkup(editor, selectedPage, {});
+      expect(blockedMarkup).toContain('window.probe = 1');
+      expect(blockedMarkup).not.toContain('allowCustomJs');
       updateSiteMetaRecord(editor, { customCode: { allowScripts: true } });
-      expect(buildPageDocumentMarkup(editor, selectedPage, {})).toContain('var allowCustomJs = true');
+      expect(buildPageDocumentMarkup(editor, selectedPage, {})).toContain('window.probe = 1');
     });
 
     test('flows round-trip through the component attribute', () => {

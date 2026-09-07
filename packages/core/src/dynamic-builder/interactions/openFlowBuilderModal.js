@@ -46,10 +46,7 @@ const openFlowBuilderModal = (editor, targetComponent, openOptions = {}) => {
     editor.trigger('db:flows:update', { component, flows: nextFlows });
   };
   const renderBuilder = (flowRecords, renderOptions = {}) => {
-    const formElement = buildElementFromMarkup(
-      ownerDocument,
-      buildFlowBuilderMarkup(flowRecords, componentLabel),
-    );
+    const formElement = buildElementFromMarkup(ownerDocument, buildFlowBuilderMarkup(flowRecords, componentLabel));
     if (!formElement) return;
     formElement.addEventListener('submit', (submitEvent) => submitEvent.preventDefault());
     attachFlowBuilderHandlers(formElement, {

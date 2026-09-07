@@ -1,4 +1,5 @@
 import applyQualityAudits from './audits/applyQualityAudits.js';
+import keepComponentTypeViewStatics from './support/keepComponentTypeViewStatics.js';
 import applyScrollAnimations from './animations/applyScrollAnimations.js';
 import applyBlockLibrary from './blocks/applyBlockLibrary.js';
 import applySiteMetaFoundation from './support/applySiteMetaFoundation.js';
@@ -26,6 +27,8 @@ import applyReusableComponents from './symbols/applyReusableComponents.js';
 import applySchemaManager from './schema/applySchemaManager.js';
 import applySeoManager from './seo/applySeoManager.js';
 import applySiteIdentity from './siteIdentity/applySiteIdentity.js';
+import applySiteManager from './siteManager/applySiteManager.js';
+import applyTemplateManager from './templateManager/applyTemplateManager.js';
 import applyEditorShell from './shell/applyEditorShell.js';
 import applyStyleSectors from './styleSectors/applyStyleSectors.js';
 import deepMergeRecords from './support/deepMergeRecords.js';
@@ -38,6 +41,7 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
   const mergedOptions = deepMergeRecords(getDefaultPluginOptions(), pluginOptions);
   const applyAllModules = composeModuleAppliers([
     applySiteMetaFoundation,
+    keepComponentTypeViewStatics,
     applyEditorTheme,
     applyIconSystem,
     applyDesignTokens,
@@ -58,11 +62,13 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
     applyInteractionFlows,
     applyReusableComponents,
     applyBlockLibrary,
+    applyTemplateManager,
     applySeoManager,
     applySchemaManager,
     applyQualityAudits,
     applyExportSystem,
     applyPersistence,
+    applySiteManager,
     applySiteIdentity,
     applyFontLibrary,
     applyPhotoEditor,

@@ -5,7 +5,6 @@ import buildPageDocumentMarkup from '../../../src/dynamic-builder/exporter/build
 import convertMillisecondsToSeconds from '../../../src/dynamic-builder/interactions/convertMillisecondsToSeconds';
 import convertSecondsToMilliseconds from '../../../src/dynamic-builder/interactions/convertSecondsToMilliseconds';
 import describeFlowPreviewWarnings from '../../../src/dynamic-builder/interactions/describeFlowPreviewWarnings';
-import describeFlowSaveNotice from '../../../src/dynamic-builder/interactions/describeFlowSaveNotice';
 import describeTargetMatches from '../../../src/dynamic-builder/interactions/describeTargetMatches';
 import getDialogRuntimeSource from '../../../src/dynamic-builder/interactions/getDialogRuntimeSource';
 import getFlowRuntimeSource from '../../../src/dynamic-builder/interactions/getFlowRuntimeSource';
@@ -136,7 +135,7 @@ describe('Dynamic builder motion', () => {
     });
 
     test('the runtime binds keyboard access, typing guards and remembered values', () => {
-      const runtimeSource = getFlowRuntimeSource(false);
+      const runtimeSource = getFlowRuntimeSource();
       expect(runtimeSource).toContain('setAttribute("role", "button")');
       expect(runtimeSource).toContain('"focusout"');
       expect(runtimeSource).toContain('isTypingTarget(keyEvent.target, element)');
@@ -191,30 +190,23 @@ describe('Dynamic builder motion', () => {
       expect(describeTargetMatches(document, '.missing-thing').state).toBe('empty');
       expect(describeTargetMatches(document, '#(').state).toBe('invalid');
       expect(describeTargetMatches(document, '').state).toBe('self');
-      const warnings = describeFlowPreviewWarnings(
-        document,
-        [
-          {
-            actions: [
-              { type: 'custom-js', options: {} },
-              { type: 'show', options: { target: '.missing-thing' } },
-            ],
-          },
-        ],
-        false,
-      );
+      const warnings = describeFlowPreviewWarnings(document, [
+        {
+          actions: [
+            { type: 'open-url', options: { url: '/next' } },
+            { type: 'show', options: { target: '.missing-thing' } },
+          ],
+        },
+      ]);
       expect(warnings.length).toBe(2);
     });
 
-    test('a blocked script step is called out on save and again when the visitor clicks', () => {
-      const scriptFlows = [{ actions: [{ type: 'custom-js', options: { code: 'x' } }] }];
-      expect(describeFlowSaveNotice([], false).text).toBe('Flows cleared.');
-      expect(describeFlowSaveNotice(scriptFlows, false).kind).toBe('warning');
-      expect(describeFlowSaveNotice(scriptFlows, true).text).toBe('Flows saved.');
-      const runtimeSource = getFlowRuntimeSource(false);
+    test('a step the preview cannot finish says so at the moment it is clicked', () => {
+      const runtimeSource = getFlowRuntimeSource();
       expect(runtimeSource).toContain('window.dbFlowsNotice(messageText)');
-      expect(runtimeSource).toContain('Allow script tags turned on in Custom code');
       expect(runtimeSource).toContain('Links are not opened while you preview');
+      expect(runtimeSource).toContain('Forms are not sent while you preview');
+      expect(runtimeSource).not.toContain('allowCustomJs');
     });
   });
 
@@ -239,6 +231,15 @@ describe('Dynamic builder motion', () => {
       expect(childComponents.at(0).get('editable')).toBe(false);
       expect(htmlComponent.toHTML()).toContain('Contact');
       expect(htmlComponent.toHTML()).not.toContain('htmlCode');
+    });
+
+    test('flows pasted into a custom HTML block are dropped', () => {
+      const htmlComponent = editor.getWrapper().append({ type: 'db-custom-html' })[0];
+      htmlComponent.addAttributes({
+        htmlCode: '<button data-db-flows="[]" class="pasted">Hi</button>',
+      });
+      expect(htmlComponent.toHTML()).toContain('pasted');
+      expect(htmlComponent.toHTML()).not.toContain('data-db-flows');
     });
 
     test('the script card says when it will not ship', async () => {

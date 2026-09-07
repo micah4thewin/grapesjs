@@ -7,9 +7,7 @@ const stripPastedFlowAttributes = (htmlMarkup) => {
   );
   const bodyElement = parsedDocument.body;
   if (!bodyElement) return markupText;
-  [...bodyElement.querySelectorAll('[data-db-flows]')].forEach((element) =>
-    element.removeAttribute('data-db-flows'),
-  );
+  [...bodyElement.querySelectorAll('[data-db-flows]')].forEach((element) => element.removeAttribute('data-db-flows'));
   return bodyElement.innerHTML;
 };
 

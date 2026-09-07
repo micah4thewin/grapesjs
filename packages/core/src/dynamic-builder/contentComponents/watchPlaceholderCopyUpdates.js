@@ -14,7 +14,10 @@ const watchPlaceholderCopyUpdates = (editor, contentTextDefaults) => {
   editor.on('component:add', (component, options) => {
     if (options && options.temporary) return;
     const hostComponent = resolvePlaceholderHost(component);
-    hostComponent && syncPlaceholderMarker(hostComponent, contentTextDefaults, hostComponent === component);
+    if (!hostComponent) return;
+    const isAuthoredMarker = hostComponent === component && hostComponent.getAttributes()['data-db-placeholder'];
+    if (isAuthoredMarker) return;
+    syncPlaceholderMarker(hostComponent, contentTextDefaults, hostComponent === component);
   });
   editor.on('component:remove', (component) => {
     const hostComponent = resolvePlaceholderHost(component);
