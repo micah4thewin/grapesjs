@@ -1,4 +1,5 @@
-import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
+import buildDragRule from '../support/buildDragRule.js';
+import getDropTargetTypes from '../support/getDropTargetTypes.js';
 import buildSpacingSelectOptions from './buildSpacingSelectOptions.js';
 import getColumnPresetRecord from './getColumnPresetRecord.js';
 import getLayoutSpacingScale from './getLayoutSpacingScale.js';
@@ -17,7 +18,7 @@ const buildColumnsTypeDefinition = () => {
       defaults: {
         tagName: 'div',
         name: 'Columns',
-        draggable: getDropTargetSelectors().sectionBody,
+        draggable: buildDragRule(getDropTargetTypes().sectionBody),
         droppable: '[data-db-type=column]',
         classes: ['db-columns'],
         attributes: {

@@ -11,7 +11,8 @@ const toggleEditorThemeMode = (editor, pluginOptions) => {
   const followsSystem = !isForcedMode && nextMode === resolveSystemThemeMode(containerElement);
   if (followsSystem) containerElement.removeAttribute('data-theme');
   else containerElement.setAttribute('data-theme', nextMode);
-  if (!isForcedMode && !writeShellPreference(editor, pluginOptions, 'theme', followsSystem ? '' : nextMode)) {
+  const storedValue = followsSystem ? '' : nextMode;
+  if (!isForcedMode && !writeShellPreference(editor, pluginOptions, 'theme', storedValue, 'db-editor-theme')) {
     editor.trigger('db:theme:storage-error');
   }
   editor.trigger('db:theme:update', nextMode);

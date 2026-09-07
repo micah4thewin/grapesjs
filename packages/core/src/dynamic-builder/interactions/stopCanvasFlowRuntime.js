@@ -5,6 +5,7 @@ const restoreCanvasElement = (element) => {
     return;
   }
   ['tabindex', 'role', 'aria-hidden', 'hidden'].forEach((attributeName) => element.removeAttribute(attributeName));
+  element.style.removeProperty('display');
 };
 
 const stopCanvasFlowRuntime = (editor) => {
@@ -12,6 +13,7 @@ const stopCanvasFlowRuntime = (editor) => {
   const canvasDocument = editor.Canvas && editor.Canvas.getDocument && editor.Canvas.getDocument();
   if (!canvasWindow || !canvasDocument) return;
   canvasWindow.dbFlowsPreview = false;
+  canvasWindow.dbFlowsNotice = null;
   const registry = canvasWindow.dbFlows;
   canvasWindow.dbFlows = null;
   if (registry) {

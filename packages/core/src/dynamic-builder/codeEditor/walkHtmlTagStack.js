@@ -34,7 +34,7 @@ const walkHtmlTagStack = (codeText) => {
     if (isClosing) {
       const openIndex = openStack.lastIndexOf(tagName);
       if (openIndex < 0) {
-        return { problem: 'Found </' + tagName + '> but no <' + tagName + '> is open.' };
+        return { problem: 'Check the closing tags: </' + tagName + '> has no matching <' + tagName + '>.' };
       }
       const skippedTags = openStack.splice(openIndex + 1);
       const strictSkipped = skippedTags.filter((skippedName) => optionalCloseTagNames.indexOf(skippedName) < 0);

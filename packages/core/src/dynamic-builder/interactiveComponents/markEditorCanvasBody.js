@@ -1,3 +1,5 @@
+import isEditorLive from '../support/isEditorLive.js';
+
 const markEditorCanvasBody = (editor) => {
   const resolveCanvasBody = () => {
     const canvasDocument = editor.Canvas && editor.Canvas.getDocument && editor.Canvas.getDocument();
@@ -15,6 +17,9 @@ const markEditorCanvasBody = (editor) => {
     else bodyElement.removeAttribute('data-db-editor-preview');
   };
   applyCanvasMarker();
+  Promise.resolve().then(() => {
+    if (isEditorLive(editor)) applyCanvasMarker();
+  });
   editor.on('canvas:frame:load:head', applyCanvasMarker);
   editor.on('canvas:frame:load:body', applyCanvasMarker);
   editor.on('command:run:core:preview', () => setPreviewFlag(true));

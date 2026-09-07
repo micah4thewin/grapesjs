@@ -30,7 +30,7 @@ const registerAuditCommands = (editor, moduleOptions) => {
     },
     'db:run-preflight': (commandEditor, commandSender, commandOptions) => {
       const optionsRecord = commandOptions || {};
-      const preflightResult = runPublishPreflight(commandEditor, moduleOptions);
+      const preflightResult = runPublishPreflight(commandEditor, moduleOptions, optionsRecord);
       if (optionsRecord.openReport !== false) openPreflightModal(commandEditor, preflightResult, optionsRecord);
       return preflightResult;
     },

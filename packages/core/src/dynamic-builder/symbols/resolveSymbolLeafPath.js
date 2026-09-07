@@ -4,7 +4,9 @@ const resolveSymbolLeafPath = (instanceComponent, leafComponent) => {
   while (currentComponent && currentComponent !== instanceComponent) {
     const parentComponent = currentComponent.parent ? currentComponent.parent() : null;
     if (!parentComponent) return '';
-    indexPath.unshift(parentComponent.components().indexOf(currentComponent));
+    const componentIndex = parentComponent.components().indexOf(currentComponent);
+    if (componentIndex < 0) return '';
+    indexPath.unshift(componentIndex);
     currentComponent = parentComponent;
   }
   return currentComponent === instanceComponent && indexPath.length ? indexPath.join('.') : '';

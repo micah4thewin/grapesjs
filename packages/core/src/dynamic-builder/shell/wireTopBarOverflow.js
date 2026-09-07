@@ -1,8 +1,10 @@
+import isEditorLive from '../support/isEditorLive.js';
 import isTopBarOverflowing from './isTopBarOverflowing.js';
 
 const wireTopBarOverflow = (editor, stripElement) => {
   const maxCompactLevel = 3;
   const applyCompactLevel = () => {
+    if (!isEditorLive(editor) || !stripElement.isConnected) return;
     let compactLevel = 0;
     stripElement.setAttribute('data-db-compact', '0');
     while (compactLevel < maxCompactLevel && isTopBarOverflowing(stripElement)) {

@@ -1,13 +1,16 @@
 import getIconMarkup from '../support/getIconMarkup.js';
 import getViewsPanelButtonTitles from './getViewsPanelButtonTitles.js';
+import isEditorLive from '../support/isEditorLive.js';
 
 const refineDefaultPanels = (editor) => {
   const panelManager = editor.Panels;
   if (!panelManager || !panelManager.getPanel) return;
-  const removeRedundantPanels = () =>
+  const removeRedundantPanels = () => {
+    if (!isEditorLive(editor)) return;
     ['commands', 'options', 'devices-c'].forEach((redundantPanelId) => {
       if (panelManager.getPanel(redundantPanelId)) panelManager.removePanel(redundantPanelId);
     });
+  };
   removeRedundantPanels();
   editor.on('command:run:core:open-styles', () => setTimeout(removeRedundantPanels, 30));
   const viewButtonPresentation = getViewsPanelButtonTitles();

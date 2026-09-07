@@ -1,5 +1,6 @@
+import buildDragRule from '../support/buildDragRule.js';
 import buildDropRule from '../support/buildDropRule.js';
-import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
+import getDropTargetTypes from '../support/getDropTargetTypes.js';
 import getPageLevelComponentTypes from '../support/getPageLevelComponentTypes.js';
 import buildSectionTraitDefinitions from './buildSectionTraitDefinitions.js';
 
@@ -10,7 +11,7 @@ const buildSectionTypeDefinition = () => ({
     defaults: {
       tagName: 'section',
       name: 'Section',
-      draggable: getDropTargetSelectors().pageOnly,
+      draggable: buildDragRule(getDropTargetTypes().pageOnly),
       droppable: buildDropRule(getPageLevelComponentTypes()),
       classes: ['db-section'],
       attributes: { 'data-db-type': 'section', 'data-db-layout': 'contained', 'data-db-theme': 'default' },

@@ -1,6 +1,7 @@
 import armSymbolDeleteConfirmation from './armSymbolDeleteConfirmation.js';
 import deleteSymbolRecord from './deleteSymbolRecord.js';
 import listSymbolInstances from './listSymbolInstances.js';
+import runSymbolUndoStep from './runSymbolUndoStep.js';
 import showToastNotice from '../support/showToastNotice.js';
 
 const handleSymbolDeleteAction = (editor, symbolRecord, actionElement, libraryCallbacks) => {
@@ -9,8 +10,10 @@ const handleSymbolDeleteAction = (editor, symbolRecord, actionElement, libraryCa
     armSymbolDeleteConfirmation(actionElement);
     return;
   }
-  instanceList.forEach((instanceComponent) => instanceComponent.remove());
-  deleteSymbolRecord(editor, symbolRecord.id);
+  runSymbolUndoStep(editor, () => {
+    instanceList.forEach((instanceComponent) => instanceComponent.remove());
+    deleteSymbolRecord(editor, symbolRecord.id);
+  });
   libraryCallbacks.refresh();
   const removedText = instanceList.length
     ? ' removed from ' + instanceList.length + (instanceList.length === 1 ? ' place.' : ' places.')

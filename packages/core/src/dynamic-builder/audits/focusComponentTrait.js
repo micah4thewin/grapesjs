@@ -1,4 +1,5 @@
 import activateViewsPanelButton from '../shell/activateViewsPanelButton.js';
+import isEditorLive from '../support/isEditorLive.js';
 import locateAuditComponent from './locateAuditComponent.js';
 
 const focusTraitInput = (editor, traitName) => {
@@ -12,7 +13,9 @@ const focusTraitInput = (editor, traitName) => {
 const focusComponentTrait = (editor, component, traitName) => {
   if (!locateAuditComponent(editor, component)) return false;
   activateViewsPanelButton(editor, 'core:open-traits');
-  setTimeout(() => focusTraitInput(editor, traitName), 60);
+  setTimeout(() => {
+    if (isEditorLive(editor)) focusTraitInput(editor, traitName);
+  }, 60);
   return true;
 };
 

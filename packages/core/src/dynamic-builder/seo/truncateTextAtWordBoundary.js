@@ -4,12 +4,13 @@ const truncateTextAtWordBoundary = (textValue, characterLimit) => {
     .trim();
   if (cleanText.length <= characterLimit) return cleanText;
   const clippedText = cleanText.slice(0, characterLimit);
+  const boundarySearchText = cleanText.slice(0, characterLimit + 1);
   const sentenceEnd = Math.max(
-    clippedText.lastIndexOf('. '),
-    clippedText.lastIndexOf('! '),
-    clippedText.lastIndexOf('? '),
+    boundarySearchText.lastIndexOf('. '),
+    boundarySearchText.lastIndexOf('! '),
+    boundarySearchText.lastIndexOf('? '),
   );
-  if (sentenceEnd > characterLimit / 2) return clippedText.slice(0, sentenceEnd + 1);
+  if (sentenceEnd > 0 && sentenceEnd + 1 >= characterLimit / 2) return clippedText.slice(0, sentenceEnd + 1);
   const wordEnd = clippedText.lastIndexOf(' ');
   return (wordEnd > 0 ? clippedText.slice(0, wordEnd) : clippedText).replace(/[,;:\-]+$/, '');
 };

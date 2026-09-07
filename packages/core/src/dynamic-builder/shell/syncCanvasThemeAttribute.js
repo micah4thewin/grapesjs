@@ -1,7 +1,9 @@
+import isEditorLive from '../support/isEditorLive.js';
 import resolveEffectiveThemeMode from './resolveEffectiveThemeMode.js';
 
 const syncCanvasThemeAttribute = (editor) => {
   const applyThemeAttribute = () => {
+    if (!isEditorLive(editor)) return;
     const canvasDocument = editor.Canvas && editor.Canvas.getDocument && editor.Canvas.getDocument();
     if (!canvasDocument || !canvasDocument.documentElement) return;
     canvasDocument.documentElement.setAttribute('data-db-editor-theme', resolveEffectiveThemeMode(editor));

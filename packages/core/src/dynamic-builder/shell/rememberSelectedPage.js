@@ -1,4 +1,5 @@
 import getSiteMetaRecord from '../support/getSiteMetaRecord.js';
+import isEditorLive from '../support/isEditorLive.js';
 import isPlainRecord from '../support/isPlainRecord.js';
 import updateSiteMetaRecord from '../support/updateSiteMetaRecord.js';
 
@@ -23,6 +24,7 @@ const rememberSelectedPage = (editor) => {
     if (!selectedId || selectedId === readStoredPageId()) return;
     pendingWriteTimer = setTimeout(() => {
       pendingWriteTimer = null;
+      if (!isEditorLive(editor)) return;
       if (editor.Pages.get(selectedId)) updateSiteMetaRecord(editor, { shell: { lastPageId: selectedId } });
     }, 150);
   });

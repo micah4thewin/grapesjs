@@ -30,6 +30,7 @@ const stopCanvasAnimationRuntime = (editor) => {
     element.removeAttribute('data-db-aos-in');
     element.style.removeProperty('--db-aos-duration');
     element.style.removeProperty('--db-aos-delay');
+    element.style.removeProperty('will-change');
   });
 };
 

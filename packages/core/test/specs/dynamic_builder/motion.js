@@ -223,9 +223,10 @@ describe('Dynamic builder motion', () => {
       expect(htmlComponent.toHTML()).not.toContain('htmlCode');
     });
 
-    test('the script card says when it will not ship', () => {
+    test('the script card says when it will not ship', async () => {
       const scriptComponent = editor.getWrapper().append({ type: 'db-custom-script' })[0];
       expect(scriptComponent.toHTML()).toBe('');
+      await new Promise((resolve) => setTimeout(resolve, 400));
       const noteTexts = () =>
         scriptComponent
           .find('.db-code-card-note')

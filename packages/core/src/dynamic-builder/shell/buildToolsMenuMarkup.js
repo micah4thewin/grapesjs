@@ -3,11 +3,11 @@ import buildToolsMenuSectionMarkup from './buildToolsMenuSectionMarkup.js';
 import getCoreCommandLabelRecords from './getCoreCommandLabelRecords.js';
 import getDbCommandLabelRecords from './getDbCommandLabelRecords.js';
 import getIconMarkup from '../support/getIconMarkup.js';
-import getToolsMenuSections from './getToolsMenuSections.js';
+import listAvailableToolsMenuSections from './listAvailableToolsMenuSections.js';
 
-const buildToolsMenuMarkup = () => {
+const buildToolsMenuMarkup = (editor) => {
   const labelRecords = { ...getCoreCommandLabelRecords(), ...getDbCommandLabelRecords() };
-  const sectionsMarkup = getToolsMenuSections()
+  const sectionsMarkup = listAvailableToolsMenuSections(editor)
     .map((sectionRecord) => buildToolsMenuSectionMarkup(sectionRecord, labelRecords))
     .join('');
   return [

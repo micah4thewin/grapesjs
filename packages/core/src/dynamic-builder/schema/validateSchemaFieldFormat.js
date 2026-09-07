@@ -1,4 +1,3 @@
-import normalizeSchemaPriceValue from './normalizeSchemaPriceValue.js';
 import normalizeSchemaUrlValue from './normalizeSchemaUrlValue.js';
 
 const isValidDateText = (dateText) =>
@@ -12,7 +11,7 @@ const validateSchemaFieldFormat = (formatName, fieldValue) => {
     return textValue
       .split('\n')
       .every((lineText) => normalizeSchemaUrlValue(lineText.trim()) !== '' || !lineText.trim());
-  if (formatName === 'number') return normalizeSchemaPriceValue(textValue) !== '';
+  if (formatName === 'number') return /^\d+(\.\d+)?$/.test(textValue);
   if (formatName === 'date') return isValidDateText(textValue);
   if (formatName === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(textValue);
   if (formatName === 'tel') return /^\+?[\d\s().-]{5,}$/.test(textValue);

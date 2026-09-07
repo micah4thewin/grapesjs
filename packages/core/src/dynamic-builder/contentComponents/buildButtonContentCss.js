@@ -62,6 +62,12 @@ const buildButtonContentCss = () => `
   padding-left: var(--db-space-3, 0.75rem);
   padding-right: var(--db-space-3, 0.75rem);
 }
+.db-button-md,
+.db-button[data-db-size='md'] {
+  min-height: 44px;
+  font-size: var(--db-type-base, 1rem);
+  padding: var(--db-space-2, 0.5rem) var(--db-space-5, 1.5rem);
+}
 .db-button-sm,
 .db-button[data-db-size='sm'] {
   min-height: 40px;

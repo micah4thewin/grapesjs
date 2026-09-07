@@ -16,6 +16,7 @@ const getAuditFixDefinitions = () => [
   { id: 'aria-label', label: 'Add accessible name', opensPanel: true, run: focusTrait('aria-label') },
   { id: 'form-action', label: 'Connect form', opensPanel: true, run: focusTrait('action') },
   { id: 'link-href', label: 'Set link', opensPanel: true, run: focusTrait('href') },
+  { id: 'privacy-url', label: 'Choose privacy page', opensPanel: true, run: focusTrait('data-db-privacy-url') },
   { id: 'image-source', label: 'Choose picture', opensPanel: true, run: focusTrait('src') },
   {
     id: 'lazy-loading',

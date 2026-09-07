@@ -85,8 +85,10 @@ const runFormBehavior = () => {
       if (invalidControls.length) {
         submitEvent.preventDefault();
         setStatus(formElement.getAttribute('data-db-error-message') || 'Please fix the errors above.', 'error');
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (!reducedMotion) invalidControls[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const motionQuery = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+        const reducedMotion = Boolean(motionQuery && motionQuery.matches);
+        if (!reducedMotion && invalidControls[0].scrollIntoView)
+          invalidControls[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
         invalidControls[0].focus({ preventScroll: !reducedMotion });
         return;
       }

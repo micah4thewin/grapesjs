@@ -1,7 +1,7 @@
 import resolveEffectiveThemeMode from './resolveEffectiveThemeMode.js';
 import toggleEditorThemeMode from './toggleEditorThemeMode.js';
 
-const collectPaletteShellActions = (editor) => {
+const collectPaletteShellActions = (editor, pluginOptions) => {
   const actionRecords = [];
   const nextThemeMode = resolveEffectiveThemeMode(editor) === 'dark' ? 'light' : 'dark';
   actionRecords.push({
@@ -12,7 +12,7 @@ const collectPaletteShellActions = (editor) => {
     keywords: 'theme dark light mode appearance colours colors',
     keysText: '',
     hintText: '',
-    runAction: () => toggleEditorThemeMode(editor),
+    runAction: () => toggleEditorThemeMode(editor, pluginOptions),
   });
   const containerElement = editor.getContainer && editor.getContainer();
   const soundToggle = containerElement && containerElement.querySelector('[data-db-sound-toggle]');

@@ -10,7 +10,7 @@ import getSelectionDependentCommandIds from './getSelectionDependentCommandIds.j
 import resolvePaletteGroupTitle from './resolvePaletteGroupTitle.js';
 import runShellCommand from './runShellCommand.js';
 
-const collectPaletteActions = (editor) => {
+const collectPaletteActions = (editor, pluginOptions) => {
   const shortcutMap = buildCommandShortcutMap(editor);
   const hasSelection = Boolean(editor.getSelected && editor.getSelected());
   const hiddenCommandIds = hasSelection ? [] : getSelectionDependentCommandIds();
@@ -37,7 +37,7 @@ const collectPaletteActions = (editor) => {
   return [
     ...dbRecords,
     ...coreRecords,
-    ...collectPaletteShellActions(editor),
+    ...collectPaletteShellActions(editor, pluginOptions),
     ...collectPaletteDeviceActions(editor),
     ...collectPalettePageActions(editor),
     ...collectPaletteBlockActions(editor),

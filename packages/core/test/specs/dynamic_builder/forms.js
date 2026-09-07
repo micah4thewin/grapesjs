@@ -19,6 +19,22 @@ import wrapOrphanFormChild from '../../../src/dynamic-builder/formComponents/wra
 
 const flushTimers = () => new Promise((resolve) => setTimeout(resolve, 0));
 
+const collectDescendants = (component) =>
+  component
+    .components()
+    .models.reduce(
+      (records, childComponent) => records.concat([childComponent], collectDescendants(childComponent)),
+      [],
+    );
+const findByTag = (component, tagName) =>
+  collectDescendants(component).filter(
+    (childComponent) => String(childComponent.get('tagName')).toLowerCase() === tagName,
+  );
+const findByClass = (component, className) =>
+  collectDescendants(component).filter((childComponent) => childComponent.getClasses().includes(className));
+const findByTagAttribute = (component, tagName, attributeName) =>
+  findByTag(component, tagName).filter((childComponent) => childComponent.getAttributes()[attributeName] !== undefined);
+
 describe('Dynamic builder forms', () => {
   let editor;
 
@@ -81,9 +97,9 @@ describe('Dynamic builder forms', () => {
       })[0];
       expect(formComponent.findType('db-form-status').length).toBe(1);
       const fieldComponent = formComponent.findType('db-form-field')[0];
-      const controlId = fieldComponent.find('input')[0].getAttributes().id;
+      const controlId = findByTag(fieldComponent, 'input')[0].getAttributes().id;
       expect(controlId).toMatch(/^db-field-/);
-      expect(fieldComponent.find('label')[0].getAttributes().for).toBe(controlId);
+      expect(findByTag(fieldComponent, 'label')[0].getAttributes().for).toBe(controlId);
       expect(formComponent.toHTML()).toContain('for="' + controlId + '"');
     });
 
@@ -104,18 +120,18 @@ describe('Dynamic builder forms', () => {
       const fieldComponent = appendForm().append({ type: 'db-form-field' }, { at: 0 })[0];
       fieldComponent.addAttributes({ 'data-db-required': 'true' });
       fieldComponent.addAttributes({ 'data-db-field-kind': 'email' });
-      const controlComponent = fieldComponent.find('input')[0];
+      const controlComponent = findByTag(fieldComponent, 'input')[0];
       expect(controlComponent.getAttributes().type).toBe('email');
       expect(controlComponent.getAttributes().required).toBe('required');
       expect(fieldComponent.getAttributes()['data-db-label']).toBe('Email address');
       fieldComponent.addAttributes({ 'data-db-field-kind': 'textarea' });
-      expect(fieldComponent.find('textarea').length).toBe(1);
-      expect(fieldComponent.find('input').length).toBe(0);
+      expect(findByTag(fieldComponent, 'textarea').length).toBe(1);
+      expect(findByTag(fieldComponent, 'input').length).toBe(0);
     });
 
     test('inline label edits write back to the field so trait changes do not revert them', () => {
       const fieldComponent = appendForm().findType('db-form-field')[0];
-      const labelComponent = fieldComponent.find('label')[0];
+      const labelComponent = findByTag(fieldComponent, 'label')[0];
       expect(labelComponent.get('type')).toBe('db-field-label');
       editor.trigger('rte:disable', { model: labelComponent, el: { textContent: ' Your full name ' } });
       expect(fieldComponent.getAttributes()['data-db-label']).toBe('Your full name');
@@ -129,7 +145,7 @@ describe('Dynamic builder forms', () => {
         { type: 'db-form-field', components: [{ type: 'db-select' }] },
         { at: 0 },
       )[0];
-      const selectComponent = fieldComponent.find('select')[0];
+      const selectComponent = findByTag(fieldComponent, 'select')[0];
       const optionComponents = selectComponent.components().models;
       expect(optionComponents[0].getAttributes().value).toBe('');
       expect(optionComponents[0].getAttributes().disabled).toBe('disabled');
@@ -146,20 +162,20 @@ describe('Dynamic builder forms', () => {
 
     test('radio groups update in place, keep custom styling and sanitise the group name', () => {
       const radioComponent = appendForm().append({ type: 'db-radio-group' }, { at: 0 })[0];
-      const firstChoice = radioComponent.find('.db-choice')[0];
+      const firstChoice = findByClass(radioComponent, 'db-choice')[0];
       firstChoice.addClass('my-custom');
       radioComponent.addAttributes({ 'data-db-selected': 'phone', 'data-db-required': 'true' });
       radioComponent.addAttributes({ 'data-db-legend': 'Pick one' });
-      expect(radioComponent.find('.my-custom').length).toBe(1);
-      expect(radioComponent.find('input[checked]').length).toBe(1);
-      expect(radioComponent.find('input[required]').length).toBe(3);
-      expect(radioComponent.find('legend')[0].toHTML()).toContain('Pick one');
+      expect(findByClass(radioComponent, 'my-custom').length).toBe(1);
+      expect(findByTagAttribute(radioComponent, 'input', 'checked').length).toBe(1);
+      expect(findByTagAttribute(radioComponent, 'input', 'required').length).toBe(3);
+      expect(findByTag(radioComponent, 'legend')[0].toHTML()).toContain('Pick one');
       radioComponent.addAttributes({ 'data-db-group-name': 'a"b c' });
       expect(radioComponent.getAttributes()['data-db-group-name']).toBe('a-b-c');
-      expect(radioComponent.find('input')[0].getAttributes().name).toBe('a-b-c');
+      expect(findByTag(radioComponent, 'input')[0].getAttributes().name).toBe('a-b-c');
       radioComponent.addAttributes({ 'data-db-options': 'email|Email\npost|Post' });
-      expect(radioComponent.find('.db-choice').length).toBe(2);
-      expect(radioComponent.find('.my-custom').length).toBe(1);
+      expect(findByClass(radioComponent, 'db-choice').length).toBe(2);
+      expect(findByClass(radioComponent, 'my-custom').length).toBe(1);
       expect(sanitizeFieldName('  ', 'choice')).toBe('choice');
       expect(serializeOptionEntries([{ optionLabel: 'Email', optionValue: 'email' }, { optionLabel: 'Post' }])).toBe(
         'email|Email\nPost',
@@ -185,6 +201,7 @@ describe('Dynamic builder forms', () => {
       expect(formComponent.findType('db-form-step').length).toBe(2);
       expect(formComponent.findType('db-form-step')[0].findType('db-form-field').length).toBe(3);
       expect(addedStep.getAttributes()['data-db-legend']).toBe('Step 2');
+      expect(findByTag(addedStep, 'legend')[0].toHTML()).toContain('Step 2');
       expect(formComponent.findType('db-form-steps-nav').length).toBe(1);
       const scriptText = buildSiteScriptText(editor, {});
       expect(scriptText).toContain('dbStepsReady');
@@ -382,9 +399,9 @@ describe('Dynamic builder forms', () => {
     test('ensureFieldControlId keeps the help text linked to the control', () => {
       const fieldComponent = appendForm().findType('db-form-field')[2];
       ensureFieldControlId(fieldComponent);
-      const controlAttributes = fieldComponent.find('textarea')[0].getAttributes();
+      const controlAttributes = findByTag(fieldComponent, 'textarea')[0].getAttributes();
       expect(controlAttributes['aria-describedby']).toBe(controlAttributes.id + '-help');
-      expect(fieldComponent.find('small')[0].getAttributes().id).toBe(controlAttributes.id + '-help');
+      expect(findByTag(fieldComponent, 'small')[0].getAttributes().id).toBe(controlAttributes.id + '-help');
     });
   });
 });

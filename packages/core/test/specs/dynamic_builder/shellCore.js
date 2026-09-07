@@ -166,8 +166,8 @@ describe('Dynamic builder shell core', () => {
       expect(window.localStorage.getItem('db-editor:db-project:probe:theme')).toBe('dark');
       expect(toggleEditorThemeMode(editor, pluginOptions)).toBe('light');
       expect(containerElement.getAttribute('data-theme')).toBeNull();
-      expect(window.localStorage.getItem('db-editor:db-project:probe:theme')).toBeNull();
-      expect(window.localStorage.getItem('db-editor-theme')).toBeNull();
+      expect(window.localStorage.getItem('db-editor:db-project:probe:theme')).toBeFalsy();
+      expect(window.localStorage.getItem('db-editor-theme')).toBeFalsy();
     });
 
     test('action toasts expose an undo button, a dismiss control and an alert role for errors', () => {

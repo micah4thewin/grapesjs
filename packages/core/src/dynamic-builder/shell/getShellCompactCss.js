@@ -35,6 +35,10 @@ const getShellCompactCss = () => `
 [data-db-panel='db-top'][data-db-compact='3'] [data-db-snapshot-button] {
   display: none;
 }
+[data-db-panel='db-top'][data-db-compact='2'] .gjs-db-optional-group .gjs-db-menu-trigger-label,
+[data-db-panel='db-top'][data-db-compact='3'] .gjs-db-optional-group .gjs-db-menu-trigger-label {
+  display: none;
+}
 [data-db-panel='db-top'][data-db-compact='3'] .gjs-db-shell-brand-group,
 [data-db-panel='db-top'][data-db-compact='3'] [data-db-theme-toggle],
 [data-db-panel='db-top'][data-db-compact='3'] [data-db-command='core:undo'],

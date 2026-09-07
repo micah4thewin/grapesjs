@@ -5,8 +5,9 @@ const wireToastNotifications = (editor) => {
   editor.on('db:revision:saved', () => showToastNotice(editor, 'Snapshot saved', { kind: 'success' }));
   editor.on('db:project:restored', () => showToastNotice(editor, 'Restored your last session'));
   editor.on('db:export:complete', (exportPayload) => {
-    const exportKind = (exportPayload || {}).kind;
-    const messageText = exportKind === 'zip' ? 'site.zip downloaded' : 'Export ready';
+    const payloadRecord = exportPayload || {};
+    const fallbackText = payloadRecord.kind === 'zip' ? 'site.zip downloaded' : 'Export ready';
+    const messageText = String(payloadRecord.message || '').trim() || fallbackText;
     showToastNotice(editor, messageText, { kind: 'success' });
   });
   editor.on('db:save-status', (statusPayload) => {

@@ -5,6 +5,7 @@ import applyIconColorStyle from '../../../src/dynamic-builder/icons/applyIconCol
 import buildCssFilterString from '../../../src/dynamic-builder/photoEditor/buildCssFilterString';
 import buildGalleryMediaCss from '../../../src/dynamic-builder/mediaComponents/buildGalleryMediaCss';
 import computeCropRectangle from '../../../src/dynamic-builder/photoEditor/computeCropRectangle';
+import decodeSvgDataUri from '../../../src/dynamic-builder/icons/decodeSvgDataUri';
 import deriveAltTextFromAssetName from '../../../src/dynamic-builder/mediaComponents/deriveAltTextFromAssetName';
 import describeUploadSavings from '../../../src/dynamic-builder/mediaComponents/describeUploadSavings';
 import describeUploadSkipReason from '../../../src/dynamic-builder/mediaComponents/describeUploadSkipReason';
@@ -407,8 +408,22 @@ describe('Dynamic builder media components', () => {
       sanitizeSvgAssetRecord(editor, badAsset);
       const goodAsset = editor.Assets.add({ src: cleanSource, name: 'good.svg' });
       sanitizeSvgAssetRecord(editor, goodAsset);
+      const handlerSource =
+        'data:image/svg+xml,' +
+        encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg"><circle r="2" onload="alert(1)"/></svg>');
+      const styledSource =
+        'data:image/svg+xml,' +
+        encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg"><style>.a{fill:red}</style><circle r="2"/></svg>');
+      sanitizeSvgAssetRecord(editor, editor.Assets.add({ src: handlerSource, name: 'handler.svg' }));
+      sanitizeSvgAssetRecord(editor, editor.Assets.add({ src: styledSource, name: 'styled.svg' }));
       expect(editor.Assets.getAll().filter((asset) => asset.get('name') === 'bad.svg').length).toBe(0);
+      expect(editor.Assets.getAll().filter((asset) => asset.get('name') === 'handler.svg').length).toBe(0);
       expect(editor.Assets.getAll().filter((asset) => asset.get('name') === 'good.svg').length).toBe(1);
+      const styledAsset = editor.Assets.getAll().filter((asset) => asset.get('name') === 'styled.svg');
+      expect(styledAsset.length).toBe(1);
+      const styledMarkup = decodeSvgDataUri(styledAsset[0].get('src'));
+      expect(styledMarkup).toContain('<circle');
+      expect(styledMarkup).not.toContain('<style');
     });
 
     test('gallery captions toggle every item and the paste link fills the map', () => {

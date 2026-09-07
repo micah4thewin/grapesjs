@@ -1,6 +1,7 @@
 import captureSymbolFromInstance from './captureSymbolFromInstance.js';
 import renderAllSymbolInstances from './renderAllSymbolInstances.js';
 import resolveSymbolIdOfComponent from './resolveSymbolIdOfComponent.js';
+import runSymbolUndoStep from './runSymbolUndoStep.js';
 
 const createSymbolMasterSyncScheduler = (editor) => {
   let syncTimer = null;
@@ -9,8 +10,10 @@ const createSymbolMasterSyncScheduler = (editor) => {
     syncTimer = null;
     isSyncing = true;
     try {
-      captureSymbolFromInstance(editor, instanceComponent);
-      renderAllSymbolInstances(editor, resolveSymbolIdOfComponent(instanceComponent), instanceComponent);
+      runSymbolUndoStep(editor, () => {
+        captureSymbolFromInstance(editor, instanceComponent);
+        renderAllSymbolInstances(editor, resolveSymbolIdOfComponent(instanceComponent), instanceComponent);
+      });
     } finally {
       isSyncing = false;
     }

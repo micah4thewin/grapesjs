@@ -1,3 +1,4 @@
+import buildPreflightSummaryRecords from './buildPreflightSummaryRecords.js';
 import capAuditFindings from './capAuditFindings.js';
 import collectMissingAltItems from './collectMissingAltItems.js';
 import collectPlaceholderLinkItems from './collectPlaceholderLinkItems.js';
@@ -16,7 +17,8 @@ const getPreflightCollectors = () => [
   { group: 'Data', collectItems: collectUnresolvedTokenItems, remainderLabel: 'more data tokens are unresolved' },
 ];
 
-const runPublishPreflight = (editor, moduleOptions) => {
+const runPublishPreflight = (editor, moduleOptions, commandOptions) => {
+  const optionsRecord = commandOptions || {};
   const preflightContext = { editor, moduleOptions: moduleOptions || {} };
   const items = getPreflightCollectors().flatMap((collectorRecord) => {
     try {
@@ -33,7 +35,9 @@ const runPublishPreflight = (editor, moduleOptions) => {
   });
   const preflightResult = {
     items,
+    findings: items,
     counts: countFindingsBySeverity(items),
+    summaries: buildPreflightSummaryRecords(editor, moduleOptions, items, optionsRecord.source === 'export'),
     isReady: items.length === 0,
     completedAt: Date.now(),
     pageCount: editor.Pages && editor.Pages.getAll ? editor.Pages.getAll().length : 1,

@@ -1,3 +1,5 @@
+import isEditorLive from '../support/isEditorLive.js';
+
 const siteFieldKeys = [
   'siteName',
   'titleTemplate',
@@ -20,7 +22,9 @@ const openSeoFieldFromAudit = (editor, fieldKey) => {
   if (!editor.Commands || !editor.Commands.has('db:open-seo-settings')) return false;
   editor.getModel().set('dbSeoActiveTab', siteFieldKeys.includes(fieldKey) ? 'site' : 'page');
   editor.runCommand('db:open-seo-settings');
-  setTimeout(() => focusSeoField(editor, fieldKey), 30);
+  setTimeout(() => {
+    if (isEditorLive(editor)) focusSeoField(editor, fieldKey);
+  }, 30);
   return true;
 };
 

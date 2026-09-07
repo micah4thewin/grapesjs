@@ -1,7 +1,9 @@
+import isEditorLive from '../support/isEditorLive.js';
 import walkComponentTree from '../support/walkComponentTree.js';
 import ensureFieldControlId from './ensureFieldControlId.js';
 import ensureFormStatusChild from './ensureFormStatusChild.js';
 import ensureFormStepsNav from './ensureFormStepsNav.js';
+import syncLegendFromAttribute from './syncLegendFromAttribute.js';
 import syncSubmitButtonClasses from './syncSubmitButtonClasses.js';
 import wrapOrphanFormChild from './wrapOrphanFormChild.js';
 
@@ -13,6 +15,7 @@ const settleFormTree = (rootComponent) => {
       ensureFormStepsNav(visitedComponent);
     }
     if (visitedComponent.is('db-form-field')) ensureFieldControlId(visitedComponent);
+    if (visitedComponent.is('db-form-step')) syncLegendFromAttribute(visitedComponent, 'Step');
     if (visitedComponent.is('db-submit-button')) syncSubmitButtonClasses(visitedComponent);
   });
 };
@@ -24,6 +27,7 @@ const watchFormStructureUpdates = (editor) => {
     if (addedComponent.is('db-form-field')) ensureFieldControlId(addedComponent);
     if (addedComponent.is('db-submit-button')) syncSubmitButtonClasses(addedComponent);
     if (!addedComponent.is('db-form-step')) return;
+    syncLegendFromAttribute(addedComponent, 'Step');
     const formComponent = addedComponent.closestType('db-form');
     if (formComponent) ensureFormStepsNav(formComponent);
   });
@@ -34,7 +38,8 @@ const watchFormStructureUpdates = (editor) => {
       .findType('db-form')
       .forEach((formComponent) => ensureFormStepsNav(formComponent));
   });
-  const wrapDroppedComponent = (droppedComponent) => setTimeout(() => wrapOrphanFormChild(editor, droppedComponent), 0);
+  const wrapDroppedComponent = (droppedComponent) =>
+    setTimeout(() => isEditorLive(editor) && wrapOrphanFormChild(editor, droppedComponent), 0);
   editor.on('block:drag:stop', wrapDroppedComponent);
   editor.on('component:drag:end', (dragRecord) => wrapDroppedComponent(dragRecord && dragRecord.target));
   editor.on('load', () => editor.Pages.getAll().forEach((sitePage) => settleFormTree(sitePage.getMainComponent())));

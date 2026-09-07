@@ -1,8 +1,9 @@
 import grapesjs from '../../../src';
 import { fixJsDom, fixJsDomIframe } from '../../common';
+import getToolsMenuCommandIds from '../../../src/dynamic-builder/shell/getToolsMenuCommandIds';
 
 describe('probe', () => {
-  test('model statics', () => {
+  test('commands', () => {
     document.body.innerHTML = '<div id="fixtures"><div id="db-editor"></div></div>';
     const editor = grapesjs.init({
       container: '#db-editor',
@@ -10,12 +11,9 @@ describe('probe', () => {
       plugins: [fixJsDom, (e) => grapesjs.dynamicBuilder(e, { shell: { firstRunWizard: false } })],
     });
     fixJsDomIframe(editor.getModel().shallow);
-    const types = editor.DomComponents.getTypes();
-    const noDefaults = types.filter((t) => typeof t.model.getDefaults !== 'function').map((t) => t.id);
-    console.log('NO_GETDEFAULTS', JSON.stringify(noDefaults.slice(0, 10)), noDefaults.length);
-    const linkType = editor.DomComponents.getType('link');
-    console.log('LINK_VIEW_OWN', JSON.stringify(Object.keys(linkType.view)));
-    console.log('LINK_PROTO_CHAIN', String(Object.getPrototypeOf(linkType.view) === Function.prototype));
+    const missing = getToolsMenuCommandIds().filter((id) => !editor.Commands.has(id));
+    console.log('MISSING_TOOLS', JSON.stringify(missing));
+    console.log('HAS_SITEMGR', editor.Commands.has('db:open-site-manager'), editor.Commands.has('db:open-template-manager'));
     editor.destroy();
   });
 });

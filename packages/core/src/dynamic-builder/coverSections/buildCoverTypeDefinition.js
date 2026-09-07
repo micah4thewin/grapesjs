@@ -4,7 +4,8 @@ import buildCoverOverlayChild from './buildCoverOverlayChild.js';
 import getCoverTextDefaults from './getCoverTextDefaults.js';
 import getCoverTraitDefinitions from './getCoverTraitDefinitions.js';
 import getDefaultCoverPhotoUri from './getDefaultCoverPhotoUri.js';
-import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
+import buildDragRule from '../support/buildDragRule.js';
+import getDropTargetTypes from '../support/getDropTargetTypes.js';
 import runCoverBehavior from './runCoverBehavior.js';
 
 const buildCoverTypeDefinition = (mediaKind) => {
@@ -18,7 +19,7 @@ const buildCoverTypeDefinition = (mediaKind) => {
       defaults: {
         tagName: 'section',
         name: mediaKind === 'video' ? 'Video cover' : 'Photo cover',
-        draggable: getDropTargetSelectors().pageOnly,
+        draggable: buildDragRule(getDropTargetTypes().pageOnly),
         droppable: false,
         classes: ['db-cover', mediaKind === 'video' ? 'db-cover-video' : 'db-cover-photo'],
         attributes: {

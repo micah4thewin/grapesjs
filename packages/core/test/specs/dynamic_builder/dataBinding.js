@@ -68,8 +68,8 @@ describe('Dynamic builder data binding', () => {
     test('the html filter keeps sanitized markup while plain tokens stay escaped', () => {
       const result = replaceBindingTokensInText({ bio: '<b onclick="x()">bold</b>' }, '{{db:bio|html}} {{db:bio}}');
       expect(result).toContain('<b>bold</b>');
-      expect(result).not.toContain('onclick');
-      expect(result).toContain('&lt;b');
+      expect(result).not.toContain('<b onclick');
+      expect(result).toContain('&lt;b onclick=&quot;x()&quot;&gt;bold&lt;/b&gt;');
     });
   });
 

@@ -15,6 +15,22 @@ const getDbCommandLabelRecords = () => ({
   'db:open-seo-settings': { label: 'SEO settings', iconName: 'seo', keywords: 'meta title description search' },
   'db:open-schema-manager': { label: 'Schema manager', iconName: 'schema', keywords: 'structured data json-ld' },
   'db:open-export': { label: 'Export site', iconName: 'exportBundle', keywords: 'download publish bundle zip' },
+  'db:preview-export': {
+    label: 'Preview the exported site',
+    iconName: 'eye',
+    keywords: 'export preview check output build result',
+  },
+  'db:persist-now': { label: 'Save now', iconName: 'save', keywords: 'save store autosave keep work' },
+  'db:open-site-manager': {
+    label: 'Sites',
+    iconName: 'folder',
+    keywords: 'sites projects switch open workspace',
+  },
+  'db:open-template-manager': {
+    label: 'Templates',
+    iconName: 'layers',
+    keywords: 'template starter layout preset page',
+  },
   'db:open-revisions': { label: 'Saved snapshots', iconName: 'history', keywords: 'versions revisions restore backup' },
   'db:save-revision': { label: 'Save a snapshot', iconName: 'bookmark', keywords: 'revision version store backup' },
   'db:open-audit-report': { label: 'Audits report', iconName: 'performance', keywords: 'quality checks review' },

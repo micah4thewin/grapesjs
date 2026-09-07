@@ -1,3 +1,4 @@
+import isEditorLive from '../support/isEditorLive.js';
 import measureAnimationSpan from './measureAnimationSpan.js';
 import runCanvasAnimationRuntime from './runCanvasAnimationRuntime.js';
 import stopCanvasAnimationRuntime from './stopCanvasAnimationRuntime.js';
@@ -21,7 +22,9 @@ const previewAnimationsOnCanvas = (editor) => {
   const animatedCount = runCanvasAnimationRuntime(editor);
   if (!animatedCount) return 0;
   const previewSpan = measureAnimationSpan(canvasDocument) + 1600;
-  const previewTimer = setTimeout(() => stopCanvasAnimationRuntime(editor), previewSpan);
+  const previewTimer = setTimeout(() => {
+    if (isEditorLive(editor)) stopCanvasAnimationRuntime(editor);
+  }, previewSpan);
   editor.getModel().set('dbAnimationPreviewTimer', previewTimer);
   return animatedCount;
 };

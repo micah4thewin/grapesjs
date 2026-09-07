@@ -5,7 +5,9 @@ const syncInputTypeDefaults = (component) => {
   const componentAttributes = component.getAttributes();
   const typeRecords = getInputTypeOptionRecords();
   const nextRecord = typeRecords.find((typeRecord) => typeRecord.id === componentAttributes.type) || typeRecords[0];
-  const previousRecord = typeRecords.find((typeRecord) => typeRecord.id === component.previous('attributes').type);
+  const previousRecord = typeRecords.find(
+    (typeRecord) => typeRecord.id === (component.previous('attributes') || {}).type,
+  );
   const nextAttributes = {};
   const removedAttributes = [];
   if (nextRecord.inputmode) nextAttributes.inputmode = nextRecord.inputmode;

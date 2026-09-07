@@ -85,7 +85,7 @@ describe('Dynamic builder content and layout components', () => {
       const projectJson = JSON.stringify(editor.getProjectData());
       expect(projectJson).not.toContain('dbAddSectionWired');
       editor.loadProjectData(JSON.parse(projectJson));
-      const reloadedSection = editor.getWrapper().find('[data-db-type=section]')[0];
+      const reloadedSection = editor.getWrapper().findType('db-section')[0];
       editor.select(reloadedSection);
       expect(toolbarTitles(reloadedSection)).toContain('Add section below');
       editor.select(reloadedSection.components().at(0));

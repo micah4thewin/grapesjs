@@ -1,5 +1,6 @@
 import collectCanvasFlowRecords from './collectCanvasFlowRecords.js';
 import describeFlowPreviewWarnings from './describeFlowPreviewWarnings.js';
+import isEditorLive from '../support/isEditorLive.js';
 import resolveAllowScripts from './resolveAllowScripts.js';
 import runCanvasFlowRuntime from './runCanvasFlowRuntime.js';
 import showToastNotice from '../support/showToastNotice.js';
@@ -22,9 +23,12 @@ const watchPreviewInteractionMode = (editor, dialogSettings) => {
   watchLiveCanvasModes(editor, {
     delay: 260,
     onRun: (liveEditor) => {
+      if (!isEditorLive(liveEditor)) return;
       if (runCanvasFlowRuntime(liveEditor, dialogSettings)) warnAboutPreviewLimits(liveEditor);
     },
-    onStop: (liveEditor) => stopCanvasFlowRuntime(liveEditor),
+    onStop: (liveEditor) => {
+      if (isEditorLive(liveEditor)) stopCanvasFlowRuntime(liveEditor);
+    },
   });
 };
 

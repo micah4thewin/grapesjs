@@ -1,3 +1,4 @@
+import buildDragRule from '../support/buildDragRule.js';
 import buildDropRule from '../support/buildDropRule.js';
 import getPageLevelComponentTypes from '../support/getPageLevelComponentTypes.js';
 import buildLayoutPlaceholderChildren from './buildLayoutPlaceholderChildren.js';
@@ -9,7 +10,7 @@ const buildContainerTypeDefinition = () => ({
     defaults: {
       tagName: 'div',
       name: 'Container',
-      draggable: '[data-gjs-type=wrapper], [data-db-type=section], [data-db-type=column]',
+      draggable: buildDragRule(['wrapper', 'db-section', 'db-column']),
       droppable: buildDropRule(getPageLevelComponentTypes()),
       classes: ['db-container'],
       attributes: { 'data-db-type': 'container' },

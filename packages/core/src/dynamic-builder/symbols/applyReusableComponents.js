@@ -1,6 +1,7 @@
 import buildSymbolCanvasCss from './buildSymbolCanvasCss.js';
 import buildSymbolEditorOnlyCss from './buildSymbolEditorOnlyCss.js';
 import buildSymbolTypeDefinition from './buildSymbolTypeDefinition.js';
+import ensureComponentTypeViewEvents from '../support/ensureComponentTypeViewEvents.js';
 import getSymbolEditorCss from './getSymbolEditorCss.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
 import openSymbolLibraryModal from './openSymbolLibraryModal.js';
@@ -22,6 +23,7 @@ import wireSymbolToolbarActions from './wireSymbolToolbarActions.js';
 const applyReusableComponents = (editor, pluginOptions) => {
   const moduleOptions = (pluginOptions && pluginOptions.symbols) || {};
   registerComponentTypeSet(editor, [buildSymbolTypeDefinition()]);
+  ensureComponentTypeViewEvents(editor);
   registerCanvasStyles(editor, 'db-css-symbols-base', buildSymbolCanvasCss());
   registerEditorOnlyCanvasStyles(editor, 'db-symbols-canvas-editor-only', buildSymbolEditorOnlyCss());
   watchSymbolLibraryHistory(editor);

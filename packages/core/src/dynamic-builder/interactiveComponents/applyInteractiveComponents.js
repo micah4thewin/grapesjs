@@ -22,6 +22,7 @@ import getNavbarScrollRuntimeSource from './getNavbarScrollRuntimeSource.js';
 import hasComponentWithAttribute from '../support/hasComponentWithAttribute.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
 import markEditorCanvasBody from './markEditorCanvasBody.js';
+import prepareEditorCanvasFrame from './prepareEditorCanvasFrame.js';
 import registerCanvasStyles from '../support/registerCanvasStyles.js';
 import registerCommandSet from '../support/registerCommandSet.js';
 import registerComponentTypeSet from '../support/registerComponentTypeSet.js';
@@ -68,6 +69,7 @@ const applyInteractiveComponents = (editor, pluginOptions) => {
   registerCommandSet(editor, {
     'db:navbar-build-menu': (commandEditor) => runNavbarBuildMenuCommand(commandEditor),
   });
+  prepareEditorCanvasFrame(editor);
   markEditorCanvasBody(editor);
   watchInteractiveComponentAdds(editor, interactiveTextDefaults);
   watchInteractiveAttributeUpdates(editor);

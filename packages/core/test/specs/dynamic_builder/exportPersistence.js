@@ -335,6 +335,7 @@ describe('Dynamic builder export and persistence with an editor', () => {
 
   describe('preflight and download', () => {
     test('runs the audits when no preflight command exists', () => {
+      editor.Commands.remove('db:run-preflight');
       const preflightRecord = runExportPreflight(editor);
       expect(preflightRecord.source).toBe('audits');
       expect(preflightRecord.summaries.length).toBe(3);

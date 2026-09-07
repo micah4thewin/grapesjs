@@ -1,4 +1,5 @@
 import collectComponentPlainText from '../schema/collectComponentPlainText.js';
+import isSamplePlaceholderText from './isSamplePlaceholderText.js';
 
 const isSampleTextComponent = (component) => {
   const componentAttributes = component.getAttributes ? component.getAttributes() : {};
@@ -9,7 +10,7 @@ const isSampleTextComponent = (component) => {
     childComponents && childComponents.some((childComponent) => childComponent.get('type') !== 'textnode'),
   );
   if (hasElementChildren) return false;
-  return /lorem ipsum/i.test(collectComponentPlainText(component));
+  return isSamplePlaceholderText(collectComponentPlainText(component));
 };
 
 export default isSampleTextComponent;

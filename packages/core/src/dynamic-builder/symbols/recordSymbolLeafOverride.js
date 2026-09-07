@@ -1,6 +1,7 @@
 import applySymbolElementFlag from './applySymbolElementFlag.js';
 import areDefinitionsEquivalent from './areDefinitionsEquivalent.js';
 import captureSymbolLeafDefinition from './captureSymbolLeafDefinition.js';
+import getSymbolLeafBaseline from './getSymbolLeafBaseline.js';
 import getSymbolOverrides from './getSymbolOverrides.js';
 import getSymbolRecord from './getSymbolRecord.js';
 import resolveDefinitionAtPath from './resolveDefinitionAtPath.js';
@@ -14,8 +15,10 @@ const recordSymbolLeafOverride = (editor, instanceComponent, leafComponent) => {
   if (!leafPath || !symbolRecord) return;
   const leafDefinition = captureSymbolLeafDefinition(leafComponent);
   if (!leafDefinition) return;
-  const masterDefinition = resolveDefinitionAtPath(symbolRecord.components, leafPath);
-  const matchesMaster = areDefinitionsEquivalent(masterDefinition, leafDefinition);
+  const baselineDefinition =
+    getSymbolLeafBaseline(editor, instanceComponent)[leafPath] ||
+    resolveDefinitionAtPath(symbolRecord.components, leafPath);
+  const matchesMaster = areDefinitionsEquivalent(baselineDefinition, leafDefinition);
   const nextOverrides = { ...getSymbolOverrides(instanceComponent) };
   if (matchesMaster && !nextOverrides[leafPath]) return;
   if (matchesMaster) delete nextOverrides[leafPath];

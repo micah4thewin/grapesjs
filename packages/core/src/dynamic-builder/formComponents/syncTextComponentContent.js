@@ -1,5 +1,5 @@
 import escapeHtmlText from '../support/escapeHtmlText.js';
-import readComponentPlainText from './readComponentPlainText.js';
+import readComponentPlainText from '../support/readComponentPlainText.js';
 
 const syncTextComponentContent = (textComponent, nextText) => {
   if (!textComponent || !textComponent.components) return;

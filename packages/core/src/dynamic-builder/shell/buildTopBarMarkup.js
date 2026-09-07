@@ -3,6 +3,7 @@ import buildDeviceGroupMarkup from './buildDeviceGroupMarkup.js';
 import buildDeviceMenuMarkup from './buildDeviceMenuMarkup.js';
 import buildExtraTopBarGroupMarkup from './buildExtraTopBarGroupMarkup.js';
 import buildHistoryGroupMarkup from './buildHistoryGroupMarkup.js';
+import buildOptionalTopBarGroupMarkup from './buildOptionalTopBarGroupMarkup.js';
 import buildPagesMenuMarkup from './buildPagesMenuMarkup.js';
 import buildPreviewExitMarkup from './buildPreviewExitMarkup.js';
 import buildStatusGroupMarkup from './buildStatusGroupMarkup.js';
@@ -18,13 +19,14 @@ const buildTopBarMarkup = (editor, shellOptions, experienceOptions) => {
     '<div class="gjs-db-panel-top" data-db-panel="db-top" role="toolbar" data-db-compact="0"',
     ` aria-label="${escapeHtmlText(toolbarLabel)}">`,
     buildBrandGroupMarkup(brandLabelText),
+    buildOptionalTopBarGroupMarkup(editor),
     buildPagesMenuMarkup(editor),
     buildExtraTopBarGroupMarkup(shellOptions, 'start'),
     buildDeviceGroupMarkup(editor),
     buildDeviceMenuMarkup(editor),
     buildViewGroupMarkup(),
     buildHistoryGroupMarkup(),
-    buildToolsMenuMarkup(),
+    buildToolsMenuMarkup(editor),
     buildPreviewExitMarkup(),
     buildExtraTopBarGroupMarkup(shellOptions, 'end'),
     buildStatusGroupMarkup(experienceOptions),

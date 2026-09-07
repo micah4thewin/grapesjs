@@ -18,6 +18,7 @@ import checkWordCount from '../../../src/dynamic-builder/audits/checkWordCount';
 import evaluateSchemaValidation from '../../../src/dynamic-builder/schema/evaluateSchemaValidation';
 import getAuditContext from '../../../src/dynamic-builder/audits/getAuditContext';
 import getProductValidationRules from '../../../src/dynamic-builder/schema/getProductValidationRules';
+import normalizePreflightResult from '../../../src/dynamic-builder/exporter/normalizePreflightResult';
 import normalizeSchemaPriceValue from '../../../src/dynamic-builder/schema/normalizeSchemaPriceValue';
 import normalizeSchemaUrlValue from '../../../src/dynamic-builder/schema/normalizeSchemaUrlValue';
 import resolveEffectiveBackgroundColor from '../../../src/dynamic-builder/audits/resolveEffectiveBackgroundColor';
@@ -237,6 +238,7 @@ describe('Dynamic builder audits and schema', () => {
       const fixIds = result.items.map((item) => item.fixId);
       expect(fixIds).toContain('form-action');
       expect(fixIds).toContain('link-href');
+      expect(fixIds).toContain('privacy-url');
       expect(fixIds).toContain('edit-text');
       expect(fixIds).toContain('open-site-identity');
       expect(fixIds).toContain('seo-field:canonicalBase');
@@ -253,6 +255,27 @@ describe('Dynamic builder audits and schema', () => {
       const result = editor.runCommand('db:run-preflight', { openReport: false });
       expect(result.items).toEqual([]);
       expect(result.isReady).toBe(true);
+    });
+
+    test('the preflight names data tokens that resolve to nothing', () => {
+      editor.getWrapper().append('<p>{{ db:siteInfo.nope }} {{db:siteInfo.name}}</p>');
+      const dataItems = editor
+        .runCommand('db:run-preflight', { openReport: false })
+        .items.filter((item) => item.group === 'Data');
+      expect(dataItems.length).toBe(1);
+      expect(dataItems[0].message).toContain('{{db:siteInfo.nope}}');
+      expect(dataItems[0].fixId).toBe('open-data-sources');
+    });
+
+    test('the export side can read the preflight result', () => {
+      const result = editor.runCommand('db:run-preflight', { openReport: false, source: 'export' });
+      expect(result.findings).toBe(result.items);
+      const summaryLabels = result.summaries.map((summaryRecord) => summaryRecord.auditLabel);
+      expect(summaryLabels).toContain('Publish checklist');
+      expect(summaryLabels).toContain('SEO');
+      const exportRecord = normalizePreflightResult(result);
+      expect(exportRecord.source).toBe('command');
+      expect(exportRecord.warningCount).toBeGreaterThan(0);
     });
 
     test('opening the preflight renders a checklist modal with fix buttons', () => {

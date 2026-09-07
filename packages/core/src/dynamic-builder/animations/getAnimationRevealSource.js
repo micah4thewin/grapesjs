@@ -1,0 +1,25 @@
+const getAnimationRevealSource = () => [
+  'var readTiming = function (element, timingName, fallbackValue) {',
+  "  var parsedValue = parseInt(element.getAttribute('data-db-aos-' + timingName) || '', 10);",
+  '  return isNaN(parsedValue) ? fallbackValue : parsedValue;',
+  '};',
+  'var applyTiming = function (element) {',
+  "  element.style.setProperty('--db-aos-duration', readTiming(element, 'duration', 700) + 'ms');",
+  "  element.style.setProperty('--db-aos-delay', readTiming(element, 'delay', 0) + 'ms');",
+  '};',
+  'var releaseWillChange = function (element) {',
+  "  if (element.getAttribute('data-db-aos-in') !== 'true') return;",
+  "  element.style.cssText += '; will-change: auto;';",
+  '};',
+  'var reveal = function (element) {',
+  "  element.setAttribute('data-db-aos-in', 'true');",
+  "  var settleAfter = readTiming(element, 'duration', 700) + readTiming(element, 'delay', 0) + 120;",
+  '  setTimeout(function () { releaseWillChange(element); }, settleAfter);',
+  '};',
+  'var hide = function (element) {',
+  "  element.removeAttribute('data-db-aos-in');",
+  "  element.style.removeProperty('will-change');",
+  '};',
+];
+
+export default getAnimationRevealSource;
