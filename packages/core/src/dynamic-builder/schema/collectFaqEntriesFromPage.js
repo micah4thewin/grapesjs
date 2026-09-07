@@ -1,4 +1,5 @@
 import collectComponentPlainText from './collectComponentPlainText.js';
+import componentHasAttribute from './componentHasAttribute.js';
 import findComponentsInTree from './findComponentsInTree.js';
 
 const collectFaqEntriesFromPage = (editor, page) => {
@@ -11,15 +12,11 @@ const collectFaqEntriesFromPage = (editor, page) => {
   );
   return accordionItems
     .map((itemComponent) => {
-      const hasAttribute = (targetComponent, attributeName) => {
-        const componentAttributes = targetComponent.getAttributes ? targetComponent.getAttributes() : {};
-        return componentAttributes[attributeName] !== undefined;
-      };
       const triggerComponent = findComponentsInTree(itemComponent, (candidateComponent) =>
-        hasAttribute(candidateComponent, 'data-db-accordion-trigger'),
+        componentHasAttribute(candidateComponent, 'data-db-accordion-trigger'),
       )[0];
       const panelComponent = findComponentsInTree(itemComponent, (candidateComponent) =>
-        hasAttribute(candidateComponent, 'data-db-accordion-panel'),
+        componentHasAttribute(candidateComponent, 'data-db-accordion-panel'),
       )[0];
       return {
         questionText: collectComponentPlainText(triggerComponent),

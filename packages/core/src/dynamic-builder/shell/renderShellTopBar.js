@@ -8,15 +8,19 @@ import wireHistoryButtons from './wireHistoryButtons.js';
 import wirePagesMenuActions from './wirePagesMenuActions.js';
 import wireSaveStatus from './wireSaveStatus.js';
 import wireThemeToggle from './wireThemeToggle.js';
+import wireToolbarArrowNavigation from './wireToolbarArrowNavigation.js';
 import wireTopBarClickActions from './wireTopBarClickActions.js';
+import wireTopBarOverflow from './wireTopBarOverflow.js';
 import wireViewToggleButtons from './wireViewToggleButtons.js';
 
-const renderShellTopBar = (editor, shellOptions, themeOptions) => {
+const renderShellTopBar = (editor, shellOptions, themeOptions, pluginOptions) => {
   const containerElement = editor.getContainer && editor.getContainer();
   if (!containerElement || !containerElement.ownerDocument) return;
   if (containerElement.querySelector('[data-db-panel="db-top"]')) return;
-  applyStoredThemePreference(editor, themeOptions);
-  const stripElement = buildElementFromMarkup(containerElement.ownerDocument, buildTopBarMarkup(editor, shellOptions));
+  const resolvedOptions = { ...(pluginOptions || {}), shell: shellOptions, theme: themeOptions };
+  applyStoredThemePreference(editor, resolvedOptions);
+  const topBarMarkup = buildTopBarMarkup(editor, shellOptions, resolvedOptions.experience || {});
+  const stripElement = buildElementFromMarkup(containerElement.ownerDocument, topBarMarkup);
   if (!stripElement) return;
   containerElement.classList.add('gjs-db-shell-host');
   containerElement.insertBefore(stripElement, containerElement.firstChild);
@@ -27,9 +31,12 @@ const renderShellTopBar = (editor, shellOptions, themeOptions) => {
   wireViewToggleButtons(editor, stripElement);
   wireHistoryButtons(editor, stripElement);
   wireSaveStatus(editor, stripElement);
-  wireThemeToggle(editor, stripElement);
+  wireThemeToggle(editor, stripElement, resolvedOptions);
   updatePagesTriggerLabel(editor, stripElement);
+  wireToolbarArrowNavigation(stripElement);
+  wireTopBarOverflow(editor, stripElement);
   editor.on('destroy', () => stripElement.remove());
+  editor.trigger('db:shell:ready', { stripElement });
 };
 
 export default renderShellTopBar;

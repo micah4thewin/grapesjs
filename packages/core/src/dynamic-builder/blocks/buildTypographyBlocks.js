@@ -1,5 +1,4 @@
 import buildBlockDefinition from './buildBlockDefinition.js';
-import buildHeadingContentRecord from './buildHeadingContentRecord.js';
 
 const buildTypographyBlocks = () => [
   buildBlockDefinition('db-heading', 'Heading', 'Typography', 'heading', { type: 'db-heading' }),
@@ -16,15 +15,9 @@ const buildTypographyBlocks = () => [
     type: 'db-callout',
     attributes: { 'data-db-variant': 'warning' },
   }),
-  buildBlockDefinition('db-eyebrow-heading', 'Eyebrow', 'Typography', 'badge', [
-    {
-      type: 'db-text',
-      classes: ['db-text', 'db-text-caption', 'db-eyebrow'],
-      attributes: { 'data-db-variant': 'caption' },
-      components: 'Our mission',
-    },
-    buildHeadingContentRecord('2', 'A better way to build for the web'),
-  ]),
+  buildBlockDefinition('db-eyebrow-heading', 'Small label + title', 'Typography', 'badge', {
+    type: 'db-eyebrow-group',
+  }),
 ];
 
 export default buildTypographyBlocks;

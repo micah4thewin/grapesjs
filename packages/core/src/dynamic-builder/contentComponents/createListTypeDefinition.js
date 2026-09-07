@@ -16,7 +16,7 @@ const createListTypeDefinition = (contentTextDefaults) => ({
         {
           type: 'checkbox',
           name: 'tagName',
-          label: 'Ordered',
+          label: 'Numbered list',
           changeProp: true,
           valueTrue: 'ol',
           valueFalse: 'ul',
@@ -24,10 +24,10 @@ const createListTypeDefinition = (contentTextDefaults) => ({
         {
           type: 'select',
           name: 'data-db-spacing',
-          label: 'Spacing',
+          label: 'Space between items',
           options: [
-            { id: 'tight', label: 'Tight' },
             { id: 'normal', label: 'Normal' },
+            { id: 'tight', label: 'Tight' },
             { id: 'loose', label: 'Loose' },
           ],
         },

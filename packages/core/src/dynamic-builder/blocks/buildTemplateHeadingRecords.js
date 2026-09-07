@@ -1,6 +1,9 @@
-const buildTemplateHeadingRecords = (headingText, introText) => [
-  { type: 'db-heading', components: [{ type: 'textnode', content: headingText }] },
-  ...(introText ? [{ type: 'db-text', components: [{ type: 'textnode', content: introText }] }] : []),
+import buildHeadingContentRecord from './buildHeadingContentRecord.js';
+import buildTextContentRecord from './buildTextContentRecord.js';
+
+const buildTemplateHeadingRecords = (headingText, introText, headingLevel = '2') => [
+  buildHeadingContentRecord(headingLevel, headingText),
+  ...(introText ? [buildTextContentRecord(introText, 'lead')] : []),
 ];
 
 export default buildTemplateHeadingRecords;

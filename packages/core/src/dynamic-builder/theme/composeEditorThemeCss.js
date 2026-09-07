@@ -21,6 +21,7 @@ import buildPrimitivePaletteCss from './buildPrimitivePaletteCss.js';
 import buildPrimitiveTopBarCss from './buildPrimitiveTopBarCss.js';
 import buildPrimitivePreviewCardsCss from './buildPrimitivePreviewCardsCss.js';
 import buildMenuPrimitivesCss from './buildMenuPrimitivesCss.js';
+import buildShellChromeButtonsCss from './buildShellChromeButtonsCss.js';
 import buildToastCss from './buildToastCss.js';
 import buildPreviewChromeFixCss from './buildPreviewChromeFixCss.js';
 import buildModalFieldRefinementsCss from './buildModalFieldRefinementsCss.js';
@@ -51,6 +52,7 @@ const composeEditorThemeCss = () =>
     buildPrimitiveTopBarCss,
     buildPrimitivePreviewCardsCss,
     buildMenuPrimitivesCss,
+    buildShellChromeButtonsCss,
     buildToastCss,
     buildPreviewChromeFixCss,
     buildModalFieldRefinementsCss,

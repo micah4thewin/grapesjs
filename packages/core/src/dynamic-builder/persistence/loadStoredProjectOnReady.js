@@ -5,11 +5,12 @@ import isPlainRecord from '../support/isPlainRecord.js';
 import readStoredJsonRecord from './readStoredJsonRecord.js';
 import replaceSiteMetaRecord from '../support/replaceSiteMetaRecord.js';
 import resetUndoHistory from './resetUndoHistory.js';
+import resolveStorageKey from './resolveStorageKey.js';
 
 const loadStoredProjectOnReady = (editor, moduleOptions) => {
   if (!editor.onReady) return;
   editor.onReady(() => {
-    const storedSnapshot = readStoredJsonRecord(moduleOptions.storageKey);
+    const storedSnapshot = readStoredJsonRecord(resolveStorageKey(editor, moduleOptions));
     if (!isPlainRecord(storedSnapshot) || !isPlainRecord(storedSnapshot.projectData)) return;
     if (isDraftRecoveryMode(editor, moduleOptions)) {
       editor.trigger('db:project:draft-available', { savedAt: storedSnapshot.savedAt || '' });

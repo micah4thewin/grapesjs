@@ -9,7 +9,7 @@ import checkOversizedImages from './checkOversizedImages.js';
 import getAuditContext from './getAuditContext.js';
 import runAuditChecks from './runAuditChecks.js';
 
-const runPerformanceAudit = (editor, moduleOptions) =>
+const runPerformanceAudit = (editor, moduleOptions, auditContext) =>
   runAuditChecks(
     [
       checkOversizedImages,
@@ -21,7 +21,7 @@ const runPerformanceAudit = (editor, moduleOptions) =>
       checkIframeCount,
       checkLazyMediaPresence,
     ],
-    getAuditContext(editor, moduleOptions),
+    auditContext || getAuditContext(editor, moduleOptions),
   );
 
 export default runPerformanceAudit;

@@ -1,5 +1,6 @@
 import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildCarouselDefaultChildren from './buildCarouselDefaultChildren.js';
+import getCarouselTraitDefinitions from './getCarouselTraitDefinitions.js';
 import runCarouselBehavior from './runCarouselBehavior.js';
 
 const buildCarouselTypeDefinition = () => ({
@@ -24,42 +25,7 @@ const buildCarouselTypeDefinition = () => ({
       },
       components: buildCarouselDefaultChildren(),
       script: runCarouselBehavior,
-      traits: [
-        { type: 'db-aria-label', name: 'aria-label', label: 'Carousel label' },
-        {
-          type: 'checkbox',
-          name: 'data-db-autoplay',
-          label: 'Autoplay',
-          valueTrue: 'true',
-          valueFalse: 'false',
-          default: 'false',
-        },
-        {
-          type: 'number',
-          name: 'data-db-interval',
-          label: 'Autoplay interval (ms)',
-          min: 2000,
-          max: 60000,
-          step: 500,
-          default: '5000',
-        },
-        {
-          type: 'checkbox',
-          name: 'data-db-loop',
-          label: 'Loop slides',
-          valueTrue: 'true',
-          valueFalse: 'false',
-          default: 'true',
-        },
-        {
-          type: 'checkbox',
-          name: 'data-db-dots',
-          label: 'Show dots',
-          valueTrue: 'true',
-          valueFalse: 'false',
-          default: 'true',
-        },
-      ],
+      traits: getCarouselTraitDefinitions(),
     },
   },
 });

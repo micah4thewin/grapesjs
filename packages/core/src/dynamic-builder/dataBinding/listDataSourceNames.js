@@ -1,10 +1,10 @@
-import buildDefaultDataSources from './buildDefaultDataSources.js';
-import isPlainRecord from '../support/isPlainRecord.js';
+import getDataSourceRegistry from './getDataSourceRegistry.js';
 
-const listDataSourceNames = (editorModel) => {
-  const registryRecord = editorModel && editorModel.get ? editorModel.get('dbDataSources') : null;
-  const sourcesRecord = isPlainRecord(registryRecord) ? registryRecord : buildDefaultDataSources();
-  return Object.keys(sourcesRecord).sort();
+const listDataSourceNames = (editor) => {
+  if (!editor || typeof editor.getModel !== 'function') return [];
+  return Object.keys(getDataSourceRegistry(editor)).sort((firstName, secondName) =>
+    firstName.localeCompare(secondName, undefined, { sensitivity: 'base' }),
+  );
 };
 
 export default listDataSourceNames;

@@ -6,7 +6,10 @@ const renderRevisionListElement = (listElement, revisionList) => {
     listElement.innerHTML = '<li class="gjs-db-list-item gjs-db-muted">No revisions saved yet.</li>';
     return;
   }
-  listElement.innerHTML = revisionList.map((revisionRecord) => buildRevisionItemMarkup(revisionRecord)).join('');
+  const nowValue = new Date();
+  listElement.innerHTML = revisionList
+    .map((revisionRecord) => buildRevisionItemMarkup(revisionRecord, nowValue))
+    .join('');
 };
 
 export default renderRevisionListElement;

@@ -1,4 +1,5 @@
 import buildExportCheckboxMarkup from './buildExportCheckboxMarkup.js';
+import buildExportCustomScriptsStatusMarkup from './buildExportCustomScriptsStatusMarkup.js';
 import getSiteCustomCodeRecord from './getSiteCustomCodeRecord.js';
 
 const buildExportOptionsSectionMarkup = (editor) => {
@@ -8,32 +9,25 @@ const buildExportOptionsSectionMarkup = (editor) => {
     '<div class="gjs-db-section-title">Options</div>',
     buildExportCheckboxMarkup(
       'separateAssets',
-      'Separate assets',
-      'Link styles.css and site.js from every page instead of inlining styles and scripts.',
-      false,
-      false,
+      'Use shared style and script files',
+      'Every page links to one styles.css and one site.js, and page downloads include them. ' +
+        'Turn this off to get self-contained pages that carry their own styles and scripts.',
+      true,
     ),
     buildExportCheckboxMarkup(
       'resolveBindings',
-      'Resolve data bindings',
-      'Replace binding tokens with values from the data source registry in the exported markup.',
+      'Fill in live data',
+      'Replaces data placeholders with the real content from your data sources, so visitors see finished pages.',
       true,
-      false,
     ),
     buildExportCheckboxMarkup(
       'includeProjectBackup',
-      'Include project backup files',
-      'Adds project.json and design-tokens.json. These expose your full editor project, so leave this off for public hosting.',
-      false,
+      'Include backup files',
+      'Adds project.json and design-tokens.json so you can restore or hand over the project. ' +
+        'Leave this off for files you upload to a public host.',
       false,
     ),
-    buildExportCheckboxMarkup(
-      'includeCustomScripts',
-      'Include custom scripts',
-      'Read only. Mirrors the allow scripts flag from the Custom code settings.',
-      allowScripts,
-      true,
-    ),
+    buildExportCustomScriptsStatusMarkup(allowScripts),
     '</section>',
   ].join('');
 };

@@ -1,8 +1,8 @@
 import formatByteSizeText from '../support/formatByteSizeText.js';
 import measureStorageUsageBytes from './measureStorageUsageBytes.js';
 
-const buildStorageUsageText = (moduleOptions) => {
-  const usedBytes = measureStorageUsageBytes(moduleOptions);
+const buildStorageUsageText = (editor, moduleOptions) => {
+  const usedBytes = measureStorageUsageBytes(editor, moduleOptions);
   const budgetBytes = 5 * 1024 * 1024;
   const usedShare = Math.min(1, usedBytes / budgetBytes);
   const noteText = usedShare > 0.8 ? ' Delete old revisions to keep autosave working.' : '';

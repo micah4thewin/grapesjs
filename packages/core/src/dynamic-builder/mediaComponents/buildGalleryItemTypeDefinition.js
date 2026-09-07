@@ -1,10 +1,12 @@
+import buildMediaTraitCategory from './buildMediaTraitCategory.js';
+
 const buildGalleryItemTypeDefinition = () => ({
   type: 'db-gallery-item',
   isComponent: (el) => Boolean(el && el.dataset && el.dataset.dbType === 'gallery-item') && { type: 'db-gallery-item' },
   model: {
     defaults: {
       tagName: 'figure',
-      name: 'Gallery item',
+      name: 'Gallery picture',
       draggable: '[data-db-type=gallery]',
       droppable: false,
       classes: ['db-gallery-item'],
@@ -21,6 +23,7 @@ const buildGalleryItemTypeDefinition = () => ({
           valueTrue: 'true',
           valueFalse: 'false',
           default: 'true',
+          category: buildMediaTraitCategory('gallery-item', 'Gallery picture'),
         },
       ],
     },

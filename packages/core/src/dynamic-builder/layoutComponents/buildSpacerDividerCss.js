@@ -3,10 +3,10 @@ import getLayoutSpacingScale from './getLayoutSpacingScale.js';
 const buildSpacerDividerCss = () => {
   const spacerSizeRecord = getLayoutSpacingScale().spacerSizes;
   const spacerRules = Object.keys(spacerSizeRecord).map(
-    (sizeKey) => `.db-spacer[data-db-spacer=${sizeKey}] { height: ${spacerSizeRecord[sizeKey].cssValue}; }`,
+    (sizeKey) => `.db-spacer[data-db-spacer=${sizeKey}] { --db-spacer-preset: ${spacerSizeRecord[sizeKey].cssValue}; }`,
   );
   return [
-    '.db-spacer { display: block; width: 100%; height: var(--db-space-8, 3rem); }',
+    '.db-spacer { --db-spacer-preset: var(--db-space-8, 3rem); display: block; width: 100%; height: var(--db-spacer-height, var(--db-spacer-preset)); }',
     ...spacerRules,
     '.db-divider { display: block; border: none; border-top: 1px solid var(--db-color-line, #dfe3ea); margin: var(--db-space-6, 2rem) auto; width: 100%; }',
     '.db-divider[data-db-divider=dashed] { border-top-style: dashed; }',

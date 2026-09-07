@@ -1,4 +1,5 @@
 import getViewToggleCommandIds from './getViewToggleCommandIds.js';
+import wirePreviewModeChrome from './wirePreviewModeChrome.js';
 
 const wireViewToggleButtons = (editor, stripElement) => {
   getViewToggleCommandIds().forEach((commandId) => {
@@ -10,6 +11,7 @@ const wireViewToggleButtons = (editor, stripElement) => {
     editor.on(`command:stop:${commandId}`, () => setPressedState(false));
     setPressedState(editor.Commands.isActive(commandId));
   });
+  wirePreviewModeChrome(editor, stripElement);
 };
 
 export default wireViewToggleButtons;

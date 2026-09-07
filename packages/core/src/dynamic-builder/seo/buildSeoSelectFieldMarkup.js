@@ -1,3 +1,4 @@
+import buildSeoFieldAttributesMarkup from './buildSeoFieldAttributesMarkup.js';
 import buildSeoFieldHelpMarkup from './buildSeoFieldHelpMarkup.js';
 import buildSeoFieldLabelMarkup from './buildSeoFieldLabelMarkup.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
@@ -16,12 +17,12 @@ const buildSeoSelectFieldMarkup = (fieldKey, labelText, helpText, selectedValue,
     )
     .join('');
   return [
-    '<div class="gjs-db-field">',
+    '<div class="gjs-db-field" data-db-seo-field-wrap="' + escapeHtmlText(fieldKey) + '">',
     buildSeoFieldLabelMarkup(fieldKey, labelText, ''),
-    '<select class="gjs-db-field-input" id="gjs-db-seo-' + fieldKey + '" data-db-seo-field="' + fieldKey + '">',
+    '<select class="gjs-db-field-input"' + buildSeoFieldAttributesMarkup(fieldKey) + '>',
     optionMarkup,
     '</select>',
-    buildSeoFieldHelpMarkup(helpText),
+    buildSeoFieldHelpMarkup(fieldKey, helpText),
     '</div>',
   ].join('');
 };

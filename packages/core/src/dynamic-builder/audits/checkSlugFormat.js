@@ -14,6 +14,7 @@ const checkSlugFormat = (auditContext) => {
       'Metadata',
       'The page slug "' + slugValue + '" is not URL friendly.',
       'Use lowercase letters, numbers, and hyphens, for example "' + normalizedSlug + '".',
+      { fixId: 'seo-field:slug' },
     ),
   ];
 };

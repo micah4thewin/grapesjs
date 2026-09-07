@@ -1,52 +1,62 @@
-import captureSymbolFromInstance from './captureSymbolFromInstance.js';
+import createSymbolMasterSyncScheduler from './createSymbolMasterSyncScheduler.js';
 import findOwningSymbolInstance from './findOwningSymbolInstance.js';
+import findOwningSymbolLeaf from './findOwningSymbolLeaf.js';
+import isEditorOnlyComponentUpdate from './isEditorOnlyComponentUpdate.js';
 import isSymbolInstanceEditing from './isSymbolInstanceEditing.js';
+import isSymbolRenderBusy from './isSymbolRenderBusy.js';
+import recordSymbolLeafOverride from './recordSymbolLeafOverride.js';
+import refreshSymbolElementFlags from './refreshSymbolElementFlags.js';
 import renderAllSymbolInstances from './renderAllSymbolInstances.js';
 import renderSymbolInstance from './renderSymbolInstance.js';
 import resolveSymbolIdOfComponent from './resolveSymbolIdOfComponent.js';
 
 const watchSymbolInstances = (editor) => {
-  let syncTimer = null;
-  let isSyncing = false;
-  const scheduleMasterSync = (instanceComponent) => {
-    if (isSyncing) return;
-    syncTimer && clearTimeout(syncTimer);
-    syncTimer = setTimeout(() => {
-      isSyncing = true;
-      try {
-        captureSymbolFromInstance(editor, instanceComponent);
-        renderAllSymbolInstances(editor, resolveSymbolIdOfComponent(instanceComponent), instanceComponent);
-      } finally {
-        isSyncing = false;
-      }
-    }, 350);
-  };
+  const syncScheduler = createSymbolMasterSyncScheduler(editor);
+  const isBusy = () => syncScheduler.isSyncing() || isSymbolRenderBusy(editor);
   const handleSubtreeChange = (changedComponent) => {
-    if (isSyncing || !changedComponent || typeof changedComponent.get !== 'function') return;
+    if (isBusy() || !changedComponent || typeof changedComponent.get !== 'function') return;
     const instanceComponent = findOwningSymbolInstance(changedComponent);
-    if (!instanceComponent || !isSymbolInstanceEditing(instanceComponent)) return;
-    scheduleMasterSync(instanceComponent);
+    if (!instanceComponent || instanceComponent === changedComponent) return;
+    if (isSymbolInstanceEditing(instanceComponent)) {
+      syncScheduler.schedule(instanceComponent);
+      return;
+    }
+    const leafComponent = findOwningSymbolLeaf(changedComponent, instanceComponent);
+    leafComponent && recordSymbolLeafOverride(editor, instanceComponent, leafComponent);
+  };
+  const removalParents = new WeakMap();
+  const handleChildRemoval = (removedComponent) => {
+    const parentComponent = removedComponent ? removalParents.get(removedComponent) : null;
+    removedComponent && removalParents.delete(removedComponent);
+    handleSubtreeChange(parentComponent || removedComponent);
   };
   editor.on('component:add', (addedComponent) => {
-    if (isSyncing) return;
     if (addedComponent && addedComponent.get && addedComponent.get('type') === 'db-symbol') {
       renderSymbolInstance(editor, addedComponent);
       return;
     }
     handleSubtreeChange(addedComponent);
   });
-  editor.on('component:remove', handleSubtreeChange);
-  editor.on('component:update', handleSubtreeChange);
+  editor.on('component:remove:before', (removedComponent) => {
+    const parentComponent = removedComponent && removedComponent.parent ? removedComponent.parent() : null;
+    parentComponent && removalParents.set(removedComponent, parentComponent);
+  });
+  editor.on('component:remove', handleChildRemoval);
+  editor.on('component:update', (changedComponent) => {
+    if (!isEditorOnlyComponentUpdate(changedComponent)) handleSubtreeChange(changedComponent);
+  });
   editor.on('component:input', handleSubtreeChange);
   editor.on('component:update:attributes', (changedComponent) => {
-    if (isSyncing || !changedComponent || !changedComponent.get) return;
-    if (changedComponent.get('type') !== 'db-symbol') {
-      handleSubtreeChange(changedComponent);
-      return;
-    }
+    if (isBusy() || !changedComponent || !changedComponent.get) return;
+    refreshSymbolElementFlags(changedComponent);
+    if (changedComponent.get('type') !== 'db-symbol') return;
     if (changedComponent.get('dbSymbolRenderedId') === resolveSymbolIdOfComponent(changedComponent)) return;
     changedComponent.set('dbSymbolRenderedId', resolveSymbolIdOfComponent(changedComponent), { avoidStore: true });
     renderSymbolInstance(editor, changedComponent);
+  });
+  editor.on('component:mount', refreshSymbolElementFlags);
+  editor.on('db:symbol:editing', (editingPayload) => {
+    if (editingPayload && editingPayload.editing === false) syncScheduler.cancel();
   });
   editor.on('page:select', () => renderAllSymbolInstances(editor));
   if (editor.onReady) editor.onReady(() => renderAllSymbolInstances(editor));

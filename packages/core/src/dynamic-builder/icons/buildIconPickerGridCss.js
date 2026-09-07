@@ -37,6 +37,10 @@ const buildIconPickerGridCss = () => `
   background-color: var(--gjs-db-hover);
   border-color: var(--gjs-db-line);
 }
+.gjs-db-icon-cell:focus-visible {
+  outline: 2px solid var(--gjs-db-accent);
+  outline-offset: 2px;
+}
 .gjs-db-icon-cell-active {
   color: var(--gjs-db-accent);
   background-color: var(--gjs-db-accent-soft);
@@ -45,7 +49,7 @@ const buildIconPickerGridCss = () => `
 .gjs-db-icon-cell-name {
   width: 100%;
   overflow: hidden;
-  font-size: 0.61rem;
+  font-size: 0.7rem;
   color: var(--gjs-db-faint);
   text-align: center;
   text-overflow: ellipsis;

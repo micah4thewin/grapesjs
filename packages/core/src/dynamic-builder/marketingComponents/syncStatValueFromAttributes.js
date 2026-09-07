@@ -1,12 +1,16 @@
+import findDescendantByAttribute from './findDescendantByAttribute.js';
+import formatStatNumber from './formatStatNumber.js';
+import resolveComponentSiteLocale from './resolveComponentSiteLocale.js';
+
 const syncStatValueFromAttributes = (component) => {
   if (!component || !component.getAttributes) return;
-  const componentAttributes = component.getAttributes();
-  if (componentAttributes['data-db-stat-target'] === undefined) return;
-  const parsedTarget = parseFloat(componentAttributes['data-db-stat-target']);
-  const safeTarget = isNaN(parsedTarget) ? 0 : parsedTarget;
-  const prefixText = componentAttributes['data-db-stat-prefix'] || '';
-  const suffixText = componentAttributes['data-db-stat-suffix'] || '';
-  component.components(prefixText + Math.round(safeTarget).toLocaleString('en-US') + suffixText);
+  const attributeRecord = component.getAttributes();
+  if (attributeRecord['data-db-stat-target'] === undefined) return;
+  const valueComponent = findDescendantByAttribute(component, 'data-db-stat-value') || component;
+  const numberText = formatStatNumber(attributeRecord['data-db-stat-target'], resolveComponentSiteLocale(component));
+  const prefixText = String(attributeRecord['data-db-stat-prefix'] || '');
+  const suffixText = String(attributeRecord['data-db-stat-suffix'] || '');
+  valueComponent.components(prefixText + numberText + suffixText);
 };
 
 export default syncStatValueFromAttributes;

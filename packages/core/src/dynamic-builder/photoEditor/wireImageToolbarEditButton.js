@@ -1,18 +1,22 @@
 import getIconMarkup from '../support/getIconMarkup.js';
-import openPhotoEditorModal from './openPhotoEditorModal.js';
+
+const toolbarMarker = 'data-db-photo-toolbar';
 
 const wireImageToolbarEditButton = (editor) => {
   const imageTypes = ['db-image', 'image'];
   editor.on('component:selected', (selectedComponent) => {
     if (!selectedComponent || imageTypes.indexOf(String(selectedComponent.get('type') || '')) < 0) return;
-    if (selectedComponent.get('dbPhotoEditorWired')) return;
     const toolbarItems = [...(selectedComponent.get('toolbar') || [])];
+    if (
+      toolbarItems.some((toolbarItem) => toolbarItem && toolbarItem.attributes && toolbarItem.attributes[toolbarMarker])
+    )
+      return;
     toolbarItems.push({
-      attributes: { title: 'Edit photo' },
+      attributes: { title: 'Edit photo', [toolbarMarker]: 'true' },
       label: getIconMarkup('sliders', { size: 15, label: 'Edit photo' }),
-      command: () => openPhotoEditorModal(editor, selectedComponent),
+      command: 'db:open-photo-editor',
     });
-    selectedComponent.set({ toolbar: toolbarItems, dbPhotoEditorWired: true });
+    selectedComponent.set('toolbar', toolbarItems, { avoidStore: true });
   });
 };
 

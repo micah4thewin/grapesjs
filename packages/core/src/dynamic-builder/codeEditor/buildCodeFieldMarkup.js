@@ -16,7 +16,7 @@ const buildCodeFieldMarkup = (fieldOptions) => {
     '<div class="gjs-db-code-field" data-db-code-field="' + escapeHtmlText(fieldOptions.name) + '">',
     '<div class="gjs-db-code-field-head">',
     '<span class="gjs-db-code-language">' + escapeHtmlText(languageRecord.label) + '</span>',
-    '<span class="gjs-db-code-field-title">' + escapeHtmlText(fieldOptions.label || '') + '</span>',
+    fieldOptions.label ? '<span class="gjs-db-code-field-title">' + escapeHtmlText(fieldOptions.label) + '</span>' : '',
     snippetRecords.length
       ? '<select class="gjs-db-code-snippets" data-db-code-snippets aria-label="Insert a snippet">' +
         '<option value="">Insert a snippet</option>' +

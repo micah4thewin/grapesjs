@@ -1,26 +1,6 @@
-import buildMarketingPlaceholderUri from './buildMarketingPlaceholderUri.js';
+import buildLogoItemRecord from './buildLogoItemRecord.js';
 
-const buildLogoCloudDefaultChildren = () => {
-  const logoNames = ['Acme Co', 'Northwind', 'Globex', 'Initech', 'Luminary', 'Vertex'];
-  return logoNames.map((logoName) => ({
-    tagName: 'li',
-    name: logoName + ' logo item',
-    classes: ['db-logo-cloud-item'],
-    components: [
-      {
-        type: 'db-image',
-        classes: ['db-image', 'db-logo-cloud-image'],
-        attributes: {
-          src: buildMarketingPlaceholderUri('logo', logoName),
-          alt: logoName + ' logo',
-          loading: 'lazy',
-          decoding: 'async',
-          width: '240',
-          height: '80',
-        },
-      },
-    ],
-  }));
-};
+const buildLogoCloudDefaultChildren = () =>
+  ['Acme Co', 'Northwind', 'Globex', 'Initech', 'Luminary', 'Vertex'].map((logoName) => buildLogoItemRecord(logoName));
 
 export default buildLogoCloudDefaultChildren;

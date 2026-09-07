@@ -2,6 +2,9 @@ import createCodeSurface from './createCodeSurface.js';
 import getCodeSnippetRecords from './getCodeSnippetRecords.js';
 import validateCodeText from './validateCodeText.js';
 
+const isSubmitShortcut = (keyEvent) =>
+  (keyEvent.ctrlKey || keyEvent.metaKey) && (keyEvent.key === 'Enter' || keyEvent.key.toLowerCase() === 's');
+
 const mountCodeField = (editor, fieldElement, fieldOptions) => {
   const surfaceHost = fieldElement.querySelector('[data-db-code-surface]');
   const statusElement = fieldElement.querySelector('[data-db-code-status]');
@@ -23,6 +26,11 @@ const mountCodeField = (editor, fieldElement, fieldOptions) => {
     },
   });
   reportStatus(fieldOptions.value || '');
+  fieldElement.addEventListener('keydown', (keyEvent) => {
+    if (!fieldOptions.onSubmitRequest || !isSubmitShortcut(keyEvent)) return;
+    keyEvent.preventDefault();
+    fieldOptions.onSubmitRequest();
+  });
   const snippetSelect = fieldElement.querySelector('[data-db-code-snippets]');
   if (snippetSelect) {
     snippetSelect.addEventListener('change', () => {

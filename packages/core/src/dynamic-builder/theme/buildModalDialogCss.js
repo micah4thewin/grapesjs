@@ -24,6 +24,13 @@ const buildModalDialogCss = () => `
   font-weight: var(--gjs-db-w-bold);
 }
 .gjs-mdl-btn-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  top: 6px;
+  right: 8px;
   color: var(--gjs-db-muted);
   cursor: pointer;
   border-radius: var(--gjs-db-r-2);

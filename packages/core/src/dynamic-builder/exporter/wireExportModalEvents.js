@@ -1,7 +1,10 @@
 import buildAssetFileRecords from './buildAssetFileRecords.js';
-import buildPageFileRecords from './buildPageFileRecords.js';
+import buildPageExportRecords from './buildPageExportRecords.js';
 import downloadFileRecordList from './downloadFileRecordList.js';
+import openExportPreview from './openExportPreview.js';
+import openModalCommandAndReturn from './openModalCommandAndReturn.js';
 import readExportBuildOptions from './readExportBuildOptions.js';
+import runWithBusyButton from './runWithBusyButton.js';
 
 const wireExportModalEvents = (editor, rootElement) => {
   rootElement.addEventListener('click', (clickEvent) => {
@@ -11,19 +14,32 @@ const wireExportModalEvents = (editor, rootElement) => {
     if (!actionElement) return;
     const actionName = actionElement.getAttribute('data-db-export-action');
     const buildOptions = readExportBuildOptions(editor, rootElement);
-    if (actionName === 'page') {
-      const targetPageId = actionElement.getAttribute('data-db-export-page') || '';
-      downloadFileRecordList(editor, buildPageFileRecords(editor, buildOptions, targetPageId), 'page');
-    } else if (actionName === 'all-pages') {
-      downloadFileRecordList(editor, buildPageFileRecords(editor, buildOptions), 'pages');
-    } else if (actionName === 'asset') {
-      const targetAssetId = actionElement.getAttribute('data-db-export-asset') || '';
-      downloadFileRecordList(editor, buildAssetFileRecords(editor, buildOptions, targetAssetId), 'asset');
-    } else if (actionName === 'download-zip') {
-      editor.runCommand('db:download-site', { buildOptions: { ...buildOptions, separateAssets: true } });
-    } else if (actionName === 'publish') {
-      editor.runCommand('db:publish-site', { buildOptions: { ...buildOptions, separateAssets: true } });
-    }
+    const busyHandlers = {
+      page: () => {
+        const targetPageId = actionElement.getAttribute('data-db-export-page') || '';
+        const pageRecords = buildPageExportRecords(editor, buildOptions, targetPageId);
+        const pageBaseName = pageRecords.length ? pageRecords[0].fileName.replace(/\.html$/i, '') : 'page';
+        downloadFileRecordList(editor, pageRecords, 'page', { archiveFileName: pageBaseName + '-page.zip' });
+      },
+      'all-pages': () =>
+        downloadFileRecordList(editor, buildPageExportRecords(editor, buildOptions), 'pages', {
+          forceZip: true,
+          archiveFileName: 'pages.zip',
+        }),
+      asset: () => {
+        const targetAssetId = actionElement.getAttribute('data-db-export-asset') || '';
+        downloadFileRecordList(editor, buildAssetFileRecords(editor, buildOptions, targetAssetId), 'asset');
+      },
+      'download-zip': () => editor.runCommand('db:download-site', { buildOptions, skipPreflight: true }),
+    };
+    const directHandlers = {
+      publish: () => editor.runCommand('db:publish-site', { buildOptions }),
+      preview: () => openExportPreview(editor, buildOptions),
+      'custom-code': () =>
+        openModalCommandAndReturn(editor, 'db:open-custom-code', () => editor.runCommand('db:open-export')),
+    };
+    if (busyHandlers[actionName]) runWithBusyButton(actionElement, busyHandlers[actionName]);
+    else if (directHandlers[actionName]) directHandlers[actionName]();
   });
 };
 

@@ -4,7 +4,7 @@ const getCoverTextDefaults = () => ({
   bodyText:
     'A full screen cover sets the tone in one glance. Swap the photo, tune the overlay and write the line you want people to read first.',
   primaryLabel: 'Get started',
-  secondaryLabel: 'Learn more',
+  secondaryLabel: 'See how it works',
 });
 
 export default getCoverTextDefaults;

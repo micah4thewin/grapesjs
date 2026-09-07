@@ -1,4 +1,5 @@
 import buildHeroDefaultChildren from './buildHeroDefaultChildren.js';
+import buildMarketingSectionTraits from './buildMarketingSectionTraits.js';
 
 const buildHeroTypeDefinition = () => ({
   type: 'db-hero',
@@ -10,33 +11,36 @@ const buildHeroTypeDefinition = () => ({
       draggable: '[data-gjs-type=wrapper]',
       droppable: false,
       classes: ['db-hero'],
-      attributes: { 'data-db-type': 'hero', 'data-db-hero': 'split-media-right', 'data-db-theme': 'default' },
+      attributes: {
+        'data-db-type': 'hero',
+        'data-db-hero': 'split-media-right',
+        'data-db-theme': 'default',
+        'data-db-media': 'image',
+      },
       components: buildHeroDefaultChildren(),
       traits: [
         {
           type: 'select',
           name: 'data-db-hero',
-          label: 'Layout variant',
+          label: 'Layout',
           default: 'split-media-right',
           options: [
             { id: 'centered', label: 'Centered' },
-            { id: 'split-media-right', label: 'Split, media right' },
-            { id: 'split-media-left', label: 'Split, media left' },
+            { id: 'split-media-right', label: 'Text left, picture right' },
+            { id: 'split-media-left', label: 'Picture left, text right' },
           ],
         },
         {
           type: 'select',
-          name: 'data-db-theme',
-          label: 'Theme',
-          default: 'default',
+          name: 'data-db-media',
+          label: 'Picture',
+          default: 'image',
           options: [
-            { id: 'default', label: 'Default' },
-            { id: 'light', label: 'Light' },
-            { id: 'dark', label: 'Dark' },
-            { id: 'brand', label: 'Brand' },
+            { id: 'image', label: 'Show a picture' },
+            { id: 'none', label: 'No picture' },
           ],
         },
-        { type: 'text', name: 'id', label: 'Anchor id', placeholder: 'hero' },
+        ...buildMarketingSectionTraits('default', 'hero'),
       ],
     },
   },

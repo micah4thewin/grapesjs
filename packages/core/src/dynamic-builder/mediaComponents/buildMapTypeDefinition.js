@@ -1,4 +1,6 @@
 import buildMapPlaceholderChildren from './buildMapPlaceholderChildren.js';
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
+import getMapTraitDefinitions from './getMapTraitDefinitions.js';
 import runMapFacadeBehavior from './runMapFacadeBehavior.js';
 
 const buildMapTypeDefinition = () => ({
@@ -8,7 +10,7 @@ const buildMapTypeDefinition = () => ({
     defaults: {
       tagName: 'div',
       name: 'Map',
-      draggable: true,
+      draggable: getDropTargetSelectors().anyLayout,
       droppable: false,
       classes: ['db-map'],
       attributes: {
@@ -17,15 +19,11 @@ const buildMapTypeDefinition = () => ({
         'data-db-lng': '-0.1278',
         'data-db-zoom': '13',
         'data-db-address': 'London, United Kingdom',
+        'data-db-note': 'The map loads from OpenStreetMap only after you choose to view it.',
       },
       components: buildMapPlaceholderChildren(),
       script: runMapFacadeBehavior,
-      traits: [
-        { type: 'number', name: 'data-db-lat', label: 'Latitude', min: -90, max: 90, step: 0.0001 },
-        { type: 'number', name: 'data-db-lng', label: 'Longitude', min: -180, max: 180, step: 0.0001 },
-        { type: 'number', name: 'data-db-zoom', label: 'Zoom', min: 1, max: 19, step: 1, default: '13' },
-        { type: 'text', name: 'data-db-address', label: 'Address label', placeholder: 'City, Country' },
-      ],
+      traits: getMapTraitDefinitions(),
     },
   },
 });

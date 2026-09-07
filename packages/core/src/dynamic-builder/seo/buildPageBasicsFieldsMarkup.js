@@ -2,32 +2,36 @@ import buildCharacterCounterBadgeMarkup from './buildCharacterCounterBadgeMarkup
 import buildSeoTextFieldMarkup from './buildSeoTextFieldMarkup.js';
 import buildSeoTextareaFieldMarkup from './buildSeoTextareaFieldMarkup.js';
 
-const buildPageBasicsFieldsMarkup = (pageSeoRecord) =>
+const buildPageBasicsFieldsMarkup = (pageSeoRecord, pageContext) =>
   [
     buildSeoTextFieldMarkup(
       'title',
       'Page title',
-      'Headline shown in search results and browser tabs. Keep it at 60 characters or fewer.',
+      'Headline shown in search results and browser tabs. Aim for 30 to 60 characters; the site name is added after it.',
       pageSeoRecord.title,
-      buildCharacterCounterBadgeMarkup('title', 60),
+      buildCharacterCounterBadgeMarkup('title', 30, 60),
     ),
     buildSeoTextareaFieldMarkup(
       'description',
       'Meta description',
-      'Summary shown under the title in search results. Keep it at 160 characters or fewer.',
+      'Summary shown under the title in search results. Aim for 50 to 160 characters.',
       pageSeoRecord.description,
-      buildCharacterCounterBadgeMarkup('description', 160),
+      buildCharacterCounterBadgeMarkup('description', 50, 160),
     ),
     buildSeoTextFieldMarkup(
       'slug',
       'URL slug',
-      'Path segment for this page, for example about-us. Cleaned automatically when you leave the field.',
-      pageSeoRecord.slug,
+      pageContext.isMainPage
+        ? 'The home page is always published at the site root, so it has no slug.'
+        : 'The last part of the page address, for example about-us. Cleaned up when you leave the field.',
+      pageContext.isMainPage ? '' : pageSeoRecord.slug,
+      '',
+      { isDisabled: pageContext.isMainPage },
     ),
     buildSeoTextFieldMarkup(
       'canonical',
       'Canonical URL override',
-      'Full URL search engines should treat as the original. Leave empty to build it from the base URL and slug.',
+      'Only needed when this page is a copy of another address. Leave empty to build the address from the site address and slug.',
       pageSeoRecord.canonical,
     ),
   ].join('');

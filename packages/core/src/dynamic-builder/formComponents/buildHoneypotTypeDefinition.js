@@ -6,7 +6,7 @@ const buildHoneypotTypeDefinition = (formTextDefaults) => ({
   model: {
     defaults: {
       tagName: 'div',
-      name: 'Honeypot',
+      name: 'Spam trap (hidden)',
       draggable: '[data-db-type=form]',
       droppable: false,
       copyable: false,
@@ -17,10 +17,21 @@ const buildHoneypotTypeDefinition = (formTextDefaults) => ({
         'data-db-honeypot': 'true',
         'aria-hidden': 'true',
       },
-      components:
-        '<label>' +
-        escapeHtmlText(formTextDefaults.honeypotLabelText) +
-        '<input type="text" name="website" tabindex="-1" aria-hidden="true" autocomplete="off"></label>',
+      components: [
+        {
+          tagName: 'label',
+          selectable: false,
+          hoverable: false,
+          layerable: false,
+          draggable: false,
+          removable: false,
+          copyable: false,
+          traits: [],
+          components:
+            escapeHtmlText(formTextDefaults.honeypotLabelText) +
+            '<input type="text" name="website" tabindex="-1" aria-hidden="true" autocomplete="off">',
+        },
+      ],
       traits: [],
     },
   },

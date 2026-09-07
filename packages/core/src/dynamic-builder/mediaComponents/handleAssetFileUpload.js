@@ -1,28 +1,22 @@
-import compressImageFileToAsset from './compressImageFileToAsset.js';
-import readFileAsDataUrl from './readFileAsDataUrl.js';
+import addUploadedImageAsset from './addUploadedImageAsset.js';
+import describeUploadSkipReason from './describeUploadSkipReason.js';
+import readUploadedFiles from './readUploadedFiles.js';
+import showToastNotice from '../support/showToastNotice.js';
 
 const handleAssetFileUpload = async (editor, uploadEvent, maxDimension) => {
-  const fileList =
-    (uploadEvent.dataTransfer && uploadEvent.dataTransfer.files) || (uploadEvent.target && uploadEvent.target.files);
-  if (!fileList || !fileList.length) return;
-  const uploadedFiles = [...fileList];
-  for (const uploadedFile of uploadedFiles) {
+  for (const uploadedFile of readUploadedFiles(uploadEvent)) {
+    const skipReason = describeUploadSkipReason(uploadedFile);
+    if (skipReason) {
+      showToastNotice(editor, skipReason, { kind: 'error', duration: 5000 });
+      continue;
+    }
     try {
-      const isCompressibleImage =
-        uploadedFile.type.indexOf('image/') === 0 &&
-        uploadedFile.type !== 'image/svg+xml' &&
-        uploadedFile.type !== 'image/gif';
-      if (isCompressibleImage) {
-        const compressedAsset = await compressImageFileToAsset(uploadedFile, maxDimension);
-        const originalDataUrl = await readFileAsDataUrl(uploadedFile);
-        const smallestSrc = compressedAsset.src.length < originalDataUrl.length ? compressedAsset.src : originalDataUrl;
-        editor.Assets.add({ ...compressedAsset, src: smallestSrc });
-      } else {
-        const rawDataUrl = await readFileAsDataUrl(uploadedFile);
-        editor.Assets.add({ src: rawDataUrl, name: uploadedFile.name, type: 'image' });
-      }
+      await addUploadedImageAsset(editor, uploadedFile, maxDimension);
     } catch (uploadError) {
-      editor.trigger('db:save-status', { state: 'error', message: `Could not add ${uploadedFile.name}` });
+      showToastNotice(editor, 'Could not add ' + uploadedFile.name + '. Try a different picture.', {
+        kind: 'error',
+        duration: 5000,
+      });
     }
   }
 };

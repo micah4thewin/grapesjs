@@ -1,5 +1,6 @@
 import buildElementFromMarkup from '../support/buildElementFromMarkup.js';
 import buildHistoryListMarkup from './buildHistoryListMarkup.js';
+import focusFirstModalControl from '../support/focusFirstModalControl.js';
 import jumpToHistoryIndex from './jumpToHistoryIndex.js';
 import openThemedModal from '../support/openThemedModal.js';
 
@@ -8,7 +9,7 @@ const openHistoryModal = (editor) => {
   if (!containerElement || !containerElement.ownerDocument) return;
   const historyMarkup = [
     '<div class="gjs-db-form">',
-    '<p class="gjs-db-muted">Click any step to jump the page back or forward to that moment.</p>',
+    '<p class="gjs-db-muted">Choose a step to take the page back or forward to that moment.</p>',
     buildHistoryListMarkup(editor),
     '</div>',
   ].join('');
@@ -22,6 +23,9 @@ const openHistoryModal = (editor) => {
     editor.Modal.close();
   });
   openThemedModal(editor, 'Edit history', historyElement, { className: 'gjs-db-history-modal' });
+  const currentRow = historyElement.querySelector('[aria-current="step"]');
+  if (currentRow) currentRow.setAttribute('data-db-autofocus', '');
+  focusFirstModalControl(historyElement);
 };
 
 export default openHistoryModal;

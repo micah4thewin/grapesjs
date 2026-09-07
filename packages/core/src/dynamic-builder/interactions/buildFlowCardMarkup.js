@@ -1,5 +1,6 @@
 import buildFlowActionRowMarkup from './buildFlowActionRowMarkup.js';
 import buildFlowFieldMarkup from './buildFlowFieldMarkup.js';
+import buildFlowIconButtonMarkup from './buildFlowIconButtonMarkup.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
 import getFlowTriggerRecords from './getFlowTriggerRecords.js';
 import getIconMarkup from '../support/getIconMarkup.js';
@@ -7,6 +8,7 @@ import getIconMarkup from '../support/getIconMarkup.js';
 const buildFlowCardMarkup = (flowRecord, flowIndex) => {
   const triggerRecords = getFlowTriggerRecords();
   const triggerRecord = triggerRecords.find((candidate) => candidate.id === flowRecord.trigger) || triggerRecords[0];
+  const flowLabel = 'flow ' + (flowIndex + 1);
   const triggerOptionsMarkup = triggerRecords
     .map(
       (candidate) =>
@@ -25,7 +27,9 @@ const buildFlowCardMarkup = (flowRecord, flowIndex) => {
     )
     .join('');
   const actionsMarkup = flowRecord.actions
-    .map((actionRecord, actionIndex) => buildFlowActionRowMarkup(actionRecord, flowIndex, actionIndex))
+    .map((actionRecord, actionIndex) =>
+      buildFlowActionRowMarkup(actionRecord, flowIndex, actionIndex, flowRecord.actions.length),
+    )
     .join('');
   return [
     '<li class="gjs-db-flow-card" data-db-flow-index="' +
@@ -35,18 +39,19 @@ const buildFlowCardMarkup = (flowRecord, flowIndex) => {
       '">',
     '<div class="gjs-db-flow-card-head">',
     '<span class="gjs-db-flow-card-icon">' + getIconMarkup('flow', { size: 16 }) + '</span>',
-    '<select class="gjs-db-field-input gjs-db-flow-trigger" data-db-flow-trigger aria-label="Trigger">',
+    '<select class="gjs-db-field-input gjs-db-flow-trigger" data-db-flow-trigger aria-label="Trigger for ' +
+      flowLabel +
+      '">',
     triggerOptionsMarkup,
     '</select>',
-    '<button type="button" class="gjs-db-button gjs-db-flow-icon-button" data-db-flow-remove ',
-    'title="Delete this flow" aria-label="Delete flow ' + (flowIndex + 1) + '">',
-    getIconMarkup('trash', { size: 14 }),
-    '</button>',
+    buildFlowIconButtonMarkup('test', 'play', 'Save and test ' + flowLabel + ' in preview'),
+    buildFlowIconButtonMarkup('duplicate', 'copy', 'Duplicate ' + flowLabel),
+    buildFlowIconButtonMarkup('remove', 'trash', 'Delete ' + flowLabel),
     '</div>',
     '<p class="gjs-db-flow-hint">' + escapeHtmlText(triggerRecord.hint) + '</p>',
     triggerFieldsMarkup ? '<div class="gjs-db-flow-fields">' + triggerFieldsMarkup + '</div>' : '',
     '<ol class="gjs-db-flow-actions">' + actionsMarkup + '</ol>',
-    '<button type="button" class="gjs-db-button gjs-db-flow-add-action" data-db-flow-add-action>',
+    '<button type="button" class="gjs-db-button gjs-db-flow-add-action" data-db-flow-action="add-step">',
     getIconMarkup('plus', { size: 14 }),
     '<span>Add a step</span>',
     '</button>',

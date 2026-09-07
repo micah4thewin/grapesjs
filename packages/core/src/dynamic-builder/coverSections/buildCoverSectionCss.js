@@ -1,3 +1,5 @@
+import buildThemeTokenDeclarations from '../layoutComponents/buildThemeTokenDeclarations.js';
+
 const buildCoverSectionCss = () => `
 .db-cover {
   position: relative;
@@ -9,8 +11,8 @@ const buildCoverSectionCss = () => `
   padding: var(--db-space-9, 4rem) var(--db-space-5, 1.5rem);
   overflow: hidden;
   isolation: isolate;
-  color: #ffffff;
-  background: var(--db-color-text, #111827);
+  ${buildThemeTokenDeclarations('dark')}
+  background: var(--db-theme-dark-surface, #111827);
 }
 .db-cover[data-db-cover-height='100vh'] { min-height: 100vh; min-height: 100svh; }
 .db-cover[data-db-cover-height='60vh'] { min-height: 60vh; min-height: 60svh; }

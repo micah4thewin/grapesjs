@@ -1,0 +1,53 @@
+const getOrganizationTypeGroups = () => [
+  {
+    label: 'Organization',
+    options: [
+      ['Organization', 'Organization (company, brand or club)'],
+      ['Corporation', 'Corporation'],
+      ['NGO', 'Non-profit'],
+      ['EducationalOrganization', 'School or educational organization'],
+      ['GovernmentOrganization', 'Government organization'],
+      ['SportsOrganization', 'Sports club or team'],
+      ['OnlineBusiness', 'Online business'],
+    ],
+  },
+  {
+    label: 'Person',
+    options: [['Person', 'Person (freelancer, artist, creator)']],
+  },
+  {
+    label: 'Local business',
+    options: [
+      ['LocalBusiness', 'Local business (general)'],
+      ['ProfessionalService', 'Professional service'],
+      ['Store', 'Shop or store'],
+      ['Restaurant', 'Restaurant'],
+      ['CafeOrCoffeeShop', 'Cafe or coffee shop'],
+      ['Bakery', 'Bakery'],
+      ['BarOrPub', 'Bar or pub'],
+      ['Hotel', 'Hotel or lodging'],
+      ['BeautySalon', 'Beauty salon'],
+      ['HairSalon', 'Hair salon'],
+      ['DaySpa', 'Spa or wellness'],
+      ['HealthAndBeautyBusiness', 'Health and beauty business'],
+      ['MedicalBusiness', 'Medical practice or clinic'],
+      ['Dentist', 'Dentist'],
+      ['Physician', 'Physician'],
+      ['LegalService', 'Legal service'],
+      ['Attorney', 'Attorney'],
+      ['AccountingService', 'Accounting service'],
+      ['FinancialService', 'Financial service'],
+      ['RealEstateAgent', 'Real estate agent'],
+      ['HomeAndConstructionBusiness', 'Home and construction business'],
+      ['Electrician', 'Electrician'],
+      ['Plumber', 'Plumber'],
+      ['AutoRepair', 'Auto repair'],
+      ['GymOrFitnessCenter', 'Gym or fitness studio'],
+      ['ChildCare', 'Child care'],
+      ['PetStore', 'Pet store'],
+      ['TravelAgency', 'Travel agency'],
+    ],
+  },
+];
+
+export default getOrganizationTypeGroups;

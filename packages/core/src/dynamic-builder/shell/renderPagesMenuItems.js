@@ -21,9 +21,10 @@ const renderPagesMenuItems = (editor, menuElement) => {
     )
     .join('');
   const addItemMarkup = buildMenuItemMarkup('New page', 'plus', 'data-db-page-action="add"');
+  const wizardItemMarkup = buildMenuItemMarkup('Set up site pages', 'wand', 'data-db-command="db:open-site-wizard"');
   const hintMarkup =
     '<div class="gjs-db-menu-hint" role="none">Arrow keys move between pages and actions. Alt + arrow keys reorder.</div>';
-  menuElement.innerHTML = `${pageRowsMarkup}<div class="gjs-db-menu-separator" role="none"></div>${addItemMarkup}${hintMarkup}`;
+  menuElement.innerHTML = `${pageRowsMarkup}<div class="gjs-db-menu-separator" role="none"></div>${addItemMarkup}${wizardItemMarkup}${hintMarkup}`;
 };
 
 export default renderPagesMenuItems;

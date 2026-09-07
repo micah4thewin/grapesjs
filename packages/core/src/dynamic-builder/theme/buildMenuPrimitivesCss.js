@@ -45,8 +45,8 @@ const buildMenuPrimitivesCss = () => `
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: none;
   border-radius: var(--gjs-db-r-2);
@@ -58,6 +58,14 @@ const buildMenuPrimitivesCss = () => `
 .gjs-db-menu-icon-button:hover {
   background-color: var(--gjs-db-hover);
   color: var(--gjs-db-fg);
+}
+.gjs-db-menu-icon-button[aria-disabled='true'] {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.gjs-db-menu-icon-button[aria-disabled='true']:hover {
+  background-color: transparent;
+  color: var(--gjs-db-muted);
 }
 .gjs-db-menu-icon-button:focus-visible {
   outline: 2px solid var(--gjs-db-focus);
@@ -72,23 +80,6 @@ const buildMenuPrimitivesCss = () => `
   background-color: var(--gjs-db-active);
   box-shadow: var(--gjs-db-press-1);
   color: var(--gjs-db-fg);
-}
-.gjs-db-download-button {
-  background-color: var(--gjs-db-accent);
-  color: var(--gjs-db-accent-fg);
-  box-shadow: var(--gjs-db-lift-1);
-  font-weight: var(--gjs-db-w-medium);
-}
-.gjs-db-download-button:hover {
-  background-color: var(--gjs-db-accent);
-  color: var(--gjs-db-accent-fg);
-  box-shadow: var(--gjs-db-lift-2);
-  transform: translateY(-1px);
-  opacity: 0.92;
-}
-.gjs-db-field-invalid {
-  outline: 2px solid var(--gjs-db-error);
-  outline-offset: -1px;
 }
 `;
 

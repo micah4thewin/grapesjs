@@ -1,10 +1,11 @@
+import buildSeoImageFieldMarkup from './buildSeoImageFieldMarkup.js';
 import buildSeoSelectFieldMarkup from './buildSeoSelectFieldMarkup.js';
 import buildSeoTextFieldMarkup from './buildSeoTextFieldMarkup.js';
 import buildSeoTextareaFieldMarkup from './buildSeoTextareaFieldMarkup.js';
 
 const buildPageTwitterFieldsMarkup = (pageSeoRecord) =>
   [
-    '<div class="gjs-db-section-title">Twitter card</div>',
+    '<div class="gjs-db-section-title">X (Twitter) card</div>',
     buildSeoSelectFieldMarkup(
       'twitterCard',
       'Card style',
@@ -28,9 +29,9 @@ const buildPageTwitterFieldsMarkup = (pageSeoRecord) =>
       'Leave empty to reuse the share description, then the meta description.',
       pageSeoRecord.twitterDescription,
     ),
-    buildSeoTextFieldMarkup(
+    buildSeoImageFieldMarkup(
       'twitterImage',
-      'Card image URL',
+      'Card image',
       'Leave empty to reuse the share image.',
       pageSeoRecord.twitterImage,
     ),

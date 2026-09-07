@@ -8,7 +8,8 @@ const syncAnimationAttributes = (component) => {
   if (!effectValue) return;
   if (effectValue === 'none') {
     const presentNames = getAnimationAttributeNames().filter((attributeName) => attributeName in attributesRecord);
-    if (presentNames.length && typeof component.removeAttributes === 'function') component.removeAttributes(presentNames);
+    if (presentNames.length && typeof component.removeAttributes === 'function')
+      component.removeAttributes(presentNames);
     return;
   }
   const defaultsRecord = getAnimationAttributeDefaults();

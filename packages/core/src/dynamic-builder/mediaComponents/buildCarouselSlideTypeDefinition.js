@@ -1,3 +1,5 @@
+import buildMediaTraitCategory from './buildMediaTraitCategory.js';
+
 const buildCarouselSlideTypeDefinition = () => ({
   type: 'db-carousel-slide',
   isComponent: (el) =>
@@ -5,7 +7,7 @@ const buildCarouselSlideTypeDefinition = () => ({
   model: {
     defaults: {
       tagName: 'div',
-      name: 'Carousel slide',
+      name: 'Slide',
       draggable: '[data-db-carousel-track]',
       droppable: true,
       classes: ['db-carousel-slide'],
@@ -16,7 +18,14 @@ const buildCarouselSlideTypeDefinition = () => ({
         'aria-label': 'Media slide',
       },
       components: [{ type: 'db-image' }],
-      traits: [{ type: 'db-aria-label', name: 'aria-label', label: 'Slide label' }],
+      traits: [
+        {
+          type: 'db-aria-label',
+          name: 'aria-label',
+          label: 'Slide name for screen readers',
+          category: buildMediaTraitCategory('carousel-slide', 'Slide'),
+        },
+      ],
     },
   },
 });

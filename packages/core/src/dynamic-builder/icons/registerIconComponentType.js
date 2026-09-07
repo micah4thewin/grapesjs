@@ -23,6 +23,7 @@ const registerIconComponentType = (editor, moduleOptions = {}) => {
             'data-db-icon-stroke': String(defaultSettings.strokeWidth),
             'data-db-icon-decorative': 'true',
             'data-db-icon-label': '',
+            'data-db-icon-color': '',
           },
           components: defaultMarkup,
           traits: getIconTraitDefinitions(defaultSettings),

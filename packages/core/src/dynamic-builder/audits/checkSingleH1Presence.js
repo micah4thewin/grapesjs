@@ -1,27 +1,31 @@
-import collectHeadingLevels from './collectHeadingLevels.js';
+import buildFindingDetails from './buildFindingDetails.js';
+import collectHeadingRecords from './collectHeadingRecords.js';
 import createFindingRecord from './createFindingRecord.js';
 
 const checkSingleH1Presence = (auditContext) => {
-  const h1Count = collectHeadingLevels(auditContext).filter((headingLevel) => headingLevel === 1).length;
-  if (h1Count === 1) return [];
-  if (h1Count === 0) {
+  const topHeadings = collectHeadingRecords(auditContext).filter((headingRecord) => headingRecord.level === 1);
+  if (topHeadings.length === 1) return [];
+  if (topHeadings.length === 0) {
     return [
       createFindingRecord(
         'warning',
         'Content',
         'The page has no h1 heading.',
-        'Add exactly one h1 that states the page topic; search engines weigh it heavily.',
+        'Give the page exactly one h1 that states its topic; search engines weigh it heavily.',
       ),
     ];
   }
-  return [
-    createFindingRecord(
-      'warning',
-      'Content',
-      'The page has ' + h1Count + ' h1 headings.',
-      'Keep exactly one h1 and demote the others to h2.',
-    ),
-  ];
+  return topHeadings
+    .slice(1)
+    .map((headingRecord) =>
+      createFindingRecord(
+        'warning',
+        'Content',
+        'The page has ' + topHeadings.length + ' h1 headings; only the first one should stay an h1.',
+        'Change this heading to h2 so the page keeps a single main title.',
+        buildFindingDetails(headingRecord.target, 'demote-heading'),
+      ),
+    );
 };
 
 export default checkSingleH1Presence;

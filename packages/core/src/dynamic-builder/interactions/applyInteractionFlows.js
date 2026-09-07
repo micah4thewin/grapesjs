@@ -4,24 +4,19 @@ import createFlowSummaryTraitDefinition from './createFlowSummaryTraitDefinition
 import getDialogRuntimeSource from './getDialogRuntimeSource.js';
 import getFlowRuntimeSource from './getFlowRuntimeSource.js';
 import getInteractionEditorCss from './getInteractionEditorCss.js';
-import getSiteMetaRecord from '../support/getSiteMetaRecord.js';
 import hasDialogActions from './hasDialogActions.js';
 import hasInteractionFlows from './hasInteractionFlows.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
-import isPlainRecord from '../support/isPlainRecord.js';
 import openFlowBuilderModal from './openFlowBuilderModal.js';
 import registerCanvasStyles from '../support/registerCanvasStyles.js';
 import registerCommandSet from '../support/registerCommandSet.js';
 import registerComponentTypeSet from '../support/registerComponentTypeSet.js';
 import registerRuntimeScript from '../support/registerRuntimeScript.js';
 import registerTraitTypeSet from '../support/registerTraitTypeSet.js';
+import resolveAllowScripts from './resolveAllowScripts.js';
 import resolveInteractionSettings from './resolveInteractionSettings.js';
 import watchAlertButtonComponents from './watchAlertButtonComponents.js';
-
-const resolveAllowScripts = (editor) => {
-  const customCodeRecord = getSiteMetaRecord(editor).customCode;
-  return isPlainRecord(customCodeRecord) && customCodeRecord.allowScripts === true;
-};
+import watchPreviewInteractionMode from './watchPreviewInteractionMode.js';
 
 const applyInteractionFlows = (editor, pluginOptions) => {
   const moduleOptions = (pluginOptions && pluginOptions.interactions) || {};
@@ -30,6 +25,7 @@ const applyInteractionFlows = (editor, pluginOptions) => {
   registerComponentTypeSet(editor, [buildAlertButtonTypeDefinition()]);
   registerCanvasStyles(editor, 'db-css-interactions-base', buildDialogSiteCss());
   watchAlertButtonComponents(editor);
+  watchPreviewInteractionMode(editor, dialogSettings);
   registerRuntimeScript(editor, 'db-dialog', {
     detect: (runtimeEditor, page) => hasDialogActions(runtimeEditor, page),
     source: () => getDialogRuntimeSource(dialogSettings),

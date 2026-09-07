@@ -7,6 +7,8 @@ import openSaveRevisionModal from './openSaveRevisionModal.js';
 import registerCommandSet from '../support/registerCommandSet.js';
 import resolvePersistenceOptions from './resolvePersistenceOptions.js';
 import watchAutosaveUpdates from './watchAutosaveUpdates.js';
+import wirePersistenceNotices from './wirePersistenceNotices.js';
+import runPersistNowCommand from './runPersistNowCommand.js';
 
 const applyPersistence = (editor, pluginOptions) => {
   const moduleOptions = resolvePersistenceOptions(pluginOptions, editor);
@@ -14,7 +16,9 @@ const applyPersistence = (editor, pluginOptions) => {
     'db:save-revision': (commandEditor) => openSaveRevisionModal(commandEditor, moduleOptions),
     'db:open-revisions': (commandEditor) => openRevisionsModal(commandEditor, moduleOptions),
     'db:open-history': (commandEditor) => openHistoryModal(commandEditor),
+    'db:persist-now': (commandEditor) => runPersistNowCommand(commandEditor, moduleOptions),
   });
+  wirePersistenceNotices(editor);
   watchAutosaveUpdates(editor, moduleOptions);
   loadStoredProjectOnReady(editor, moduleOptions);
   const injectEditorSideStyles = () =>

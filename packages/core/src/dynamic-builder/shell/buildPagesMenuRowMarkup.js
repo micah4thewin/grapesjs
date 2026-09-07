@@ -1,5 +1,6 @@
 import buildPagesMenuIconButtonMarkup from './buildPagesMenuIconButtonMarkup.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
+import getHomePageDeleteHint from './getHomePageDeleteHint.js';
 import getIconMarkup from '../support/getIconMarkup.js';
 
 const buildPagesMenuRowMarkup = (rowRecord) => {
@@ -10,10 +11,17 @@ const buildPagesMenuRowMarkup = (rowRecord) => {
   const homeActionMarkup = isMainPage
     ? ''
     : buildPagesMenuIconButtonMarkup('set-home', pageId, 'smartHome', `Set ${pageName} as home page`, 'Set as home');
-  const deleteActionMarkup =
-    allowDelete && !isMainPage
-      ? buildPagesMenuIconButtonMarkup('delete', pageId, 'trash', `Delete ${pageName}`, 'Delete')
-      : '';
+  const deleteHint = isMainPage ? getHomePageDeleteHint() : `Delete ${pageName}`;
+  const deleteActionMarkup = allowDelete
+    ? buildPagesMenuIconButtonMarkup(
+        'delete',
+        pageId,
+        'trash',
+        deleteHint,
+        isMainPage ? deleteHint : 'Delete',
+        isMainPage ? 'aria-disabled="true"' : '',
+      )
+    : '';
   return [
     `<div class="gjs-db-menu-row" role="none" data-db-page-row="${safePageId}">`,
     `<button type="button" class="gjs-db-menu-item gjs-db-menu-item-grow" role="menuitem" data-db-page-action="select"`,

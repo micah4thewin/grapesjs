@@ -12,8 +12,6 @@ const buildDataBindingBaseCss = () =>
     'color: var(--db-color-text-muted, #5b6472); }',
     '.db-repeater-item-meta { font-size: var(--db-type-sm, 0.9rem); font-weight: 600;',
     'color: var(--db-color-brand, #4f46e5); }',
-    '.db-repeater [data-db-repeater-item] { outline: 1px dashed var(--db-color-line, #dfe3ea);',
-    'outline-offset: 2px; }',
     '.db-repeater-empty { grid-column: 1 / -1; padding: var(--db-space-5, 1.5rem); text-align: center;',
     'border: 1px dashed var(--db-color-line, #dfe3ea); border-radius: var(--db-radius-md, 0.5rem);',
     'color: var(--db-color-text-muted, #5b6472); font-size: var(--db-type-sm, 0.9rem);',

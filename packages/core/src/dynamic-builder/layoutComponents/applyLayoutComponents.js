@@ -1,22 +1,37 @@
-import buildStructuralDragCanvasCss from './buildStructuralDragCanvasCss.js';
 import registerEditorOnlyCanvasStyles from '../support/registerEditorOnlyCanvasStyles.js';
+import registerTraitTypeSet from '../support/registerTraitTypeSet.js';
+import buildLayoutEditorCanvasCss from './buildLayoutEditorCanvasCss.js';
+import buildStructuralDragCanvasCss from './buildStructuralDragCanvasCss.js';
+import createAnchorTraitDefinition from './createAnchorTraitDefinition.js';
 import registerLayoutCanvasStyles from './registerLayoutCanvasStyles.js';
 import registerLayoutComponentTypes from './registerLayoutComponentTypes.js';
+import watchAnchorUpdates from './watchAnchorUpdates.js';
+import watchColumnCountUpdates from './watchColumnCountUpdates.js';
 import watchColumnPresetUpdates from './watchColumnPresetUpdates.js';
+import watchLayoutMigrations from './watchLayoutMigrations.js';
+import watchSectionBackgroundUpdates from './watchSectionBackgroundUpdates.js';
+import watchSpacerResizeUpdates from './watchSpacerResizeUpdates.js';
+import wireAddBelowToolbarButton from './wireAddBelowToolbarButton.js';
+import wireLayoutDropWrapping from './wireLayoutDropWrapping.js';
 import wireSectionToolbarAddButton from './wireSectionToolbarAddButton.js';
 import wireStructuralDragFeedback from './wireStructuralDragFeedback.js';
-import watchSectionBackgroundUpdates from './watchSectionBackgroundUpdates.js';
-import watchStackMobileClassUpdates from './watchStackMobileClassUpdates.js';
 
 const applyLayoutComponents = (editor, pluginOptions) => {
   const moduleOptions = (pluginOptions && pluginOptions.layoutComponents) || {};
+  registerTraitTypeSet(editor, { 'db-anchor': createAnchorTraitDefinition() });
   registerLayoutComponentTypes(editor);
   registerLayoutCanvasStyles(editor, moduleOptions);
-  watchSectionBackgroundUpdates(editor);
-  watchStackMobileClassUpdates(editor);
-  watchColumnPresetUpdates(editor);
-  wireSectionToolbarAddButton(editor);
   registerEditorOnlyCanvasStyles(editor, 'db-css-layout-drag-feedback', buildStructuralDragCanvasCss());
+  registerEditorOnlyCanvasStyles(editor, 'db-css-layout-editor-hints', buildLayoutEditorCanvasCss());
+  watchLayoutMigrations(editor);
+  watchSectionBackgroundUpdates(editor);
+  watchColumnPresetUpdates(editor);
+  watchColumnCountUpdates(editor);
+  watchSpacerResizeUpdates(editor);
+  watchAnchorUpdates(editor);
+  wireSectionToolbarAddButton(editor);
+  wireAddBelowToolbarButton(editor);
+  wireLayoutDropWrapping(editor);
   wireStructuralDragFeedback(editor);
 };
 

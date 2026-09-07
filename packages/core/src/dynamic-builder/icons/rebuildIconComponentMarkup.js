@@ -1,6 +1,7 @@
 import buildIconStateKey from './buildIconStateKey.js';
 import buildIconSvgMarkup from './buildIconSvgMarkup.js';
 import getIconMarkupCache from './getIconMarkupCache.js';
+import lockIconChildren from './lockIconChildren.js';
 import readIconTraitValues from './readIconTraitValues.js';
 
 const rebuildIconComponentMarkup = (editor, iconComponent) => {
@@ -10,9 +11,10 @@ const rebuildIconComponentMarkup = (editor, iconComponent) => {
   const knownStateKey = markupCache.get(iconComponent);
   const hasRenderedSvg = String(iconComponent.getInnerHTML() || '').indexOf('<svg') >= 0;
   markupCache.set(iconComponent, nextStateKey);
-  if (knownStateKey === nextStateKey) return;
-  if (knownStateKey === undefined && hasRenderedSvg) return;
-  iconComponent.components(buildIconSvgMarkup(iconSettings));
+  const keepsMarkup = knownStateKey === nextStateKey || (knownStateKey === undefined && hasRenderedSvg);
+  if (!keepsMarkup) iconComponent.components(buildIconSvgMarkup(iconSettings));
+  lockIconChildren(iconComponent);
+  return !keepsMarkup;
 };
 
 export default rebuildIconComponentMarkup;

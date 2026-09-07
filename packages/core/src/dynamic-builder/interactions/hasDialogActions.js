@@ -1,10 +1,11 @@
+import hasDialogReferences from './hasDialogReferences.js';
 import parseFlowRecords from './parseFlowRecords.js';
 import walkComponentTree from '../support/walkComponentTree.js';
 
 const hasDialogActions = (editor, page) => {
   const allPages = editor.Pages && editor.Pages.getAll ? editor.Pages.getAll() : [];
   const pageList = page ? [page] : allPages;
-  return pageList.some((sitePage) => {
+  const dialogStepFound = pageList.some((sitePage) => {
     const mainComponent = sitePage.getMainComponent ? sitePage.getMainComponent() : null;
     let dialogFound = false;
     walkComponentTree(mainComponent, (currentComponent) => {
@@ -16,6 +17,7 @@ const hasDialogActions = (editor, page) => {
     });
     return dialogFound;
   });
+  return dialogStepFound || hasDialogReferences(editor, page);
 };
 
 export default hasDialogActions;

@@ -1,15 +1,18 @@
+import announceSeoFieldState from './announceSeoFieldState.js';
 import countTextCharacters from './countTextCharacters.js';
 import updateCharacterCounterBadge from './updateCharacterCounterBadge.js';
 
-const refreshSeoCounters = (rootElement) => {
+const refreshSeoCounters = (rootElement, previewValues) => {
   rootElement.querySelectorAll('[data-db-seo-counter]').forEach((badgeElement) => {
-    const fieldWrapper = badgeElement.closest('.gjs-db-field');
-    const fieldElement = fieldWrapper && fieldWrapper.querySelector('[data-db-seo-field]');
+    const fieldKey = badgeElement.dataset.dbSeoCounter;
+    const fieldElement = rootElement.querySelector('[data-db-seo-field="' + fieldKey + '"]');
     if (!fieldElement) return;
-    if (badgeElement.id && fieldElement.getAttribute('aria-describedby') !== badgeElement.id) {
-      fieldElement.setAttribute('aria-describedby', badgeElement.id);
+    const measuredText = fieldKey === 'title' ? previewValues.titleText : fieldElement.value;
+    const previousState = badgeElement.dataset.dbSeoState || '';
+    const nextState = updateCharacterCounterBadge(badgeElement, countTextCharacters(measuredText));
+    if (previousState && previousState !== nextState) {
+      announceSeoFieldState(rootElement, fieldKey, badgeElement.textContent);
     }
-    updateCharacterCounterBadge(badgeElement, countTextCharacters(fieldElement.value));
   });
 };
 

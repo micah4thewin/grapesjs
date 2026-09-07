@@ -17,9 +17,9 @@ const createHeadingTypeDefinition = (contentTextDefaults) => ({
           name: 'data-db-level',
           label: 'Level',
           options: [
-            { id: '1', label: 'H1' },
-            { id: '2', label: 'H2' },
-            { id: '3', label: 'H3' },
+            { id: '1', label: 'H1 (page title, one per page)' },
+            { id: '2', label: 'H2 (section title)' },
+            { id: '3', label: 'H3 (subheading)' },
             { id: '4', label: 'H4' },
             { id: '5', label: 'H5' },
             { id: '6', label: 'H6' },
@@ -28,10 +28,10 @@ const createHeadingTypeDefinition = (contentTextDefaults) => ({
         {
           type: 'select',
           name: 'data-db-size',
-          label: 'Visual size',
+          label: 'Size',
           options: [
-            { id: 'auto', label: 'Auto (match level)' },
-            { id: 'display', label: 'Display' },
+            { id: 'auto', label: 'Match level' },
+            { id: 'display', label: 'Extra large (hero)' },
             { id: 'xl', label: 'Extra large' },
             { id: 'lg', label: 'Large' },
             { id: 'md', label: 'Medium' },

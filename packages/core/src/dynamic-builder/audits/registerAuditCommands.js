@@ -1,27 +1,43 @@
 import getAuditDefinitions from './getAuditDefinitions.js';
+import getAuditRunnerRecords from './getAuditRunnerRecords.js';
 import openAuditReportModal from './openAuditReportModal.js';
+import openPreflightModal from './openPreflightModal.js';
 import registerCommandSet from '../support/registerCommandSet.js';
-import runAccessibilityAudit from './runAccessibilityAudit.js';
-import runPerformanceAudit from './runPerformanceAudit.js';
-import runSeoAudit from './runSeoAudit.js';
-import storeAuditResults from './storeAuditResults.js';
+import runAuditCommand from './runAuditCommand.js';
+import runPublishPreflight from './runPublishPreflight.js';
 
 const registerAuditCommands = (editor, moduleOptions) => {
-  const auditRunners = {
-    accessibility: runAccessibilityAudit,
-    performance: runPerformanceAudit,
-    seo: runSeoAudit,
-  };
+  const auditRunners = getAuditRunnerRecords();
+  const auditDefinitions = getAuditDefinitions();
   const commandDefinitions = {
     'db:open-audit-report': (commandEditor) => openAuditReportModal(commandEditor),
+    'db:run-all-audits': (commandEditor, commandSender, commandOptions) => {
+      const optionsRecord = commandOptions || {};
+      const findingsByAudit = {};
+      auditDefinitions.forEach((auditDefinition) => {
+        findingsByAudit[auditDefinition.id] = runAuditCommand(
+          commandEditor,
+          moduleOptions,
+          auditDefinition,
+          auditRunners[auditDefinition.id],
+          { ...optionsRecord, openReport: false },
+        );
+      });
+      if (optionsRecord.openReport !== false && moduleOptions.autoOpenReport !== false) {
+        openAuditReportModal(commandEditor, { focusSelector: '[data-db-audit-run-all]' });
+      }
+      return findingsByAudit;
+    },
+    'db:run-preflight': (commandEditor, commandSender, commandOptions) => {
+      const optionsRecord = commandOptions || {};
+      const preflightResult = runPublishPreflight(commandEditor, moduleOptions);
+      if (optionsRecord.openReport !== false) openPreflightModal(commandEditor, preflightResult, optionsRecord);
+      return preflightResult;
+    },
   };
-  getAuditDefinitions().forEach((auditDefinition) => {
-    commandDefinitions[auditDefinition.commandId] = (commandEditor) => {
-      const findings = auditRunners[auditDefinition.id](commandEditor, moduleOptions);
-      storeAuditResults(commandEditor, auditDefinition.id, findings);
-      if (moduleOptions.autoOpenReport !== false) openAuditReportModal(commandEditor);
-      return findings;
-    };
+  auditDefinitions.forEach((auditDefinition) => {
+    commandDefinitions[auditDefinition.commandId] = (commandEditor, commandSender, commandOptions) =>
+      runAuditCommand(commandEditor, moduleOptions, auditDefinition, auditRunners[auditDefinition.id], commandOptions);
   });
   registerCommandSet(editor, commandDefinitions);
 };

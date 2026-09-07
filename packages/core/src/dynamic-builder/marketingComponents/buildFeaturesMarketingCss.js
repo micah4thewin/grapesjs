@@ -6,6 +6,7 @@ const buildFeaturesMarketingCss = () => `
 .db-feature-card {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: var(--db-space-3, 0.75rem);
   padding: var(--db-space-6, 2rem);
   background-color: var(--db-color-surface, #ffffff);
@@ -19,12 +20,13 @@ const buildFeaturesMarketingCss = () => `
   transform: translateY(-2px);
   box-shadow: var(--db-shadow-md, 0 8px 20px -6px rgba(15, 23, 42, 0.12));
 }
-.db-feature-icon {
+.db-feature-card .db-feature-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2.75rem;
   height: 2.75rem;
+  margin: 0;
   border-radius: var(--db-radius-md, 0.5rem);
   background-color: var(--db-color-surface-alt, #f4f6fa);
   color: var(--db-color-brand, #4f46e5);

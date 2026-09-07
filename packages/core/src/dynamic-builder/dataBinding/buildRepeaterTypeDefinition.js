@@ -2,6 +2,8 @@ import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildRepeaterDefaultChildren from './buildRepeaterDefaultChildren.js';
 import buildRepeaterTraitDefinitions from './buildRepeaterTraitDefinitions.js';
 import listDataSourceNames from './listDataSourceNames.js';
+import resolveEditorFromComponent from './resolveEditorFromComponent.js';
+import scheduleRepeaterPreviewRender from './scheduleRepeaterPreviewRender.js';
 
 const buildRepeaterTypeDefinition = () => ({
   type: 'db-repeater',
@@ -22,7 +24,17 @@ const buildRepeaterTypeDefinition = () => ({
       },
       components: buildRepeaterDefaultChildren(),
       traits: (repeaterComponent) =>
-        buildRepeaterTraitDefinitions(listDataSourceNames(repeaterComponent && repeaterComponent.em)),
+        buildRepeaterTraitDefinitions(
+          listDataSourceNames(resolveEditorFromComponent(repeaterComponent)),
+          repeaterComponent && repeaterComponent.getAttributes
+            ? repeaterComponent.getAttributes()['data-db-source']
+            : '',
+        ),
+    },
+  },
+  view: {
+    onRender: ({ editor, model }) => {
+      if (editor && model) scheduleRepeaterPreviewRender(editor, model);
     },
   },
 });

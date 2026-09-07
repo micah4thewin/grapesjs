@@ -1,6 +1,9 @@
-const buildVirtualLocation = (eventValues, pageUrl) => ({
+import normalizeSchemaPriceValue from './normalizeSchemaPriceValue.js';
+import normalizeSchemaUrlValue from './normalizeSchemaUrlValue.js';
+
+const buildVirtualLocation = (ticketUrl, pageUrl) => ({
   '@type': 'VirtualLocation',
-  url: eventValues.offerUrl || pageUrl,
+  url: ticketUrl || pageUrl,
 });
 
 const buildPlaceLocation = (eventValues) => ({
@@ -12,14 +15,15 @@ const buildPlaceLocation = (eventValues) => ({
   },
 });
 
-const buildEventRecordFields = (eventValues, pageUrl) => {
+const buildEventRecordFields = (eventValues, pageUrl, canonicalBase) => {
   const eventStatusValue = String(eventValues.eventStatus || '').trim();
   const attendanceModeValue = String(eventValues.attendanceMode || '').trim();
+  const ticketUrl = normalizeSchemaUrlValue(eventValues.offerUrl, canonicalBase);
   const isOnlineEvent = /^Online/i.test(attendanceModeValue);
   const isMixedEvent = /^Mixed/i.test(attendanceModeValue);
   let locationValue;
-  if (isOnlineEvent) locationValue = buildVirtualLocation(eventValues, pageUrl);
-  else if (isMixedEvent) locationValue = [buildVirtualLocation(eventValues, pageUrl), buildPlaceLocation(eventValues)];
+  if (isOnlineEvent) locationValue = buildVirtualLocation(ticketUrl, pageUrl);
+  else if (isMixedEvent) locationValue = [buildVirtualLocation(ticketUrl, pageUrl), buildPlaceLocation(eventValues)];
   else locationValue = buildPlaceLocation(eventValues);
   return {
     name: eventValues.name,
@@ -30,9 +34,11 @@ const buildEventRecordFields = (eventValues, pageUrl) => {
     location: locationValue,
     offers: {
       '@type': 'Offer',
-      price: eventValues.offerPrice,
-      priceCurrency: eventValues.offerCurrency,
-      url: eventValues.offerUrl,
+      price: normalizeSchemaPriceValue(eventValues.offerPrice),
+      priceCurrency: String(eventValues.offerCurrency || '')
+        .trim()
+        .toUpperCase(),
+      url: ticketUrl,
     },
   };
 };

@@ -63,6 +63,16 @@ const buildPrimitiveTopBarCss = () => `
   box-shadow: none;
   transform: none;
 }
+@media (pointer: coarse) {
+  .gjs-db-panel-top .gjs-db-panel-button {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+  .gjs-db-panel-top .gjs-db-menu-trigger,
+  .gjs-db-panel-top .gjs-db-button {
+    min-height: 2.75rem;
+  }
+}
 .gjs-db-status {
   display: inline-flex;
   align-items: center;

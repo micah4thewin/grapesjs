@@ -1,52 +1,68 @@
+import buildOrganizationBusinessFieldsMarkup from './buildOrganizationBusinessFieldsMarkup.js';
+import buildOrganizationContactFieldsMarkup from './buildOrganizationContactFieldsMarkup.js';
 import buildSchemaSelectFieldMarkup from './buildSchemaSelectFieldMarkup.js';
 import buildSchemaTextFieldMarkup from './buildSchemaTextFieldMarkup.js';
 import buildSchemaTextareaFieldMarkup from './buildSchemaTextareaFieldMarkup.js';
+import getOrganizationTypeGroups from './getOrganizationTypeGroups.js';
 
 const buildOrganizationFieldsMarkup = (organizationRecord) =>
   [
     buildSchemaSelectFieldMarkup(
       'organization.type',
-      'Organization type',
-      'Pick the closest schema.org type.',
+      'Who is behind the site',
+      'Pick the closest match; local businesses can add opening hours and a price range.',
       organizationRecord.type || 'Organization',
-      [
-        ['Organization', 'Organization'],
-        ['LocalBusiness', 'Local business'],
-        ['ProfessionalService', 'Professional service'],
-      ],
+      getOrganizationTypeGroups(),
     ),
     '<div class="gjs-db-grid-two">',
-    buildSchemaTextFieldMarkup('organization.name', 'Name', '', organizationRecord.name),
-    buildSchemaTextFieldMarkup('organization.url', 'URL', '', organizationRecord.url),
+    buildSchemaTextFieldMarkup(
+      'organization.name',
+      'Name',
+      'The official name shown in search results.',
+      organizationRecord.name,
+    ),
+    buildSchemaTextFieldMarkup(
+      'organization.url',
+      'Website address',
+      'The home page address, for example https://www.example.com.',
+      organizationRecord.url,
+      { type: 'url', placeholder: 'https://www.example.com' },
+    ),
     '</div>',
     '<div class="gjs-db-grid-two">',
-    buildSchemaTextFieldMarkup('organization.logo', 'Logo URL', '', organizationRecord.logo),
-    buildSchemaTextFieldMarkup('organization.email', 'Email', '', organizationRecord.email),
+    '<div data-db-schema-when="organization business">',
+    buildSchemaTextFieldMarkup(
+      'organization.logo',
+      'Logo',
+      'Full address of a square logo image, at least 112x112px.',
+      organizationRecord.logo,
+      { type: 'url', placeholder: 'https://www.example.com/logo.png' },
+    ),
     '</div>',
-    '<div class="gjs-db-grid-two">',
-    buildSchemaTextFieldMarkup('organization.telephone', 'Telephone', '', organizationRecord.telephone),
-    buildSchemaTextFieldMarkup('organization.streetAddress', 'Street address', '', organizationRecord.streetAddress),
+    buildSchemaTextFieldMarkup(
+      'organization.image',
+      'Photo',
+      'Full address of a photo of the place or person.',
+      organizationRecord.image,
+      { type: 'url', placeholder: 'https://www.example.com/photo.jpg' },
+    ),
     '</div>',
-    '<div class="gjs-db-grid-two">',
-    buildSchemaTextFieldMarkup('organization.addressLocality', 'City', '', organizationRecord.addressLocality),
-    buildSchemaTextFieldMarkup('organization.addressRegion', 'Region', '', organizationRecord.addressRegion),
+    '<div data-db-schema-when="person">',
+    buildSchemaTextFieldMarkup(
+      'organization.jobTitle',
+      'Job title',
+      'What you do, for example Photographer or Web designer.',
+      organizationRecord.jobTitle,
+    ),
     '</div>',
-    '<div class="gjs-db-grid-two">',
-    buildSchemaTextFieldMarkup('organization.postalCode', 'Postal code', '', organizationRecord.postalCode),
-    buildSchemaTextFieldMarkup('organization.addressCountry', 'Country', '', organizationRecord.addressCountry),
-    '</div>',
+    buildOrganizationContactFieldsMarkup(organizationRecord),
     buildSchemaTextareaFieldMarkup(
       'organization.sameAs',
       'Social profiles',
-      'One URL per line.',
+      'One full address per line, for example https://www.instagram.com/yourname.',
       organizationRecord.sameAs,
     ),
-    buildSchemaTextareaFieldMarkup(
-      'organization.openingHours',
-      'Opening hours',
-      'For example: Mo-Fr 09:00-17:00.',
-      organizationRecord.openingHours,
-    ),
+    buildOrganizationBusinessFieldsMarkup(organizationRecord),
   ].join('');
 
 export default buildOrganizationFieldsMarkup;

@@ -8,8 +8,9 @@ const checkCanonicalBase = (auditContext) => {
     createFindingRecord(
       'warning',
       'Metadata',
-      'No canonical base URL is configured for the site.',
-      'Set the production domain in the SEO settings so canonical links and the sitemap resolve.',
+      'No website address (canonical base URL) is set for the site.',
+      'Enter the address the site will live at, such as https://www.example.com, so links and the sitemap resolve.',
+      { fixId: 'seo-field:canonicalBase' },
     ),
   ];
 };

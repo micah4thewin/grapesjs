@@ -26,7 +26,7 @@ const getDesignKitRecords = () => [
     fontFamilies: ['Nunito'],
     tokens: {
       font: { display: "'Nunito', system-ui, sans-serif", body: "'Nunito', system-ui, sans-serif" },
-      color: { brand: '#0d9488', accent: '#c2410c', text: '#134e4a', textMuted: '#526b68', surfaceAlt: '#f0fdfa' },
+      color: { brand: '#0f766e', accent: '#c2410c', text: '#134e4a', textMuted: '#526b68', surfaceAlt: '#f0fdfa' },
     },
   },
   {

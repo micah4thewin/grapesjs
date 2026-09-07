@@ -5,6 +5,8 @@ import buildStrikethroughRteAction from './buildStrikethroughRteAction.js';
 import buildSubscriptRteAction from './buildSubscriptRteAction.js';
 import buildSuperscriptRteAction from './buildSuperscriptRteAction.js';
 
+const replacedCoreActionNames = ['strikethrough'];
+
 const registerRichTextActions = (editor) => {
   if (!(editor.getContainer && editor.getContainer())) return;
   const actionBuilders = [
@@ -20,7 +22,9 @@ const registerRichTextActions = (editor) => {
     if (!richTextModule || !richTextModule.getToolbarEl || !richTextModule.getToolbarEl()) return;
     actionBuilders.forEach((buildRteAction) => {
       const actionDefinition = buildRteAction();
-      if (richTextModule.get(actionDefinition.name)) return;
+      const existingAction = richTextModule.get(actionDefinition.name);
+      if (existingAction && replacedCoreActionNames.indexOf(actionDefinition.name) < 0) return;
+      if (existingAction) richTextModule.remove(actionDefinition.name);
       richTextModule.add(actionDefinition.name, actionDefinition);
     });
   };

@@ -1,40 +1,46 @@
 import createFindingRecord from './createFindingRecord.js';
 import resolveSeoRecords from './resolveSeoRecords.js';
+import resolveSeoTitleText from '../seo/resolveSeoTitleText.js';
 
 const checkSeoTitle = (auditContext) => {
   const { pageSeo, siteSeo } = resolveSeoRecords(auditContext);
-  const titleText = String(pageSeo.title || siteSeo.defaultTitle || '').trim();
-  if (!titleText) {
-    return [
-      createFindingRecord(
-        'error',
-        'Metadata',
-        'The page has no SEO title.',
-        'Set a unique title of roughly 30 to 60 characters in the SEO settings.',
-      ),
-    ];
-  }
-  if (titleText.length < 10) {
-    return [
+  const customTitle = String(pageSeo.title || '').trim();
+  const renderedTitle = resolveSeoTitleText(siteSeo, pageSeo, auditContext.pageName);
+  const findings = [];
+  const titleDetails = { fixId: 'seo-field:title' };
+  if (!customTitle) {
+    findings.push(
       createFindingRecord(
         'warning',
         'Metadata',
-        'The SEO title is only ' + titleText.length + ' characters long.',
+        'No custom page title is set; search results will show "' + renderedTitle + '".',
+        'Write a title of roughly 30 to 60 characters that says what this page offers.',
+        titleDetails,
+      ),
+    );
+  }
+  if (renderedTitle.length > 60) {
+    findings.push(
+      createFindingRecord(
+        'warning',
+        'Metadata',
+        'The title shown in search results is ' + renderedTitle.length + ' characters: "' + renderedTitle + '".',
+        'Keep the full title, including the site name, under 60 characters so it is not cut off.',
+        titleDetails,
+      ),
+    );
+  } else if (customTitle && renderedTitle.length < 10) {
+    findings.push(
+      createFindingRecord(
+        'warning',
+        'Metadata',
+        'The page title is only ' + renderedTitle.length + ' characters long.',
         'Expand the title so it describes the page; aim for 30 to 60 characters.',
+        titleDetails,
       ),
-    ];
+    );
   }
-  if (titleText.length > 60) {
-    return [
-      createFindingRecord(
-        'warning',
-        'Metadata',
-        'The SEO title is ' + titleText.length + ' characters long.',
-        'Keep titles under 60 characters so search results do not truncate them.',
-      ),
-    ];
-  }
-  return [];
+  return findings;
 };
 
 export default checkSeoTitle;

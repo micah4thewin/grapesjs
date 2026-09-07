@@ -1,6 +1,7 @@
 import collectFeatureRuntimeScriptText from './collectFeatureRuntimeScriptText.js';
 import collectSiteRuntimeScriptText from './collectSiteRuntimeScriptText.js';
 import listPageExportEntries from './listPageExportEntries.js';
+import minifyScriptText from './minifyScriptText.js';
 import resolveCustomScriptText from './resolveCustomScriptText.js';
 
 const buildSiteScriptText = (editor, buildOptions) => {
@@ -17,7 +18,8 @@ const buildSiteScriptText = (editor, buildOptions) => {
       "if (document.documentElement.getAttribute('data-db-page') === " + pageKey + ') {\n' + customScriptText + '\n}',
     );
   });
-  return scriptChunks.join('\n\n');
+  const combinedScript = scriptChunks.join('\n\n');
+  return (buildOptions || {}).optimizeJs === false ? combinedScript : minifyScriptText(combinedScript);
 };
 
 export default buildSiteScriptText;

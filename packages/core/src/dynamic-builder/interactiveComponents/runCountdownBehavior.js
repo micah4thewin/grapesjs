@@ -2,25 +2,44 @@ const runCountdownBehavior = () => {
   document.querySelectorAll('[data-db-countdown]').forEach((countdownElement) => {
     if (countdownElement.dataset.dbCountdownReady) return;
     countdownElement.dataset.dbCountdownReady = 'true';
+    const isEditorCanvas = () =>
+      document.body.hasAttribute('data-db-editor-canvas') && !document.body.hasAttribute('data-db-editor-preview');
     const gridElement = countdownElement.querySelector('[data-db-countdown-grid]');
     const messageElement = countdownElement.querySelector('[data-db-countdown-message]');
     const summaryElement = countdownElement.querySelector('[data-db-countdown-summary]');
-    const valueElements = {
-      days: countdownElement.querySelector('[data-db-count-days]'),
-      hours: countdownElement.querySelector('[data-db-count-hours]'),
-      minutes: countdownElement.querySelector('[data-db-count-minutes]'),
-      seconds: countdownElement.querySelector('[data-db-count-seconds]'),
-    };
+    const segmentKeys = ['days', 'hours', 'minutes', 'seconds'];
+    const valueElements = {};
+    segmentKeys.forEach((segmentKey) => {
+      valueElements[segmentKey] = countdownElement.querySelector('[data-db-count-' + segmentKey + ']');
+    });
     const countdownState = { timerId: null, lastSummaryStamp: null };
+    const readAttribute = (attributeName) => countdownElement.getAttribute(attributeName) || '';
     const readDeadline = () => {
-      const dateValue = countdownElement.getAttribute('data-db-deadline-date') || '';
+      const dateValue = readAttribute('data-db-deadline-date');
       if (!dateValue) return null;
-      const rawTimeValue = countdownElement.getAttribute('data-db-deadline-time') || '';
-      const timeValue = /^\d\d?:\d\d$/.test(rawTimeValue) ? rawTimeValue : '00:00';
-      const parsedDeadline = new Date(dateValue + 'T' + (timeValue.length === 4 ? '0' + timeValue : timeValue) + ':00');
+      const rawTimeValue = readAttribute('data-db-deadline-time');
+      const timeValue = /^([01]\d|2[0-3]):[0-5]\d$/.test(rawTimeValue) ? rawTimeValue : '00:00';
+      const rawOffsetValue = readAttribute('data-db-deadline-offset');
+      const offsetValue = /^(Z|[+-](0\d|1[0-4]):[0-5]\d)$/.test(rawOffsetValue) ? rawOffsetValue : '';
+      const parsedDeadline = new Date(dateValue + 'T' + timeValue + ':00' + offsetValue);
       return isNaN(parsedDeadline.getTime()) ? null : parsedDeadline;
     };
     const padValue = (numberValue) => String(numberValue).padStart(2, '0');
+    const setHiddenState = (targetElement, shouldHide) => {
+      if (!targetElement) return;
+      if (shouldHide) targetElement.setAttribute('hidden', '');
+      else targetElement.removeAttribute('hidden');
+    };
+    const setLiveHidden = (shouldHide) => {
+      const inEditor = isEditorCanvas();
+      setHiddenState(countdownElement, shouldHide && !inEditor);
+      if (shouldHide && inEditor) countdownElement.setAttribute('data-db-live-hidden', 'true');
+      else countdownElement.removeAttribute('data-db-live-hidden');
+    };
+    const showGrid = (shouldShowGrid) => {
+      setHiddenState(gridElement, !shouldShowGrid);
+      setHiddenState(messageElement, shouldShowGrid);
+    };
     const writeSegments = (remainingMs) => {
       const totalSeconds = Math.max(0, Math.floor(remainingMs / 1000));
       const segmentValues = {
@@ -29,65 +48,46 @@ const runCountdownBehavior = () => {
         minutes: Math.floor((totalSeconds % 3600) / 60),
         seconds: totalSeconds % 60,
       };
-      Object.keys(segmentValues).forEach((segmentKey) => {
+      segmentKeys.forEach((segmentKey) => {
         if (valueElements[segmentKey]) valueElements[segmentKey].textContent = padValue(segmentValues[segmentKey]);
       });
+      const daysSegment = valueElements.days ? valueElements.days.closest('.db-countdown-segment') : null;
+      const hideDays = readAttribute('data-db-hide-days') === 'true' && segmentValues.days === 0 && remainingMs > 0;
+      setHiddenState(daysSegment, hideDays);
       return segmentValues;
     };
     const writeSummary = (summaryText) => {
       if (summaryElement && summaryElement.textContent !== summaryText) summaryElement.textContent = summaryText;
     };
-    const setHiddenState = (targetElement, shouldHide) => {
-      if (!targetElement) return;
-      if (shouldHide) targetElement.setAttribute('hidden', '');
-      else targetElement.removeAttribute('hidden');
-    };
     const applyTick = () => {
-      if (!countdownElement.isConnected) {
-        window.clearInterval(countdownState.timerId);
-        return;
-      }
+      if (!countdownElement.isConnected) return window.clearInterval(countdownState.timerId);
       const deadlineDate = readDeadline();
       if (!deadlineDate) {
         writeSegments(0);
-        setHiddenState(countdownElement, false);
-        setHiddenState(gridElement, false);
-        setHiddenState(messageElement, true);
+        setLiveHidden(false);
+        showGrid(true);
         writeSummary('No deadline set for this countdown');
         return;
       }
       const remainingMs = deadlineDate.getTime() - Date.now();
-      const expiryMessageText = countdownElement.getAttribute('data-db-expiry-message') || 'This countdown has ended.';
       if (remainingMs <= 0) {
         writeSegments(0);
-        const expiryAction = countdownElement.getAttribute('data-db-expiry-action') || 'message';
-        if (expiryAction === 'hide') {
-          setHiddenState(countdownElement, true);
-        } else {
-          if (messageElement) messageElement.textContent = expiryMessageText;
-          setHiddenState(countdownElement, false);
-          setHiddenState(gridElement, true);
-          setHiddenState(messageElement, false);
-        }
+        const expiryMessageText = readAttribute('data-db-expiry-message');
+        const shouldHide = readAttribute('data-db-expiry-action') === 'hide';
+        if (messageElement) messageElement.textContent = expiryMessageText;
+        setLiveHidden(shouldHide);
+        showGrid(shouldHide);
         writeSummary(expiryMessageText);
         return;
       }
-      setHiddenState(countdownElement, false);
-      setHiddenState(gridElement, false);
-      setHiddenState(messageElement, true);
+      setLiveHidden(false);
+      showGrid(true);
       const segmentValues = writeSegments(remainingMs);
       const minuteStamp = Math.floor(remainingMs / 60000);
       if (countdownState.lastSummaryStamp !== minuteStamp) {
         countdownState.lastSummaryStamp = minuteStamp;
-        writeSummary(
-          'Time remaining: ' +
-            segmentValues.days +
-            ' days, ' +
-            segmentValues.hours +
-            ' hours and ' +
-            segmentValues.minutes +
-            ' minutes',
-        );
+        const summaryParts = [segmentValues.days + ' days', segmentValues.hours + ' hours', segmentValues.minutes + ' minutes'];
+        writeSummary('Time remaining: ' + summaryParts.join(', '));
       }
     };
     applyTick();

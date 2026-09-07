@@ -1,15 +1,13 @@
-const targetField = {
-  name: 'target',
-  label: 'Target',
-  type: 'text',
-  placeholder: 'Leave empty for this element, or #id / .class',
-};
+import getFlowStorageActionRecords from './getFlowStorageActionRecords.js';
+import getFlowTargetFieldRecord from './getFlowTargetFieldRecord.js';
+
+const targetField = getFlowTargetFieldRecord();
 
 const getFlowActionRecords = () => [
   {
     id: 'alert',
     label: 'Show a dialog',
-    hint: 'A SweetAlert2 pop-up.',
+    hint: 'A pop-up with a title, a message and buttons. Later steps only run after the visitor confirms.',
     fields: [
       {
         name: 'kind',
@@ -28,7 +26,13 @@ const getFlowActionRecords = () => [
       { name: 'text', label: 'Message', type: 'textarea', placeholder: 'We will be in touch shortly.' },
       { name: 'confirmText', label: 'Confirm button', type: 'text', default: 'OK', placeholder: 'OK' },
       { name: 'cancelText', label: 'Cancel button', type: 'text', placeholder: 'Leave empty to hide' },
-      { name: 'timer', label: 'Auto close after (ms)', type: 'number', placeholder: '0 keeps it open' },
+      {
+        name: 'timer',
+        label: 'Auto close after',
+        type: 'seconds',
+        placeholder: '0 keeps it open',
+        help: 'When it closes by itself the next steps still run.',
+      },
     ],
   },
   {
@@ -50,22 +54,13 @@ const getFlowActionRecords = () => [
   { id: 'show', label: 'Show something', fields: [targetField] },
   { id: 'hide', label: 'Hide something', fields: [targetField] },
   { id: 'toggle', label: 'Show or hide something', fields: [targetField] },
-  {
-    id: 'scroll-to',
-    label: 'Scroll to a spot',
-    fields: [{ ...targetField, placeholder: '#pricing' }],
-  },
+  { id: 'scroll-to', label: 'Scroll to a spot', fields: [getFlowTargetFieldRecord('#pricing')] },
   {
     id: 'open-url',
     label: 'Go to a link',
     fields: [
       { name: 'url', label: 'Address', type: 'text', placeholder: 'https://example.com or /contact' },
-      {
-        name: 'newTab',
-        label: 'Open in a new tab',
-        type: 'checkbox',
-        default: 'false',
-      },
+      { name: 'newTab', label: 'Open in a new tab', type: 'checkbox', default: 'false' },
     ],
   },
   {
@@ -82,7 +77,7 @@ const getFlowActionRecords = () => [
       { name: 'value', label: 'Value', type: 'text', placeholder: 'true' },
     ],
   },
-  { id: 'submit-form', label: 'Submit a form', fields: [{ ...targetField, placeholder: '#signup-form' }] },
+  { id: 'submit-form', label: 'Submit a form', fields: [getFlowTargetFieldRecord('#signup-form')] },
   {
     id: 'copy-text',
     label: 'Copy text to the clipboard',
@@ -92,16 +87,17 @@ const getFlowActionRecords = () => [
     ],
   },
   { id: 'replay-animation', label: 'Replay the scroll animation', fields: [targetField] },
+  ...getFlowStorageActionRecords(),
   {
     id: 'wait',
     label: 'Wait',
     hint: 'Pause before the next step.',
-    fields: [{ name: 'delay', label: 'Wait (ms)', type: 'number', default: '400' }],
+    fields: [{ name: 'delay', label: 'Wait for', type: 'seconds', default: '400' }],
   },
   {
     id: 'custom-js',
     label: 'Run custom JavaScript',
-    hint: 'Only runs on exports when "Allow script tags" is on. `element` and `event` are available.',
+    hint: 'Only runs on exports when "Allow script tags" is on. The variables element and event are available.',
     fields: [{ name: 'code', label: 'JavaScript', type: 'textarea', placeholder: "console.log('hi', element);" }],
   },
 ];

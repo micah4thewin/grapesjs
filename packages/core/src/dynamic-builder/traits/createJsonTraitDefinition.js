@@ -1,13 +1,14 @@
+import buildTraitAriaLabelAttribute from './buildTraitAriaLabelAttribute.js';
 import formatTraitDisplayValue from './formatTraitDisplayValue.js';
 import markTraitInputValidity from './markTraitInputValidity.js';
 import resolveTraitInnerElement from './resolveTraitInnerElement.js';
 import syncTraitInputFromValue from './syncTraitInputFromValue.js';
 
 const createJsonTraitDefinition = () => ({
-  createInput: () =>
+  createInput: ({ trait }) =>
     [
       '<div class="gjs-db-field">',
-      '<textarea class="gjs-db-field-input gjs-db-trait-json" rows="6" spellcheck="false" ',
+      `<textarea class="gjs-db-field-input gjs-db-trait-json" rows="6" spellcheck="false"${buildTraitAriaLabelAttribute(trait)} `,
       'placeholder="{ &quot;key&quot;: &quot;value&quot; }"></textarea>',
       '</div>',
     ].join(''),
@@ -23,7 +24,7 @@ const createJsonTraitDefinition = () => ({
         isParseable = false;
       }
     }
-    markTraitInputValidity(jsonInput, isParseable, 'Invalid JSON: fix the syntax before it can be saved');
+    markTraitInputValidity(jsonInput, isParseable, 'This is not valid JSON yet, so it has not been saved');
     if (isParseable) trait.set('value', rawValue);
   },
   onUpdate: ({ trait, elInput }) => {

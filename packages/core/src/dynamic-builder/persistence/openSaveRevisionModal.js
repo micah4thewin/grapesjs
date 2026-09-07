@@ -12,10 +12,20 @@ const openSaveRevisionModal = (editor, moduleOptions) => {
   const formElement = buildElementFromMarkup(containerElement.ownerDocument, buildSaveRevisionFormMarkup());
   if (!formElement) return;
   const labelInputElement = formElement.querySelector('[data-db-revision-label-input]');
+  const errorElement = formElement.querySelector('[data-db-revision-error]');
   formElement.addEventListener('submit', (submitEvent) => {
     submitEvent.preventDefault();
-    saveRevisionRecord(editor, moduleOptions, labelInputElement ? labelInputElement.value : '');
-    editor.Modal.close();
+    const savedRecord = saveRevisionRecord(editor, moduleOptions, labelInputElement ? labelInputElement.value : '');
+    if (savedRecord) {
+      editor.Modal.close();
+      return;
+    }
+    const errorMessage = String(editor.getModel().get('dbLastRevisionErrorMessage') || 'The revision was not saved.');
+    if (errorElement) errorElement.textContent = errorMessage;
+    if (labelInputElement) {
+      labelInputElement.setAttribute('aria-invalid', 'true');
+      labelInputElement.focus();
+    }
   });
   const cancelButtonElement = formElement.querySelector('[data-db-revision-cancel]');
   if (cancelButtonElement) cancelButtonElement.addEventListener('click', () => editor.Modal.close());

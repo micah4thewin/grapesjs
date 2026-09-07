@@ -7,9 +7,9 @@ import resolveEditorTabId from './resolveEditorTabId.js';
 const wireForeignSnapshotWatch = (editor, moduleOptions, cancelPendingSave) => {
   const containerWindow = resolveContainerWindow(editor);
   if (!containerWindow || typeof containerWindow.addEventListener !== 'function') return;
-  const ownerKey = buildSnapshotOwnerKey(moduleOptions);
   const handleStorageEvent = (storageEvent) => {
-    if (!storageEvent || storageEvent.key !== ownerKey || !storageEvent.newValue) return;
+    if (!storageEvent || !storageEvent.newValue) return;
+    if (storageEvent.key !== buildSnapshotOwnerKey(editor, moduleOptions)) return;
     let ownerRecord = null;
     try {
       ownerRecord = JSON.parse(storageEvent.newValue);

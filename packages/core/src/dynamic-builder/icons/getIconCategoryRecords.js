@@ -8,10 +8,12 @@ import getDirectionIconPaths from '../support/getDirectionIconPaths.js';
 import getEducationIconPaths from '../support/getEducationIconPaths.js';
 import getFoodIconPaths from '../support/getFoodIconPaths.js';
 import getHealthIconPaths from '../support/getHealthIconPaths.js';
+import getHiddenPickerIconNames from './getHiddenPickerIconNames.js';
 import getInteractionIconPaths from '../support/getInteractionIconPaths.js';
 import getInterfaceIconPaths from '../support/getInterfaceIconPaths.js';
 import getMediaLibraryIconPaths from '../support/getMediaLibraryIconPaths.js';
 import getNatureIconPaths from '../support/getNatureIconPaths.js';
+import getPopularIconNames from './getPopularIconNames.js';
 import getShapeIconPaths from '../support/getShapeIconPaths.js';
 import getSocialIconPaths from '../support/getSocialIconPaths.js';
 import getSystemIconPaths from '../support/getSystemIconPaths.js';
@@ -19,7 +21,6 @@ import getToolIconPaths from '../support/getToolIconPaths.js';
 import getTravelIconPaths from '../support/getTravelIconPaths.js';
 
 const categorySourceRecords = [
-  ['popular', 'Popular', getInterfaceIconPaths],
   ['arrows', 'Arrows', getDirectionIconPaths],
   ['shapes', 'Shapes', getShapeIconPaths],
   ['actions', 'Actions', getActionIconPaths],
@@ -37,14 +38,24 @@ const categorySourceRecords = [
   ['food', 'Food', getFoodIconPaths],
   ['nature', 'Nature', getNatureIconPaths],
   ['travel', 'Travel', getTravelIconPaths],
-  ['system', 'Editor', getSystemIconPaths],
+  ['interface', 'Interface', getInterfaceIconPaths],
+  ['system', 'Website', getSystemIconPaths],
 ];
 
-const getIconCategoryRecords = () =>
-  categorySourceRecords.map(([categoryId, categoryLabel, readIconPaths]) => ({
+const readPickerIconNames = (readIconPaths) => {
+  const hiddenNames = getHiddenPickerIconNames();
+  return Object.keys(readIconPaths())
+    .filter((iconName) => hiddenNames.indexOf(iconName) < 0)
+    .sort((firstName, secondName) => firstName.localeCompare(secondName));
+};
+
+const getIconCategoryRecords = () => [
+  { categoryId: 'popular', categoryLabel: 'Popular', iconNames: getPopularIconNames() },
+  ...categorySourceRecords.map(([categoryId, categoryLabel, readIconPaths]) => ({
     categoryId,
     categoryLabel,
-    iconNames: Object.keys(readIconPaths()).sort((firstName, secondName) => firstName.localeCompare(secondName)),
-  }));
+    iconNames: readPickerIconNames(readIconPaths),
+  })),
+];
 
 export default getIconCategoryRecords;

@@ -1,4 +1,5 @@
 import buildFeatureCardChildComponents from './buildFeatureCardChildComponents.js';
+import getFeaturePresetRecords from './getFeaturePresetRecords.js';
 
 const buildFeatureCardTypeDefinition = () => ({
   type: 'db-feature-card',
@@ -6,16 +7,12 @@ const buildFeatureCardTypeDefinition = () => ({
   model: {
     defaults: {
       tagName: 'div',
-      name: 'Feature card',
+      name: 'Highlight',
       draggable: '[data-db-type=features]',
       droppable: false,
       classes: ['db-feature-card'],
       attributes: { 'data-db-type': 'feature-card' },
-      components: buildFeatureCardChildComponents(
-        'star',
-        'Fast by default',
-        'Ship pages that load instantly thanks to optimized assets and clean, semantic markup.',
-      ),
+      components: buildFeatureCardChildComponents(getFeaturePresetRecords()[0]),
     },
   },
 });

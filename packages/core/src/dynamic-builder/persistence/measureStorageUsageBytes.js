@@ -1,14 +1,15 @@
 import buildRevisionsStorageKey from './buildRevisionsStorageKey.js';
 import buildSnapshotOwnerKey from './buildSnapshotOwnerKey.js';
 import getLocalStorageArea from './getLocalStorageArea.js';
+import resolveStorageKey from './resolveStorageKey.js';
 
-const measureStorageUsageBytes = (moduleOptions) => {
+const measureStorageUsageBytes = (editor, moduleOptions) => {
   const storageArea = getLocalStorageArea();
   if (!storageArea) return 0;
   const storageKeys = [
-    moduleOptions.storageKey,
-    buildRevisionsStorageKey(moduleOptions),
-    buildSnapshotOwnerKey(moduleOptions),
+    resolveStorageKey(editor, moduleOptions),
+    buildRevisionsStorageKey(editor, moduleOptions),
+    buildSnapshotOwnerKey(editor, moduleOptions),
   ];
   return storageKeys.reduce((totalBytes, storageKey) => {
     let storedValue = '';

@@ -1,4 +1,4 @@
-import buildSelectOptionsMarkup from './buildSelectOptionsMarkup.js';
+import buildSelectOptionDefinitions from './buildSelectOptionDefinitions.js';
 
 const buildSelectTypeDefinition = (formTextDefaults) => ({
   type: 'db-select',
@@ -6,7 +6,7 @@ const buildSelectTypeDefinition = (formTextDefaults) => ({
   model: {
     defaults: {
       tagName: 'select',
-      name: 'Select',
+      name: 'Dropdown',
       draggable: '[data-db-type=form-field]',
       droppable: false,
       classes: ['db-field-control', 'db-select'],
@@ -15,16 +15,23 @@ const buildSelectTypeDefinition = (formTextDefaults) => ({
         'data-db-form-control': 'true',
         name: 'topic',
         'data-db-options': formTextDefaults.selectOptionsText,
+        'data-db-placeholder': formTextDefaults.selectPlaceholderText,
+        'data-db-selected': '',
       },
-      components: buildSelectOptionsMarkup(formTextDefaults.selectOptionsText),
+      components: buildSelectOptionDefinitions(
+        formTextDefaults.selectOptionsText,
+        formTextDefaults.selectPlaceholderText,
+        '',
+      ),
       traits: [
-        { type: 'text', name: 'name', label: 'Field name' },
+        { type: 'db-option-list', name: 'data-db-options', label: 'Options' },
         {
-          type: 'db-textarea-trait',
-          name: 'data-db-options',
-          label: 'Options',
-          placeholder: 'value|Label, one per line',
+          type: 'text',
+          name: 'data-db-placeholder',
+          label: 'First line before choosing',
+          placeholder: 'Leave empty to preselect the first option',
         },
+        { type: 'text', name: 'name', label: 'Field name', placeholder: 'topic' },
       ],
     },
   },

@@ -15,8 +15,12 @@ const describeChangeAction = (actionRecord) => {
 };
 
 const describeUndoGroup = (undoGroup) => {
-  const actionList = ((undoGroup && undoGroup.actions) || []).filter((actionRecord) => actionRecord && actionRecord.type);
-  const structuralActions = actionList.filter((actionRecord) => actionRecord.type === 'add' || actionRecord.type === 'remove');
+  const actionList = ((undoGroup && undoGroup.actions) || []).filter(
+    (actionRecord) => actionRecord && actionRecord.type,
+  );
+  const structuralActions = actionList.filter(
+    (actionRecord) => actionRecord.type === 'add' || actionRecord.type === 'remove',
+  );
   if (structuralActions.length) {
     const primaryAction = structuralActions[0];
     const verbText = primaryAction.type === 'add' ? 'Added' : 'Removed';

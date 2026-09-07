@@ -1,20 +1,18 @@
-import buildTemplateHeadingRecords from './buildTemplateHeadingRecords.js';
-import buildTemplateSectionRecord from './buildTemplateSectionRecord.js';
+import buildCallToActionSection from './buildCallToActionSection.js';
+import buildHeadingContentRecord from './buildHeadingContentRecord.js';
+import buildSectionContentRecord from './buildSectionContentRecord.js';
+import buildTemplateIntroSection from './buildTemplateIntroSection.js';
 
 const getServicesTemplateComponents = () => [
   { type: 'db-navbar' },
-  buildTemplateSectionRecord(
-    buildTemplateHeadingRecords(
-      'What we do',
-      'Clear scopes, honest timelines, and work we are proud to put our name on.',
-    ),
+  buildTemplateIntroSection('What we do', 'Clear scopes, honest timelines, and work we are proud to put our name on.'),
+  buildSectionContentRecord([{ type: 'db-features' }]),
+  buildSectionContentRecord([{ type: 'db-stats' }], { attributes: { 'data-db-theme': 'light' } }),
+  buildSectionContentRecord([buildHeadingContentRecord('2', 'How engagements work'), { type: 'db-accordion' }]),
+  buildCallToActionSection(
+    'Ready when you are',
+    'Tell us about your project and we will reply within one business day.',
   ),
-  { type: 'db-features' },
-  buildTemplateSectionRecord([{ type: 'db-stats' }]),
-  buildTemplateSectionRecord([...buildTemplateHeadingRecords('How engagements work', ''), { type: 'db-accordion' }]),
-  buildTemplateSectionRecord([...buildTemplateHeadingRecords('Ready when you are', ''), { type: 'db-button-group' }], {
-    'data-db-theme': 'brand',
-  }),
   { type: 'db-footer' },
 ];
 

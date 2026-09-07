@@ -1,32 +1,38 @@
 import getIconMarkup from '../support/getIconMarkup.js';
+import getLockedChildProps from './getLockedChildProps.js';
 
 const buildMapPlaceholderChildren = () => [
   {
     tagName: 'div',
+    name: 'Map placeholder',
     classes: ['db-map-placeholder'],
-    draggable: false,
-    droppable: false,
+    ...getLockedChildProps(),
     components: [
-      { tagName: 'span', classes: ['db-map-pin'], components: getIconMarkup('map', { size: 28 }) },
+      {
+        tagName: 'span',
+        classes: ['db-map-pin'],
+        ...getLockedChildProps(),
+        components: getIconMarkup('map', { size: 28 }),
+      },
       {
         tagName: 'p',
-        type: 'text',
         classes: ['db-map-address'],
+        ...getLockedChildProps(),
         attributes: { 'data-db-map-address': 'true' },
         components: 'London, United Kingdom',
       },
       {
         tagName: 'button',
         classes: ['db-facade-button'],
-        draggable: false,
-        droppable: false,
+        ...getLockedChildProps(),
         attributes: { type: 'button', 'data-db-map-load': 'true' },
         components: 'Load interactive map',
       },
       {
         tagName: 'p',
-        type: 'text',
         classes: ['db-facade-note'],
+        ...getLockedChildProps(),
+        attributes: { 'data-db-map-note': 'true' },
         components: 'The map loads from OpenStreetMap only after you choose to view it.',
       },
     ],

@@ -1,20 +1,14 @@
-import buildMenuItemMarkup from './buildMenuItemMarkup.js';
-import deriveLabelFromCommandId from './deriveLabelFromCommandId.js';
-import escapeHtmlText from '../support/escapeHtmlText.js';
+import buildToolsMenuItemMarkup from './buildToolsMenuItemMarkup.js';
+import buildToolsMenuSectionMarkup from './buildToolsMenuSectionMarkup.js';
 import getCoreCommandLabelRecords from './getCoreCommandLabelRecords.js';
 import getDbCommandLabelRecords from './getDbCommandLabelRecords.js';
 import getIconMarkup from '../support/getIconMarkup.js';
-import getToolsMenuCommandIds from './getToolsMenuCommandIds.js';
+import getToolsMenuSections from './getToolsMenuSections.js';
 
 const buildToolsMenuMarkup = () => {
   const labelRecords = { ...getCoreCommandLabelRecords(), ...getDbCommandLabelRecords() };
-  const menuItemsMarkup = getToolsMenuCommandIds()
-    .map((commandId) => {
-      const labelRecord = labelRecords[commandId] || {};
-      const labelText = labelRecord.label || deriveLabelFromCommandId(commandId);
-      const attributesText = `data-db-command="${escapeHtmlText(commandId)}"`;
-      return buildMenuItemMarkup(labelText, labelRecord.iconName || 'settings', attributesText);
-    })
+  const sectionsMarkup = getToolsMenuSections()
+    .map((sectionRecord) => buildToolsMenuSectionMarkup(sectionRecord, labelRecords))
     .join('');
   return [
     '<div class="gjs-db-panel-group gjs-db-menu-host" role="group" aria-label="Tools">',
@@ -24,8 +18,9 @@ const buildToolsMenuMarkup = () => {
     '<span class="gjs-db-menu-trigger-label">Tools</span>',
     getIconMarkup('chevronDown', { size: 12 }),
     '</button>',
-    '<div class="gjs-db-menu" data-db-menu="tools" role="menu" aria-label="Tools" hidden>',
-    menuItemsMarkup,
+    '<div class="gjs-db-menu gjs-db-menu-tools" data-db-menu="tools" role="menu" aria-label="Tools" hidden>',
+    buildToolsMenuItemMarkup('db:open-command-palette', labelRecords),
+    sectionsMarkup,
     '</div>',
     '</div>',
   ].join('');

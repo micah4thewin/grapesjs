@@ -2,8 +2,8 @@ import buildRevisionsStorageKey from './buildRevisionsStorageKey.js';
 import isPlainRecord from '../support/isPlainRecord.js';
 import readStoredJsonRecord from './readStoredJsonRecord.js';
 
-const readRevisionList = (moduleOptions) => {
-  const storedList = readStoredJsonRecord(buildRevisionsStorageKey(moduleOptions));
+const readRevisionList = (editor, moduleOptions) => {
+  const storedList = readStoredJsonRecord(buildRevisionsStorageKey(editor, moduleOptions));
   if (!Array.isArray(storedList)) return [];
   return storedList
     .filter(

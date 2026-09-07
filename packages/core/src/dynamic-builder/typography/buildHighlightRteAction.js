@@ -1,17 +1,5 @@
-import isSelectionInsideTag from './isSelectionInsideTag.js';
-import unwrapSelectionAncestorTag from './unwrapSelectionAncestorTag.js';
-import wrapSelectionWithTag from './wrapSelectionWithTag.js';
+import buildToggleTagRteAction from './buildToggleTagRteAction.js';
 
-const buildHighlightRteAction = () => ({
-  name: 'highlight',
-  icon: '<mark>H</mark>',
-  attributes: { title: 'Highlight' },
-  state: (richTextEditor) => (isSelectionInsideTag(richTextEditor, 'MARK') ? 1 : 0),
-  result: (richTextEditor) => {
-    if (!unwrapSelectionAncestorTag(richTextEditor, 'MARK')) {
-      wrapSelectionWithTag(richTextEditor, 'mark');
-    }
-  },
-});
+const buildHighlightRteAction = () => buildToggleTagRteAction('highlight', 'mark', '<mark>H</mark>', 'Highlight');
 
 export default buildHighlightRteAction;

@@ -2,6 +2,8 @@ const runTabsBehavior = () => {
   document.querySelectorAll('[data-db-tabs]').forEach((tabsElement) => {
     if (tabsElement.dataset.dbTabsReady) return;
     tabsElement.dataset.dbTabsReady = 'true';
+    const isEditorCanvas = () =>
+      document.body.hasAttribute('data-db-editor-canvas') && !document.body.hasAttribute('data-db-editor-preview');
     const createUniqueId = (idPrefix) => idPrefix + '-' + Math.random().toString(36).slice(2, 9);
     const belongsHere = (memberElement) =>
       memberElement.closest ? memberElement.closest('[data-db-tabs]') === tabsElement : true;
@@ -44,7 +46,7 @@ const runTabsBehavior = () => {
     };
     tabsElement.addEventListener('click', (clickEvent) => {
       const tabElement = findOwnTab(clickEvent.target);
-      if (tabElement) selectTab(tabElement);
+      if (tabElement && !isEditorCanvas()) selectTab(tabElement);
     });
     tabsElement.addEventListener('keydown', (keyEvent) => {
       const tabElement = findOwnTab(keyEvent.target);
@@ -64,6 +66,12 @@ const runTabsBehavior = () => {
       tabList[targetIndex].focus();
       selectTab(tabList[targetIndex]);
     });
+    if (window.MutationObserver) {
+      new MutationObserver(syncOrientation).observe(tabsElement, {
+        attributes: true,
+        attributeFilter: ['data-db-orientation'],
+      });
+    }
     syncOrientation();
     const initialTabs = readTabs();
     const selectedTab = initialTabs.filter((tabElement) => tabElement.getAttribute('aria-selected') === 'true')[0];

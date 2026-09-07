@@ -1,0 +1,26 @@
+import getDialogRuntimeSource from './getDialogRuntimeSource.js';
+import getFlowRuntimeSource from './getFlowRuntimeSource.js';
+import resolveAllowScripts from './resolveAllowScripts.js';
+import stopCanvasFlowRuntime from './stopCanvasFlowRuntime.js';
+
+const runCanvasFlowRuntime = (editor, dialogSettings) => {
+  const canvasWindow = editor.Canvas && editor.Canvas.getWindow && editor.Canvas.getWindow();
+  const canvasDocument = editor.Canvas && editor.Canvas.getDocument && editor.Canvas.getDocument();
+  if (!canvasWindow || !canvasDocument || !canvasDocument.body) return 0;
+  stopCanvasFlowRuntime(editor);
+  const flowElementCount = canvasDocument.querySelectorAll('[data-db-flows]').length;
+  if (!flowElementCount) return 0;
+  canvasWindow.dbFlowsPreview = true;
+  try {
+    if (typeof canvasWindow.dbShowDialog !== 'function') {
+      new canvasWindow.Function(getDialogRuntimeSource(dialogSettings || {})).call(canvasWindow);
+    }
+    new canvasWindow.Function(getFlowRuntimeSource(resolveAllowScripts(editor))).call(canvasWindow);
+  } catch (runtimeError) {
+    console.error('Flow preview could not start', runtimeError);
+    return 0;
+  }
+  return flowElementCount;
+};
+
+export default runCanvasFlowRuntime;

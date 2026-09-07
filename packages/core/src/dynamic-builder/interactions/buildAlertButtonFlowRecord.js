@@ -2,7 +2,8 @@ import createFlowIdentifier from './createFlowIdentifier.js';
 
 const buildAlertButtonFlowRecord = (attributesRecord, existingFlowId) => {
   const followUpKind = String(attributesRecord['data-db-alert-then'] || 'none');
-  const followUpValue = String(attributesRecord['data-db-alert-url'] || '');
+  const linkValue = String(attributesRecord['data-db-alert-url'] || '');
+  const formValue = String(attributesRecord['data-db-alert-form'] || linkValue);
   const alertAction = {
     type: 'alert',
     options: {
@@ -14,11 +15,11 @@ const buildAlertButtonFlowRecord = (attributesRecord, existingFlowId) => {
     },
   };
   const flowActions = [alertAction];
-  if (followUpKind === 'open-url' && followUpValue) {
-    flowActions.push({ type: 'open-url', options: { url: followUpValue, newTab: 'false' } });
+  if (followUpKind === 'open-url' && linkValue) {
+    flowActions.push({ type: 'open-url', options: { url: linkValue, newTab: 'false' } });
   }
-  if (followUpKind === 'submit-form' && followUpValue) {
-    flowActions.push({ type: 'submit-form', options: { target: followUpValue } });
+  if (followUpKind === 'submit-form' && formValue) {
+    flowActions.push({ type: 'submit-form', options: { target: formValue } });
   }
   return { id: existingFlowId || createFlowIdentifier(), trigger: 'click', triggerOptions: {}, actions: flowActions };
 };

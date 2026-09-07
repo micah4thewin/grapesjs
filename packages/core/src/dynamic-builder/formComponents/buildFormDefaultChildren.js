@@ -1,73 +1,67 @@
 import buildFormFieldChildren from './buildFormFieldChildren.js';
 
 const buildFormDefaultChildren = (formTextDefaults) => {
-  const buildFieldDefinition = (labelText, controlDefinition, helpText, isRequired) => ({
+  const buildFieldDefinition = (fieldKind, labelText, controlDefinition, helpText, isRequired) => ({
     type: 'db-form-field',
     attributes: {
       'data-db-type': 'form-field',
       'data-db-form-child': 'true',
       'data-db-form-field': 'true',
       'data-db-label': labelText,
+      'data-db-help': helpText,
       'data-db-required': isRequired ? 'true' : 'false',
+      'data-db-field-kind': fieldKind,
     },
-    components: buildFormFieldChildren(labelText, controlDefinition, helpText, isRequired),
-  });
-  const buildControlDefinition = (componentType, controlAttributes) => ({
-    type: componentType,
-    attributes: controlAttributes,
+    components: buildFormFieldChildren(labelText, controlDefinition, helpText),
   });
   return [
     buildFieldDefinition(
+      'text',
       formTextDefaults.nameFieldLabelText,
-      buildControlDefinition('db-input', {
-        'data-db-type': 'input',
-        'data-db-form-control': 'true',
-        type: 'text',
-        name: 'name',
-        autocomplete: 'name',
-        required: 'required',
-      }),
+      {
+        type: 'db-input',
+        attributes: {
+          type: 'text',
+          name: 'name',
+          autocomplete: 'name',
+          placeholder: 'Jane Smith',
+          required: 'required',
+        },
+      },
       '',
       true,
     ),
     buildFieldDefinition(
+      'email',
       formTextDefaults.emailFieldLabelText,
-      buildControlDefinition('db-input', {
-        'data-db-type': 'input',
-        'data-db-form-control': 'true',
-        type: 'email',
-        name: 'email',
-        autocomplete: 'email',
-        required: 'required',
-      }),
+      {
+        type: 'db-input',
+        attributes: {
+          type: 'email',
+          name: 'email',
+          autocomplete: 'email',
+          inputmode: 'email',
+          placeholder: 'you@example.com',
+          required: 'required',
+        },
+      },
       '',
       true,
     ),
     buildFieldDefinition(
+      'textarea',
       formTextDefaults.messageFieldLabelText,
-      buildControlDefinition('db-textarea', {
-        'data-db-type': 'textarea',
-        'data-db-form-control': 'true',
-        name: 'message',
-        rows: '5',
-        placeholder: formTextDefaults.textareaPlaceholderText,
-      }),
+      {
+        type: 'db-textarea',
+        attributes: { name: 'message', rows: '5', placeholder: formTextDefaults.textareaPlaceholderText },
+      },
       formTextDefaults.messageFieldHelpText,
       false,
     ),
     { type: 'db-consent-checkbox' },
     { type: 'db-honeypot' },
     { type: 'db-submit-button' },
-    {
-      tagName: 'div',
-      classes: ['db-form-status'],
-      attributes: {
-        role: 'status',
-        'aria-live': 'polite',
-        'data-db-form-status': 'true',
-        'data-db-form-child': 'true',
-      },
-    },
+    { type: 'db-form-status' },
   ];
 };
 

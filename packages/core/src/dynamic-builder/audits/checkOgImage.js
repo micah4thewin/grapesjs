@@ -12,7 +12,8 @@ const checkOgImage = (auditContext) => {
       'info',
       'Metadata',
       'No social sharing image is set for this page.',
-      'Add an og:image of 1200x630px so shared links show a preview card.',
+      'Add a 1200x630px sharing image so links posted on social media show a preview card.',
+      { fixId: 'seo-field:ogImage' },
     ),
   ];
 };

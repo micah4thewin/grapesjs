@@ -1,4 +1,8 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildFormFieldChildren from './buildFormFieldChildren.js';
+import buildShowWhenTraitDefinitions from './buildShowWhenTraitDefinitions.js';
+import getFieldKindOptions from './getFieldKindOptions.js';
+import getFormChildDropTargets from './getFormChildDropTargets.js';
 import runFormFieldBehavior from './runFormFieldBehavior.js';
 
 const buildFormFieldTypeDefinition = (formTextDefaults) => ({
@@ -8,7 +12,7 @@ const buildFormFieldTypeDefinition = (formTextDefaults) => ({
     defaults: {
       tagName: 'div',
       name: 'Form field',
-      draggable: '[data-db-type=form]',
+      draggable: getFormChildDropTargets() + ', ' + getDropTargetSelectors().anyLayout,
       droppable: '[data-db-form-control]',
       classes: ['db-form-field'],
       attributes: {
@@ -17,6 +21,7 @@ const buildFormFieldTypeDefinition = (formTextDefaults) => ({
         'data-db-form-field': 'true',
         'data-db-label': formTextDefaults.fieldLabelText,
         'data-db-required': 'false',
+        'data-db-field-kind': 'text',
       },
       components: buildFormFieldChildren(
         formTextDefaults.fieldLabelText,
@@ -31,12 +36,12 @@ const buildFormFieldTypeDefinition = (formTextDefaults) => ({
           },
         },
         '',
-        false,
       ),
       script: runFormFieldBehavior,
       traits: [
-        { type: 'text', name: 'data-db-label', label: 'Label text' },
-        { type: 'text', name: 'data-db-help', label: 'Help text' },
+        { type: 'select', name: 'data-db-field-kind', label: 'Field type', options: getFieldKindOptions() },
+        { type: 'text', name: 'data-db-label', label: 'Label' },
+        { type: 'text', name: 'data-db-help', label: 'Help text', placeholder: 'Shown under the box' },
         {
           type: 'checkbox',
           name: 'data-db-required',
@@ -44,6 +49,7 @@ const buildFormFieldTypeDefinition = (formTextDefaults) => ({
           valueTrue: 'true',
           valueFalse: 'false',
         },
+        ...buildShowWhenTraitDefinitions(),
       ],
     },
   },

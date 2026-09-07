@@ -28,7 +28,7 @@ const saveRevisionRecord = (editor, moduleOptions, revisionLabel, recordOptions 
     meta: buildRevisionMetaRecord(snapshotPayload),
     payload: snapshotPayload,
   };
-  const nextRevisionList = [revisionRecord].concat(readRevisionList(moduleOptions));
+  const nextRevisionList = [revisionRecord].concat(readRevisionList(editor, moduleOptions));
   if (!writeRevisionList(editor, moduleOptions, nextRevisionList)) return null;
   editor.trigger('db:revision:saved', revisionRecord);
   return revisionRecord;

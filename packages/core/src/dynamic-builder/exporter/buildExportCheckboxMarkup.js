@@ -1,14 +1,13 @@
 import escapeHtmlText from '../support/escapeHtmlText.js';
 
-const buildExportCheckboxMarkup = (optionKey, labelText, helpText, checkedFlag, disabledFlag) =>
+const buildExportCheckboxMarkup = (optionKey, labelText, helpText, checkedFlag) =>
   [
     '<div class="gjs-db-field">',
-    '<label class="gjs-db-field-label">',
+    '<label class="gjs-db-field-label gjs-db-export-checkbox">',
     '<input type="checkbox" data-db-export-option="' +
       escapeHtmlText(optionKey) +
       '"' +
       (checkedFlag ? ' checked' : '') +
-      (disabledFlag ? ' disabled' : '') +
       '> ',
     escapeHtmlText(labelText),
     '</label>',

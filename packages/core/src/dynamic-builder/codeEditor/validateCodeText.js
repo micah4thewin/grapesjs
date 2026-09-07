@@ -1,4 +1,5 @@
 import countUnbalancedPairs from './countUnbalancedPairs.js';
+import walkHtmlTagStack from './walkHtmlTagStack.js';
 
 const describeBraceProblem = (pairResult, openLabel, closeLabel) => {
   if (pairResult.lowestDepth < 0) return 'There is a ' + closeLabel + ' with no matching ' + openLabel + '.';
@@ -8,12 +9,11 @@ const describeBraceProblem = (pairResult, openLabel, closeLabel) => {
 };
 
 const validateHtmlText = (codeText) => {
-  const allTags = codeText.match(/<[a-zA-Z/][^>]*>/g) || [];
-  const closeTagCount = allTags.filter((tagText) => tagText.indexOf('</') === 0).length;
-  const openTagCount = allTags.filter((tagText) => tagText.indexOf('</') !== 0 && !/\/\s*>$/.test(tagText)).length;
-  if (codeText.indexOf('<') >= 0 && codeText.indexOf('>') < 0) return 'A tag is missing its closing angle bracket.';
-  if (closeTagCount > openTagCount) return 'There are more closing tags than opening tags.';
-  return '';
+  const withoutComments = codeText.replace(/<!--[\s\S]*?-->/g, '');
+  if (withoutComments.indexOf('<') >= 0 && withoutComments.indexOf('>') < 0) {
+    return 'A tag is missing its closing angle bracket.';
+  }
+  return walkHtmlTagStack(codeText).problem;
 };
 
 const validateCssText = (codeText) => {

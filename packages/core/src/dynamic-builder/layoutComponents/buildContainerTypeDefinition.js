@@ -9,11 +9,12 @@ const buildContainerTypeDefinition = () => ({
     defaults: {
       tagName: 'div',
       name: 'Container',
-      draggable: '[data-gjs-type=wrapper], [data-db-type=section]',
+      draggable: '[data-gjs-type=wrapper], [data-db-type=section], [data-db-type=column]',
       droppable: buildDropRule(getPageLevelComponentTypes()),
       classes: ['db-container'],
       attributes: { 'data-db-type': 'container' },
       components: buildLayoutPlaceholderChildren('container'),
+      traits: [],
     },
   },
 });

@@ -60,7 +60,7 @@ const getCoverTraitDefinitions = (mediaKind) => [
       { id: 'left-middle', label: 'Left, middle' },
     ],
   },
-  { type: 'text', name: 'id', label: 'Anchor id', placeholder: 'top' },
+  { type: 'db-anchor', name: 'dbAnchor', changeProp: true, label: 'Anchor link', placeholder: 'e.g. top' },
 ];
 
 export default getCoverTraitDefinitions;

@@ -1,17 +1,11 @@
 import runCanvasAnimationRuntime from './runCanvasAnimationRuntime.js';
 import stopCanvasAnimationRuntime from './stopCanvasAnimationRuntime.js';
-
-const liveModeCommandIds = ['core:preview', 'core:fullscreen'];
+import watchLiveCanvasModes from '../support/watchLiveCanvasModes.js';
 
 const watchPreviewAnimationMode = (editor) => {
-  const isAnyLiveModeActive = () =>
-    liveModeCommandIds.some((commandId) => editor.Commands && editor.Commands.isActive(commandId));
-  liveModeCommandIds.forEach((commandId) => {
-    editor.on('command:run:' + commandId, () => setTimeout(() => runCanvasAnimationRuntime(editor), 240));
-    editor.on('command:stop:' + commandId, () => {
-      stopCanvasAnimationRuntime(editor);
-      if (isAnyLiveModeActive()) setTimeout(() => runCanvasAnimationRuntime(editor), 240);
-    });
+  watchLiveCanvasModes(editor, {
+    onRun: (liveEditor) => runCanvasAnimationRuntime(liveEditor),
+    onStop: (liveEditor) => stopCanvasAnimationRuntime(liveEditor),
   });
 };
 

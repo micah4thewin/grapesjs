@@ -1,3 +1,5 @@
+import getSchemaFieldFormatRecords from './getSchemaFieldFormatRecords.js';
+
 const getEventValidationRules = (eventValues) => {
   const attendanceModeValue = String((eventValues && eventValues.attendanceMode) || '').trim();
   const needsVenue = !/^Online/i.test(attendanceModeValue);
@@ -12,6 +14,7 @@ const getEventValidationRules = (eventValues) => {
       'offerCurrency',
       'offerUrl',
     ].filter((fieldKey, fieldIndex, allKeys) => allKeys.indexOf(fieldKey) === fieldIndex),
+    formats: getSchemaFieldFormatRecords().event,
   };
 };
 

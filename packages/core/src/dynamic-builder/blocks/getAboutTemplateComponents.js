@@ -1,48 +1,25 @@
+import buildHeadingContentRecord from './buildHeadingContentRecord.js';
+import buildSectionContentRecord from './buildSectionContentRecord.js';
+import buildTeamMemberSampleRecord from './buildTeamMemberSampleRecord.js';
+import buildTemplateIntroSection from './buildTemplateIntroSection.js';
+import buildThreeUpSampleColumns from './buildThreeUpSampleColumns.js';
+
 const getAboutTemplateComponents = () => [
   { type: 'db-navbar' },
-  {
-    type: 'db-section',
-    components: [
-      {
-        type: 'db-container',
-        components: [
-          { type: 'db-heading', components: [{ type: 'textnode', content: 'About us' }] },
-          {
-            type: 'db-text',
-            components: [
-              {
-                type: 'textnode',
-                content: 'We are a small team that cares deeply about our craft and the people we build for.',
-              },
-            ],
-          },
-        ],
-      },
+  buildTemplateIntroSection(
+    'About us',
+    'We are a small team that cares deeply about our craft and the people we build for.',
+  ),
+  buildSectionContentRecord(
+    [
+      buildHeadingContentRecord('2', 'Meet the team'),
+      buildThreeUpSampleColumns(buildTeamMemberSampleRecord, 'Team grid'),
     ],
-  },
-  {
-    type: 'db-section',
-    components: [
-      {
-        type: 'db-container',
-        components: [
-          { type: 'db-heading', components: [{ type: 'textnode', content: 'Meet the team' }] },
-          {
-            type: 'db-columns',
-            components: [
-              { type: 'db-column', components: [{ type: 'db-team-member' }] },
-              { type: 'db-column', components: [{ type: 'db-team-member' }] },
-              { type: 'db-column', components: [{ type: 'db-team-member' }] },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    type: 'db-section',
-    components: [{ type: 'db-container', components: [{ type: 'db-logo-cloud' }] }],
-  },
+    { centered: true, attributes: { 'data-db-theme': 'light' } },
+  ),
+  buildSectionContentRecord([buildHeadingContentRecord('2', 'Trusted by kind people'), { type: 'db-logo-cloud' }], {
+    centered: true,
+  }),
   { type: 'db-footer' },
 ];
 

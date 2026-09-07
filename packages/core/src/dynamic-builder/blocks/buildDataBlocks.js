@@ -4,7 +4,7 @@ import buildRepeaterContentRecord from './buildRepeaterContentRecord.js';
 import buildTextContentRecord from './buildTextContentRecord.js';
 
 const buildDataBlocks = () => [
-  buildBlockDefinition('db-repeater', 'Repeater', 'Data', 'collection', { type: 'db-repeater' }),
+  buildBlockDefinition('db-repeater', 'Repeating list', 'Data', 'collection', { type: 'db-repeater' }),
   buildBlockDefinition(
     'db-team-from-data',
     'Team from data',
@@ -18,7 +18,7 @@ const buildDataBlocks = () => [
   ),
   buildBlockDefinition(
     'db-testimonials-from-data',
-    'Testimonials from data',
+    'Quotes from data',
     'Data',
     'testimonial',
     buildRepeaterContentRecord('testimonials', [
@@ -31,7 +31,7 @@ const buildDataBlocks = () => [
     'FAQ from data',
     'Data',
     'faq',
-    buildRepeaterContentRecord('faqItems', [
+    buildRepeaterContentRecord('faqs', [
       buildHeadingContentRecord('3', '{{db:item.question}}'),
       buildTextContentRecord('{{db:item.answer}}'),
     ]),

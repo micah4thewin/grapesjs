@@ -1,3 +1,6 @@
+import writeComponentAttributeValue from '../traits/writeComponentAttributeValue.js';
+import buildOpenInTraitDefinition from './buildOpenInTraitDefinition.js';
+
 const createButtonTypeDefinition = (contentTextDefaults) => ({
   type: 'db-button',
   extend: 'link',
@@ -8,7 +11,7 @@ const createButtonTypeDefinition = (contentTextDefaults) => ({
       name: 'Button',
       draggable: true,
       droppable: false,
-      attributes: { 'data-db-type': 'button', 'data-db-variant': 'primary', 'data-db-size': 'md', href: '#' },
+      attributes: { 'data-db-type': 'button', 'data-db-variant': 'primary', 'data-db-size': 'md' },
       classes: ['db-button'],
       components: contentTextDefaults.buttonLabelText,
       traits: [
@@ -17,13 +20,14 @@ const createButtonTypeDefinition = (contentTextDefaults) => ({
         {
           type: 'select',
           name: 'data-db-variant',
-          label: 'Variant',
+          label: 'Style',
           options: [
-            { id: 'primary', label: 'Primary' },
-            { id: 'secondary', label: 'Secondary' },
-            { id: 'outline', label: 'Outline' },
-            { id: 'ghost', label: 'Ghost' },
-            { id: 'danger', label: 'Danger' },
+            { id: 'primary', label: 'Filled' },
+            { id: 'secondary', label: 'Soft' },
+            { id: 'outline', label: 'Outlined' },
+            { id: 'ghost', label: 'Text only' },
+            { id: 'link', label: 'Underlined link' },
+            { id: 'danger', label: 'Red (for risky actions)' },
           ],
         },
         {
@@ -36,10 +40,17 @@ const createButtonTypeDefinition = (contentTextDefaults) => ({
             { id: 'lg', label: 'Large' },
           ],
         },
-        { type: 'checkbox', name: 'data-db-full-mobile', label: 'Full width on mobile', valueTrue: 'true' },
-        { type: 'checkbox', name: 'target', label: 'Open in new tab', valueTrue: '_blank' },
-        { type: 'checkbox', name: 'download', label: 'Download link' },
-        { type: 'db-aria-label', name: 'aria-label', label: 'ARIA label' },
+        { type: 'checkbox', name: 'data-db-full-mobile', label: 'Full width on phones', valueTrue: 'true' },
+        buildOpenInTraitDefinition(),
+        {
+          type: 'text',
+          name: 'download',
+          label: 'Download as file name',
+          placeholder: 'e.g. brochure.pdf',
+          setValue: ({ component, value }) =>
+            writeComponentAttributeValue(component, 'download', String(value || '').trim()),
+        },
+        { type: 'db-aria-label', name: 'aria-label', label: 'Screen reader label' },
       ],
     },
   },

@@ -1,27 +1,20 @@
+import getLayoutPlaceholderCopy from './getLayoutPlaceholderCopy.js';
+
+const buildPlaceholderRecord = (componentType, componentName, copyText, extraAttributes = {}) => ({
+  type: componentType,
+  name: componentName,
+  attributes: { 'data-db-placeholder': 'true', ...extraAttributes },
+  components: copyText,
+});
+
 const buildLayoutPlaceholderChildren = (placementKind) => {
+  const placeholderCopy = getLayoutPlaceholderCopy();
   if (placementKind === 'column') {
-    return [
-      {
-        type: 'text',
-        tagName: 'p',
-        classes: ['db-layout-placeholder'],
-        content: 'Column content. Drop blocks here or edit this text.',
-      },
-    ];
+    return [buildPlaceholderRecord('db-text', 'Column text', placeholderCopy.columnText)];
   }
   return [
-    {
-      type: 'text',
-      tagName: 'h2',
-      classes: ['db-layout-placeholder'],
-      content: 'A clear headline for this section',
-    },
-    {
-      type: 'text',
-      tagName: 'p',
-      classes: ['db-layout-placeholder'],
-      content: 'Drop blocks here or edit this text to start shaping the section.',
-    },
+    buildPlaceholderRecord('db-heading', 'Section headline', placeholderCopy.sectionHeadline, { 'data-db-level': '2' }),
+    buildPlaceholderRecord('db-text', 'Section text', placeholderCopy.sectionText),
   ];
 };
 

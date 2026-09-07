@@ -1,4 +1,6 @@
-import buildRadioGroupChildrenMarkup from './buildRadioGroupChildrenMarkup.js';
+import buildRadioGroupChildrenDefinitions from './buildRadioGroupChildrenDefinitions.js';
+import buildShowWhenTraitDefinitions from './buildShowWhenTraitDefinitions.js';
+import getFormChildDropTargets from './getFormChildDropTargets.js';
 
 const buildRadioGroupTypeDefinition = (formTextDefaults) => ({
   type: 'db-radio-group',
@@ -6,8 +8,8 @@ const buildRadioGroupTypeDefinition = (formTextDefaults) => ({
   model: {
     defaults: {
       tagName: 'fieldset',
-      name: 'Radio group',
-      draggable: '[data-db-type=form]',
+      name: 'Choice list',
+      draggable: getFormChildDropTargets(),
       droppable: false,
       classes: ['db-radio-group'],
       attributes: {
@@ -16,21 +18,28 @@ const buildRadioGroupTypeDefinition = (formTextDefaults) => ({
         'data-db-legend': formTextDefaults.radioLegendText,
         'data-db-group-name': 'contact-method',
         'data-db-options': formTextDefaults.radioOptionsText,
+        'data-db-selected': '',
+        'data-db-required': 'false',
       },
-      components: buildRadioGroupChildrenMarkup(
+      components: buildRadioGroupChildrenDefinitions(
         formTextDefaults.radioLegendText,
         'contact-method',
         formTextDefaults.radioOptionsText,
+        '',
+        false,
       ),
       traits: [
-        { type: 'text', name: 'data-db-legend', label: 'Legend' },
-        { type: 'text', name: 'data-db-group-name', label: 'Group name' },
+        { type: 'text', name: 'data-db-legend', label: 'Question' },
+        { type: 'db-option-list', name: 'data-db-options', label: 'Choices' },
         {
-          type: 'db-textarea-trait',
-          name: 'data-db-options',
-          label: 'Options',
-          placeholder: 'value|Label, one per line',
+          type: 'checkbox',
+          name: 'data-db-required',
+          label: 'Required',
+          valueTrue: 'true',
+          valueFalse: 'false',
         },
+        { type: 'text', name: 'data-db-group-name', label: 'Field name', placeholder: 'contact-method' },
+        ...buildShowWhenTraitDefinitions(),
       ],
     },
   },

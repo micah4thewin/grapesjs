@@ -5,8 +5,11 @@ const buildHeadingContentCss = () => `
 .db-heading + .db-heading {
   margin-top: var(--db-space-2, 0.5rem);
 }
-:is(p, ul, ol, blockquote, aside, figure, div) + .db-heading {
+:is(p, ul, ol, blockquote, aside, figure) + .db-heading {
   margin-top: var(--db-space-6, 2rem);
+}
+.db-text[data-db-variant='eyebrow'] + .db-heading {
+  margin-top: 0;
 }
 .db-heading.db-heading[data-db-size='display'] {
   font-size: var(--db-type-4xl, 2.75rem);

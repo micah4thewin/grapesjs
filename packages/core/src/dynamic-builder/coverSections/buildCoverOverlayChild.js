@@ -1,5 +1,6 @@
 const buildCoverOverlayChild = () => ({
   tagName: 'span',
+  name: 'Overlay',
   classes: ['db-cover-overlay'],
   attributes: { 'data-db-cover-overlay': 'true', 'aria-hidden': 'true' },
   draggable: false,

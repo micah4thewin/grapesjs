@@ -1,7 +1,8 @@
 import buildPageCanonicalUrl from './buildPageCanonicalUrl.js';
-import escapeHtmlText from '../support/escapeHtmlText.js';
+import buildSitemapUrlEntryMarkup from './buildSitemapUrlEntryMarkup.js';
 import getPageSeoRecord from './getPageSeoRecord.js';
 import getSiteSeoRecord from './getSiteSeoRecord.js';
+import resolvePageLastModifiedDate from './resolvePageLastModifiedDate.js';
 import trimCanonicalBaseUrl from './trimCanonicalBaseUrl.js';
 
 const resolveUrlOriginText = (urlText) => {
@@ -26,7 +27,7 @@ const buildSitemapXmlContent = (editor) => {
     if (!pageOrigin || (siteOrigin && pageOrigin !== siteOrigin)) return;
     if (seenUrls.indexOf(pageUrl) >= 0) return;
     seenUrls.push(pageUrl);
-    urlLines.push('  <url><loc>' + escapeHtmlText(pageUrl) + '</loc></url>');
+    urlLines.push(buildSitemapUrlEntryMarkup(pageUrl, resolvePageLastModifiedDate(editor, sitePage)));
   });
   return (
     [

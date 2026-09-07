@@ -1,7 +1,18 @@
+const lockedMediaProps = {
+  draggable: false,
+  droppable: false,
+  removable: false,
+  copyable: false,
+  selectable: false,
+  hoverable: false,
+  layerable: false,
+};
+
 const buildCoverMediaChild = (mediaKind, mediaSource, posterSource) => {
   if (mediaKind === 'video') {
     return {
       tagName: 'video',
+      name: 'Cover video',
       classes: ['db-cover-media'],
       attributes: {
         'data-db-cover-media': 'video',
@@ -15,26 +26,15 @@ const buildCoverMediaChild = (mediaKind, mediaSource, posterSource) => {
         'aria-hidden': 'true',
         tabindex: '-1',
       },
-      draggable: false,
-      droppable: false,
-      removable: false,
-      copyable: false,
-      selectable: false,
-      hoverable: false,
-      layerable: false,
+      ...lockedMediaProps,
     };
   }
   return {
     type: 'image',
+    name: 'Cover photo',
     classes: ['db-cover-media'],
     attributes: { 'data-db-cover-media': 'image', src: mediaSource, alt: '', loading: 'eager', fetchpriority: 'high' },
-    draggable: false,
-    droppable: false,
-    removable: false,
-    copyable: false,
-    selectable: false,
-    hoverable: false,
-    layerable: false,
+    ...lockedMediaProps,
   };
 };
 

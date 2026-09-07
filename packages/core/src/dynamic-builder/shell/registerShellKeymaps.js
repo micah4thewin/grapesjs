@@ -1,40 +1,37 @@
-import runShellCommand from './runShellCommand.js';
-
-const getShortcutDefinitions = () => [
-  { commandId: 'db:open-command-palette', keyName: 'k', needsShift: false },
-  { commandId: 'db:save-revision', keyName: 's', needsShift: true },
-  { commandId: 'db:open-shortcut-help', keyName: '/', needsShift: false },
-];
+import getEditorInstanceSuffix from './getEditorInstanceSuffix.js';
+import getShellShortcutDefinitions from './getShellShortcutDefinitions.js';
+import isShortcutEventForEditor from './isShortcutEventForEditor.js';
+import matchShellShortcut from './matchShellShortcut.js';
+import runShellShortcut from './runShellShortcut.js';
+import wireActiveShellInstanceTracking from './wireActiveShellInstanceTracking.js';
 
 const registerShellKeymaps = (editor) => {
+  const definitionRecords = getShellShortcutDefinitions();
   const keymapsModule = editor.Keymaps;
   if (keymapsModule && keymapsModule.add) {
-    keymapsModule.add('db:open-command-palette', '\u2318+k, ctrl+k', 'db:open-command-palette', {
-      prevent: true,
-      force: true,
-    });
-    keymapsModule.add('db:save-revision', '\u2318+shift+s, ctrl+shift+s', 'db:save-revision', {
-      prevent: true,
-      force: true,
-    });
-    keymapsModule.add('db:open-shortcut-help', '\u2318+shift+slash, ctrl+shift+slash', 'db:open-shortcut-help', {
-      prevent: true,
+    definitionRecords.forEach((definitionRecord) => {
+      const handleKeymap = (keymapEditor, sender, keymapOptions) => {
+        const keyEvent = keymapOptions && keymapOptions.event;
+        if (!keyEvent || !isShortcutEventForEditor(editor, keyEvent)) return;
+        keyEvent.preventDefault();
+        runShellShortcut(editor, definitionRecord);
+      };
+      keymapsModule.add(definitionRecord.commandId, definitionRecord.keys, handleKeymap, { force: true });
     });
   }
   const containerElement = editor.getContainer && editor.getContainer();
   const ownerDocument = containerElement && containerElement.ownerDocument;
   if (!ownerDocument) return;
+  getEditorInstanceSuffix(editor);
+  wireActiveShellInstanceTracking(editor);
   const handleShellShortcut = (keyEvent) => {
-    if (!keyEvent.ctrlKey && !keyEvent.metaKey) return;
-    const pressedKey = String(keyEvent.key || '').toLowerCase();
-    const shortcutRecord = getShortcutDefinitions().find(
-      (definitionRecord) =>
-        definitionRecord.keyName === pressedKey && definitionRecord.needsShift === Boolean(keyEvent.shiftKey),
-    );
-    if (!shortcutRecord) return;
+    const definitionRecord = matchShellShortcut(definitionRecords, keyEvent);
+    if (!definitionRecord || !isShortcutEventForEditor(editor, keyEvent)) return;
     keyEvent.preventDefault();
     keyEvent.stopPropagation();
-    runShellCommand(editor, shortcutRecord.commandId);
+    const originalEvent = keyEvent._parentEvent;
+    if (originalEvent && typeof originalEvent.preventDefault === 'function') originalEvent.preventDefault();
+    runShellShortcut(editor, definitionRecord);
   };
   ownerDocument.addEventListener('keydown', handleShellShortcut, true);
   editor.on('destroy', () => ownerDocument.removeEventListener('keydown', handleShellShortcut, true));

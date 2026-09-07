@@ -1,3 +1,5 @@
+import buildFlowTargetFieldMarkup from './buildFlowTargetFieldMarkup.js';
+import convertMillisecondsToSeconds from './convertMillisecondsToSeconds.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
 
 const buildOptionsMarkup = (fieldRecord, currentValue) =>
@@ -14,6 +16,9 @@ const buildOptionsMarkup = (fieldRecord, currentValue) =>
     )
     .join('');
 
+const buildHelpMarkup = (fieldRecord) =>
+  fieldRecord.help ? '<span class="gjs-db-flow-field-help">' + escapeHtmlText(fieldRecord.help) + '</span>' : '';
+
 const buildFlowFieldMarkup = (fieldRecord, fieldValue, fieldScope) => {
   const currentValue = String(fieldValue === undefined ? fieldRecord.default || '' : fieldValue);
   const sharedAttributes =
@@ -23,6 +28,9 @@ const buildFlowFieldMarkup = (fieldRecord, fieldValue, fieldScope) => {
     escapeHtmlText(fieldScope) +
     '"';
   const labelMarkup = '<span class="gjs-db-flow-field-label">' + escapeHtmlText(fieldRecord.label) + '</span>';
+  if (fieldRecord.type === 'target') {
+    return buildFlowTargetFieldMarkup(fieldRecord, currentValue, sharedAttributes, labelMarkup);
+  }
   if (fieldRecord.type === 'select') {
     return (
       '<label class="gjs-db-flow-field">' +
@@ -58,6 +66,21 @@ const buildFlowFieldMarkup = (fieldRecord, fieldValue, fieldScope) => {
       '</label>'
     );
   }
+  if (fieldRecord.type === 'seconds') {
+    return (
+      '<label class="gjs-db-flow-field">' +
+      labelMarkup +
+      '<span class="gjs-db-flow-unit-row"><input type="number" min="0" step="0.1" value="' +
+      escapeHtmlText(convertMillisecondsToSeconds(currentValue)) +
+      '" placeholder="' +
+      escapeHtmlText(fieldRecord.placeholder || '0') +
+      '"' +
+      sharedAttributes +
+      ' data-db-flow-unit="seconds"><span class="gjs-db-flow-unit">seconds</span></span>' +
+      buildHelpMarkup(fieldRecord) +
+      '</label>'
+    );
+  }
   const inputType = fieldRecord.type === 'number' ? 'number' : 'text';
   return (
     '<label class="gjs-db-flow-field">' +
@@ -70,7 +93,9 @@ const buildFlowFieldMarkup = (fieldRecord, fieldValue, fieldScope) => {
     escapeHtmlText(fieldRecord.placeholder || '') +
     '"' +
     sharedAttributes +
-    '></label>'
+    '>' +
+    buildHelpMarkup(fieldRecord) +
+    '</label>'
   );
 };
 

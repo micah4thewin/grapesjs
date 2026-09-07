@@ -11,21 +11,23 @@ import checkWordCount from './checkWordCount.js';
 import getAuditContext from './getAuditContext.js';
 import runAuditChecks from './runAuditChecks.js';
 
-const runSeoAudit = (editor, moduleOptions) =>
-  runAuditChecks(
+const runSeoAudit = (editor, moduleOptions, auditContext) => {
+  const resolvedContext = auditContext || getAuditContext(editor, moduleOptions);
+  const siteWideChecks = resolvedContext.includeSiteWideChecks === false ? [] : [checkCanonicalBase, checkSitemapSlugs];
+  return runAuditChecks(
     [
       checkSeoTitle,
       checkSeoDescription,
-      checkCanonicalBase,
       checkSlugFormat,
       checkSingleH1Presence,
       checkOgImage,
       checkAltCoverage,
       checkWordCount,
       checkSchemaPageType,
-      checkSitemapSlugs,
+      ...siteWideChecks,
     ],
-    getAuditContext(editor, moduleOptions),
+    resolvedContext,
   );
+};
 
 export default runSeoAudit;

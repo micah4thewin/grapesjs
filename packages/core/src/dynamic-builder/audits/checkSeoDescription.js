@@ -4,6 +4,7 @@ import resolveSeoRecords from './resolveSeoRecords.js';
 const checkSeoDescription = (auditContext) => {
   const { pageSeo, siteSeo } = resolveSeoRecords(auditContext);
   const descriptionText = String(pageSeo.description || siteSeo.defaultDescription || '').trim();
+  const descriptionDetails = { fixId: 'seo-field:description' };
   if (!descriptionText) {
     return [
       createFindingRecord(
@@ -11,6 +12,7 @@ const checkSeoDescription = (auditContext) => {
         'Metadata',
         'The page has no meta description.',
         'Write a 50 to 160 character summary; search engines show it under the title.',
+        descriptionDetails,
       ),
     ];
   }
@@ -21,6 +23,7 @@ const checkSeoDescription = (auditContext) => {
         'Metadata',
         'The meta description is only ' + descriptionText.length + ' characters long.',
         'Expand it toward 50 to 160 characters to use the available snippet space.',
+        descriptionDetails,
       ),
     ];
   }
@@ -31,6 +34,7 @@ const checkSeoDescription = (auditContext) => {
         'Metadata',
         'The meta description is ' + descriptionText.length + ' characters long.',
         'Keep descriptions under 160 characters so they are not cut off in results.',
+        descriptionDetails,
       ),
     ];
   }

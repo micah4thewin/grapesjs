@@ -2,6 +2,7 @@ import getIconPickerEditorCss from './getIconPickerEditorCss.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
 import registerIconAssetGuard from './registerIconAssetGuard.js';
 import registerIconCanvasStyles from './registerIconCanvasStyles.js';
+import registerIconCommands from './registerIconCommands.js';
 import registerIconComponentType from './registerIconComponentType.js';
 import registerIconUpdateListener from './registerIconUpdateListener.js';
 import wireIconToolbarPickerButton from './wireIconToolbarPickerButton.js';
@@ -12,6 +13,7 @@ const applyIconSystem = (editor, pluginOptions) => {
   registerIconUpdateListener(editor);
   registerIconAssetGuard(editor);
   registerIconCanvasStyles(editor);
+  registerIconCommands(editor);
   wireIconToolbarPickerButton(editor);
   const injectIconPickerStyles = () => {
     if (!editor.getContainer || !editor.getContainer()) return;

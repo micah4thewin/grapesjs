@@ -3,7 +3,7 @@ import readRevisionList from './readRevisionList.js';
 import sortRevisionsNewestFirst from './sortRevisionsNewestFirst.js';
 
 const matchesNewestRevision = (editor, moduleOptions) => {
-  const newestRecord = sortRevisionsNewestFirst(readRevisionList(moduleOptions))[0];
+  const newestRecord = sortRevisionsNewestFirst(readRevisionList(editor, moduleOptions))[0];
   if (!newestRecord || !newestRecord.isRestorable) return false;
   try {
     const currentText = JSON.stringify(buildProjectSnapshot(editor).projectData);

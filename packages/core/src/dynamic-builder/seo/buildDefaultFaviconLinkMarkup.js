@@ -1,11 +1,18 @@
-const buildDefaultFaviconLinkMarkup = () => {
-  const svgMarkupParts = [
-    '%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E',
-    '%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23232a33%27/%3E',
-    '%3Ccircle cx=%2716%27 cy=%2716%27 r=%277.5%27 fill=%27%23d98a5f%27/%3E',
-    '%3C/svg%3E',
-  ];
-  const faviconDataUri = 'data:image/svg+xml,' + svgMarkupParts.join('');
+import buildHeadLinkTagMarkup from './buildHeadLinkTagMarkup.js';
+import buildInitialFaviconDataUri from './buildInitialFaviconDataUri.js';
+import getSeoModuleOptions from './getSeoModuleOptions.js';
+import getSiteMetaRecord from '../support/getSiteMetaRecord.js';
+import getSiteSeoRecord from './getSiteSeoRecord.js';
+import isPlainRecord from '../support/isPlainRecord.js';
+
+const buildDefaultFaviconLinkMarkup = (editor) => {
+  const defaultFavicon = getSeoModuleOptions(editor).defaultFavicon;
+  if (defaultFavicon === false) return '';
+  if (typeof defaultFavicon === 'string' && defaultFavicon.trim())
+    return buildHeadLinkTagMarkup('icon', defaultFavicon);
+  const designTokens = getSiteMetaRecord(editor).designTokens;
+  const colorTokens = isPlainRecord(designTokens) && isPlainRecord(designTokens.color) ? designTokens.color : {};
+  const faviconDataUri = buildInitialFaviconDataUri(getSiteSeoRecord(editor).siteName, colorTokens.brand);
   return '<link rel="icon" type="image/svg+xml" href="' + faviconDataUri + '">';
 };
 

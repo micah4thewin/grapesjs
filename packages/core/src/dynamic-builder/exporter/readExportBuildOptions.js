@@ -7,7 +7,7 @@ const readExportBuildOptions = (editor, rootElement) => {
     return inputElement ? !!inputElement.checked : fallbackFlag;
   };
   return {
-    separateAssets: readOptionFlag('separateAssets', false),
+    separateAssets: readOptionFlag('separateAssets', true),
     resolveBindings: readOptionFlag('resolveBindings', true),
     includeProjectBackup: readOptionFlag('includeProjectBackup', false),
     includeCustomScripts: getSiteCustomCodeRecord(editor).allowScripts,

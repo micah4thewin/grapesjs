@@ -11,8 +11,10 @@ import checkTextContrast from './checkTextContrast.js';
 import getAuditContext from './getAuditContext.js';
 import runAuditChecks from './runAuditChecks.js';
 
-const runAccessibilityAudit = (editor, moduleOptions) =>
-  runAuditChecks(
+const runAccessibilityAudit = (editor, moduleOptions, auditContext) => {
+  const resolvedContext = auditContext || getAuditContext(editor, moduleOptions);
+  const siteWideChecks = resolvedContext.includeSiteWideChecks === false ? [] : [checkDocumentLanguage];
+  return runAuditChecks(
     [
       checkImageAltText,
       checkHeadingStructure,
@@ -20,12 +22,13 @@ const runAccessibilityAudit = (editor, moduleOptions) =>
       checkGenericLinkText,
       checkFormControlLabels,
       checkInteractiveTargetSize,
-      checkDocumentLanguage,
       checkIconOnlyLabels,
       checkAutoplayMedia,
       checkTextContrast,
+      ...siteWideChecks,
     ],
-    getAuditContext(editor, moduleOptions),
+    resolvedContext,
   );
+};
 
 export default runAccessibilityAudit;

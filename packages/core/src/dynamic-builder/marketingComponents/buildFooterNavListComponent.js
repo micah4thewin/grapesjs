@@ -1,26 +1,25 @@
-const buildFooterNavListComponent = (navLabel, linkTexts) => ({
+import buildFooterLinkRecord from './buildFooterLinkRecord.js';
+
+const buildFooterNavListComponent = (navLabel, linkRecords) => ({
   tagName: 'nav',
-  name: navLabel + ' links',
+  name: navLabel + ' column',
   classes: ['db-footer-nav'],
-  attributes: { 'aria-label': navLabel },
+  attributes: { 'aria-label': navLabel, 'data-db-footer-nav': 'true' },
   components: [
-    { tagName: 'span', type: 'text', name: 'Nav heading', classes: ['db-footer-heading'], components: navLabel },
+    {
+      tagName: 'span',
+      type: 'text',
+      name: 'Column heading',
+      classes: ['db-footer-heading'],
+      attributes: { 'data-db-footer-heading': 'true' },
+      components: navLabel,
+    },
     {
       tagName: 'ul',
+      name: 'Link list',
       classes: ['db-footer-list'],
-      components: linkTexts.map((linkText) => ({
-        tagName: 'li',
-        components: [
-          {
-            tagName: 'a',
-            name: linkText + ' link',
-            classes: ['db-footer-link'],
-            attributes: { href: '#' },
-            components: linkText,
-            traits: [{ type: 'db-url', name: 'href', label: 'Link URL' }],
-          },
-        ],
-      })),
+      attributes: { 'data-db-footer-list': 'true' },
+      components: linkRecords.map((linkRecord) => buildFooterLinkRecord(linkRecord.text, linkRecord.href)),
     },
   ],
 });

@@ -18,6 +18,11 @@ const wireSiteIdentityForm = (editor, designTokenOptions, formElement) => {
       refreshPalettePreview(formElement);
       return;
     }
+    if (target.closest('[data-db-identity-open-tokens]')) {
+      editor.Modal.close();
+      editor.runCommand('db:open-token-manager');
+      return;
+    }
     if (target.closest('[data-db-identity-pick-logo]'))
       pickLogoFromAssets(editor, formElement, () => refreshPalettePreview(formElement));
     if (target.closest('[data-db-identity-extract]'))

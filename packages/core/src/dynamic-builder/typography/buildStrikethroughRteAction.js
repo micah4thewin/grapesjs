@@ -1,8 +1,5 @@
-const buildStrikethroughRteAction = () => ({
-  name: 'strikethrough',
-  icon: '<s>S</s>',
-  attributes: { title: 'Strike-through' },
-  result: (richTextEditor) => richTextEditor.exec('strikeThrough'),
-});
+import buildToggleTagRteAction from './buildToggleTagRteAction.js';
+
+const buildStrikethroughRteAction = () => buildToggleTagRteAction('strikethrough', 's', '<s>S</s>', 'Strike-through');
 
 export default buildStrikethroughRteAction;

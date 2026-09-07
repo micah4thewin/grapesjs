@@ -6,11 +6,11 @@ import sortRevisionsNewestFirst from './sortRevisionsNewestFirst.js';
 const evictOldestRevision = (editor, moduleOptions) => {
   const storageArea = getLocalStorageArea();
   if (!storageArea) return false;
-  const revisionList = sortRevisionsNewestFirst(readRevisionList(moduleOptions));
+  const revisionList = sortRevisionsNewestFirst(readRevisionList(editor, moduleOptions));
   if (revisionList.length < 2) return false;
   const evictedRecord = revisionList[revisionList.length - 1];
   try {
-    storageArea.setItem(buildRevisionsStorageKey(moduleOptions), JSON.stringify(revisionList.slice(0, -1)));
+    storageArea.setItem(buildRevisionsStorageKey(editor, moduleOptions), JSON.stringify(revisionList.slice(0, -1)));
   } catch (evictError) {
     return false;
   }

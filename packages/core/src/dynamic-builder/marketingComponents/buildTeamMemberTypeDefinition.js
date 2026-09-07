@@ -1,4 +1,5 @@
 import buildTeamMemberDefaultChildren from './buildTeamMemberDefaultChildren.js';
+import getTeamMemberPresetRecords from './getTeamMemberPresetRecords.js';
 
 const buildTeamMemberTypeDefinition = () => ({
   type: 'db-team-member',
@@ -11,7 +12,7 @@ const buildTeamMemberTypeDefinition = () => ({
       droppable: false,
       classes: ['db-team-member'],
       attributes: { 'data-db-type': 'team-member' },
-      components: buildTeamMemberDefaultChildren(),
+      components: buildTeamMemberDefaultChildren(getTeamMemberPresetRecords()[0]),
     },
   },
 });

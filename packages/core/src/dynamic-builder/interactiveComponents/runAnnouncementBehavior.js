@@ -2,6 +2,8 @@ const runAnnouncementBehavior = () => {
   document.querySelectorAll('[data-db-announcement]').forEach((announcementElement) => {
     if (announcementElement.dataset.dbAnnouncementReady) return;
     announcementElement.dataset.dbAnnouncementReady = 'true';
+    const isEditorCanvas = () =>
+      document.body.hasAttribute('data-db-editor-canvas') && !document.body.hasAttribute('data-db-editor-preview');
     const readStorageKey = () => announcementElement.getAttribute('data-db-storage-key') || '';
     const readDismissed = () => {
       const storageKey = readStorageKey();
@@ -27,13 +29,22 @@ const runAnnouncementBehavior = () => {
       return true;
     };
     const applyVisibility = () => {
-      if (readDismissed() || !isWithinWindow()) announcementElement.setAttribute('hidden', '');
+      const inEditor = isEditorCanvas();
+      const shouldHide = !isWithinWindow() || (!inEditor && readDismissed());
+      if (inEditor) {
+        announcementElement.removeAttribute('hidden');
+        if (shouldHide) announcementElement.setAttribute('data-db-live-hidden', 'true');
+        else announcementElement.removeAttribute('data-db-live-hidden');
+        return;
+      }
+      announcementElement.removeAttribute('data-db-live-hidden');
+      if (shouldHide) announcementElement.setAttribute('hidden', '');
       else announcementElement.removeAttribute('hidden');
     };
     const closeElement = announcementElement.querySelector('[data-db-announcement-close]');
     if (closeElement)
       closeElement.addEventListener('click', () => {
-        if (announcementElement.getAttribute('data-db-dismissible') !== 'true') return;
+        if (announcementElement.getAttribute('data-db-dismissible') !== 'true' || isEditorCanvas()) return;
         const storageKey = readStorageKey();
         if (storageKey) {
           try {

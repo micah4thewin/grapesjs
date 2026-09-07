@@ -12,12 +12,18 @@ import buildTemplateBlocks from './buildTemplateBlocks.js';
 import buildTypographyBlocks from './buildTypographyBlocks.js';
 import decorateBlockLabels from './decorateBlockLabels.js';
 import registerBlockCompositionStyles from './registerBlockCompositionStyles.js';
+import registerBlockCompositionTypes from './registerBlockCompositionTypes.js';
 import resolveBlockCategoryRecord from './resolveBlockCategoryRecord.js';
 import sortBlockDefinitions from './sortBlockDefinitions.js';
+import wireBlockPanelAccessibility from './wireBlockPanelAccessibility.js';
+import wireNextBlockSuggestions from './wireNextBlockSuggestions.js';
+import wireRootLevelDropWrapping from './wireRootLevelDropWrapping.js';
+import wireTemplateDropGuard from './wireTemplateDropGuard.js';
 
 const applyBlockLibrary = (editor, pluginOptions) => {
   const moduleOptions = (pluginOptions && pluginOptions.blocks) || {};
   const excludedBlockIds = Array.isArray(moduleOptions.excludeBlockIds) ? moduleOptions.excludeBlockIds : [];
+  registerBlockCompositionTypes(editor);
   const blockDefinitions = [
     ...buildTemplateBlocks(),
     ...buildLayoutBlocks(),
@@ -37,8 +43,12 @@ const applyBlockLibrary = (editor, pluginOptions) => {
     }));
   registerBlockSet(editor, sortBlockDefinitions(blockDefinitions));
   decorateBlockLabels(editor);
-  applyBlockPreviews(editor);
+  applyBlockPreviews(editor, moduleOptions);
   registerBlockCompositionStyles(editor);
+  wireTemplateDropGuard(editor);
+  wireRootLevelDropWrapping(editor);
+  moduleOptions.nextBlockSuggestions !== false && wireNextBlockSuggestions(editor);
+  editor.onReady && editor.onReady(() => wireBlockPanelAccessibility(editor));
 };
 
 export default applyBlockLibrary;

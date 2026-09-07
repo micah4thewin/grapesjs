@@ -1,21 +1,41 @@
-import buildAlertButtonFlowRecord from './buildAlertButtonFlowRecord.js';
+import ensureStableComponentId from './ensureStableComponentId.js';
+import getAlertAttributeNames from './getAlertAttributeNames.js';
+import mergeAlertFlowIntoRecords from './mergeAlertFlowIntoRecords.js';
 import parseFlowRecords from './parseFlowRecords.js';
+import refreshAlertButtonTraits from './refreshAlertButtonTraits.js';
 import serializeFlowRecords from './serializeFlowRecords.js';
 
+const isAlertButton = (component) =>
+  !!component && typeof component.get === 'function' && component.get('type') === 'db-alert-button';
+
 const syncAlertButtonFlow = (component) => {
-  if (!component || typeof component.get !== 'function') return;
-  if (component.get('type') !== 'db-alert-button') return;
+  if (!isAlertButton(component)) return;
   const attributesRecord = component.getAttributes();
   const existingFlows = parseFlowRecords(attributesRecord['data-db-flows']);
-  const existingFlowId = existingFlows[0] && existingFlows[0].id;
-  const nextFlows = serializeFlowRecords([buildAlertButtonFlowRecord(attributesRecord, existingFlowId)]);
-  if (nextFlows === attributesRecord['data-db-flows']) return;
+  const nextFlows = serializeFlowRecords(mergeAlertFlowIntoRecords(existingFlows, attributesRecord));
+  if (nextFlows === String(attributesRecord['data-db-flows'] || '')) return;
   component.addAttributes({ 'data-db-flows': nextFlows });
+};
+
+const pinChosenForm = (editor, component) => {
+  if (!isAlertButton(component)) return;
+  const formSelector = String(component.getAttributes()['data-db-alert-form'] || '').trim();
+  const wrapperComponent = editor.getWrapper && editor.getWrapper();
+  if (!formSelector || !wrapperComponent) return;
+  const formComponent = wrapperComponent.find(formSelector)[0];
+  if (formComponent) ensureStableComponentId(editor, formComponent);
 };
 
 const watchAlertButtonComponents = (editor) => {
   editor.on('component:add', syncAlertButtonFlow);
-  editor.on('component:update:attributes', syncAlertButtonFlow);
+  getAlertAttributeNames().forEach((attributeName) =>
+    editor.on('component:update:attributes:' + attributeName, syncAlertButtonFlow),
+  );
+  editor.on('component:update:attributes:data-db-alert-form', (component) => pinChosenForm(editor, component));
+  editor.on('component:update:attributes:data-db-alert-then', (component) =>
+    refreshAlertButtonTraits(editor, component),
+  );
+  editor.on('component:selected', (component) => refreshAlertButtonTraits(editor, component));
 };
 
 export default watchAlertButtonComponents;

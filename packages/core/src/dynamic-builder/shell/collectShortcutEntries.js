@@ -20,8 +20,12 @@ const collectShortcutEntries = (editor) => {
     else coreEntries.push(entryRecord);
   });
   return [
-    { groupTitle: 'Dynamic Builder shortcuts', entries: shellEntries },
-    { groupTitle: 'Core editing shortcuts', entries: coreEntries },
+    { groupTitle: 'Builder shortcuts', entries: shellEntries, noteText: '' },
+    {
+      groupTitle: 'Editing shortcuts',
+      entries: coreEntries,
+      noteText: 'Single keys work while something is selected on the page.',
+    },
   ].filter((groupRecord) => groupRecord.entries.length > 0);
 };
 

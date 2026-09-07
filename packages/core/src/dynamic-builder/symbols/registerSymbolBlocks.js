@@ -1,25 +1,30 @@
-import resolveBlockPreviewMarkup from '../blockPreviews/resolveBlockPreviewMarkup.js';
+import buildSymbolBlockDefinition from './buildSymbolBlockDefinition.js';
 import listSymbolRecords from './listSymbolRecords.js';
 
 const symbolBlockPrefix = 'db-symbol-block-';
 
+const resolveBlockId = (blockModel) => String(blockModel.get('id') || blockModel.id || '');
+
 const registerSymbolBlocks = (editor) => {
   const blockManager = editor.BlockManager;
   if (!blockManager) return;
+  const symbolRecords = listSymbolRecords(editor);
+  const wantedBlockIds = symbolRecords.map((symbolRecord) => symbolBlockPrefix + symbolRecord.id);
   blockManager
     .getAll()
-    .filter((blockModel) => String(blockModel.get('id') || blockModel.id).indexOf(symbolBlockPrefix) === 0)
-    .map((blockModel) => String(blockModel.get('id') || blockModel.id))
+    .filter((blockModel) => resolveBlockId(blockModel).indexOf(symbolBlockPrefix) === 0)
+    .map((blockModel) => resolveBlockId(blockModel))
+    .filter((blockId) => wantedBlockIds.indexOf(blockId) < 0)
     .forEach((blockId) => blockManager.remove(blockId));
-  listSymbolRecords(editor).forEach((symbolRecord) => {
-    blockManager.add(symbolBlockPrefix + symbolRecord.id, {
-      label: String(symbolRecord.name || 'Reusable component'),
-      category: 'Reusable',
-      media: resolveBlockPreviewMarkup('db-symbol', 'Reusable'),
-      select: true,
-      attributes: { title: 'Reusable \u2014 edit once, updates everywhere' },
-      content: { type: 'db-symbol', attributes: { 'data-db-type': 'symbol', 'data-db-symbol': symbolRecord.id } },
-    });
+  symbolRecords.forEach((symbolRecord) => {
+    const blockId = symbolBlockPrefix + symbolRecord.id;
+    const blockDefinition = buildSymbolBlockDefinition(editor, symbolRecord);
+    const existingBlock = blockManager.get(blockId);
+    if (existingBlock) {
+      existingBlock.set({ label: blockDefinition.label, media: blockDefinition.media });
+      return;
+    }
+    blockManager.add(blockId, blockDefinition);
   });
 };
 

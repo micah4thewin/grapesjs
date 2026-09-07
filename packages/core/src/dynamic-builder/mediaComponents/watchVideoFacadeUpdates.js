@@ -1,23 +1,18 @@
-import escapeHtmlText from '../support/escapeHtmlText.js';
-import sanitizeUrlValue from '../support/sanitizeUrlValue.js';
-import findDescendantWithAttribute from './findDescendantWithAttribute.js';
+import parseVideoLinkRecord from './parseVideoLinkRecord.js';
+import syncFacadeTextChild from './syncFacadeTextChild.js';
 
 const watchVideoFacadeUpdates = (editor) => {
-  editor.on('component:update:attributes:data-db-poster', (component) => {
-    if (!component || !component.is || !component.is('db-video')) return;
-    const posterUrl = sanitizeUrlValue(component.getAttributes()['data-db-poster']);
-    if (posterUrl) {
-      const escapedUrl = posterUrl.split('"').join('%22').split('\n').join('');
-      component.addStyle({ 'background-image': 'url("' + escapedUrl + '")' });
-    } else {
-      component.addStyle({ 'background-image': 'none' });
-    }
-  });
+  const isVideoComponent = (component) => Boolean(component && component.is && component.is('db-video'));
   editor.on('component:update:attributes:data-db-consent-note', (component) => {
-    if (!component || !component.is || !component.is('db-video')) return;
-    const noteComponent = findDescendantWithAttribute(component, 'data-db-video-note');
-    if (!noteComponent) return;
-    noteComponent.components(escapeHtmlText(String(component.getAttributes()['data-db-consent-note'] || '')));
+    if (isVideoComponent(component)) syncFacadeTextChild(component, 'data-db-consent-note', 'data-db-video-note');
+  });
+  editor.on('component:update:attributes:data-db-video', (component) => {
+    if (!isVideoComponent(component)) return;
+    const rawValue = String(component.getAttributes()['data-db-video'] || '').trim();
+    if (rawValue.indexOf('/') < 0 && rawValue.indexOf('.') < 0) return;
+    const videoRecord = parseVideoLinkRecord(rawValue);
+    if (!videoRecord || videoRecord.videoId === rawValue) return;
+    component.addAttributes({ 'data-db-provider': videoRecord.provider, 'data-db-video': videoRecord.videoId });
   });
 };
 

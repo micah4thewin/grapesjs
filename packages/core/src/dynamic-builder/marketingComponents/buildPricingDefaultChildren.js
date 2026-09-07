@@ -1,41 +1,11 @@
-import buildPricingTierDefaultChildren from './buildPricingTierDefaultChildren.js';
+import buildPricingTierRecord from './buildPricingTierRecord.js';
+import getPricingTierPresetRecords from './getPricingTierPresetRecords.js';
 
 const buildPricingDefaultChildren = () => {
-  const tierPresets = [
-    {
-      tierName: 'Starter',
-      blurbText: 'Everything you need to launch your first site.',
-      monthlyPrice: '$19',
-      yearlyPrice: '$190',
-      featureTexts: ['Up to 3 projects', 'Community support', 'Basic analytics'],
-      ctaLabel: 'Start free trial',
-      ctaVariant: 'outline',
-      featured: 'false',
-    },
-    {
-      tierName: 'Growth',
-      blurbText: 'For teams shipping sites every week.',
-      monthlyPrice: '$49',
-      yearlyPrice: '$490',
-      featureTexts: ['Unlimited projects', 'Priority support', 'Advanced analytics', 'Team roles'],
-      ctaLabel: 'Choose Growth',
-      ctaVariant: 'primary',
-      featured: 'true',
-    },
-    {
-      tierName: 'Scale',
-      blurbText: 'Advanced controls for larger organizations.',
-      monthlyPrice: '$99',
-      yearlyPrice: '$990',
-      featureTexts: ['Dedicated success manager', 'Custom integrations', 'SLA-backed uptime', 'Audit logs'],
-      ctaLabel: 'Talk to sales',
-      ctaVariant: 'outline',
-      featured: 'false',
-    },
-  ];
   const buildToggleButton = (billingPeriod, buttonLabel, isPressed) => ({
     tagName: 'button',
-    name: buttonLabel + ' billing toggle',
+    type: 'text',
+    name: buttonLabel + ' switch',
     classes: ['db-pricing-toggle-button'],
     attributes: { type: 'button', 'data-db-billing': billingPeriod, 'aria-pressed': isPressed },
     components: buttonLabel,
@@ -46,33 +16,46 @@ const buildPricingDefaultChildren = () => {
       name: 'Pricing header',
       classes: ['db-pricing-header'],
       components: [
-        { tagName: 'h2', type: 'text', classes: ['db-pricing-title'], components: 'Simple, honest pricing' },
+        {
+          tagName: 'h2',
+          type: 'text',
+          name: 'Pricing title',
+          classes: ['db-pricing-title'],
+          components: 'Simple, transparent pricing',
+        },
         {
           tagName: 'p',
           type: 'text',
+          name: 'Pricing subtitle',
           classes: ['db-pricing-subtitle'],
-          components: 'Switch between monthly and yearly billing at any time. Yearly plans get two months free.',
+          components: 'Pick the plan that fits you today and change it whenever you need to.',
         },
         {
           tagName: 'div',
-          name: 'Billing toggle',
+          name: 'Billing switch',
           classes: ['db-pricing-toggle'],
           attributes: { role: 'group', 'aria-label': 'Billing period' },
-          components: [buildToggleButton('monthly', 'Monthly', 'true'), buildToggleButton('yearly', 'Yearly', 'false')],
+          components: [
+            buildToggleButton('monthly', 'Monthly', 'true'),
+            buildToggleButton('yearly', 'Yearly', 'false'),
+            {
+              tagName: 'span',
+              name: 'Savings badge',
+              classes: ['db-pricing-save'],
+              attributes: { 'data-db-pricing-save': 'true' },
+              components: 'Save 17%',
+            },
+          ],
         },
       ],
     },
     {
       tagName: 'div',
-      name: 'Pricing tiers',
+      name: 'Plans',
       classes: ['db-pricing-grid'],
       attributes: { 'data-db-pricing-grid': 'true' },
       droppable: '[data-db-type=pricing-tier]',
-      components: tierPresets.map((tierPreset) => ({
-        type: 'db-pricing-tier',
-        attributes: { 'data-db-featured': tierPreset.featured },
-        components: buildPricingTierDefaultChildren(tierPreset),
-      })),
+      components: getPricingTierPresetRecords().map((tierPreset) => buildPricingTierRecord(tierPreset)),
     },
   ];
 };

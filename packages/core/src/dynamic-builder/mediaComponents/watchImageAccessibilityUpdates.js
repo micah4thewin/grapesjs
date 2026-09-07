@@ -1,14 +1,23 @@
+const isImageComponent = (component) => Boolean(component && component.is && component.is('db-image'));
+
 const watchImageAccessibilityUpdates = (editor) => {
-  const enforceDecorativeAlt = (component) => {
-    if (!component || !component.is || !component.is('db-image')) return;
+  editor.on('component:update:attributes:data-db-decorative', (component) => {
+    if (!isImageComponent(component)) return;
     const componentAttributes = component.getAttributes();
-    const isDecorative = String(componentAttributes['data-db-decorative']) === 'true';
-    if (isDecorative && componentAttributes.alt !== '') component.addAttributes({ alt: '' });
-    if (isDecorative && componentAttributes.role !== 'presentation') component.addAttributes({ role: 'presentation' });
-    if (!isDecorative && componentAttributes.role === 'presentation') component.removeAttributes(['role']);
-  };
-  editor.on('component:update:attributes:data-db-decorative', enforceDecorativeAlt);
-  editor.on('component:update:attributes:alt', enforceDecorativeAlt);
+    if (String(componentAttributes['data-db-decorative']) === 'true') {
+      component.addAttributes({ alt: '', role: 'presentation' });
+    } else if (componentAttributes.role === 'presentation') {
+      component.removeAttributes(['role']);
+    }
+  });
+  editor.on('component:update:attributes:alt', (component) => {
+    if (!isImageComponent(component)) return;
+    const componentAttributes = component.getAttributes();
+    const hasAltText = String(componentAttributes.alt || '').trim().length > 0;
+    if (hasAltText && String(componentAttributes['data-db-decorative']) === 'true') {
+      component.addAttributes({ 'data-db-decorative': 'false' });
+    }
+  });
 };
 
 export default watchImageAccessibilityUpdates;

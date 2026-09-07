@@ -15,12 +15,13 @@ const createTextTypeDefinition = (contentTextDefaults) => ({
         {
           type: 'select',
           name: 'data-db-variant',
-          label: 'Variant',
+          label: 'Style',
           options: [
-            { id: 'body', label: 'Body' },
-            { id: 'lead', label: 'Lead' },
+            { id: 'body', label: 'Body text' },
+            { id: 'lead', label: 'Intro (larger)' },
             { id: 'small', label: 'Small' },
             { id: 'caption', label: 'Caption' },
+            { id: 'eyebrow', label: 'Small label (uppercase)' },
           ],
         },
       ],

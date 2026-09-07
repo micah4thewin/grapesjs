@@ -1,10 +1,12 @@
+import dropComponentAttributes from '../support/dropComponentAttributes.js';
 import sanitizeUrlValue from '../support/sanitizeUrlValue.js';
 
 const watchSectionBackgroundUpdates = (editor) => {
   editor.on('component:update:attributes:data-db-bg-image', (component) => {
     if (!component || !component.is || !component.is('db-section')) return;
     const attributeRecord = component.getAttributes();
-    const safeUrl = sanitizeUrlValue(attributeRecord['data-db-bg-image']);
+    const rawValue = String(attributeRecord['data-db-bg-image'] || '').trim();
+    const safeUrl = sanitizeUrlValue(rawValue);
     const currentStyle = component.getStyle ? component.getStyle() : {};
     const currentValue = String(currentStyle['--db-section-bg-image'] || '');
     if (safeUrl) {
@@ -15,9 +17,9 @@ const watchSectionBackgroundUpdates = (editor) => {
       component.addAttributes({ 'data-db-has-bg': 'true' });
       return;
     }
-    if (!currentValue && !attributeRecord['data-db-has-bg']) return;
-    if (currentValue !== 'none') component.addStyle({ '--db-section-bg-image': 'none' });
-    if (attributeRecord['data-db-has-bg']) component.removeAttributes(['data-db-has-bg']);
+    if (currentValue && currentValue !== 'none') component.addStyle({ '--db-section-bg-image': 'none' });
+    const staleNames = ['data-db-has-bg', ...(rawValue ? ['data-db-bg-image'] : [])];
+    dropComponentAttributes(component, staleNames);
   });
 };
 

@@ -3,7 +3,7 @@ const runMapFacadeBehavior = () => {
     if (mapElement.dataset.dbMapReady) return;
     mapElement.dataset.dbMapReady = 'true';
     mapElement.addEventListener('click', (clickEvent) => {
-      if (mapElement.dataset.dbMapLoaded) return;
+      if (mapElement.dataset.dbMapLoaded || document.body.hasAttribute('data-db-editing')) return;
       const clickTarget = clickEvent.target;
       const loadTrigger = clickTarget && clickTarget.closest ? clickTarget.closest('[data-db-map-load]') : null;
       if (!loadTrigger || !mapElement.contains(loadTrigger)) return;

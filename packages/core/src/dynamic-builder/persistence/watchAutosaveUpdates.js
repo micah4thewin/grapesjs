@@ -1,12 +1,11 @@
-import readSnapshotOwnerRecord from './readSnapshotOwnerRecord.js';
 import saveProjectSnapshot from './saveProjectSnapshot.js';
+import syncLastKnownSavedAt from './syncLastKnownSavedAt.js';
 import wireAutosaveFlushListeners from './wireAutosaveFlushListeners.js';
 import wireForeignSnapshotWatch from './wireForeignSnapshotWatch.js';
 
 const watchAutosaveUpdates = (editor, moduleOptions) => {
   let pendingSaveTimer = null;
-  const knownOwner = readSnapshotOwnerRecord(moduleOptions);
-  editor.getModel().set('dbLastKnownSavedAt', knownOwner ? knownOwner.savedAt : '');
+  syncLastKnownSavedAt(editor, moduleOptions);
   const cancelPendingSave = () => {
     if (!pendingSaveTimer) return;
     clearTimeout(pendingSaveTimer);
@@ -24,9 +23,14 @@ const watchAutosaveUpdates = (editor, moduleOptions) => {
     cancelPendingSave();
     return saveProjectSnapshot(editor, moduleOptions);
   };
+  const persistNow = () => {
+    cancelPendingSave();
+    return saveProjectSnapshot(editor, moduleOptions);
+  };
   editor.on('update', scheduleSnapshotSave);
   editor.on('destroy', cancelPendingSave);
   editor.getModel().set('dbFlushPendingSave', flushPendingSave);
+  editor.getModel().set('dbPersistNow', persistNow);
   wireAutosaveFlushListeners(editor, flushPendingSave);
   wireForeignSnapshotWatch(editor, moduleOptions, cancelPendingSave);
 };

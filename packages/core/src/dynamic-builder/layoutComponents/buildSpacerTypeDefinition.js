@@ -18,7 +18,10 @@ const buildSpacerTypeDefinition = () => ({
           name: 'data-db-spacer',
           label: 'Height',
           default: 'md',
-          options: buildSpacingSelectOptions(getLayoutSpacingScale().spacerSizes),
+          options: [
+            ...buildSpacingSelectOptions(getLayoutSpacingScale().spacerSizes),
+            { id: 'custom', label: 'Custom (dragged)' },
+          ],
         },
       ],
     },

@@ -1,16 +1,15 @@
 import buildAlertButtonFlowRecord from './buildAlertButtonFlowRecord.js';
 import buildAlertButtonTraitDefinitions from './buildAlertButtonTraitDefinitions.js';
+import getAlertAttributeNames from './getAlertAttributeNames.js';
 import serializeFlowRecords from './serializeFlowRecords.js';
 
 const defaultAlertAttributes = {
   'data-db-type': 'alert-button',
   'data-db-alert-kind': 'success',
   'data-db-alert-title': 'Thanks!',
-  'data-db-alert-text': 'We got your details and will be in touch shortly.',
+  'data-db-alert-text': 'Thanks for stopping by. We will be in touch soon.',
   'data-db-alert-confirm': 'OK',
-  'data-db-alert-cancel': '',
   'data-db-alert-then': 'none',
-  'data-db-alert-url': '',
 };
 
 const buildAlertButtonTypeDefinition = () => ({
@@ -29,7 +28,14 @@ const buildAlertButtonTypeDefinition = () => ({
         'data-db-flows': serializeFlowRecords([buildAlertButtonFlowRecord(defaultAlertAttributes)]),
       },
       components: [{ type: 'textnode', content: 'Show a dialog' }],
-      traits: buildAlertButtonTraitDefinitions(),
+      traits: buildAlertButtonTraitDefinitions(defaultAlertAttributes),
+    },
+    getAttrToHTML(opts) {
+      const exportAttributes = this.getAttributes();
+      getAlertAttributeNames().forEach((attributeName) => delete exportAttributes[attributeName]);
+      const editorConfig = this.em && this.em.getConfig ? this.em.getConfig() : {};
+      if (editorConfig.avoidInlineStyle && !(opts && opts.keepInlineStyle === true)) delete exportAttributes.style;
+      return exportAttributes;
     },
   },
 });

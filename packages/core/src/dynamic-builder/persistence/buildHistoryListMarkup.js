@@ -19,10 +19,13 @@ const buildHistoryListMarkup = (editor) => {
       const isFuture = undoGroup.index > currentPointer;
       const stateClass = isCurrent ? ' gjs-db-history-current' : isFuture ? ' gjs-db-history-future' : '';
       const currentBadge = isCurrent ? '<span class="gjs-db-badge gjs-db-badge-success">Current</span>' : '';
+      const futureNote = isFuture ? '<span class="gjs-db-visually-hidden">, undone step</span>' : '';
       return [
         '<button type="button" class="gjs-db-list-item gjs-db-history-row' + stateClass + '"',
-        ' data-db-history-index="' + groupIndex + '">',
-        '<span>' + escapeHtmlText(describeUndoGroup(undoGroup)) + '</span>',
+        ' data-db-history-index="' + groupIndex + '"',
+        isCurrent ? ' aria-current="step"' : '',
+        '>',
+        '<span>' + escapeHtmlText(describeUndoGroup(undoGroup)) + futureNote + '</span>',
         currentBadge,
         '</button>',
       ].join('');

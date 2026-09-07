@@ -1,3 +1,5 @@
+import buildTraitRowLayoutCss from './buildTraitRowLayoutCss.js';
+
 const buildTraitManagerCss = () => `
 .gjs-trt-traits,
 .gjs-traits-c,
@@ -13,8 +15,16 @@ const buildTraitManagerCss = () => `
   font-size: 0.72rem;
   padding: var(--gjs-db-gap-2);
 }
+.gjs-trt-header {
+  padding: var(--gjs-db-gap-4) var(--gjs-db-gap-3);
+  border: 1px dashed var(--gjs-db-line);
+  border-radius: var(--gjs-db-r-2);
+  color: var(--gjs-db-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: center;
+}
 .gjs-trt-trait {
-  padding: var(--gjs-db-gap-1) 0;
   font-size: 0.78rem;
   color: var(--gjs-db-muted);
   border: none;
@@ -46,9 +56,16 @@ const buildTraitManagerCss = () => `
   color: var(--gjs-db-fg);
   background-color: var(--gjs-db-hover);
 }
+.gjs-trait-category.gjs-open .gjs-title {
+  color: var(--gjs-db-fg);
+}
 .gjs-trait-category .gjs-caret-icon {
   color: var(--gjs-db-faint);
 }
+.gjs-trait-category + .gjs-trait-category {
+  margin-top: var(--gjs-db-gap-2);
+}
+${buildTraitRowLayoutCss()}
 `;
 
 export default buildTraitManagerCss;

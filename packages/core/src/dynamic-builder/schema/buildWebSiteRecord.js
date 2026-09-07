@@ -1,15 +1,17 @@
 import isPlainRecord from '../support/isPlainRecord.js';
+import normalizeSchemaUrlValue from './normalizeSchemaUrlValue.js';
 import pruneEmptySchemaValues from './pruneEmptySchemaValues.js';
 
 const buildWebSiteRecord = (websiteValues) => {
   const websiteRecord = isPlainRecord(websiteValues) ? websiteValues : {};
-  const searchUrlTemplate = String(websiteRecord.searchUrlTemplate || '').trim();
+  const websiteUrl = normalizeSchemaUrlValue(websiteRecord.url);
+  const searchUrlTemplate = normalizeSchemaUrlValue(websiteRecord.searchUrlTemplate, websiteUrl);
   return (
     pruneEmptySchemaValues({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: websiteRecord.name,
-      url: websiteRecord.url,
+      url: websiteUrl,
       potentialAction: searchUrlTemplate
         ? {
             '@type': 'SearchAction',

@@ -1,19 +1,18 @@
 import buildPageSeoSectionMarkup from './buildPageSeoSectionMarkup.js';
+import buildSeoSaveRowMarkup from './buildSeoSaveRowMarkup.js';
+import buildSeoTabButtonMarkup from './buildSeoTabButtonMarkup.js';
 import buildSiteSeoSectionMarkup from './buildSiteSeoSectionMarkup.js';
 
-const buildSeoModalMarkup = (siteSeoRecord, pageSeoRecord) =>
+const buildSeoModalMarkup = (siteSeoRecord, pageSeoRecord, pageContext) =>
   [
     '<div class="gjs-db-form gjs-db-seo-modal" data-db-seo-root>',
     '<div class="gjs-db-button-row gjs-db-seo-tabs" role="tablist" aria-label="SEO settings sections">',
-    '<button type="button" class="gjs-db-button" role="tab" id="gjs-db-seo-tab-site"',
-    ' aria-controls="gjs-db-seo-panel-site" aria-selected="false" tabindex="-1" data-db-seo-tab="site">',
-    'Site defaults</button>',
-    '<button type="button" class="gjs-db-button" role="tab" id="gjs-db-seo-tab-page"',
-    ' aria-controls="gjs-db-seo-panel-page" aria-selected="false" tabindex="-1" data-db-seo-tab="page">',
-    'This page</button>',
+    buildSeoTabButtonMarkup('site', 'Site defaults'),
+    buildSeoTabButtonMarkup('page', 'This page: ' + (pageContext.pageName || 'Untitled page')),
     '</div>',
     buildSiteSeoSectionMarkup(siteSeoRecord),
-    buildPageSeoSectionMarkup(pageSeoRecord),
+    buildPageSeoSectionMarkup(pageSeoRecord, pageContext),
+    buildSeoSaveRowMarkup(),
     '</div>',
   ].join('');
 

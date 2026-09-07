@@ -2,6 +2,8 @@ const runAccordionBehavior = () => {
   document.querySelectorAll('[data-db-accordion]').forEach((accordionElement) => {
     if (accordionElement.dataset.dbAccordionReady) return;
     accordionElement.dataset.dbAccordionReady = 'true';
+    const isEditorCanvas = () =>
+      document.body.hasAttribute('data-db-editor-canvas') && !document.body.hasAttribute('data-db-editor-preview');
     const createUniqueId = (idPrefix) => idPrefix + '-' + Math.random().toString(36).slice(2, 9);
     const readTriggers = () =>
       Array.prototype.filter.call(accordionElement.querySelectorAll('[data-db-accordion-trigger]'), (triggerElement) =>
@@ -46,7 +48,7 @@ const runAccordionBehavior = () => {
     };
     accordionElement.addEventListener('click', (clickEvent) => {
       const triggerElement = findOwnTrigger(clickEvent.target);
-      if (!triggerElement) return;
+      if (!triggerElement || isEditorCanvas()) return;
       wireTrigger(triggerElement);
       toggleTrigger(triggerElement);
     });
@@ -64,17 +66,26 @@ const runAccordionBehavior = () => {
       keyEvent.preventDefault();
       triggerList[targetIndex].focus();
     });
-    readTriggers().forEach((triggerElement) => {
-      wireTrigger(triggerElement);
-      const itemElement = triggerElement.closest('[data-db-type=accordion-item]');
-      const shouldOpen = Boolean(itemElement) && itemElement.getAttribute('data-db-open') === 'true';
+    const applyInitialState = () => {
       const singleMode = accordionElement.getAttribute('data-db-single') === 'true';
-      const anotherOpen = readTriggers().some(
-        (siblingTrigger) =>
-          siblingTrigger !== triggerElement && siblingTrigger.getAttribute('aria-expanded') === 'true',
-      );
-      setExpanded(triggerElement, shouldOpen && !(singleMode && anotherOpen));
-    });
+      let hasOpenItem = false;
+      readTriggers().forEach((triggerElement) => {
+        wireTrigger(triggerElement);
+        const itemElement = triggerElement.closest('[data-db-type=accordion-item]');
+        const wantsOpen = Boolean(itemElement) && itemElement.getAttribute('data-db-open') === 'true';
+        const shouldOpen = wantsOpen && !(singleMode && hasOpenItem);
+        if (shouldOpen) hasOpenItem = true;
+        setExpanded(triggerElement, shouldOpen);
+      });
+    };
+    if (window.MutationObserver) {
+      new MutationObserver(applyInitialState).observe(accordionElement, {
+        attributes: true,
+        subtree: true,
+        attributeFilter: ['data-db-open', 'data-db-single'],
+      });
+    }
+    applyInitialState();
   });
 };
 

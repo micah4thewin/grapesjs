@@ -35,6 +35,7 @@ const buildSiteIdentityFormMarkup = (identityRecord) => {
     '</div>',
     `<div data-db-identity-palette>${buildPalettePreviewMarkup(generateBrandPalette(identityRecord.brandColor, identityRecord.moodId))}</div>`,
     '<div class="gjs-db-button-row">',
+    '<button type="button" class="gjs-db-button" data-db-identity-open-tokens>Fine-tune every colour</button>',
     '<button type="submit" class="gjs-db-button gjs-db-button-primary">Apply to site</button>',
     '</div>',
     '</form>',

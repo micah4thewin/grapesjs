@@ -1,3 +1,4 @@
+import buildKeyChipsMarkup from './buildKeyChipsMarkup.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
 
 const buildShortcutHelpMarkup = (shortcutGroups) => {
@@ -6,14 +7,18 @@ const buildShortcutHelpMarkup = (shortcutGroups) => {
       const entriesMarkup = groupRecord.entries
         .map((entryRecord) =>
           [
-            `<dt style="margin: 0"><span class="gjs-db-badge">${escapeHtmlText(entryRecord.keysText)}</span></dt>`,
-            `<dd style="margin: 0" class="gjs-db-muted">${escapeHtmlText(entryRecord.labelText)}</dd>`,
+            `<dt class="gjs-db-shortcut-keys">${buildKeyChipsMarkup(entryRecord.keysText)}</dt>`,
+            `<dd class="gjs-db-shortcut-label">${escapeHtmlText(entryRecord.labelText)}</dd>`,
           ].join(''),
         )
         .join('');
+      const noteMarkup = groupRecord.noteText
+        ? `<p class="gjs-db-shortcut-note">${escapeHtmlText(groupRecord.noteText)}</p>`
+        : '';
       return [
         `<h3 class="gjs-db-section-title">${escapeHtmlText(groupRecord.groupTitle)}</h3>`,
-        `<dl class="gjs-db-grid-two" style="margin: 0">${entriesMarkup}</dl>`,
+        `<dl class="gjs-db-shortcut-list">${entriesMarkup}</dl>`,
+        noteMarkup,
       ].join('');
     })
     .join('');

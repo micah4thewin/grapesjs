@@ -1,21 +1,24 @@
 import applyConditionRecordToControls from './applyConditionRecordToControls.js';
+import buildTraitAriaLabelAttribute from './buildTraitAriaLabelAttribute.js';
+import escapeHtmlText from '../support/escapeHtmlText.js';
+import getConditionKindRecords from './getConditionKindRecords.js';
 import readConditionControls from './readConditionControls.js';
 import toggleConditionControlVisibility from './toggleConditionControlVisibility.js';
 import writeComponentAttributeValue from './writeComponentAttributeValue.js';
 
 const createConditionTraitDefinition = () => ({
   eventCapture: ['change', 'input'],
-  createInput: () => {
-    const kindOptions = ['always', 'never', 'fieldTruthy', 'fieldEquals']
-      .map((conditionKind) => `<option value="${conditionKind}">${conditionKind}</option>`)
+  createInput: ({ trait }) => {
+    const kindOptions = getConditionKindRecords()
+      .map((kindRecord) => `<option value="${kindRecord.id}">${escapeHtmlText(kindRecord.label)}</option>`)
       .join('');
     return [
       '<div class="gjs-db-field gjs-db-trait-condition">',
-      `<select class="gjs-db-field-input" data-db-condition-kind aria-label="Condition kind">${kindOptions}</select>`,
-      '<input type="text" class="gjs-db-field-input" data-db-condition-field placeholder="Field path" ',
-      'aria-label="Condition field path" hidden>',
-      '<input type="text" class="gjs-db-field-input" data-db-condition-value placeholder="Expected value" ',
-      'aria-label="Condition expected value" hidden>',
+      `<select class="gjs-db-field-input" data-db-condition-kind${buildTraitAriaLabelAttribute(trait, '- when to show')}>${kindOptions}</select>`,
+      '<input type="text" class="gjs-db-field-input" data-db-condition-field placeholder="Data field, e.g. product.inStock" ',
+      `${buildTraitAriaLabelAttribute(trait, '- data field')} hidden>`,
+      '<input type="text" class="gjs-db-field-input" data-db-condition-value placeholder="Value to match, e.g. yes" ',
+      `${buildTraitAriaLabelAttribute(trait, '- value to match')} hidden>`,
       '</div>',
     ].join('');
   },

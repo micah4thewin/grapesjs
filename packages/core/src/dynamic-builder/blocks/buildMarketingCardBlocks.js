@@ -1,5 +1,10 @@
 import buildBlockDefinition from './buildBlockDefinition.js';
-import buildColumnsContentRecord from './buildColumnsContentRecord.js';
+import buildCardSampleRecord from './buildCardSampleRecord.js';
+import buildHeadingContentRecord from './buildHeadingContentRecord.js';
+import buildSectionContentRecord from './buildSectionContentRecord.js';
+import buildTeamMemberSampleRecord from './buildTeamMemberSampleRecord.js';
+import buildTestimonialSampleRecord from './buildTestimonialSampleRecord.js';
+import buildThreeUpSampleColumns from './buildThreeUpSampleColumns.js';
 
 const buildMarketingCardBlocks = () => [
   buildBlockDefinition('db-card', 'Card', 'Marketing', 'card', { type: 'db-card' }),
@@ -8,7 +13,7 @@ const buildMarketingCardBlocks = () => [
     'Card grid',
     'Marketing',
     'grid',
-    buildColumnsContentRecord('three', [[{ type: 'db-card' }], [{ type: 'db-card' }], [{ type: 'db-card' }]]),
+    buildSectionContentRecord([buildThreeUpSampleColumns(buildCardSampleRecord, 'Card grid')]),
   ),
   buildBlockDefinition('db-testimonial', 'Testimonial', 'Marketing', 'testimonial', { type: 'db-testimonial' }),
   buildBlockDefinition(
@@ -16,25 +21,41 @@ const buildMarketingCardBlocks = () => [
     'Testimonial trio',
     'Marketing',
     'quote',
-    buildColumnsContentRecord('three', [
-      [{ type: 'db-testimonial' }],
-      [{ type: 'db-testimonial' }],
-      [{ type: 'db-testimonial' }],
-    ]),
+    buildSectionContentRecord(
+      [
+        buildHeadingContentRecord('2', 'Loved by teams like yours'),
+        buildThreeUpSampleColumns(buildTestimonialSampleRecord, 'Testimonial trio'),
+      ],
+      { centered: true },
+    ),
   ),
-  buildBlockDefinition('db-logo-cloud', 'Logo cloud', 'Marketing', 'logoCloud', { type: 'db-logo-cloud' }),
-  buildBlockDefinition('db-stats-row', 'Stats', 'Marketing', 'stats', { type: 'db-stats' }),
+  buildBlockDefinition(
+    'db-logo-cloud',
+    'Logo row',
+    'Marketing',
+    'logoCloud',
+    buildSectionContentRecord([{ type: 'db-logo-cloud' }]),
+  ),
+  buildBlockDefinition(
+    'db-stats-row',
+    'Stats',
+    'Marketing',
+    'stats',
+    buildSectionContentRecord([{ type: 'db-stats' }]),
+  ),
   buildBlockDefinition('db-pricing', 'Pricing', 'Marketing', 'pricing', { type: 'db-pricing' }),
   buildBlockDefinition(
     'db-team-grid',
     'Team grid',
     'Marketing',
     'team',
-    buildColumnsContentRecord('three', [
-      [{ type: 'db-team-member' }],
-      [{ type: 'db-team-member' }],
-      [{ type: 'db-team-member' }],
-    ]),
+    buildSectionContentRecord(
+      [
+        buildHeadingContentRecord('2', 'Meet the team'),
+        buildThreeUpSampleColumns(buildTeamMemberSampleRecord, 'Team grid'),
+      ],
+      { centered: true },
+    ),
   ),
 ];
 

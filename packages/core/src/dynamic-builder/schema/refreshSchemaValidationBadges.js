@@ -1,37 +1,53 @@
+import buildRichResultReadinessMarkup from './buildRichResultReadinessMarkup.js';
 import buildValidationBadgeMarkup from './buildValidationBadgeMarkup.js';
 import collectFaqEntriesFromPage from './collectFaqEntriesFromPage.js';
 import collectSchemaFormValues from './collectSchemaFormValues.js';
 import evaluateSchemaValidation from './evaluateSchemaValidation.js';
+import formatFaqCountText from './formatFaqCountText.js';
 import getOrganizationValidationRules from './getOrganizationValidationRules.js';
 import getWebSiteValidationRules from './getWebSiteValidationRules.js';
+import isPlainRecord from '../support/isPlainRecord.js';
 import resolvePageTypeValidationRules from './resolvePageTypeValidationRules.js';
 import resolvePageValidationValues from './resolvePageValidationValues.js';
 import resolveSchemaTargetPage from './resolveSchemaTargetPage.js';
 
 const refreshSchemaValidationBadges = (editor, rootElement) => {
-  const setBadgeMarkup = (badgeName, validationResult) => {
-    const badgeSlot = rootElement.querySelector('[data-db-schema-badge="' + badgeName + '"]');
-    if (badgeSlot) badgeSlot.innerHTML = buildValidationBadgeMarkup(validationResult);
+  const setSlotMarkup = (slotSelector, slotMarkup) => {
+    const slotElement = rootElement.querySelector(slotSelector);
+    if (slotElement) slotElement.innerHTML = slotMarkup;
   };
   const siteFormValues = collectSchemaFormValues(rootElement.querySelector('[data-db-schema-section="site"]'));
   const pageFormValues = collectSchemaFormValues(rootElement.querySelector('[data-db-schema-section="page"]'));
-  setBadgeMarkup(
-    'organization',
-    evaluateSchemaValidation(siteFormValues.organization, getOrganizationValidationRules()),
+  const organizationValues = isPlainRecord(siteFormValues.organization) ? siteFormValues.organization : {};
+  const isOrganizationUntouched =
+    !String(organizationValues.name || '').trim() && !String(organizationValues.url || '').trim();
+  setSlotMarkup(
+    '[data-db-schema-badge="organization"]',
+    buildValidationBadgeMarkup(
+      evaluateSchemaValidation(organizationValues, getOrganizationValidationRules(organizationValues)),
+      'organization',
+      { isUntouched: isOrganizationUntouched },
+    ),
   );
-  setBadgeMarkup('website', evaluateSchemaValidation(siteFormValues.website, getWebSiteValidationRules()));
+  setSlotMarkup(
+    '[data-db-schema-badge="website"]',
+    buildValidationBadgeMarkup(
+      evaluateSchemaValidation(siteFormValues.website, getWebSiteValidationRules()),
+      'website',
+    ),
+  );
   const pageType = String(pageFormValues.pageType || 'WebPage');
   const faqEntryCount =
     pageType === 'FAQPage' ? collectFaqEntriesFromPage(editor, resolveSchemaTargetPage(editor)).length : 0;
   const pageValidationValues = resolvePageValidationValues(pageType, pageFormValues, faqEntryCount);
-  setBadgeMarkup(
-    'page',
-    evaluateSchemaValidation(pageValidationValues, resolvePageTypeValidationRules(pageType, pageValidationValues)),
+  const pageValidation = evaluateSchemaValidation(
+    pageValidationValues,
+    resolvePageTypeValidationRules(pageType, pageValidationValues),
   );
+  setSlotMarkup('[data-db-schema-badge="page"]', buildValidationBadgeMarkup(pageValidation, pageType));
+  setSlotMarkup('[data-db-schema-readiness]', buildRichResultReadinessMarkup(pageType, pageValidation));
   const faqCountElement = rootElement.querySelector('[data-db-schema-faq-count]');
-  if (faqCountElement && pageType === 'FAQPage') {
-    faqCountElement.textContent = faqEntryCount + ' question and answer pairs found';
-  }
+  if (faqCountElement && pageType === 'FAQPage') faqCountElement.textContent = formatFaqCountText(faqEntryCount);
 };
 
 export default refreshSchemaValidationBadges;

@@ -1,5 +1,6 @@
 import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildFormDefaultChildren from './buildFormDefaultChildren.js';
+import buildFormTraitDefinitions from './buildFormTraitDefinitions.js';
 import runFormBehavior from './runFormBehavior.js';
 
 const buildFormTypeDefinition = (formTextDefaults) => ({
@@ -10,7 +11,7 @@ const buildFormTypeDefinition = (formTextDefaults) => ({
       tagName: 'form',
       name: 'Form',
       draggable: getDropTargetSelectors().anyLayout,
-      droppable: '[data-db-form-child]',
+      droppable: '[data-db-form-child], [data-db-type=heading], [data-db-type=text], [data-db-type=divider]',
       classes: ['db-form'],
       attributes: {
         'data-db-type': 'form',
@@ -18,31 +19,15 @@ const buildFormTypeDefinition = (formTextDefaults) => ({
         method: 'post',
         enctype: 'multipart/form-data',
         novalidate: 'novalidate',
+        'data-db-recipe': 'formspree',
+        'data-db-submit-mode': 'fetch',
         'data-db-success-message': formTextDefaults.successMessage,
         'data-db-error-message': formTextDefaults.errorMessage,
+        'data-db-failure-message': formTextDefaults.failureMessage,
       },
       components: buildFormDefaultChildren(formTextDefaults),
       script: runFormBehavior,
-      traits: [
-        {
-          type: 'db-url',
-          name: 'action',
-          label: 'Send submissions to',
-          placeholder: 'https://formspree.io/f/your-form-id',
-        },
-        {
-          type: 'select',
-          name: 'method',
-          label: 'Method',
-          options: [
-            { id: 'post', label: 'POST' },
-            { id: 'get', label: 'GET' },
-          ],
-        },
-        { type: 'text', name: 'name', label: 'Form name' },
-        { type: 'text', name: 'data-db-success-message', label: 'Success message' },
-        { type: 'text', name: 'data-db-error-message', label: 'Error message' },
-      ],
+      traits: buildFormTraitDefinitions(),
     },
   },
 });

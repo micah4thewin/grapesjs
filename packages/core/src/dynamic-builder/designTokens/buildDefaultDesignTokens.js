@@ -2,7 +2,7 @@ const buildDefaultDesignTokens = () => ({
   color: {
     brand: '#1f5eff',
     brandContrast: '#ffffff',
-    accent: '#0f9d8a',
+    accent: '#0f766e',
     surface: '#ffffff',
     surfaceAlt: '#f6f6f4',
     text: '#16181d',

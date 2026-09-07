@@ -1,54 +1,57 @@
+import buildFlowFromRecipe from './buildFlowFromRecipe.js';
 import collectFlowsFromForm from './collectFlowsFromForm.js';
-import createFlowIdentifier from './createFlowIdentifier.js';
-import getFlowActionRecords from './getFlowActionRecords.js';
 import normalizeFlowRecord from './normalizeFlowRecord.js';
+import resolveFlowBuilderAction from './resolveFlowBuilderAction.js';
+import resolveFlowControlSelector from './resolveFlowControlSelector.js';
+
+const readIndexAttribute = (element, selector, attributeName) => {
+  const scopeElement = element.closest(selector);
+  return scopeElement ? Number(scopeElement.getAttribute(attributeName)) : undefined;
+};
 
 const attachFlowBuilderHandlers = (formElement, callbackRecords) => {
   const readCurrentFlows = () => collectFlowsFromForm(formElement).map(normalizeFlowRecord).filter(Boolean);
-  const rerenderWith = (flowRecords) => callbackRecords.onRerender(flowRecords);
   formElement.addEventListener('change', (changeEvent) => {
-    if (!changeEvent.target.matches('[data-db-flow-trigger], [data-db-flow-action-type]')) return;
-    rerenderWith(readCurrentFlows());
+    const changedElement = changeEvent.target;
+    callbackRecords.onDirty();
+    if (changedElement.matches('[data-db-flow-recipe]')) {
+      const recipeFlow = buildFlowFromRecipe(changedElement.value);
+      if (!recipeFlow) return;
+      const currentFlows = readCurrentFlows();
+      const focusSelector = '[data-db-flow-index="' + currentFlows.length + '"] [data-db-flow-trigger]';
+      callbackRecords.onRerender([...currentFlows, recipeFlow], focusSelector);
+      return;
+    }
+    if (!changedElement.matches('[data-db-flow-trigger], [data-db-flow-action-type]')) return;
+    callbackRecords.onRerender(readCurrentFlows(), resolveFlowControlSelector(changedElement));
   });
+  formElement.addEventListener('input', () => callbackRecords.onDirty());
   formElement.addEventListener('click', (clickEvent) => {
-    const actionElement = clickEvent.target.closest(
-      '[data-db-flow-add], [data-db-flow-save], [data-db-flow-remove], [data-db-flow-add-action],' +
-        ' [data-db-flow-remove-action]',
-    );
+    const actionElement = clickEvent.target.closest('[data-db-flow-action]');
     if (!actionElement) return;
     clickEvent.preventDefault();
+    const actionName = actionElement.getAttribute('data-db-flow-action');
     const currentFlows = readCurrentFlows();
-    if (actionElement.hasAttribute('data-db-flow-save')) {
-      callbackRecords.onSave(currentFlows);
-      return;
+    const positionRecord = {
+      flowIndex: readIndexAttribute(actionElement, '[data-db-flow-index]', 'data-db-flow-index'),
+      actionIndex: readIndexAttribute(actionElement, '[data-db-flow-action-index]', 'data-db-flow-action-index'),
+    };
+    if (actionName === 'save') return callbackRecords.onSave(currentFlows);
+    if (actionName === 'cancel') return callbackRecords.onCancel();
+    if (actionName === 'test') return callbackRecords.onTest(currentFlows, positionRecord.flowIndex);
+    if (actionName === 'pick') {
+      const inputElement = actionElement
+        .closest('.gjs-db-flow-field-target')
+        .querySelector('[data-db-flow-target-input]');
+      return callbackRecords.onPick(currentFlows, {
+        fieldScope: inputElement.getAttribute('data-db-flow-scope'),
+        fieldName: inputElement.getAttribute('data-db-flow-field'),
+      });
     }
-    if (actionElement.hasAttribute('data-db-flow-add')) {
-      rerenderWith([
-        ...currentFlows,
-        { id: createFlowIdentifier(), trigger: 'click', triggerOptions: {}, actions: [] },
-      ]);
-      return;
-    }
-    const cardElement = actionElement.closest('[data-db-flow-index]');
-    if (!cardElement) return;
-    const flowIndex = Number(cardElement.getAttribute('data-db-flow-index'));
-    if (actionElement.hasAttribute('data-db-flow-remove')) {
-      rerenderWith(currentFlows.filter((flowRecord, recordIndex) => recordIndex !== flowIndex));
-      return;
-    }
-    if (actionElement.hasAttribute('data-db-flow-add-action')) {
-      const defaultActionId = getFlowActionRecords()[0].id;
-      currentFlows[flowIndex].actions = [...currentFlows[flowIndex].actions, { type: defaultActionId, options: {} }];
-      rerenderWith(currentFlows);
-      return;
-    }
-    const rowElement = actionElement.closest('[data-db-flow-action-index]');
-    if (!rowElement) return;
-    const actionIndex = Number(rowElement.getAttribute('data-db-flow-action-index'));
-    currentFlows[flowIndex].actions = currentFlows[flowIndex].actions.filter(
-      (actionRecord, recordIndex) => recordIndex !== actionIndex,
-    );
-    rerenderWith(currentFlows);
+    const outcome = resolveFlowBuilderAction(actionName, currentFlows, positionRecord);
+    if (!outcome) return undefined;
+    callbackRecords.onDirty();
+    return callbackRecords.onRerender(outcome.flows, outcome.focusSelector);
   });
 };
 

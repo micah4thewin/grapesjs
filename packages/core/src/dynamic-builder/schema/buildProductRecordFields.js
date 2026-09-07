@@ -1,9 +1,12 @@
-const buildProductRecordFields = (productValues, pageUrl) => {
+import normalizeSchemaPriceValue from './normalizeSchemaPriceValue.js';
+import normalizeSchemaUrlValue from './normalizeSchemaUrlValue.js';
+
+const buildProductRecordFields = (productValues, pageUrl, canonicalBase) => {
   const availabilityValue = String(productValues.availability || '').trim();
   return {
     name: productValues.name,
     description: productValues.description,
-    image: productValues.image,
+    image: normalizeSchemaUrlValue(productValues.image, canonicalBase),
     sku: productValues.sku,
     brand: {
       '@type': 'Brand',
@@ -11,8 +14,10 @@ const buildProductRecordFields = (productValues, pageUrl) => {
     },
     offers: {
       '@type': 'Offer',
-      price: productValues.price,
-      priceCurrency: productValues.priceCurrency,
+      price: normalizeSchemaPriceValue(productValues.price),
+      priceCurrency: String(productValues.priceCurrency || '')
+        .trim()
+        .toUpperCase(),
       availability: availabilityValue ? 'https://schema.org/' + availabilityValue : '',
       url: pageUrl,
     },

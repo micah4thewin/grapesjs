@@ -11,9 +11,12 @@ import registerEditorOnlyCanvasStyles from '../support/registerEditorOnlyCanvasS
 import runCreateSymbolCommand from './runCreateSymbolCommand.js';
 import runDetachSymbolCommand from './runDetachSymbolCommand.js';
 import runEditSymbolCommand from './runEditSymbolCommand.js';
+import runResetSymbolOverrideCommand from './runResetSymbolOverrideCommand.js';
 import seedSymbolLibrary from './seedSymbolLibrary.js';
 import watchSymbolBlockLibrary from './watchSymbolBlockLibrary.js';
+import wireSymbolCanvasDoubleClick from './wireSymbolCanvasDoubleClick.js';
 import watchSymbolInstances from './watchSymbolInstances.js';
+import watchSymbolLibraryHistory from './watchSymbolLibraryHistory.js';
 import wireSymbolToolbarActions from './wireSymbolToolbarActions.js';
 
 const applyReusableComponents = (editor, pluginOptions) => {
@@ -21,15 +24,18 @@ const applyReusableComponents = (editor, pluginOptions) => {
   registerComponentTypeSet(editor, [buildSymbolTypeDefinition()]);
   registerCanvasStyles(editor, 'db-css-symbols-base', buildSymbolCanvasCss());
   registerEditorOnlyCanvasStyles(editor, 'db-symbols-canvas-editor-only', buildSymbolEditorOnlyCss());
+  watchSymbolLibraryHistory(editor);
   seedSymbolLibrary(editor, moduleOptions);
   watchSymbolInstances(editor);
   watchSymbolBlockLibrary(editor);
   wireSymbolToolbarActions(editor);
+  wireSymbolCanvasDoubleClick(editor);
   registerCommandSet(editor, {
     'db:open-symbols': (commandEditor) => openSymbolLibraryModal(commandEditor),
     'db:create-symbol': (commandEditor) => runCreateSymbolCommand(commandEditor),
     'db:edit-symbol': (commandEditor) => runEditSymbolCommand(commandEditor),
     'db:detach-symbol': (commandEditor) => runDetachSymbolCommand(commandEditor),
+    'db:reset-symbol-override': (commandEditor) => runResetSymbolOverrideCommand(commandEditor),
   });
   const injectSymbolEditorStyles = () => injectEditorStylesOnce(editor, 'db-css-symbols-editor', getSymbolEditorCss());
   injectSymbolEditorStyles();

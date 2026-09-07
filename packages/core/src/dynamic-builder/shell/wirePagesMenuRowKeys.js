@@ -16,7 +16,9 @@ const wirePagesMenuRowKeys = (editor, stripElement) => {
       keyEvent.stopImmediatePropagation();
       if (!reorderSitePage(editor, pageId, keyEvent.key === 'ArrowUp' ? -1 : 1)) return;
       renderPagesMenuItems(editor, menuElement);
-      const movedButton = menuElement.querySelector(`[data-db-page-row="${pageId}"] [data-db-page-action="${actionName}"]`);
+      const movedButton = menuElement.querySelector(
+        `[data-db-page-row="${pageId}"] [data-db-page-action="${actionName}"]`,
+      );
       movedButton && movedButton.focus();
       return;
     }

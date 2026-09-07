@@ -6,6 +6,7 @@ import getErrorMessageText from './getErrorMessageText.js';
 import reportForeignSnapshot from './reportForeignSnapshot.js';
 import writeSnapshotOwnerRecord from './writeSnapshotOwnerRecord.js';
 import writeStoredJsonRecord from './writeStoredJsonRecord.js';
+import resolveStorageKey from './resolveStorageKey.js';
 
 const saveProjectSnapshot = (editor, moduleOptions) => {
   const editorModel = editor.getModel();
@@ -19,7 +20,7 @@ const saveProjectSnapshot = (editor, moduleOptions) => {
     emitSaveStatus(editor, 'error', getErrorMessageText(snapshotError, 'Unable to prepare the project for saving'));
     return false;
   }
-  const writeErrorMessage = writeStoredJsonRecord(moduleOptions.storageKey, projectSnapshot, () =>
+  const writeErrorMessage = writeStoredJsonRecord(resolveStorageKey(editor, moduleOptions), projectSnapshot, () =>
     evictOldestRevision(editor, moduleOptions),
   );
   if (writeErrorMessage) {

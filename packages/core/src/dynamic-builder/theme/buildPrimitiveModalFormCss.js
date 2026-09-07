@@ -91,6 +91,12 @@ input[type='checkbox'].gjs-db-field-input {
   color: var(--gjs-db-faint);
   font-size: 0.78rem;
 }
+.gjs-db-field-error-text {
+  color: var(--gjs-db-error);
+}
+.gjs-db-field-error-text:empty {
+  display: none;
+}
 `;
 
 export default buildPrimitiveModalFormCss;

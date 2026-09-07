@@ -1,9 +1,9 @@
-import sanitizeUrlValue from '../support/sanitizeUrlValue.js';
+import normalizeSchemaUrlValue from './normalizeSchemaUrlValue.js';
 
 const splitSameAsLines = (sameAsText) =>
   String(sameAsText || '')
     .split('\n')
-    .map((lineText) => sanitizeUrlValue(lineText.trim()))
+    .map((lineText) => normalizeSchemaUrlValue(lineText.trim()))
     .filter(Boolean);
 
 export default splitSameAsLines;

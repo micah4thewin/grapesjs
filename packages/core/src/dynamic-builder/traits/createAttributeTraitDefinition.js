@@ -1,3 +1,4 @@
+import buildTraitAriaLabelAttribute from './buildTraitAriaLabelAttribute.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
 import formatTraitDisplayValue from './formatTraitDisplayValue.js';
 import resolveTraitInnerElement from './resolveTraitInnerElement.js';
@@ -9,7 +10,7 @@ const createAttributeTraitDefinition = (attributeName, placeholderText) => ({
     const placeholderValue = escapeHtmlText(trait.get('placeholder') || placeholderText);
     return [
       '<div class="gjs-db-field">',
-      `<input type="text" class="gjs-db-field-input" placeholder="${placeholderValue}">`,
+      `<input type="text" class="gjs-db-field-input" placeholder="${placeholderValue}"${buildTraitAriaLabelAttribute(trait)}>`,
       '</div>',
     ].join('');
   },

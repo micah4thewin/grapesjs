@@ -4,7 +4,7 @@ const buildFileInputTypeDefinition = () => ({
   model: {
     defaults: {
       tagName: 'input',
-      name: 'File input',
+      name: 'File upload',
       draggable: '[data-db-type=form-field]',
       droppable: false,
       classes: ['db-field-control', 'db-file-input'],
@@ -13,12 +13,18 @@ const buildFileInputTypeDefinition = () => ({
         'data-db-form-control': 'true',
         type: 'file',
         name: 'attachment',
+        accept: '.pdf,image/*',
         'data-db-max-size-mb': '10',
       },
       traits: [
-        { type: 'text', name: 'name', label: 'Field name' },
-        { type: 'text', name: 'accept', label: 'Accepted types', placeholder: '.pdf,image/*' },
-        { type: 'number', name: 'data-db-max-size-mb', label: 'Max size (MB)', min: 1 },
+        {
+          type: 'text',
+          name: 'accept',
+          label: 'Accepted file types',
+          placeholder: '.pdf,image/*',
+        },
+        { type: 'number', name: 'data-db-max-size-mb', label: 'Largest file allowed (MB)', min: 1 },
+        { type: 'text', name: 'name', label: 'Field name', placeholder: 'attachment' },
       ],
     },
   },

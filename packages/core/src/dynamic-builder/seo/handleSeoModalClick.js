@@ -1,9 +1,10 @@
 import activateSeoModalTab from './activateSeoModalTab.js';
-import collectSeoFormValues from './collectSeoFormValues.js';
-import updatePageMetaRecord from '../support/updatePageMetaRecord.js';
-import updateSiteMetaRecord from '../support/updateSiteMetaRecord.js';
+import activateSharePreviewPlatform from './activateSharePreviewPlatform.js';
+import applySeoSuggestions from './applySeoSuggestions.js';
+import pickSeoImageFromAssets from './pickSeoImageFromAssets.js';
+import saveSeoModalValues from './saveSeoModalValues.js';
 
-const handleSeoModalClick = (editor, rootElement, clickEvent) => {
+const handleSeoModalClick = (editor, rootElement, clickEvent, refreshLiveFeedback) => {
   const clickedElement = clickEvent.target;
   if (!clickedElement || !clickedElement.closest) return;
   const tabButton = clickedElement.closest('[data-db-seo-tab]');
@@ -12,15 +13,28 @@ const handleSeoModalClick = (editor, rootElement, clickEvent) => {
     editor.getModel().set('dbSeoActiveTab', tabButton.dataset.dbSeoTab);
     return;
   }
-  const saveButton = clickedElement.closest('[data-db-seo-save]');
-  if (!saveButton) return;
-  const sectionName = saveButton.dataset.dbSeoSave;
-  const sectionElement = rootElement.querySelector('[data-db-seo-section="' + sectionName + '"]');
-  const formValues = collectSeoFormValues(sectionElement);
-  if (sectionName === 'site') updateSiteMetaRecord(editor, { seo: formValues });
-  else updatePageMetaRecord(editor, { seo: formValues });
-  const statusElement = rootElement.querySelector('[data-db-seo-status="' + sectionName + '"]');
-  if (statusElement) statusElement.textContent = sectionName === 'site' ? 'Site defaults saved' : 'Page settings saved';
+  const pickButton = clickedElement.closest('[data-db-seo-pick-image]');
+  if (pickButton) {
+    pickSeoImageFromAssets(editor, rootElement, pickButton.dataset.dbSeoPickImage);
+    return;
+  }
+  const platformButton = clickedElement.closest('[data-db-seo-platform]');
+  if (platformButton) {
+    activateSharePreviewPlatform(rootElement, platformButton.dataset.dbSeoPlatform);
+    refreshLiveFeedback();
+    return;
+  }
+  if (clickedElement.closest('[data-db-seo-suggest]')) {
+    applySeoSuggestions(editor, rootElement);
+    refreshLiveFeedback();
+    return;
+  }
+  if (clickedElement.closest('[data-db-seo-cancel]')) {
+    rootElement.dataset.dbSeoResolved = 'true';
+    editor.Modal.close();
+    return;
+  }
+  if (clickedElement.closest('[data-db-seo-save]')) saveSeoModalValues(editor, rootElement, refreshLiveFeedback);
 };
 
 export default handleSeoModalClick;

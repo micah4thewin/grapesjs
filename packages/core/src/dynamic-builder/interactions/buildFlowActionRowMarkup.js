@@ -1,12 +1,13 @@
 import buildFlowFieldMarkup from './buildFlowFieldMarkup.js';
+import buildFlowIconButtonMarkup from './buildFlowIconButtonMarkup.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
 import getFlowActionRecords from './getFlowActionRecords.js';
-import getIconMarkup from '../support/getIconMarkup.js';
 
-const buildFlowActionRowMarkup = (actionRecord, flowIndex, actionIndex) => {
+const buildFlowActionRowMarkup = (actionRecord, flowIndex, actionIndex, actionCount) => {
   const catalogRecords = getFlowActionRecords();
   const catalogRecord = catalogRecords.find((candidate) => candidate.id === actionRecord.type) || catalogRecords[0];
   const fieldScope = 'action:' + flowIndex + ':' + actionIndex;
+  const stepLabel = 'step ' + (actionIndex + 1);
   const typeOptionsMarkup = catalogRecords
     .map(
       (candidate) =>
@@ -30,10 +31,11 @@ const buildFlowActionRowMarkup = (actionRecord, flowIndex, actionIndex) => {
     'aria-label="Step ' + (actionIndex + 1) + ' action">',
     typeOptionsMarkup,
     '</select>',
-    '<button type="button" class="gjs-db-button gjs-db-flow-icon-button" data-db-flow-remove-action ',
-    'title="Remove this step" aria-label="Remove step ' + (actionIndex + 1) + '">',
-    getIconMarkup('trash', { size: 14 }),
-    '</button>',
+    actionIndex > 0 ? buildFlowIconButtonMarkup('move-up', 'arrow-up', 'Move ' + stepLabel + ' up') : '',
+    actionIndex < actionCount - 1
+      ? buildFlowIconButtonMarkup('move-down', 'arrow-down', 'Move ' + stepLabel + ' down')
+      : '',
+    buildFlowIconButtonMarkup('remove-step', 'trash', 'Remove ' + stepLabel),
     '</div>',
     catalogRecord.hint ? '<p class="gjs-db-flow-hint">' + escapeHtmlText(catalogRecord.hint) + '</p>' : '',
     fieldsMarkup ? '<div class="gjs-db-flow-fields">' + fieldsMarkup + '</div>' : '',

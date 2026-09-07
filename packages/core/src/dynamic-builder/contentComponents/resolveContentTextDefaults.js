@@ -9,7 +9,7 @@ const resolveContentTextDefaults = (moduleOptions) => {
     quoteCiteText: 'Charles Eames',
     calloutTitleText: 'Good to know',
     calloutBodyText: 'Use this callout to highlight helpful context without interrupting the reading flow.',
-    buttonLabelText: 'Learn more',
+    buttonLabelText: 'Get started',
     secondaryButtonLabelText: 'See details',
     listItemTexts: [
       'First key point readers should remember',

@@ -1,4 +1,5 @@
 import buildPricingDefaultChildren from './buildPricingDefaultChildren.js';
+import buildPricingTraitDefinitions from './buildPricingTraitDefinitions.js';
 import runPricingToggleBehavior from './runPricingToggleBehavior.js';
 
 const buildPricingTypeDefinition = () => ({
@@ -11,22 +12,17 @@ const buildPricingTypeDefinition = () => ({
       draggable: '[data-gjs-type=wrapper]',
       droppable: false,
       classes: ['db-pricing'],
-      attributes: { 'data-db-type': 'pricing', 'data-db-billing-default': 'monthly' },
+      attributes: {
+        'data-db-type': 'pricing',
+        'data-db-theme': 'default',
+        'data-db-billing-default': 'monthly',
+        'data-db-billing-toggle': 'true',
+        'data-db-currency': 'USD',
+        'data-db-yearly-discount': '17',
+      },
       script: runPricingToggleBehavior,
       components: buildPricingDefaultChildren(),
-      traits: [
-        {
-          type: 'select',
-          name: 'data-db-billing-default',
-          label: 'Default billing period',
-          default: 'monthly',
-          options: [
-            { id: 'monthly', label: 'Monthly' },
-            { id: 'yearly', label: 'Yearly' },
-          ],
-        },
-        { type: 'text', name: 'id', label: 'Anchor id', placeholder: 'pricing' },
-      ],
+      traits: buildPricingTraitDefinitions(),
     },
   },
 });

@@ -1,13 +1,13 @@
 import escapeHtmlText from '../support/escapeHtmlText.js';
-import buildRequiredNoteMarkup from './buildRequiredNoteMarkup.js';
 
-const buildFormFieldChildren = (labelText, controlDefinition, helpText, isRequired) => {
+const buildFormFieldChildren = (labelText, controlDefinition, helpText) => {
   const childDefinitions = [
     {
+      type: 'db-field-label',
       tagName: 'label',
       classes: ['db-field-label'],
       attributes: { 'data-db-field-label': 'true' },
-      components: escapeHtmlText(labelText) + (isRequired ? buildRequiredNoteMarkup() : ''),
+      components: escapeHtmlText(labelText),
     },
     controlDefinition,
   ];
@@ -16,6 +16,9 @@ const buildFormFieldChildren = (labelText, controlDefinition, helpText, isRequir
       tagName: 'small',
       classes: ['db-field-help'],
       attributes: { 'data-db-field-help': 'true' },
+      draggable: false,
+      copyable: false,
+      traits: [],
       components: escapeHtmlText(helpText),
     });
   return childDefinitions;

@@ -1,4 +1,5 @@
 import getIconMarkup from '../support/getIconMarkup.js';
+import getViewsPanelButtonTitles from './getViewsPanelButtonTitles.js';
 
 const refineDefaultPanels = (editor) => {
   const panelManager = editor.Panels;
@@ -9,12 +10,15 @@ const refineDefaultPanels = (editor) => {
     });
   removeRedundantPanels();
   editor.on('command:run:core:open-styles', () => setTimeout(removeRedundantPanels, 30));
-  const viewButtonPresentation = {
-    'open-sm': { iconName: 'styles', readableLabel: 'Style manager' },
-    'open-tm': { iconName: 'traits', readableLabel: 'Settings' },
-    'open-layers': { iconName: 'layers', readableLabel: 'Layers' },
-    'open-blocks': { iconName: 'blocks', readableLabel: 'Blocks' },
-  };
+  const viewButtonPresentation = getViewsPanelButtonTitles();
+  const titleMessages = {};
+  Object.keys(viewButtonPresentation).forEach((buttonId) => {
+    titleMessages[buttonId] = viewButtonPresentation[buttonId].readableLabel;
+  });
+  if (editor.I18n && editor.I18n.addMessages) {
+    const currentLocale = editor.I18n.getLocale ? editor.I18n.getLocale() : 'en';
+    editor.I18n.addMessages({ [currentLocale]: { panels: { buttons: { titles: titleMessages } } } });
+  }
   const viewsPanel = panelManager.getPanel('views');
   if (!viewsPanel) return;
   const viewButtons = viewsPanel.get('buttons');
@@ -25,7 +29,7 @@ const refineDefaultPanels = (editor) => {
       viewButton.set({
         className: 'gjs-db-view-button',
         label: getIconMarkup(presentation.iconName, { size: 18, label: presentation.readableLabel }),
-        attributes: { title: presentation.readableLabel },
+        attributes: { title: presentation.readableLabel, 'aria-label': presentation.readableLabel },
       });
     });
 };

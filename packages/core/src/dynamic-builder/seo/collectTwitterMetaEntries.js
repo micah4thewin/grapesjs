@@ -1,12 +1,12 @@
 import normalizeTwitterHandle from './normalizeTwitterHandle.js';
-import sanitizeUrlValue from '../support/sanitizeUrlValue.js';
 
 const collectTwitterMetaEntries = (siteSeoRecord, pageSeoRecord, resolvedValues) => {
-  const shareImageUrl = sanitizeUrlValue(pageSeoRecord.twitterImage || pageSeoRecord.ogImage);
+  const shareImageUrl = String(resolvedValues.twitterImageUrl || '');
   const cardStyle = pageSeoRecord.twitterCard || (shareImageUrl ? 'summary_large_image' : 'summary');
+  const fallbackTitle = pageSeoRecord.ogTitle || resolvedValues.socialTitleText || resolvedValues.titleText;
   return [
     ['twitter:card', cardStyle],
-    ['twitter:title', pageSeoRecord.twitterTitle || pageSeoRecord.ogTitle || resolvedValues.titleText],
+    ['twitter:title', pageSeoRecord.twitterTitle || fallbackTitle],
     [
       'twitter:description',
       pageSeoRecord.twitterDescription || pageSeoRecord.ogDescription || resolvedValues.descriptionText,

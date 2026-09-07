@@ -28,17 +28,45 @@ input[type='file'].db-field-control {
   cursor: pointer;
 }
 .db-field-control:focus-visible,
-.db-choice input:focus-visible,
-.db-submit-button:focus-visible {
+.db-choice input:focus-visible {
   outline: 2px solid var(--db-color-focus-ring, #6366f1);
   outline-offset: 2px;
 }
-.db-field-control:disabled {
+.db-field-control:disabled,
+.db-field-control[readonly] {
   background: var(--db-color-surface-alt, #f4f6fa);
+}
+.db-field-control:disabled {
   cursor: not-allowed;
 }
 .db-form .db-submit-button {
   justify-self: start;
+}
+.db-submit-button[aria-busy='true'] {
+  opacity: 0.85;
+  cursor: progress;
+}
+.db-submit-button[aria-busy='true']::before {
+  content: '';
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  margin-right: 0.5em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -0.1em;
+  animation: db-form-spin 0.8s linear infinite;
+}
+@keyframes db-form-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .db-submit-button[aria-busy='true']::before {
+    animation-duration: 2s;
+  }
 }
 `;
 

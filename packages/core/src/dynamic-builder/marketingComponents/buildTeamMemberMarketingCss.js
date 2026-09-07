@@ -16,7 +16,9 @@ const buildTeamMemberMarketingCss = () => `
 .db-team-caption { display: flex; flex-direction: column; align-items: center; gap: var(--db-space-1, 0.25rem); }
 .db-team-name { margin: 0; font-family: var(--db-font-display, inherit); font-size: var(--db-type-lg, 1.2rem); }
 .db-team-role { margin: 0; color: var(--db-color-text-muted, #5b6472); font-size: var(--db-type-sm, 0.9rem); }
-.db-team-member .db-social-row { justify-content: center; margin-top: var(--db-space-2, 0.5rem); }
+.db-team-member .db-social-links { justify-content: center; margin-top: var(--db-space-2, 0.5rem); }
+.db-team-member .db-social-link,
+.db-footer .db-social-link { width: 2.75rem; height: 2.75rem; }
 `;
 
 export default buildTeamMemberMarketingCss;

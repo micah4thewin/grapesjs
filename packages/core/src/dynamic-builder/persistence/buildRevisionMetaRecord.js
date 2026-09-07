@@ -8,9 +8,8 @@ const resolvePageName = (pageRecord, pageIndex) => {
 };
 
 const buildRevisionMetaRecord = (snapshotPayload) => {
-  const projectData = isPlainRecord(snapshotPayload) && isPlainRecord(snapshotPayload.projectData)
-    ? snapshotPayload.projectData
-    : {};
+  const projectData =
+    isPlainRecord(snapshotPayload) && isPlainRecord(snapshotPayload.projectData) ? snapshotPayload.projectData : {};
   const pageList = Array.isArray(projectData.pages) ? projectData.pages : [];
   let byteLength = 0;
   try {

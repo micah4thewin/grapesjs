@@ -1,14 +1,14 @@
 import buildFooterNavListComponent from './buildFooterNavListComponent.js';
-import buildSocialLinksRowComponent from './buildSocialLinksRowComponent.js';
+import buildMarketingSocialLinksRecord from './buildMarketingSocialLinksRecord.js';
 
 const buildFooterDefaultChildren = () => {
+  const toLinkRecords = (linkTexts) => linkTexts.map((linkText) => ({ text: linkText, href: '#' }));
   const buildLegalLink = (linkText, linkPath) => ({
-    tagName: 'a',
+    type: 'link',
     name: linkText + ' link',
     classes: ['db-footer-link'],
     attributes: { href: linkPath },
     components: linkText,
-    traits: [{ type: 'db-url', name: 'href', label: 'Link URL' }],
   });
   return [
     {
@@ -33,13 +33,13 @@ const buildFooterDefaultChildren = () => {
               type: 'text',
               name: 'Brand blurb',
               classes: ['db-footer-blurb'],
-              components: 'We help ambitious teams design, build, and ship marketing sites that feel effortless.',
+              components: 'A sentence or two about your business, where you are, and who you help.',
             },
-            buildSocialLinksRowComponent(),
+            buildMarketingSocialLinksRecord(['instagram', 'facebook', 'linkedin', 'x']),
           ],
         },
-        buildFooterNavListComponent('Product', ['Features', 'Pricing', 'Integrations', 'Changelog']),
-        buildFooterNavListComponent('Company', ['About us', 'Careers', 'Blog', 'Contact']),
+        buildFooterNavListComponent('Explore', toLinkRecords(['Home', 'Services', 'About', 'Contact'])),
+        buildFooterNavListComponent('Company', toLinkRecords(['Our story', 'Careers', 'News', 'Support'])),
       ],
     },
     {
@@ -52,7 +52,7 @@ const buildFooterDefaultChildren = () => {
           type: 'text',
           name: 'Copyright',
           classes: ['db-footer-copyright'],
-          components: '\u00A9 2026 Acme Studio. All rights reserved.',
+          components: '\u00A9 ' + String(new Date().getFullYear()) + ' Acme Studio. All rights reserved.',
         },
         {
           tagName: 'div',

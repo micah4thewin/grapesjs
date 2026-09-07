@@ -6,7 +6,7 @@ import resolveTraitInnerElement from '../traits/resolveTraitInnerElement.js';
 const buildPreviewText = (codeText) => {
   const trimmedText = String(codeText || '').trim();
   if (!trimmedText) return 'Nothing here yet.';
-  return trimmedText.length > 220 ? trimmedText.slice(0, 220) + '\u2026' : trimmedText;
+  return trimmedText.length > 220 ? trimmedText.slice(0, 220) + '…' : trimmedText;
 };
 
 const createCodeTraitDefinition = (editor) => ({
@@ -22,24 +22,22 @@ const createCodeTraitDefinition = (editor) => ({
       '</div>',
     ].join('');
   },
-  onUpdate: ({ component, trait, elInput }) => {
+  onUpdate: ({ trait, elInput }) => {
     const previewElement = resolveTraitInnerElement(elInput, '[data-db-trait-code-preview]');
     if (previewElement) previewElement.textContent = buildPreviewText(trait.getValue());
     const openButton = resolveTraitInnerElement(elInput, '[data-db-trait-code-open]');
     if (!openButton || openButton.dataset.dbTraitCodeWired === 'true') return;
     openButton.dataset.dbTraitCodeWired = 'true';
     openButton.addEventListener('click', () => {
-      const languageName = String(trait.get('language') || 'html');
       openCodeEditorModal(editor, {
         title: String(trait.get('label') || 'Edit code'),
         label: String(trait.get('label') || ''),
-        language: languageName,
+        language: String(trait.get('language') || 'html'),
         value: String(trait.getValue() || ''),
         helpText: String(trait.get('helpText') || ''),
         onSubmit: (codeText) => {
           trait.setValue(codeText);
           if (previewElement) previewElement.textContent = buildPreviewText(codeText);
-          if (component && component.trigger) component.trigger('change:attributes');
         },
       });
     });

@@ -1,5 +1,6 @@
 import buildElementFromMarkup from '../support/buildElementFromMarkup.js';
 import buildExportModalMarkup from './buildExportModalMarkup.js';
+import focusFirstModalControl from '../support/focusFirstModalControl.js';
 import getExporterEditorCss from './getExporterEditorCss.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
 import openThemedModal from '../support/openThemedModal.js';
@@ -13,6 +14,7 @@ const openExportModal = (editor) => {
   if (!rootElement) return;
   wireExportModalEvents(editor, rootElement);
   openThemedModal(editor, 'Export site', rootElement, { className: 'gjs-db-export-modal' });
+  focusFirstModalControl(rootElement);
 };
 
 export default openExportModal;

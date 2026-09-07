@@ -1,55 +1,48 @@
-import applyLimitOffsetToItems from './applyLimitOffsetToItems.js';
-import buildRepeaterEmptyStateMarkup from './buildRepeaterEmptyStateMarkup.js';
+import applyBindingPreviewInElement from './applyBindingPreviewInElement.js';
+import attachRepeaterPreviewNode from './attachRepeaterPreviewNode.js';
+import buildRepeaterEmptyStateElement from './buildRepeaterEmptyStateElement.js';
+import expandRepeaterElement from './expandRepeaterElement.js';
+import findRepeaterTemplateComponent from './findRepeaterTemplateComponent.js';
 import getDataSourceRegistry from './getDataSourceRegistry.js';
-import parseWholeNumberValue from './parseWholeNumberValue.js';
-import replaceBindingTokensInText from './replaceBindingTokensInText.js';
-import resolveSourceItems from './resolveSourceItems.js';
+import listSelectedElements from './listSelectedElements.js';
+import removeRepeaterPreviewNodes from './removeRepeaterPreviewNodes.js';
+import resolveRepeaterItems from './resolveRepeaterItems.js';
+import resolveRepeaterSettings from './resolveRepeaterSettings.js';
+import syncTemplateIdStyles from './syncTemplateIdStyles.js';
 
 const renderRepeaterPreview = (editor, repeaterComponent) => {
   const editorModel = editor.getModel();
-  if (!repeaterComponent || editorModel.get('dbRepeaterRenderBusy')) return;
+  const hostElement = repeaterComponent && repeaterComponent.getEl ? repeaterComponent.getEl() : null;
+  if (!hostElement || !hostElement.ownerDocument || editorModel.get('dbRepeaterRenderBusy')) return;
   editorModel.set('dbRepeaterRenderBusy', true);
   try {
-    const componentAttributes = repeaterComponent.getAttributes();
+    removeRepeaterPreviewNodes(hostElement);
     const registryRecord = getDataSourceRegistry(editor);
-    const sourceName = componentAttributes['data-db-source'] || '';
-    const offsetValue = parseWholeNumberValue(componentAttributes['data-db-offset'], 0);
-    const limitValue = parseWholeNumberValue(componentAttributes['data-db-limit'], 0);
-    repeaterComponent
-      .components()
-      .filter((childComponent) => Boolean(childComponent.getAttributes()['data-db-repeater-preview']))
-      .forEach((previewComponent) => previewComponent.remove());
-    const templateComponent = repeaterComponent
-      .components()
-      .find((childComponent) => Boolean(childComponent.getAttributes()['data-db-repeater-item']));
-    const sourceItems = applyLimitOffsetToItems(
-      resolveSourceItems(registryRecord[sourceName]),
-      offsetValue,
-      limitValue,
-    );
-    const appendPreviewMarkup = (previewMarkup) => {
-      const appendedComponents = repeaterComponent.append(previewMarkup) || [];
-      appendedComponents.forEach((appendedComponent) => {
-        appendedComponent.removeAttributes(['data-db-repeater-item', 'data-db-type']);
-        appendedComponent.addAttributes({ 'data-db-repeater-preview': 'true' });
-        appendedComponent.set({
-          locked: true,
-          selectable: false,
-          hoverable: false,
-          draggable: false,
-          copyable: false,
-          layerable: false,
-        });
-      });
-    };
+    const settings = resolveRepeaterSettings(repeaterComponent.getAttributes());
+    const templateComponent = findRepeaterTemplateComponent(repeaterComponent);
+    syncTemplateIdStyles(editor, templateComponent);
+    const sourceItems = templateComponent ? resolveRepeaterItems(registryRecord, settings) : [];
     if (!templateComponent || !sourceItems.length) {
-      appendPreviewMarkup(buildRepeaterEmptyStateMarkup(sourceName, Boolean(templateComponent)));
-      return;
+      const emptyElement = buildRepeaterEmptyStateElement(
+        editor,
+        repeaterComponent,
+        hostElement,
+        settings,
+        Boolean(templateComponent),
+      );
+      if (emptyElement) hostElement.appendChild(emptyElement);
+    } else {
+      const stageElement = hostElement.ownerDocument.createElement('div');
+      stageElement.innerHTML = repeaterComponent.toHTML();
+      const stageRepeater = stageElement.firstElementChild;
+      if (stageRepeater) {
+        expandRepeaterElement(registryRecord, stageRepeater, { startIndex: 1 });
+        Array.from(stageRepeater.children).forEach((itemElement, itemIndex) =>
+          attachRepeaterPreviewNode(editor, hostElement, itemElement, templateComponent, itemIndex + 2),
+        );
+      }
     }
-    const templateMarkup = templateComponent.toHTML();
-    sourceItems.forEach((sourceItem) =>
-      appendPreviewMarkup(replaceBindingTokensInText({ ...registryRecord, item: sourceItem }, templateMarkup)),
-    );
+    applyBindingPreviewInElement(editor, hostElement, { skipElements: listSelectedElements(editor) });
   } finally {
     editorModel.set('dbRepeaterRenderBusy', false);
   }

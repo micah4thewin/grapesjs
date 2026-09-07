@@ -1,3 +1,4 @@
+import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
 import buildSpacingSelectOptions from './buildSpacingSelectOptions.js';
 import getColumnPresetRecord from './getColumnPresetRecord.js';
 import getLayoutSpacingScale from './getLayoutSpacingScale.js';
@@ -16,41 +17,47 @@ const buildColumnsTypeDefinition = () => {
       defaults: {
         tagName: 'div',
         name: 'Columns',
-        draggable: '[data-db-type=section], [data-db-type=container], [data-db-type=column]',
+        draggable: getDropTargetSelectors().sectionBody,
         droppable: '[data-db-type=column]',
-        classes: ['db-columns', 'db-stack-mobile'],
+        classes: ['db-columns'],
         attributes: {
           'data-db-type': 'columns',
           'data-db-columns': 'two',
           'data-db-gap': 'md',
-          'data-db-stack-mobile': 'true',
-          'data-db-reverse-mobile': 'false',
+          'data-db-valign': 'top',
+          'data-db-mobile': 'stack',
         },
         components: defaultColumnChildren,
         traits: [
-          { type: 'select', name: 'data-db-columns', label: 'Column preset', default: 'two', options: presetOptions },
+          { type: 'select', name: 'data-db-columns', label: 'Layout', default: 'two', options: presetOptions },
           {
             type: 'select',
             name: 'data-db-gap',
-            label: 'Column gap',
+            label: 'Space between columns',
             default: 'md',
             options: buildSpacingSelectOptions(getLayoutSpacingScale().gapSizes),
           },
           {
-            type: 'checkbox',
-            name: 'data-db-stack-mobile',
-            label: 'Stack on mobile',
-            valueTrue: 'true',
-            valueFalse: 'false',
-            default: 'true',
+            type: 'select',
+            name: 'data-db-valign',
+            label: 'Vertical alignment',
+            default: 'top',
+            options: [
+              { id: 'top', label: 'Top' },
+              { id: 'middle', label: 'Middle' },
+              { id: 'bottom', label: 'Bottom' },
+            ],
           },
           {
-            type: 'checkbox',
-            name: 'data-db-reverse-mobile',
-            label: 'Reverse on mobile',
-            valueTrue: 'true',
-            valueFalse: 'false',
-            default: 'false',
+            type: 'select',
+            name: 'data-db-mobile',
+            label: 'On phones',
+            default: 'stack',
+            options: [
+              { id: 'stack', label: 'Stack the columns' },
+              { id: 'stack-reverse', label: 'Stack, last column first' },
+              { id: 'side-by-side', label: 'Keep side by side' },
+            ],
           },
         ],
       },

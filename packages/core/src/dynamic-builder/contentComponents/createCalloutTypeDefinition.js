@@ -1,4 +1,4 @@
-import buildCalloutIconGlyphMarkup from './buildCalloutIconGlyphMarkup.js';
+import buildCalloutGlyphMarkup from './buildCalloutGlyphMarkup.js';
 
 const createCalloutTypeDefinition = (contentTextDefaults) => ({
   type: 'db-callout',
@@ -16,7 +16,7 @@ const createCalloutTypeDefinition = (contentTextDefaults) => ({
           tagName: 'span',
           name: 'Callout icon',
           classes: ['db-callout-icon'],
-          attributes: { 'aria-hidden': 'true' },
+          attributes: { 'aria-hidden': 'true', 'data-db-glyph': 'info' },
           selectable: false,
           hoverable: false,
           layerable: false,
@@ -24,7 +24,7 @@ const createCalloutTypeDefinition = (contentTextDefaults) => ({
           droppable: false,
           copyable: false,
           removable: false,
-          components: buildCalloutIconGlyphMarkup(),
+          components: buildCalloutGlyphMarkup('info'),
         },
         {
           tagName: 'div',
@@ -60,9 +60,9 @@ const createCalloutTypeDefinition = (contentTextDefaults) => ({
         {
           type: 'select',
           name: 'data-db-variant',
-          label: 'Variant',
+          label: 'Type of note',
           options: [
-            { id: 'info', label: 'Info' },
+            { id: 'info', label: 'Information' },
             { id: 'success', label: 'Success' },
             { id: 'warning', label: 'Warning' },
             { id: 'error', label: 'Error' },

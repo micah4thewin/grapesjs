@@ -1,17 +1,18 @@
 import buildMarketingPlaceholderUri from './buildMarketingPlaceholderUri.js';
-import buildSocialLinksRowComponent from './buildSocialLinksRowComponent.js';
+import buildMarketingSocialLinksRecord from './buildMarketingSocialLinksRecord.js';
 
-const buildTeamMemberDefaultChildren = () => [
+const buildTeamMemberDefaultChildren = (presetRecord) => [
   {
     type: 'db-image',
     classes: ['db-image', 'db-team-avatar'],
     attributes: {
       src: buildMarketingPlaceholderUri('avatar'),
-      alt: 'Portrait of Jordan Avery',
+      alt: 'Portrait of ' + presetRecord.name,
       loading: 'lazy',
       decoding: 'async',
       width: '240',
       height: '240',
+      'data-db-field': 'portrait',
     },
   },
   {
@@ -19,15 +20,23 @@ const buildTeamMemberDefaultChildren = () => [
     name: 'Member details',
     classes: ['db-team-caption'],
     components: [
-      { tagName: 'h3', type: 'text', name: 'Member name', classes: ['db-team-name'], components: 'Jordan Avery' },
+      {
+        tagName: 'h3',
+        type: 'text',
+        name: 'Member name',
+        classes: ['db-team-name'],
+        attributes: { 'data-db-field': 'name' },
+        components: presetRecord.name,
+      },
       {
         tagName: 'p',
         type: 'text',
         name: 'Member role',
         classes: ['db-team-role'],
-        components: 'Principal Product Designer',
+        attributes: { 'data-db-field': 'role' },
+        components: presetRecord.role,
       },
-      buildSocialLinksRowComponent(),
+      buildMarketingSocialLinksRecord(['linkedin', 'x', 'email']),
     ],
   },
 ];

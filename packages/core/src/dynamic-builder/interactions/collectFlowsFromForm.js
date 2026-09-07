@@ -1,13 +1,21 @@
+import convertSecondsToMilliseconds from './convertSecondsToMilliseconds.js';
 import getFlowActionRecords from './getFlowActionRecords.js';
 import getFlowTriggerRecords from './getFlowTriggerRecords.js';
+
+const readFieldElementValue = (fieldElement) => {
+  if (fieldElement.type === 'checkbox') return String(fieldElement.checked);
+  if (fieldElement.getAttribute('data-db-flow-unit') === 'seconds') {
+    return convertSecondsToMilliseconds(fieldElement.value);
+  }
+  return String(fieldElement.value || '');
+};
 
 const readFieldValues = (scopeElement, fieldScope) => {
   const collectedValues = {};
   scopeElement.querySelectorAll('[data-db-flow-scope="' + fieldScope + '"]').forEach((fieldElement) => {
     const fieldName = fieldElement.getAttribute('data-db-flow-field');
     if (!fieldName) return;
-    collectedValues[fieldName] =
-      fieldElement.type === 'checkbox' ? String(fieldElement.checked) : String(fieldElement.value || '');
+    collectedValues[fieldName] = readFieldElementValue(fieldElement);
   });
   return collectedValues;
 };

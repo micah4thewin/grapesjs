@@ -16,6 +16,16 @@ const buildIconPickerControlsCss = () => `
   border: none;
   padding: 0.6em 0;
 }
+.gjs-db-icon-current {
+  flex: none;
+  max-width: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gjs-db-icon-picker-help {
+  margin: 0;
+}
 .gjs-db-chip-row {
   display: flex;
   flex-wrap: wrap;
@@ -28,7 +38,7 @@ const buildIconPickerControlsCss = () => `
   background-color: transparent;
   color: var(--gjs-db-muted);
   font-family: var(--gjs-db-font-ui);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   cursor: pointer;
   transition:
     color var(--gjs-db-dur-1) var(--gjs-db-ease-soft),

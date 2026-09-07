@@ -5,8 +5,10 @@ import buildFeaturesMarketingCss from './buildFeaturesMarketingCss.js';
 import buildFooterMarketingCss from './buildFooterMarketingCss.js';
 import buildHeroMarketingCss from './buildHeroMarketingCss.js';
 import buildLogoCloudMarketingCss from './buildLogoCloudMarketingCss.js';
+import buildMarketingLookInvertedCss from './buildMarketingLookInvertedCss.js';
+import buildMarketingLookSurfaceCss from './buildMarketingLookSurfaceCss.js';
 import buildPricingMarketingCss from './buildPricingMarketingCss.js';
-import buildSocialRowMarketingCss from './buildSocialRowMarketingCss.js';
+import buildPricingTierMarketingCss from './buildPricingTierMarketingCss.js';
 import buildStatsMarketingCss from './buildStatsMarketingCss.js';
 import buildTeamMemberMarketingCss from './buildTeamMemberMarketingCss.js';
 import buildTestimonialMarketingCss from './buildTestimonialMarketingCss.js';
@@ -21,10 +23,12 @@ const registerMarketingCanvasStyles = (editor, moduleOptions) => {
     buildLogoCloudMarketingCss(),
     buildStatsMarketingCss(),
     buildPricingMarketingCss(),
-    buildSocialRowMarketingCss(),
+    buildPricingTierMarketingCss(),
     buildTeamMemberMarketingCss(),
     buildContactMarketingCss(),
     buildFooterMarketingCss(),
+    buildMarketingLookSurfaceCss(),
+    buildMarketingLookInvertedCss(),
     extraCssText,
   ].join('\n');
   registerCanvasStyles(editor, 'db-css-marketing-base', marketingCssText);

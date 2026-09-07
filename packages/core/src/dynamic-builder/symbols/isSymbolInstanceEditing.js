@@ -1,6 +1,8 @@
+import getSymbolEditingRegistry from './getSymbolEditingRegistry.js';
+
 const isSymbolInstanceEditing = (instanceComponent) => {
-  if (!instanceComponent || typeof instanceComponent.getAttributes !== 'function') return false;
-  return instanceComponent.getAttributes()['data-db-symbol-editing'] === 'true';
+  if (!instanceComponent || !instanceComponent.cid) return false;
+  return getSymbolEditingRegistry(instanceComponent.em)[instanceComponent.cid] === true;
 };
 
 export default isSymbolInstanceEditing;

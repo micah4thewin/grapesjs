@@ -1,31 +1,39 @@
+import buildTraitAriaLabelAttribute from './buildTraitAriaLabelAttribute.js';
 import getIconMarkup from '../support/getIconMarkup.js';
 import openIconPickerModal from '../icons/openIconPickerModal.js';
-import resolveTraitInnerElement from './resolveTraitInnerElement.js';
-import splitIconNameWords from '../icons/splitIconNameWords.js';
+import refreshTraitView from './refreshTraitView.js';
+import renderIconTraitPreview from './renderIconTraitPreview.js';
+import writeComponentAttributeValue from './writeComponentAttributeValue.js';
+
+const readStoredIconName = (trait, component) => {
+  const attributeRecord = component && component.getAttributes ? component.getAttributes() : {};
+  return String(attributeRecord[trait.get('name')] || trait.getValue() || '');
+};
 
 const createIconPickerTraitDefinition = (editor) => ({
   eventCapture: ['click'],
-  createInput: () =>
+  createInput: ({ trait }) =>
     [
       '<div class="gjs-db-field gjs-db-trait-icon">',
-      '<span class="gjs-db-trait-icon-preview" data-db-icon-preview></span>',
-      '<button type="button" class="gjs-db-button gjs-db-trait-icon-choose" data-db-icon-open>',
+      '<span class="gjs-db-trait-icon-preview" data-db-icon-preview aria-hidden="true"></span>',
+      `<button type="button" class="gjs-db-button gjs-db-trait-icon-choose" data-db-icon-open${buildTraitAriaLabelAttribute(trait, '- choose icon')}>`,
       '<span data-db-icon-current>Choose icon</span>',
       getIconMarkup('search', { size: 14 }),
       '</button>',
       '</div>',
     ].join(''),
-  onEvent: ({ trait, event }) => {
+  onEvent: ({ trait, component, event }) => {
     const eventTarget = event && event.target;
     if (!eventTarget || !eventTarget.closest || !eventTarget.closest('[data-db-icon-open]')) return;
-    openIconPickerModal(editor, String(trait.getValue() || ''), (chosenIconName) => trait.set('value', chosenIconName));
+    openIconPickerModal(editor, readStoredIconName(trait, component), (chosenIconName) => {
+      if (!chosenIconName) return;
+      writeComponentAttributeValue(component, trait.get('name'), chosenIconName);
+      trait.set('value', chosenIconName);
+      refreshTraitView(trait);
+    });
   },
-  onUpdate: ({ trait, elInput }) => {
-    const iconName = String(trait.getValue() || '');
-    const previewElement = resolveTraitInnerElement(elInput, '[data-db-icon-preview]');
-    const labelElement = resolveTraitInnerElement(elInput, '[data-db-icon-current]');
-    if (previewElement) previewElement.innerHTML = iconName ? getIconMarkup(iconName, { size: 20 }) : '';
-    if (labelElement) labelElement.textContent = iconName ? splitIconNameWords(iconName) : 'Choose icon';
+  onUpdate: ({ trait, component, elInput }) => {
+    renderIconTraitPreview(elInput, readStoredIconName(trait, component));
   },
 });
 

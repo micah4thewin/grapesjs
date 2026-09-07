@@ -1,8 +1,9 @@
 import activateViewsPanelButton from './activateViewsPanelButton.js';
+import getViewsPanelButtonIds from './getViewsPanelButtonIds.js';
 
 const runShellCommand = (editor, commandId) => {
   if (!commandId) return;
-  const viewSwitchCommandIds = ['core:open-styles', 'core:open-traits', 'core:open-layers', 'core:open-blocks'];
+  const viewSwitchCommandIds = Object.keys(getViewsPanelButtonIds());
   if (viewSwitchCommandIds.indexOf(commandId) >= 0 && activateViewsPanelButton(editor, commandId)) return;
   const commandsModule = editor.Commands;
   if (!commandsModule.has(commandId)) return;

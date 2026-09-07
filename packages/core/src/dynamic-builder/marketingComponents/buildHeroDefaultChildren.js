@@ -1,10 +1,11 @@
-import buildMarketingPlaceholderUri from './buildMarketingPlaceholderUri.js';
+import buildHeroMediaRecord from './buildHeroMediaRecord.js';
 
 const buildHeroDefaultChildren = () => [
   {
     tagName: 'div',
     name: 'Hero inner',
     classes: ['db-hero-inner'],
+    attributes: { 'data-db-hero-inner': 'true' },
     components: [
       {
         tagName: 'div',
@@ -14,16 +15,16 @@ const buildHeroDefaultChildren = () => [
           {
             tagName: 'span',
             type: 'text',
-            name: 'Hero eyebrow',
+            name: 'Small label',
             classes: ['db-hero-eyebrow'],
-            components: 'Just launched',
+            components: 'Welcome',
           },
           {
             tagName: 'h1',
             type: 'text',
             name: 'Hero title',
             classes: ['db-hero-title'],
-            components: 'Build landing pages that convert',
+            components: 'Grow your business with confidence',
           },
           {
             tagName: 'p',
@@ -31,31 +32,12 @@ const buildHeroDefaultChildren = () => [
             name: 'Hero lead',
             classes: ['db-hero-lead'],
             components:
-              'Everything you need to design, publish, and grow a marketing site: flexible sections, accessible defaults, and performance built in.',
+              'Tell visitors what you offer, who it is for, and why they should choose you. Keep it short and friendly.',
           },
           { type: 'db-button-group' },
         ],
       },
-      {
-        tagName: 'figure',
-        name: 'Hero media',
-        classes: ['db-hero-media'],
-        components: [
-          {
-            type: 'db-image',
-            classes: ['db-image', 'db-hero-image'],
-            attributes: {
-              src: buildMarketingPlaceholderUri('hero'),
-              alt: 'Product interface preview',
-              loading: 'eager',
-              decoding: 'async',
-              fetchpriority: 'high',
-              width: '960',
-              height: '640',
-            },
-          },
-        ],
-      },
+      buildHeroMediaRecord(),
     ],
   },
 ];

@@ -1,3 +1,4 @@
+import countFindingsBySeverity from '../audits/countFindingsBySeverity.js';
 import runAccessibilityAudit from '../audits/runAccessibilityAudit.js';
 import runPerformanceAudit from '../audits/runPerformanceAudit.js';
 import runSeoAudit from '../audits/runSeoAudit.js';
@@ -18,12 +19,11 @@ const runPublishAuditSummaries = (editor) => {
     } catch (auditError) {
       findings = [];
     }
-    const severityCounts = { error: 0, warning: 0, info: 0 };
-    findings.forEach((findingRecord) => {
-      const severityValue = findingRecord && findingRecord.severity;
-      if (severityCounts[severityValue] !== undefined) severityCounts[severityValue] += 1;
-    });
-    return { ...auditDefinition, severityCounts, findingCount: findings.length, commandAvailable: true };
+    return {
+      auditId: auditDefinition.auditId,
+      auditLabel: auditDefinition.auditLabel,
+      severityCounts: countFindingsBySeverity(findings),
+    };
   });
 };
 

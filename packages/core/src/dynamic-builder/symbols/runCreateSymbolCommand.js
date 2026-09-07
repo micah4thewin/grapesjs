@@ -1,6 +1,5 @@
 import createSymbolFromComponent from './createSymbolFromComponent.js';
 import openSymbolNameModal from './openSymbolNameModal.js';
-import registerSymbolBlocks from './registerSymbolBlocks.js';
 import renderSymbolInstance from './renderSymbolInstance.js';
 import replaceComponentWithSymbolInstance from './replaceComponentWithSymbolInstance.js';
 import resolveComponentDisplayName from './resolveComponentDisplayName.js';
@@ -29,7 +28,6 @@ const runCreateSymbolCommand = (editor) => {
         renderSymbolInstance(editor, instanceComponent);
         editor.select(instanceComponent);
       }
-      registerSymbolBlocks(editor);
       showToastNotice(editor, '"' + symbolRecord.name + '" is now reusable.', { kind: 'success' });
     },
   });

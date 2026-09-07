@@ -1,9 +1,10 @@
 import buildBlockDefinition from './buildBlockDefinition.js';
+import buildContactFormSectionContent from './buildContactFormSectionContent.js';
 import buildFormFieldContentRecord from './buildFormFieldContentRecord.js';
 import buildNewsletterSignupContent from './buildNewsletterSignupContent.js';
 
 const buildFormBlocks = () => [
-  buildBlockDefinition('db-contact-form', 'Contact form', 'Forms', 'form', { type: 'db-form' }),
+  buildBlockDefinition('db-contact-form', 'Contact form', 'Forms', 'form', buildContactFormSectionContent()),
   buildBlockDefinition(
     'db-newsletter-signup',
     'Newsletter signup',
@@ -14,12 +15,12 @@ const buildFormBlocks = () => [
   buildBlockDefinition('db-form-field', 'Form field', 'Forms', 'edit', { type: 'db-form-field' }),
   buildBlockDefinition(
     'db-select-field',
-    'Select field',
+    'Dropdown field',
     'Forms',
     'chevronDown',
     buildFormFieldContentRecord('Topic', { type: 'db-select' }, {}),
   ),
-  buildBlockDefinition('db-radio-group', 'Radio group', 'Forms', 'check', { type: 'db-radio-group' }),
+  buildBlockDefinition('db-radio-group', 'Pick-one choices', 'Forms', 'check', { type: 'db-radio-group' }),
   buildBlockDefinition(
     'db-file-upload-field',
     'File upload field',

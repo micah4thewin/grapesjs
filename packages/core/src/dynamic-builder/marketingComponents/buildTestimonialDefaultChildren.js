@@ -1,23 +1,31 @@
 import buildMarketingPlaceholderUri from './buildMarketingPlaceholderUri.js';
+import buildTestimonialRatingMarkup from './buildTestimonialRatingMarkup.js';
 
-const buildTestimonialDefaultChildren = () => [
+const buildTestimonialDefaultChildren = (presetRecord) => [
+  {
+    tagName: 'span',
+    name: 'Star rating',
+    classes: ['db-testimonial-rating'],
+    attributes: { 'data-db-testimonial-rating': 'true', role: 'img', 'aria-label': 'No rating' },
+    components: buildTestimonialRatingMarkup(0),
+  },
   {
     tagName: 'blockquote',
-    name: 'Testimonial quote',
+    name: 'Quote',
     classes: ['db-testimonial-quote'],
     components: [
       {
         tagName: 'p',
         type: 'text',
         name: 'Quote text',
-        components:
-          '\u201CWe rebuilt our whole marketing site in a week. The defaults are so good that the first draft already looked like the finished product.\u201D',
+        attributes: { 'data-db-field': 'quote' },
+        components: presetRecord.quote,
       },
     ],
   },
   {
     tagName: 'figcaption',
-    name: 'Testimonial caption',
+    name: 'Who said it',
     classes: ['db-testimonial-caption'],
     components: [
       {
@@ -25,11 +33,12 @@ const buildTestimonialDefaultChildren = () => [
         classes: ['db-image', 'db-testimonial-avatar'],
         attributes: {
           src: buildMarketingPlaceholderUri('avatar'),
-          alt: 'Portrait of Maya Chen',
+          alt: 'Portrait of ' + presetRecord.name,
           loading: 'lazy',
           decoding: 'async',
           width: '96',
           height: '96',
+          'data-db-field': 'portrait',
         },
       },
       {
@@ -42,14 +51,23 @@ const buildTestimonialDefaultChildren = () => [
             type: 'text',
             name: 'Name',
             classes: ['db-testimonial-name'],
-            components: 'Maya Chen',
+            attributes: { 'data-db-field': 'name' },
+            components: presetRecord.name,
           },
           {
             tagName: 'span',
             type: 'text',
             name: 'Role',
             classes: ['db-testimonial-role'],
-            components: 'Head of Growth, Northwind',
+            attributes: { 'data-db-field': 'role' },
+            components: presetRecord.role,
+          },
+          {
+            tagName: 'span',
+            name: 'Review source',
+            classes: ['db-testimonial-source'],
+            attributes: { 'data-db-testimonial-source': 'true' },
+            components: '',
           },
         ],
       },

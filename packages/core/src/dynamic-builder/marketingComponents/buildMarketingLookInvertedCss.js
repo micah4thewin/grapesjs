@@ -24,7 +24,7 @@ const buildMarketingLookInvertedCss = () => {
     buildScopedCssRule(lookScopes.inverted, ['.db-hero-eyebrow'], 'opacity: 0.85;'),
     buildScopedCssRule(
       lookScopes.inverted,
-      ['.db-card-link', '.db-contact-link', '.db-footer-link'],
+      ['.db-button-link', '.db-button[data-db-variant=link]', '.db-contact-link'],
       'color: inherit; text-decoration: underline; text-underline-offset: 0.2em;',
     ),
     buildScopedCssRule(
@@ -55,23 +55,37 @@ const buildMarketingLookInvertedCss = () => {
     ),
     buildScopedCssRule(
       lookScopes.inverted,
-      ['.db-button[data-db-variant=secondary]'],
+      ['.db-button-secondary', '.db-button[data-db-variant=secondary]'],
       'background: rgba(255, 255, 255, 0.14); border-color: ' + translucentLine + '; color: inherit;',
     ),
     buildScopedCssRule(
       lookScopes.inverted,
-      ['.db-button[data-db-variant=outline]', '.db-button[data-db-variant=ghost]'],
+      [
+        '.db-button-outline',
+        '.db-button-ghost',
+        '.db-button[data-db-variant=outline]',
+        '.db-button[data-db-variant=ghost]',
+      ],
       'background: transparent; border-color: currentColor; color: inherit;',
     ),
     buildScopedCssRule(
       lookScopes.inverted,
-      ['.db-button[data-db-variant=outline]:hover', '.db-button[data-db-variant=ghost]:hover'],
+      [
+        '.db-button-outline:hover',
+        '.db-button-ghost:hover',
+        '.db-button[data-db-variant=outline]:hover',
+        '.db-button[data-db-variant=ghost]:hover',
+      ],
       'background: rgba(255, 255, 255, 0.12);',
     ),
-    buildScopedCssRule(lookScopes.inverted, ['.db-button[data-db-variant=ghost]'], 'border-color: transparent;'),
+    buildScopedCssRule(
+      lookScopes.inverted,
+      ['.db-button-ghost', '.db-button[data-db-variant=ghost]'],
+      'border-color: transparent;',
+    ),
     buildScopedCssRule(
       lookScopes.brand,
-      ['.db-button[data-db-variant=primary]', '.db-pricing-toggle-button[aria-pressed=true]'],
+      ['.db-button-primary', '.db-button[data-db-variant=primary]', '.db-pricing-toggle-button[aria-pressed=true]'],
       'background: var(--db-color-brand-contrast, #ffffff); border-color: var(--db-color-brand-contrast, #ffffff); color: var(--db-color-brand, #4f46e5);',
     ),
     buildScopedCssRule(

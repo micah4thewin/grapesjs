@@ -1,48 +1,37 @@
-import getIconMarkup from '../support/getIconMarkup.js';
+import buildCarouselControlChild from './buildCarouselControlChild.js';
+import buildCarouselDotChildren from './buildCarouselDotChildren.js';
+import getLockedChildProps from './getLockedChildProps.js';
 
-const buildCarouselDefaultChildren = () => {
-  const buildDotButton = (slideNumber) => ({
-    tagName: 'button',
-    classes: ['db-carousel-dot'],
+const buildCarouselDefaultChildren = () => [
+  {
+    tagName: 'div',
+    name: 'Slides',
+    classes: ['db-carousel-track'],
     draggable: false,
-    droppable: false,
-    attributes: { type: 'button', 'aria-label': 'Go to slide ' + slideNumber },
-  });
-  const buildControlButton = (directionKey, labelText, iconName) => ({
-    tagName: 'button',
-    classes: ['db-carousel-control', 'db-carousel-' + directionKey],
-    draggable: false,
-    droppable: false,
-    attributes: { type: 'button', 'aria-label': labelText, ['data-db-carousel-' + directionKey]: 'true' },
-    components: getIconMarkup(iconName, { size: 18 }),
-  });
-  return [
-    {
-      tagName: 'div',
-      classes: ['db-carousel-track'],
-      draggable: false,
-      droppable: '[data-db-type=carousel-slide]',
-      attributes: { 'data-db-carousel-track': 'true' },
-      components: [{ type: 'db-carousel-slide' }, { type: 'db-carousel-slide' }, { type: 'db-carousel-slide' }],
-    },
-    buildControlButton('prev', 'Previous slide', 'arrowLeft'),
-    buildControlButton('next', 'Next slide', 'arrowRight'),
-    {
-      tagName: 'div',
-      classes: ['db-carousel-dots'],
-      draggable: false,
-      droppable: false,
-      attributes: { 'data-db-carousel-dots': 'true' },
-      components: [buildDotButton(1), buildDotButton(2), buildDotButton(3)],
-    },
-    {
-      tagName: 'p',
-      classes: ['db-carousel-status'],
-      draggable: false,
-      droppable: false,
-      attributes: { 'data-db-carousel-status': 'true', 'aria-live': 'polite' },
-    },
-  ];
-};
+    droppable: '[data-db-type=carousel-slide]',
+    removable: false,
+    copyable: false,
+    attributes: { 'data-db-carousel-track': 'true' },
+    components: [{ type: 'db-carousel-slide' }, { type: 'db-carousel-slide' }, { type: 'db-carousel-slide' }],
+  },
+  buildCarouselControlChild('prev', 'Previous slide', ['arrowLeft']),
+  buildCarouselControlChild('next', 'Next slide', ['arrowRight']),
+  buildCarouselControlChild('pause', 'Pause slides', ['pauseCircle', 'play'], { 'aria-pressed': 'false' }),
+  {
+    tagName: 'div',
+    name: 'Dots',
+    classes: ['db-carousel-dots'],
+    ...getLockedChildProps(),
+    attributes: { 'data-db-carousel-dots': 'true' },
+    components: buildCarouselDotChildren(3),
+  },
+  {
+    tagName: 'p',
+    name: 'Status',
+    classes: ['db-carousel-status'],
+    ...getLockedChildProps(),
+    attributes: { 'data-db-carousel-status': 'true', 'aria-live': 'polite' },
+  },
+];
 
 export default buildCarouselDefaultChildren;

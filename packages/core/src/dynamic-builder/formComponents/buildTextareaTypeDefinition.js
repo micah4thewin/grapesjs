@@ -4,7 +4,7 @@ const buildTextareaTypeDefinition = (formTextDefaults) => ({
   model: {
     defaults: {
       tagName: 'textarea',
-      name: 'Textarea',
+      name: 'Long text box',
       draggable: '[data-db-type=form-field]',
       droppable: false,
       classes: ['db-field-control', 'db-textarea'],
@@ -16,9 +16,10 @@ const buildTextareaTypeDefinition = (formTextDefaults) => ({
         placeholder: formTextDefaults.textareaPlaceholderText,
       },
       traits: [
-        { type: 'text', name: 'name', label: 'Field name' },
-        { type: 'text', name: 'placeholder', label: 'Placeholder' },
-        { type: 'number', name: 'rows', label: 'Rows', min: 2, max: 30 },
+        { type: 'text', name: 'placeholder', label: 'Hint shown inside the box' },
+        { type: 'number', name: 'rows', label: 'Visible lines', min: 2, max: 30 },
+        { type: 'number', name: 'maxlength', label: 'Maximum characters', min: 1 },
+        { type: 'text', name: 'name', label: 'Field name', placeholder: 'message' },
       ],
     },
   },

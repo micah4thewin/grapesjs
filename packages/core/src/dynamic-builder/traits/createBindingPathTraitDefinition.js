@@ -1,3 +1,4 @@
+import buildTraitAriaLabelAttribute from './buildTraitAriaLabelAttribute.js';
 import escapeHtmlText from '../support/escapeHtmlText.js';
 import collectBindingPathEntries from './collectBindingPathEntries.js';
 import createValueTraitDefinition from './createValueTraitDefinition.js';
@@ -11,7 +12,7 @@ const createBindingPathTraitDefinition = (editor, moduleOptions) =>
     const placeholderValue = escapeHtmlText(trait.get('placeholder') || '{{db:source.field}}');
     return [
       '<div class="gjs-db-field">',
-      `<input type="text" class="gjs-db-field-input" list="${datalistId}" placeholder="${placeholderValue}">`,
+      `<input type="text" class="gjs-db-field-input" list="${datalistId}" placeholder="${placeholderValue}"${buildTraitAriaLabelAttribute(trait)}>`,
       `<datalist id="${datalistId}">${optionMarkup}</datalist>`,
       '</div>',
     ].join('');

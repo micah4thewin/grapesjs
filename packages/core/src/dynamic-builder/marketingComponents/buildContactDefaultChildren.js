@@ -1,20 +1,32 @@
-const buildContactDefaultChildren = () => {
+import buildDirectionsUrl from './buildDirectionsUrl.js';
+import buildPhoneHref from './buildPhoneHref.js';
+
+const buildContactDefaultChildren = (contactRecord) => {
   const hoursPresets = [
     ['Monday to Friday', '9:00 - 18:00'],
     ['Saturday', '10:00 - 16:00'],
     ['Sunday', 'Closed'],
   ];
+  const buildContactLink = (fieldName, linkText, linkHref, linkName, traitLabel) => ({
+    tagName: 'p',
+    name: linkName,
+    classes: ['db-contact-line'],
+    components: [
+      {
+        type: 'link',
+        name: linkName + ' link',
+        classes: ['db-contact-link'],
+        attributes: { href: linkHref, 'data-db-field': fieldName },
+        components: linkText,
+        traits: [{ type: 'db-url', name: 'href', label: traitLabel }],
+      },
+    ],
+  });
   return [
-    {
-      tagName: 'h3',
-      type: 'text',
-      name: 'Contact title',
-      classes: ['db-contact-title'],
-      components: 'Visit our studio',
-    },
+    { tagName: 'h3', type: 'text', name: 'Contact title', classes: ['db-contact-title'], components: 'Visit us' },
     {
       tagName: 'address',
-      name: 'Contact details',
+      name: 'Address',
       classes: ['db-contact-address'],
       components: [
         {
@@ -22,36 +34,23 @@ const buildContactDefaultChildren = () => {
           type: 'text',
           name: 'Street address',
           classes: ['db-contact-line'],
-          components: '480 Market Street, Suite 210, San Francisco, CA 94104',
+          attributes: { 'data-db-field': 'address' },
+          components: contactRecord.address,
         },
-        {
-          tagName: 'p',
-          classes: ['db-contact-line'],
-          components: [
-            {
-              tagName: 'a',
-              name: 'Phone link',
-              classes: ['db-contact-link'],
-              attributes: { href: 'tel:+14155550137' },
-              components: '+1 (415) 555-0137',
-              traits: [{ type: 'db-url', name: 'href', label: 'Phone link (tel:)' }],
-            },
-          ],
-        },
-        {
-          tagName: 'p',
-          classes: ['db-contact-line'],
-          components: [
-            {
-              tagName: 'a',
-              name: 'Email link',
-              classes: ['db-contact-link'],
-              attributes: { href: 'mailto:hello@example.com' },
-              components: 'hello@example.com',
-              traits: [{ type: 'db-url', name: 'href', label: 'Email link (mailto:)' }],
-            },
-          ],
-        },
+        buildContactLink(
+          'phone',
+          contactRecord.phone,
+          buildPhoneHref(contactRecord.phone),
+          'Phone',
+          'Phone link (tel:)',
+        ),
+        buildContactLink(
+          'email',
+          contactRecord.email,
+          'mailto:' + contactRecord.email,
+          'Email',
+          'Email link (mailto:)',
+        ),
       ],
     },
     {
@@ -63,17 +62,22 @@ const buildContactDefaultChildren = () => {
         name: 'Hours row',
         classes: ['db-contact-hours-row'],
         components: [
-          { tagName: 'dt', type: 'text', components: dayText },
-          { tagName: 'dd', type: 'text', components: hoursText },
+          { tagName: 'dt', type: 'text', name: 'Day', components: dayText },
+          { tagName: 'dd', type: 'text', name: 'Hours', components: hoursText },
         ],
       })),
     },
     {
       type: 'db-button',
-      classes: ['db-button', 'db-contact-directions'],
+      name: 'Directions button',
+      classes: ['db-button', 'db-button-secondary', 'db-button-md', 'db-contact-directions'],
       attributes: {
         'data-db-variant': 'secondary',
-        href: 'https://maps.google.com/?q=480+Market+Street+San+Francisco',
+        'data-db-size': 'md',
+        'data-db-field': 'directions',
+        href: buildDirectionsUrl(contactRecord.address),
+        target: '_blank',
+        rel: 'noopener',
       },
       components: 'Get directions',
     },

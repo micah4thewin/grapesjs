@@ -9,19 +9,17 @@ const buildCalloutContentCss = () => `
   border-left: 4px solid var(--db-color-brand, #4f46e5);
   border-radius: var(--db-radius-md, 0.5rem);
   color: var(--db-color-text, #111827);
+  text-align: left;
 }
 .db-callout-icon {
   display: inline-flex;
   flex: 0 0 auto;
   margin-top: 0.1em;
+  line-height: 0;
   color: var(--db-color-brand, #4f46e5);
 }
-.db-callout-glyph {
-  display: none;
-  line-height: 0;
-}
-.db-callout[data-db-variant='info'] .db-callout-glyph[data-db-glyph='info'] {
-  display: inline-flex;
+.db-callout-icon svg {
+  display: block;
 }
 .db-callout[data-db-variant='success'] {
   border-left-color: var(--db-color-success, #15803d);
@@ -29,26 +27,17 @@ const buildCalloutContentCss = () => `
 .db-callout[data-db-variant='success'] .db-callout-icon {
   color: var(--db-color-success, #15803d);
 }
-.db-callout[data-db-variant='success'] .db-callout-glyph[data-db-glyph='success'] {
-  display: inline-flex;
-}
 .db-callout[data-db-variant='warning'] {
   border-left-color: var(--db-color-warning, #b45309);
 }
 .db-callout[data-db-variant='warning'] .db-callout-icon {
   color: var(--db-color-warning, #b45309);
 }
-.db-callout[data-db-variant='warning'] .db-callout-glyph[data-db-glyph='warning'] {
-  display: inline-flex;
-}
 .db-callout[data-db-variant='error'] {
   border-left-color: var(--db-color-danger, #b91c1c);
 }
 .db-callout[data-db-variant='error'] .db-callout-icon {
   color: var(--db-color-danger, #b91c1c);
-}
-.db-callout[data-db-variant='error'] .db-callout-glyph[data-db-glyph='error'] {
-  display: inline-flex;
 }
 .db-callout-content {
   flex: 1 1 auto;
@@ -60,6 +49,21 @@ const buildCalloutContentCss = () => `
   font-size: var(--db-type-base, 1rem);
   line-height: 1.4;
   color: var(--db-color-text, #111827);
+}
+.db-callout[data-db-variant='warning'] .db-callout-title::before,
+.db-callout[data-db-variant='error'] .db-callout-title::before {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.db-callout[data-db-variant='warning'] .db-callout-title::before {
+  content: 'Warning: ';
+}
+.db-callout[data-db-variant='error'] .db-callout-title::before {
+  content: 'Error: ';
 }
 .db-callout-body {
   margin: 0;

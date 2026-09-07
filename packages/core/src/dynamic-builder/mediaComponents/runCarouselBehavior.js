@@ -5,63 +5,70 @@ const runCarouselBehavior = () => {
     const trackElement = carouselElement.querySelector('[data-db-carousel-track]');
     const dotsElement = carouselElement.querySelector('[data-db-carousel-dots]');
     const statusElement = carouselElement.querySelector('[data-db-carousel-status]');
+    const pauseButton = carouselElement.querySelector('[data-db-carousel-pause]');
     if (!trackElement) return;
-    const carouselState = { index: 0, timer: null, paused: false, pointerStart: null };
+    const carouselState = { index: 0, timer: null, hovered: false, stopped: false, pointerStart: null };
+    const readAttribute = (attributeName, fallbackValue) =>
+      carouselElement.getAttribute(attributeName) || fallbackValue;
+    const isEditing = () => document.body.hasAttribute('data-db-editing');
     const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const loopEnabled = () => readAttribute('data-db-loop', 'true') !== 'false';
     const readSlides = () => Array.prototype.slice.call(trackElement.children);
-    const announceSlide = () =>
-      statusElement &&
-      (statusElement.textContent = 'Slide ' + (carouselState.index + 1) + ' of ' + readSlides().length);
-    const renderDots = () => {
-      if (!dotsElement) return;
-      const slideCount = readSlides().length;
-      while (dotsElement.children.length > slideCount) dotsElement.removeChild(dotsElement.lastChild);
-      while (dotsElement.children.length < slideCount) {
-        const dotButton = document.createElement('button');
-        dotButton.type = 'button';
-        dotButton.className = 'db-carousel-dot';
-        dotsElement.appendChild(dotButton);
-      }
-      Array.prototype.forEach.call(dotsElement.children, (dotButton, dotIndex) => {
-        dotButton.setAttribute('aria-label', 'Go to slide ' + (dotIndex + 1));
-        if (dotIndex === carouselState.index) dotButton.setAttribute('aria-current', 'true');
-        else dotButton.removeAttribute('aria-current');
+    const labelSlides = () => {
+      const slideList = readSlides();
+      slideList.forEach((slideElement, slideIndex) => {
+        const currentLabel = slideElement.getAttribute('aria-label');
+        if (!currentLabel || currentLabel === 'Media slide')
+          slideElement.setAttribute('aria-label', 'Slide ' + (slideIndex + 1) + ' of ' + slideList.length);
       });
+      if (statusElement) statusElement.textContent = 'Slide ' + (carouselState.index + 1) + ' of ' + slideList.length;
+    };
+    const renderDots = () =>
+      dotsElement &&
+      Array.prototype.forEach.call(dotsElement.children, (dotButton, dotIndex) =>
+        dotButton.setAttribute('aria-current', dotIndex === carouselState.index ? 'true' : 'false'),
+      );
+    const scrollToCurrent = (scrollBehavior) => {
+      const targetLeft = carouselState.index * trackElement.clientWidth;
+      if (trackElement.scrollTo) trackElement.scrollTo({ left: targetLeft, behavior: scrollBehavior });
+      else trackElement.scrollLeft = targetLeft;
     };
     const goToSlide = (targetIndex) => {
-      const slideList = readSlides();
-      if (!slideList.length) return;
-      const loopEnabled = carouselElement.getAttribute('data-db-loop') !== 'false';
-      const boundedIndex = Math.max(0, Math.min(slideList.length - 1, targetIndex));
-      const nextIndex = loopEnabled ? (targetIndex + slideList.length) % slideList.length : boundedIndex;
-      carouselState.index = nextIndex;
-      const scrollBehavior = prefersReducedMotion() ? 'auto' : 'smooth';
-      trackElement.scrollTo({ left: nextIndex * trackElement.clientWidth, behavior: scrollBehavior });
+      const slideCount = readSlides().length;
+      if (!slideCount) return;
+      const boundedIndex = Math.max(0, Math.min(slideCount - 1, targetIndex));
+      carouselState.index = loopEnabled() ? (targetIndex + slideCount) % slideCount : boundedIndex;
+      scrollToCurrent(prefersReducedMotion() ? 'auto' : 'smooth');
       renderDots();
-      announceSlide();
+      labelSlides();
     };
+    const autoplayAllowed = () =>
+      !carouselState.stopped && !carouselState.hovered && !document.hidden && !isEditing() && !prefersReducedMotion();
     const scheduleAutoplay = () => {
       window.clearTimeout(carouselState.timer);
-      const intervalValue = parseInt(carouselElement.getAttribute('data-db-interval') || '5000', 10);
-      const intervalMs = Math.max(2000, intervalValue || 5000);
+      if (readAttribute('data-db-autoplay', 'false') !== 'true') return;
+      const intervalMs = Math.max(2000, parseInt(readAttribute('data-db-interval', '5000'), 10) || 5000);
       carouselState.timer = window.setTimeout(() => {
-        const autoplayEnabled = carouselElement.getAttribute('data-db-autoplay') === 'true';
-        if (autoplayEnabled && !carouselState.paused && !prefersReducedMotion())
-          goToSlide((carouselState.index + 1) % readSlides().length);
+        const onLastSlide = carouselState.index >= readSlides().length - 1;
+        if (autoplayAllowed() && (loopEnabled() || !onLastSlide)) goToSlide(carouselState.index + 1);
         scheduleAutoplay();
       }, intervalMs);
     };
-    const prevButton = carouselElement.querySelector('[data-db-carousel-prev]');
-    const nextButton = carouselElement.querySelector('[data-db-carousel-next]');
-    if (prevButton) prevButton.addEventListener('click', () => goToSlide(carouselState.index - 1));
-    if (nextButton) nextButton.addEventListener('click', () => goToSlide(carouselState.index + 1));
-    if (dotsElement)
-      dotsElement.addEventListener('click', (clickEvent) => {
-        const clickTarget = clickEvent.target;
-        const dotButton = clickTarget && clickTarget.closest ? clickTarget.closest('.db-carousel-dot') : null;
-        if (!dotButton) return;
-        goToSlide(Array.prototype.indexOf.call(dotsElement.children, dotButton));
-      });
+    const wireClick = (targetElement, handleClick) =>
+      targetElement && targetElement.addEventListener('click', handleClick);
+    const setHovered = (isHovered) => () => (carouselState.hovered = isHovered);
+    wireClick(carouselElement.querySelector('[data-db-carousel-prev]'), () => goToSlide(carouselState.index - 1));
+    wireClick(carouselElement.querySelector('[data-db-carousel-next]'), () => goToSlide(carouselState.index + 1));
+    wireClick(pauseButton, () => {
+      carouselState.stopped = !carouselState.stopped;
+      pauseButton.setAttribute('aria-pressed', carouselState.stopped ? 'true' : 'false');
+      pauseButton.setAttribute('aria-label', carouselState.stopped ? 'Play slides' : 'Pause slides');
+    });
+    wireClick(dotsElement, (clickEvent) => {
+      const dotButton =
+        clickEvent.target && clickEvent.target.closest ? clickEvent.target.closest('.db-carousel-dot') : null;
+      if (dotButton) goToSlide(Array.prototype.indexOf.call(dotsElement.children, dotButton));
+    });
     carouselElement.addEventListener('keydown', (keyEvent) => {
       if (keyEvent.key !== 'ArrowLeft' && keyEvent.key !== 'ArrowRight') return;
       keyEvent.preventDefault();
@@ -69,19 +76,24 @@ const runCarouselBehavior = () => {
     });
     trackElement.addEventListener('pointerdown', (pointerEvent) => (carouselState.pointerStart = pointerEvent.clientX));
     trackElement.addEventListener('pointerup', (pointerEvent) => {
-      if (carouselState.pointerStart === null) return;
-      const pointerDelta = pointerEvent.clientX - carouselState.pointerStart;
+      const pointerDelta = carouselState.pointerStart === null ? 0 : pointerEvent.clientX - carouselState.pointerStart;
       carouselState.pointerStart = null;
-      if (pointerDelta > 40) goToSlide(carouselState.index - 1);
-      if (pointerDelta < -40) goToSlide(carouselState.index + 1);
+      if (isEditing() || Math.abs(pointerDelta) < 40) return;
+      goToSlide(pointerDelta > 0 ? carouselState.index - 1 : carouselState.index + 1);
     });
     trackElement.addEventListener('pointercancel', () => (carouselState.pointerStart = null));
-    carouselElement.addEventListener('mouseenter', () => (carouselState.paused = true));
-    carouselElement.addEventListener('mouseleave', () => (carouselState.paused = false));
-    carouselElement.addEventListener('focusin', () => (carouselState.paused = true));
-    carouselElement.addEventListener('focusout', () => (carouselState.paused = false));
+    carouselElement.addEventListener('mouseenter', setHovered(true));
+    carouselElement.addEventListener('mouseleave', setHovered(false));
+    carouselElement.addEventListener('focusin', setHovered(true));
+    carouselElement.addEventListener('focusout', setHovered(false));
+    window.addEventListener('resize', () => scrollToCurrent('auto'));
+    if (window.MutationObserver)
+      new MutationObserver(scheduleAutoplay).observe(carouselElement, {
+        attributes: true,
+        attributeFilter: ['data-db-autoplay', 'data-db-interval'],
+      });
     renderDots();
-    announceSlide();
+    labelSlides();
     scheduleAutoplay();
   });
 };

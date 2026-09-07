@@ -1,29 +1,22 @@
+import buildCallToActionSection from './buildCallToActionSection.js';
+import buildHeadingContentRecord from './buildHeadingContentRecord.js';
+import buildSectionContentRecord from './buildSectionContentRecord.js';
+import buildTestimonialSampleRecord from './buildTestimonialSampleRecord.js';
+import buildThreeUpSampleColumns from './buildThreeUpSampleColumns.js';
+
 const getLandingTemplateComponents = () => [
   { type: 'db-navbar' },
   { type: 'db-hero' },
-  { type: 'db-features' },
-  { type: 'db-stats' },
-  {
-    type: 'db-section',
-    components: [{ type: 'db-container', components: [{ type: 'db-testimonial' }] }],
-  },
-  {
-    type: 'db-section',
-    attributes: { 'data-db-theme': 'brand' },
-    components: [
-      {
-        type: 'db-container',
-        components: [
-          { type: 'db-heading', components: [{ type: 'textnode', content: 'Ready to get started?' }] },
-          {
-            type: 'db-text',
-            components: [{ type: 'textnode', content: 'Join thousands of happy customers building with us today.' }],
-          },
-          { type: 'db-button-group' },
-        ],
-      },
+  buildSectionContentRecord([{ type: 'db-features' }]),
+  buildSectionContentRecord([{ type: 'db-stats' }], { attributes: { 'data-db-theme': 'light' } }),
+  buildSectionContentRecord(
+    [
+      buildHeadingContentRecord('2', 'What customers say'),
+      buildThreeUpSampleColumns(buildTestimonialSampleRecord, 'Testimonial trio'),
     ],
-  },
+    { centered: true },
+  ),
+  buildCallToActionSection('Ready to get started?', 'Join thousands of happy customers building with us today.'),
   { type: 'db-footer' },
 ];
 

@@ -23,6 +23,14 @@ const buildInlineTextElementCss = () => `
   padding: 0.05em 0.2em;
   border-radius: 0.2em;
 }
+.db-section[data-db-theme='dark'] mark,
+.db-section[data-db-theme='brand'] mark,
+.db-section[data-db-overlay='true'] mark,
+.db-column[data-db-theme='dark'] mark,
+.db-column[data-db-theme='brand'] mark,
+.db-cover mark {
+  color: var(--db-theme-dark-surface, #111827);
+}
 .db-section small,
 .db-prose small {
   font-size: max(0.85em, 0.75rem);

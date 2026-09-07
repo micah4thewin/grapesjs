@@ -39,7 +39,12 @@ const checkTextContrast = (auditContext) => {
       ),
     );
   });
-  const cappedFindings = capAuditFindings(findings, auditContext, 'Contrast', 'more low-contrast text elements were found');
+  const cappedFindings = capAuditFindings(
+    findings,
+    auditContext,
+    'Contrast',
+    'more low-contrast text elements were found',
+  );
   if (unverifiableCount > 0) {
     cappedFindings.push(
       createFindingRecord(

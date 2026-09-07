@@ -1,4 +1,6 @@
+import encodeCanvasToDataUrl from '../photoEditor/encodeCanvasToDataUrl.js';
 import loadImageElementFromFile from './loadImageElementFromFile.js';
+import resolveCompressedImageFormat from './resolveCompressedImageFormat.js';
 
 const compressImageFileToAsset = async (imageFile, maxDimension) => {
   const imageElement = await loadImageElementFromFile(imageFile);
@@ -10,18 +12,15 @@ const compressImageFileToAsset = async (imageFile, maxDimension) => {
   const canvasElement = document.createElement('canvas');
   canvasElement.width = targetWidth;
   canvasElement.height = targetHeight;
-  const drawingContext = canvasElement.getContext('2d');
-  drawingContext.drawImage(imageElement, 0, 0, targetWidth, targetHeight);
-  const keepsTransparency = imageFile.type === 'image/png' || imageFile.type === 'image/svg+xml';
-  const outputDataUrl = keepsTransparency
-    ? canvasElement.toDataURL('image/png')
-    : canvasElement.toDataURL('image/jpeg', 0.82);
+  canvasElement.getContext('2d').drawImage(imageElement, 0, 0, targetWidth, targetHeight);
   return {
-    src: outputDataUrl,
+    src: encodeCanvasToDataUrl(canvasElement, resolveCompressedImageFormat(imageFile.type), 82),
     name: imageFile.name,
     type: 'image',
     width: targetWidth,
     height: targetHeight,
+    sourceWidth,
+    sourceHeight,
   };
 };
 

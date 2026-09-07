@@ -1,3 +1,5 @@
+import buildRepeaterItemInnerMarkup from './buildRepeaterItemInnerMarkup.js';
+
 const buildRepeaterItemTypeDefinition = () => ({
   type: 'db-repeater-item',
   isComponent: (el) =>
@@ -5,15 +7,12 @@ const buildRepeaterItemTypeDefinition = () => ({
   model: {
     defaults: {
       tagName: 'div',
-      name: 'Repeater Item',
+      name: 'Item template',
       draggable: '[data-db-type=repeater]',
       droppable: true,
       classes: ['db-repeater-item'],
       attributes: { 'data-db-type': 'repeater-item', 'data-db-repeater-item': 'true' },
-      components: [
-        '<h4 class="db-repeater-item-heading">{{db:item.name}}</h4>',
-        '<p class="db-repeater-item-body">{{db:item.description}}</p>',
-      ].join(''),
+      components: buildRepeaterItemInnerMarkup(),
     },
   },
 });

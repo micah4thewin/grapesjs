@@ -1,13 +1,14 @@
+import buildBlockDefinition from './buildBlockDefinition.js';
 import getAboutTemplateComponents from './getAboutTemplateComponents.js';
 import getArticleTemplateComponents from './getArticleTemplateComponents.js';
 import getContactTemplateComponents from './getContactTemplateComponents.js';
-import getIconMarkup from '../support/getIconMarkup.js';
 import getLandingTemplateComponents from './getLandingTemplateComponents.js';
 import getLaunchTemplateComponents from './getLaunchTemplateComponents.js';
 import getPortfolioTemplateComponents from './getPortfolioTemplateComponents.js';
 import getPricingTemplateComponents from './getPricingTemplateComponents.js';
 import getServicesTemplateComponents from './getServicesTemplateComponents.js';
 import getSupportTemplateComponents from './getSupportTemplateComponents.js';
+import openTemplateChooserModal from './openTemplateChooserModal.js';
 
 const buildTemplateBlocks = () => {
   const templateEntries = [
@@ -22,12 +23,8 @@ const buildTemplateBlocks = () => {
     ['db-template-article', 'Article page', 'article', getArticleTemplateComponents],
   ];
   return templateEntries.map(([templateId, templateLabel, iconName, buildComponents]) => ({
-    id: templateId,
-    label: templateLabel,
-    category: 'Page templates',
-    media: getIconMarkup(iconName, { size: 28 }),
-    select: true,
-    content: buildComponents(),
+    ...buildBlockDefinition(templateId, templateLabel, 'Page templates', iconName, buildComponents()),
+    onClick: (blockModel, editorInstance) => openTemplateChooserModal(editorInstance, blockModel),
   }));
 };
 

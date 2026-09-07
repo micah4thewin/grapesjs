@@ -1,16 +1,13 @@
-import getBlockPreviewAliases from './getBlockPreviewAliases.js';
 import getBlockPreviewLibrary from './getBlockPreviewLibrary.js';
 import getCategoryPreviewFallbacks from './getCategoryPreviewFallbacks.js';
+import resolveDedicatedPreviewMarkup from './resolveDedicatedPreviewMarkup.js';
 import wrapPreviewSvgMarkup from './wrapPreviewSvgMarkup.js';
 
 const resolveBlockPreviewMarkup = (blockId, categoryName) => {
-  const previewLibrary = getBlockPreviewLibrary();
-  const aliasRecords = getBlockPreviewAliases();
-  const resolvedId = aliasRecords[blockId] || blockId;
-  const directShapes = previewLibrary[resolvedId];
-  if (directShapes) return wrapPreviewSvgMarkup(directShapes);
+  const dedicatedMarkup = resolveDedicatedPreviewMarkup(blockId);
+  if (dedicatedMarkup) return dedicatedMarkup;
   const fallbackId = getCategoryPreviewFallbacks()[categoryName];
-  const fallbackShapes = fallbackId && previewLibrary[fallbackId];
+  const fallbackShapes = fallbackId && getBlockPreviewLibrary()[fallbackId];
   return fallbackShapes ? wrapPreviewSvgMarkup(fallbackShapes) : '';
 };
 

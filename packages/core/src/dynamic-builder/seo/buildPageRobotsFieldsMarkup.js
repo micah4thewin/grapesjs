@@ -2,7 +2,7 @@ import buildSeoCheckboxFieldMarkup from './buildSeoCheckboxFieldMarkup.js';
 
 const buildPageRobotsFieldsMarkup = (pageSeoRecord) =>
   [
-    '<div class="gjs-db-section-title">Robots directives</div>',
+    '<div class="gjs-db-section-title">Search engine visibility</div>',
     buildSeoCheckboxFieldMarkup(
       'noindex',
       'Hide from search results (noindex)',
@@ -26,6 +26,12 @@ const buildPageRobotsFieldsMarkup = (pageSeoRecord) =>
       'No text snippets (nosnippet)',
       'Asks search engines not to show text snippets from this page.',
       pageSeoRecord.nosnippet,
+    ),
+    buildSeoCheckboxFieldMarkup(
+      'sitemapExclude',
+      'Leave out of sitemap.xml',
+      'Keeps the page out of the sitemap without hiding it from search engines. Useful for thank-you and legal pages.',
+      pageSeoRecord.sitemapExclude,
     ),
   ].join('');
 

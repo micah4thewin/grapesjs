@@ -1,0 +1,33 @@
+const buildDesignKitsModalMarkup = () =>
+  [
+    '<div class="gjs-db-form gjs-db-kits">',
+    '<p class="gjs-db-muted">',
+    'A kit swaps the site fonts and colours in one click. Hover or focus a kit to preview it on the page,',
+    ' then click to apply it. Everything stays editable in Design tokens.',
+    '</p>',
+    '<div data-db-kit-grids>',
+    '<section class="gjs-db-kit-section">',
+    '<h3 class="gjs-db-section-title">Built-in kits</h3>',
+    '<div class="gjs-db-kit-grid" role="group" aria-label="Built-in design kits" data-db-kit-grid="builtIn"></div>',
+    '</section>',
+    '<section class="gjs-db-kit-section">',
+    '<h3 class="gjs-db-section-title">My kits</h3>',
+    '<div class="gjs-db-kit-grid" role="group" aria-label="My design kits" data-db-kit-grid="custom"></div>',
+    '<p class="gjs-db-muted" data-db-kit-empty>Save the current look below to reuse it on another site.</p>',
+    '</section>',
+    '</div>',
+    '<div class="gjs-db-kit-save-row">',
+    '<label class="gjs-db-field-label" for="db-kit-name">Save the current look as a kit</label>',
+    '<div class="gjs-db-kit-save-controls">',
+    '<input id="db-kit-name" class="gjs-db-field-input" type="text" autocomplete="off"',
+    ' placeholder="Kit name, for example Client brand" data-db-kit-name />',
+    '<button type="button" class="gjs-db-button gjs-db-button-primary" data-db-kit-save>Save kit</button>',
+    '<button type="button" class="gjs-db-button" data-db-kit-export>Export my kits</button>',
+    '<button type="button" class="gjs-db-button" data-db-kit-import>Import kits</button>',
+    '<input type="file" accept="application/json,.json" data-db-kit-import-input aria-label="Choose a kits file" />',
+    '</div>',
+    '</div>',
+    '</div>',
+  ].join('');
+
+export default buildDesignKitsModalMarkup;

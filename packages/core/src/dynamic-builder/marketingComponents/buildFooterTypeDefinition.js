@@ -1,4 +1,5 @@
 import buildFooterDefaultChildren from './buildFooterDefaultChildren.js';
+import buildMarketingSectionTraits from './buildMarketingSectionTraits.js';
 
 const buildFooterTypeDefinition = () => ({
   type: 'db-footer',
@@ -10,8 +11,9 @@ const buildFooterTypeDefinition = () => ({
       draggable: '[data-gjs-type=wrapper]',
       droppable: false,
       classes: ['db-footer'],
-      attributes: { 'data-db-type': 'footer' },
+      attributes: { 'data-db-type': 'footer', 'data-db-theme': 'dark' },
       components: buildFooterDefaultChildren(),
+      traits: buildMarketingSectionTraits('dark', 'footer'),
     },
   },
 });

@@ -1,6 +1,6 @@
 const eyeOffDataUri =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'" +
-  " stroke='%23857c72' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E" +
+  " stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E" +
   "%3Cpath d='m4 4 16 16M9.9 5.2A9.8 9.8 0 0 1 12 5c6 0 10 7 10 7a17.4 17.4 0 0 1-3.3 3.9" +
   'M6.1 6.1A16.9 16.9 0 0 0 2 12s4 7 10 7a9.9 9.9 0 0 0 4-.8\'/%3E%3C/svg%3E")';
 
@@ -14,21 +14,37 @@ const buildPreviewChromeFixCss = () => `
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  top: 3rem;
+  left: 0.5rem;
   border-radius: var(--gjs-db-r-pill);
   background-color: var(--gjs-db-panel);
   box-shadow: var(--gjs-db-lift-2);
   color: transparent;
   overflow: hidden;
-  background-image: ${eyeOffDataUri};
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 18px 18px;
   cursor: pointer;
+}
+.gjs-off-prv::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 18px;
+  background-color: var(--gjs-db-muted);
+  -webkit-mask-image: ${eyeOffDataUri};
+  mask-image: ${eyeOffDataUri};
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 18px 18px;
+  mask-size: 18px 18px;
 }
 .gjs-off-prv:hover {
   box-shadow: var(--gjs-db-lift-3);
+}
+.gjs-off-prv:hover::before {
+  background-color: var(--gjs-db-fg);
 }
 .gjs-toolbar-item.fa-pencil {
   color: transparent;

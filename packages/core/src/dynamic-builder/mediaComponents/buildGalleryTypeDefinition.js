@@ -1,4 +1,5 @@
 import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
+import getGalleryTraitDefinitions from './getGalleryTraitDefinitions.js';
 import runGalleryLightboxBehavior from './runGalleryLightboxBehavior.js';
 
 const buildGalleryTypeDefinition = () => ({
@@ -14,43 +15,15 @@ const buildGalleryTypeDefinition = () => ({
       attributes: {
         'data-db-type': 'gallery',
         'data-db-columns': '3',
+        'data-db-mobile-columns': '2',
+        'data-db-aspect': 'landscape',
         'data-db-gap': 'md',
+        'data-db-captions': 'true',
         'data-db-lightbox': 'true',
       },
       components: [{ type: 'db-gallery-item' }, { type: 'db-gallery-item' }, { type: 'db-gallery-item' }],
       script: runGalleryLightboxBehavior,
-      traits: [
-        {
-          type: 'select',
-          name: 'data-db-columns',
-          label: 'Columns',
-          default: '3',
-          options: [
-            { id: '2', label: 'Two' },
-            { id: '3', label: 'Three' },
-            { id: '4', label: 'Four' },
-          ],
-        },
-        {
-          type: 'select',
-          name: 'data-db-gap',
-          label: 'Gap',
-          default: 'md',
-          options: [
-            { id: 'sm', label: 'Small' },
-            { id: 'md', label: 'Medium' },
-            { id: 'lg', label: 'Large' },
-          ],
-        },
-        {
-          type: 'checkbox',
-          name: 'data-db-lightbox',
-          label: 'Enable lightbox',
-          valueTrue: 'true',
-          valueFalse: 'false',
-          default: 'true',
-        },
-      ],
+      traits: getGalleryTraitDefinitions(),
     },
   },
 });

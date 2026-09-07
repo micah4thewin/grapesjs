@@ -34,15 +34,7 @@ const buildCardMarketingCss = () => `
 }
 .db-card-title { margin: 0; font-family: var(--db-font-display, inherit); font-size: var(--db-type-lg, 1.2rem); }
 .db-card-text { margin: 0; color: var(--db-color-text-muted, #5b6472); line-height: 1.6; }
-.db-card-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--db-space-2, 0.5rem);
-  font-weight: 600;
-  color: var(--db-color-brand, #4f46e5);
-  text-decoration: none;
-}
-.db-card-link:hover { text-decoration: underline; }
+.db-card-link { align-self: flex-start; }
 .db-stretched-link::after { content: ''; position: absolute; inset: 0; }
 .db-card[data-db-variant='horizontal'] { flex-direction: row; align-items: stretch; }
 .db-card[data-db-variant='horizontal'] .db-card-image {

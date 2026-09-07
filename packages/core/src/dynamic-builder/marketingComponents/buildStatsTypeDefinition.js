@@ -1,5 +1,8 @@
 import getDropTargetSelectors from '../support/getDropTargetSelectors.js';
-import buildStatChildComponents from './buildStatChildComponents.js';
+import appendStatTile from './appendStatTile.js';
+import buildAddChildButtonTrait from './buildAddChildButtonTrait.js';
+import buildStatRecord from './buildStatRecord.js';
+import getStatPresetRecords from './getStatPresetRecords.js';
 import runStatCountUpBehavior from './runStatCountUpBehavior.js';
 
 const buildStatsTypeDefinition = () => ({
@@ -8,27 +11,14 @@ const buildStatsTypeDefinition = () => ({
   model: {
     defaults: {
       tagName: 'div',
-      name: 'Stats row',
+      name: 'Big numbers',
       draggable: getDropTargetSelectors().sectionBody,
       droppable: '[data-db-type=stat]',
       classes: ['db-stats'],
       attributes: { 'data-db-type': 'stats' },
       script: runStatCountUpBehavior,
-      components: [
-        {
-          type: 'db-stat',
-          components: buildStatChildComponents({ target: 12000, suffix: '+', label: 'Teams onboarded' }),
-        },
-        {
-          type: 'db-stat',
-          components: buildStatChildComponents({ target: 98, suffix: '%', label: 'Customer satisfaction' }),
-        },
-        { type: 'db-stat', components: buildStatChildComponents({ target: 42, label: 'Countries served' }) },
-        {
-          type: 'db-stat',
-          components: buildStatChildComponents({ target: 150, prefix: '$', suffix: 'M', label: 'Revenue processed' }),
-        },
-      ],
+      components: getStatPresetRecords().map((statPreset) => buildStatRecord(statPreset)),
+      traits: [buildAddChildButtonTrait('Add a number', appendStatTile)],
     },
   },
 });

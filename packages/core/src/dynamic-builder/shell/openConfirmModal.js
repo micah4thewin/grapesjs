@@ -7,10 +7,10 @@ const openConfirmModal = (editor, modalTitle, messageText, confirmLabel, onConfi
   if (!containerElement || !containerElement.ownerDocument) return;
   const confirmMarkup = [
     '<div class="gjs-db-form">',
-    `<p class="gjs-db-muted">${escapeHtmlText(messageText)}</p>`,
+    `<p class="gjs-db-muted" data-db-confirm-message>${escapeHtmlText(messageText)}</p>`,
     '<div class="gjs-db-button-row">',
+    '<button type="button" class="gjs-db-button" data-db-confirm-cancel data-db-autofocus>Cancel</button>',
     `<button type="button" class="gjs-db-button gjs-db-button-danger" data-db-confirm-accept>${escapeHtmlText(confirmLabel)}</button>`,
-    '<button type="button" class="gjs-db-button" data-db-confirm-cancel>Cancel</button>',
     '</div>',
     '</div>',
   ].join('');

@@ -1,5 +1,6 @@
 import buildDeletePageMessage from './buildDeletePageMessage.js';
 import capturePageSnapshot from './capturePageSnapshot.js';
+import getHomePageDeleteHint from './getHomePageDeleteHint.js';
 import getPageDisplayName from './getPageDisplayName.js';
 import listPageLinkComponents from './listPageLinkComponents.js';
 import openConfirmModal from './openConfirmModal.js';
@@ -16,7 +17,7 @@ const deleteSitePage = (editor, pageId) => {
     return;
   }
   if (targetPage === editor.Pages.getMain()) {
-    showToastNotice(editor, 'The home page cannot be deleted. Set another page as home first.', { kind: 'warning' });
+    showToastNotice(editor, getHomePageDeleteHint(), { kind: 'warning' });
     return;
   }
   const pageName = getPageDisplayName(targetPage);

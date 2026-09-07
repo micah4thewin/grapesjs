@@ -1,9 +1,20 @@
+import buildDeviceMenuMarkup from './buildDeviceMenuMarkup.js';
 import closeShellMenus from './closeShellMenus.js';
+import positionShellMenu from './positionShellMenu.js';
 import renderPagesMenuItems from './renderPagesMenuItems.js';
 import wireMenuKeyboardNavigation from './wireMenuKeyboardNavigation.js';
 
 const wireDropdownMenus = (editor, stripElement) => {
   const ownerDocument = stripElement.ownerDocument;
+  const renderMenuContent = (menuName, menuElement) => {
+    if (menuName === 'pages') renderPagesMenuItems(editor, menuElement);
+    if (menuName !== 'devices') return;
+    const menuHost = menuElement.parentElement;
+    const freshHost = ownerDocument.createElement('div');
+    freshHost.innerHTML = buildDeviceMenuMarkup(editor);
+    menuElement.innerHTML = freshHost.querySelector('[data-db-menu="devices"]').innerHTML;
+    menuHost && menuHost.classList.add('gjs-db-device-menu-host');
+  };
   stripElement.addEventListener('click', (clickEvent) => {
     const targetElement = clickEvent.target;
     if (!targetElement || !targetElement.closest) return;
@@ -15,15 +26,18 @@ const wireDropdownMenus = (editor, stripElement) => {
       const shouldOpen = menuElement.hidden;
       closeShellMenus(stripElement);
       if (shouldOpen) {
-        if (menuName === 'pages') renderPagesMenuItems(editor, menuElement);
+        renderMenuContent(menuName, menuElement);
         menuElement.hidden = false;
         triggerElement.setAttribute('aria-expanded', 'true');
-        const firstMenuItem = menuElement.querySelector('[role="menuitem"]');
+        positionShellMenu(menuElement, stripElement);
+        const firstMenuItem = menuElement.querySelector('[role="menuitem"], [role="menuitemradio"]');
         if (firstMenuItem && firstMenuItem.focus) firstMenuItem.focus();
       }
       return;
     }
-    const menuItemElement = targetElement.closest('[data-db-menu] [data-db-command]');
+    const menuItemElement = targetElement.closest(
+      '[data-db-menu] [data-db-command], [data-db-menu] [data-db-page-action], [data-db-menu] [data-db-device]',
+    );
     if (menuItemElement) closeShellMenus(stripElement, { restoreFocus: true });
   });
   wireMenuKeyboardNavigation(stripElement);

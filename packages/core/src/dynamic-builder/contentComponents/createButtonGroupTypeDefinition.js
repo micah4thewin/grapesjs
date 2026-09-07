@@ -4,7 +4,7 @@ const createButtonGroupTypeDefinition = (contentTextDefaults) => ({
   model: {
     defaults: {
       tagName: 'div',
-      name: 'Button Group',
+      name: 'Button group',
       draggable: true,
       droppable: '[data-db-type="button"]',
       attributes: {
@@ -15,9 +15,10 @@ const createButtonGroupTypeDefinition = (contentTextDefaults) => ({
       },
       classes: ['db-button-group'],
       components: [
-        { type: 'db-button' },
+        { type: 'db-button', name: 'Main button' },
         {
           type: 'db-button',
+          name: 'Second button',
           attributes: { 'data-db-variant': 'secondary' },
           components: contentTextDefaults.secondaryButtonLabelText,
         },
@@ -25,26 +26,26 @@ const createButtonGroupTypeDefinition = (contentTextDefaults) => ({
       traits: [
         {
           type: 'select',
+          name: 'data-db-align',
+          label: 'Align',
+          options: [
+            { id: 'start', label: 'Left' },
+            { id: 'center', label: 'Center' },
+            { id: 'end', label: 'Right' },
+            { id: 'between', label: 'Spread out' },
+          ],
+        },
+        {
+          type: 'select',
           name: 'data-db-gap',
-          label: 'Gap',
+          label: 'Space between buttons',
           options: [
             { id: 'sm', label: 'Small' },
             { id: 'md', label: 'Medium' },
             { id: 'lg', label: 'Large' },
           ],
         },
-        { type: 'checkbox', name: 'data-db-wrap', label: 'Allow wrapping', valueTrue: 'true' },
-        {
-          type: 'select',
-          name: 'data-db-align',
-          label: 'Alignment',
-          options: [
-            { id: 'start', label: 'Start' },
-            { id: 'center', label: 'Center' },
-            { id: 'end', label: 'End' },
-            { id: 'between', label: 'Space between' },
-          ],
-        },
+        { type: 'checkbox', name: 'data-db-wrap', label: 'Wrap onto new lines when needed', valueTrue: 'true' },
       ],
     },
   },
