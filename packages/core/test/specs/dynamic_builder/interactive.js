@@ -286,6 +286,15 @@ describe('Dynamic builder interactive components', () => {
       expect(addedLink.getAttributes()['data-db-network']).toBe('github');
       expect(addedLink.getTraits().map((trait) => trait.get('name'))).toEqual(['href', 'aria-label']);
     });
+
+    test('typing a profile address swaps the icon to the matching network', () => {
+      const social = editor.getWrapper().append({ type: 'db-social-links' })[0];
+      const firstLink = social.components().at(0).components().at(0);
+      expect(firstLink.getAttributes()['data-db-network']).toBe('x');
+      firstLink.addAttributes({ href: 'https://www.linkedin.com/in/acme' });
+      expect(firstLink.getAttributes()['data-db-network']).toBe('linkedin');
+      expect(firstLink.getName()).toBe('LinkedIn link');
+    });
   });
 
   describe('editor canvas marker', () => {

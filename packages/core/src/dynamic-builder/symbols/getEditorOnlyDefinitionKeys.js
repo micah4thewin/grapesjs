@@ -18,7 +18,6 @@ const getEditorOnlyDefinitionKeys = () => [
   '__symbol_ovrd',
   'dbSymbolRenderedId',
   'dbSymbolOverrides',
-  'dbAddSectionWired',
 ];
 
 export default getEditorOnlyDefinitionKeys;

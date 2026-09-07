@@ -1,10 +1,12 @@
 import getCanvasCssRegistry from './getCanvasCssRegistry.js';
 import injectStylesOnce from './injectStylesOnce.js';
+import isEditorLive from './isEditorLive.js';
 
 const registerCanvasStyles = (editor, styleId, cssText) => {
   const cssRegistry = getCanvasCssRegistry(editor);
   cssRegistry.set(styleId, cssText);
   const applyRegisteredStyles = () => {
+    if (!isEditorLive(editor)) return;
     const canvasDocument = editor.Canvas && editor.Canvas.getDocument && editor.Canvas.getDocument();
     if (!canvasDocument) return;
     cssRegistry.forEach((registeredCss, registeredId) => injectStylesOnce(canvasDocument, registeredId, registeredCss));

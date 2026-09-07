@@ -47,7 +47,10 @@ const createLocalStorageSiteAdapter = () => ({
   },
   deleteSite: (siteId) => {
     const siteRecord = readIndexRecords().find((storedRecord) => storedRecord.id === siteId) || null;
-    if (siteRecord) removeStoredKey(siteRecord.storageKey);
+    if (siteRecord) {
+      removeStoredKey(siteRecord.storageKey);
+      removeStoredKey(siteRecord.storageKey + ':owner');
+    }
     return Promise.resolve(writeIndexRecords(readIndexRecords().filter((storedRecord) => storedRecord.id !== siteId)));
   },
   readUser: () => {
