@@ -1,16 +1,18 @@
+import clonePageComponents from './clonePageComponents.js';
 import getPageDisplayName from './getPageDisplayName.js';
 import isPlainRecord from '../support/isPlainRecord.js';
 import resolveUniquePageName from './resolveUniquePageName.js';
-import serializePageComponents from './serializePageComponents.js';
 import showToastNotice from '../support/showToastNotice.js';
 
 const duplicateSitePage = (editor, pageId) => {
   const sourcePage = editor.Pages.get(pageId);
   if (!sourcePage || !sourcePage.getMainComponent) return null;
   const copyName = resolveUniquePageName(editor, `${getPageDisplayName(sourcePage)} copy`);
-  const copiedComponents = serializePageComponents(sourcePage);
-  const copiedPage = editor.Pages.add({ name: copyName, component: copiedComponents }, { select: true });
+  const copiedComponents = clonePageComponents(sourcePage);
+  const copiedPage = editor.Pages.add({ name: copyName }, { select: true });
   if (!copiedPage) return null;
+  const copiedRoot = copiedPage.getMainComponent();
+  if (copiedRoot && copiedComponents.length) copiedRoot.append(copiedComponents);
   const sourceMeta = sourcePage.get('dbPageMeta');
   if (isPlainRecord(sourceMeta)) {
     const copiedMeta = JSON.parse(JSON.stringify(sourceMeta));

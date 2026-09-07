@@ -1,10 +1,10 @@
+import clonePageComponents from './clonePageComponents.js';
 import getPageDisplayName from './getPageDisplayName.js';
-import serializePageComponents from './serializePageComponents.js';
 
 const capturePageSnapshot = (sitePage) => ({
   pageId: String(sitePage.getId()),
   name: getPageDisplayName(sitePage),
-  component: serializePageComponents(sitePage),
+  components: clonePageComponents(sitePage),
   meta: sitePage.get('dbPageMeta') || null,
 });
 

@@ -3,6 +3,7 @@ import openSymbolNameModal from './openSymbolNameModal.js';
 import renderSymbolInstance from './renderSymbolInstance.js';
 import replaceComponentWithSymbolInstance from './replaceComponentWithSymbolInstance.js';
 import resolveComponentDisplayName from './resolveComponentDisplayName.js';
+import runSymbolUndoStep from './runSymbolUndoStep.js';
 import showToastNotice from '../support/showToastNotice.js';
 
 const runCreateSymbolCommand = (editor) => {
@@ -21,13 +22,16 @@ const runCreateSymbolCommand = (editor) => {
     helpText: 'Reuse this on any page. Editing it once updates every copy.',
     initialName: resolveComponentDisplayName(selectedComponent),
     onSubmit: (symbolName) => {
-      const symbolRecord = createSymbolFromComponent(editor, selectedComponent, symbolName);
-      if (!symbolRecord) return;
-      const instanceComponent = replaceComponentWithSymbolInstance(selectedComponent, symbolRecord.id);
-      if (instanceComponent) {
+      const symbolRecord = runSymbolUndoStep(editor, () => {
+        const savedRecord = createSymbolFromComponent(editor, selectedComponent, symbolName);
+        if (!savedRecord) return null;
+        const instanceComponent = replaceComponentWithSymbolInstance(selectedComponent, savedRecord.id);
+        if (!instanceComponent) return savedRecord;
         renderSymbolInstance(editor, instanceComponent);
         editor.select(instanceComponent);
-      }
+        return savedRecord;
+      });
+      if (!symbolRecord) return;
       showToastNotice(editor, '"' + symbolRecord.name + '" is now reusable.', { kind: 'success' });
     },
   });

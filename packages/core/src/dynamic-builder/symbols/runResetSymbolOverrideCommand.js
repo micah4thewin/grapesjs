@@ -7,6 +7,7 @@ import replaceSymbolLeafComponent from './replaceSymbolLeafComponent.js';
 import resolveDefinitionAtPath from './resolveDefinitionAtPath.js';
 import resolveSymbolIdOfComponent from './resolveSymbolIdOfComponent.js';
 import resolveSymbolLeafPath from './resolveSymbolLeafPath.js';
+import runSymbolUndoStep from './runSymbolUndoStep.js';
 import setSymbolOverrides from './setSymbolOverrides.js';
 import showToastNotice from '../support/showToastNotice.js';
 
@@ -26,13 +27,14 @@ const runResetSymbolOverrideCommand = (editor) => {
     showToastNotice(editor, 'This copy already matches the other copies.');
     return;
   }
-  delete nextOverrides[leafPath];
-  setSymbolOverrides(instanceComponent, nextOverrides);
-  const restoredLeaf = replaceSymbolLeafComponent(leafComponent, masterDefinition);
-  if (restoredLeaf) {
+  runSymbolUndoStep(editor, () => {
+    delete nextOverrides[leafPath];
+    setSymbolOverrides(instanceComponent, nextOverrides);
+    const restoredLeaf = replaceSymbolLeafComponent(leafComponent, masterDefinition);
+    if (!restoredLeaf) return;
     lockSymbolComponentTree(restoredLeaf, true, false);
     editor.select(restoredLeaf);
-  }
+  });
   showToastNotice(editor, 'Back in step with the other copies.', { kind: 'success' });
 };
 

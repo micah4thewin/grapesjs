@@ -64,7 +64,7 @@ const runTabsBehavior = () => {
       if (targetIndex < 0 || !tabList[targetIndex]) return;
       keyEvent.preventDefault();
       tabList[targetIndex].focus();
-      selectTab(tabList[targetIndex]);
+      if (!isEditorCanvas()) selectTab(tabList[targetIndex]);
     });
     if (window.MutationObserver) {
       new MutationObserver(syncOrientation).observe(tabsElement, {

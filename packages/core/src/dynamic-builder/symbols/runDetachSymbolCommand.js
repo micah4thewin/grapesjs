@@ -1,5 +1,6 @@
 import findOwningSymbolInstance from './findOwningSymbolInstance.js';
 import hasSymbolPlaceholderOnly from './hasSymbolPlaceholderOnly.js';
+import runSymbolUndoStep from './runSymbolUndoStep.js';
 import serializeSymbolChildren from './serializeSymbolChildren.js';
 import setSymbolSubtreeLocked from './setSymbolSubtreeLocked.js';
 import showToastNotice from '../support/showToastNotice.js';
@@ -18,9 +19,11 @@ const runDetachSymbolCommand = (editor) => {
     ? []
     : serializeSymbolChildren(instanceComponent).map((childDefinition) => stripDefinitionElementIds(childDefinition));
   const insertIndex = parentComponent.components().indexOf(instanceComponent);
-  const addedComponents = parentComponent.append(detachedDefinitions, { at: insertIndex });
-  instanceComponent.remove();
-  if (addedComponents && addedComponents[0]) editor.select(addedComponents[0]);
+  runSymbolUndoStep(editor, () => {
+    const addedComponents = parentComponent.append(detachedDefinitions, { at: insertIndex });
+    instanceComponent.remove();
+    if (addedComponents && addedComponents[0]) editor.select(addedComponents[0]);
+  });
   showToastNotice(editor, 'This copy is now independent.');
 };
 
