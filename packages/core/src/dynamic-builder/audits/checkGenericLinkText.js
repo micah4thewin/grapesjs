@@ -1,12 +1,13 @@
+import buildFindingDetails from './buildFindingDetails.js';
 import capAuditFindings from './capAuditFindings.js';
 import createFindingRecord from './createFindingRecord.js';
 
 const checkGenericLinkText = (auditContext) => {
-  const { canvasBody } = auditContext;
-  if (!canvasBody) return [];
-  const genericPhrases = ['click here', 'read more', 'learn more'];
+  const { canvasRoot } = auditContext;
+  if (!canvasRoot) return [];
+  const genericPhrases = ['click here', 'read more', 'learn more', 'here', 'more'];
   const findings = [];
-  canvasBody.querySelectorAll('a').forEach((linkElement) => {
+  canvasRoot.querySelectorAll('a').forEach((linkElement) => {
     const normalizedText = String(linkElement.textContent || '')
       .toLowerCase()
       .replace(/[^a-z ]+/g, ' ')
@@ -17,12 +18,13 @@ const checkGenericLinkText = (auditContext) => {
       createFindingRecord(
         'warning',
         'Links',
-        'Link text "' + normalizedText + '" does not describe its destination.',
-        'Rewrite the link so its text alone explains where it leads.',
+        'Link text "' + normalizedText + '" does not say where it leads.',
+        'Rewrite the link so its text alone explains the destination, for example "See our pricing".',
+        buildFindingDetails(linkElement),
       ),
     );
   });
-  return capAuditFindings(findings, 8, 'Links', 'more generic links were found');
+  return capAuditFindings(findings, auditContext, 'Links', 'more generic links were found');
 };
 
 export default checkGenericLinkText;

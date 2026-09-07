@@ -1,0 +1,26 @@
+const getAuditTagLabelRecords = () => ({
+  a: 'Link',
+  img: 'Image',
+  button: 'Button',
+  input: 'Field',
+  select: 'Dropdown',
+  textarea: 'Text area',
+  form: 'Form',
+  h1: 'Heading',
+  h2: 'Heading',
+  h3: 'Heading',
+  h4: 'Heading',
+  h5: 'Heading',
+  h6: 'Heading',
+  p: 'Paragraph',
+  span: 'Text',
+  li: 'List item',
+  svg: 'Icon',
+  video: 'Video',
+  audio: 'Audio',
+  iframe: 'Embed',
+  section: 'Section',
+  div: 'Box',
+});
+
+export default getAuditTagLabelRecords;

@@ -1,3 +1,4 @@
+import getPageDisplayName from './getPageDisplayName.js';
 import toSlugText from '../support/toSlugText.js';
 
 const validatePageName = (editor, pageName, excludedPageId) => {
@@ -9,14 +10,15 @@ const validatePageName = (editor, pageName, excludedPageId) => {
   }
   const mainPage = editor.Pages && editor.Pages.getMain && editor.Pages.getMain();
   const mainPageId = mainPage && mainPage.getId ? String(mainPage.getId()) : '';
-  if (candidateSlug === 'index' && excludedPageId !== mainPageId) {
+  const isRenamingMainPage = excludedPageId !== '' && excludedPageId === mainPageId;
+  if (candidateSlug === 'index' && !isRenamingMainPage) {
     return { isValid: false, message: 'The name "index" is reserved for the home page.' };
   }
   const allPages = (editor.Pages && editor.Pages.getAll && editor.Pages.getAll()) || [];
   const hasCollision = allPages.some((sitePage) => {
     const pageId = String(sitePage.getId ? sitePage.getId() : '');
-    if (pageId === excludedPageId || pageId === mainPageId) return false;
-    return toSlugText(sitePage.getName ? sitePage.getName() : '') === candidateSlug;
+    if (pageId === excludedPageId) return false;
+    return toSlugText(getPageDisplayName(sitePage)) === candidateSlug;
   });
   if (hasCollision) return { isValid: false, message: 'Another page already uses this name.' };
   return { isValid: true, message: '' };

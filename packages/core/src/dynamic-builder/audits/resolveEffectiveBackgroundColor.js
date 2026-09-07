@@ -3,12 +3,18 @@ import parseColorToRgb from '../support/parseColorToRgb.js';
 
 const formatRgbColor = (rgbColor) => 'rgb(' + rgbColor.red + ', ' + rgbColor.green + ', ' + rgbColor.blue + ')';
 
+const hasBackgroundImage = (computedStyle) => {
+  const imageValue = String(computedStyle.backgroundImage || 'none').trim();
+  return imageValue !== '' && imageValue !== 'none';
+};
+
 const resolveEffectiveBackgroundColor = (element, canvasWindow) => {
   const layerColors = [];
   let currentElement = element;
   while (currentElement && currentElement.nodeType === 1) {
-    const backgroundColor = canvasWindow.getComputedStyle(currentElement).backgroundColor;
-    const parsedColor = parseColorToRgb(backgroundColor);
+    const computedStyle = canvasWindow.getComputedStyle(currentElement);
+    if (hasBackgroundImage(computedStyle)) return null;
+    const parsedColor = parseColorToRgb(computedStyle.backgroundColor);
     if (parsedColor && parsedColor.alpha > 0) {
       layerColors.push(parsedColor);
       if (parsedColor.alpha >= 1) break;

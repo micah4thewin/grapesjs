@@ -1,6 +1,5 @@
-import closeShellMenus from './closeShellMenus.js';
-import deleteSitePage from './deleteSitePage.js';
-import renameSitePage from './renameSitePage.js';
+import runPagesMenuAction from './runPagesMenuAction.js';
+import wirePagesMenuRowKeys from './wirePagesMenuRowKeys.js';
 
 const wirePagesMenuActions = (editor, stripElement) => {
   stripElement.addEventListener('click', (clickEvent) => {
@@ -10,12 +9,9 @@ const wirePagesMenuActions = (editor, stripElement) => {
     if (!actionElement || !stripElement.contains(actionElement)) return;
     const actionName = actionElement.getAttribute('data-db-page-action');
     const pageId = actionElement.getAttribute('data-db-page-id') || '';
-    closeShellMenus(stripElement);
-    if (actionName === 'select') editor.Pages.select(pageId);
-    else if (actionName === 'rename') renameSitePage(editor, pageId);
-    else if (actionName === 'delete') deleteSitePage(editor, pageId);
-    else if (actionName === 'add') editor.runCommand('db:add-page');
+    runPagesMenuAction(editor, actionName, pageId);
   });
+  wirePagesMenuRowKeys(editor, stripElement);
 };
 
 export default wirePagesMenuActions;

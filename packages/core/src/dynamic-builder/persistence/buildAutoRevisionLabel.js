@@ -1,5 +1,3 @@
-import formatIsoDateTimeText from './formatIsoDateTimeText.js';
-
-const buildAutoRevisionLabel = (revisionDate) => 'Revision ' + formatIsoDateTimeText(revisionDate);
+const buildAutoRevisionLabel = () => 'Manual save';
 
 export default buildAutoRevisionLabel;

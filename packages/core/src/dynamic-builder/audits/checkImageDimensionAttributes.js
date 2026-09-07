@@ -1,23 +1,25 @@
+import buildFindingDetails from './buildFindingDetails.js';
 import capAuditFindings from './capAuditFindings.js';
 import collectImageRecords from './collectImageRecords.js';
 import createFindingRecord from './createFindingRecord.js';
 
+const hasAttributeValue = (attributeValue) => attributeValue != null && String(attributeValue).trim() !== '';
+
 const checkImageDimensionAttributes = (auditContext) => {
   const findings = [];
   collectImageRecords(auditContext).forEach((imageRecord) => {
-    const hasWidth = imageRecord.attributes.width != null && String(imageRecord.attributes.width).trim() !== '';
-    const hasHeight = imageRecord.attributes.height != null && String(imageRecord.attributes.height).trim() !== '';
-    if (hasWidth && hasHeight) return;
+    if (hasAttributeValue(imageRecord.attributes.width) && hasAttributeValue(imageRecord.attributes.height)) return;
     findings.push(
       createFindingRecord(
         'warning',
         'Images',
-        'Image ' + imageRecord.label + ' is missing explicit width and height attributes.',
-        'Set both attributes so the browser reserves space and avoids layout shift.',
+        imageRecord.label + ' has no width and height set.',
+        'Set both so the browser reserves the space and the page does not jump while loading.',
+        buildFindingDetails(imageRecord.target, 'image-dimensions'),
       ),
     );
   });
-  return capAuditFindings(findings, 8, 'Images', 'more images without dimension attributes were found');
+  return capAuditFindings(findings, auditContext, 'Images', 'more images without dimensions were found');
 };
 
 export default checkImageDimensionAttributes;

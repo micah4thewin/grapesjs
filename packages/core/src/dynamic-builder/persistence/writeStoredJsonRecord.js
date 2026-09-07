@@ -1,27 +1,28 @@
 import getErrorMessageText from './getErrorMessageText.js';
 import getLocalStorageArea from './getLocalStorageArea.js';
+import getStorageFullMessage from './getStorageFullMessage.js';
 import isQuotaExceededError from './isQuotaExceededError.js';
 
 const writeStoredJsonRecord = (storageKey, recordValue, onQuotaExceeded) => {
   const storageArea = getLocalStorageArea();
-  if (!storageArea) return 'Local storage is not available in this environment';
+  if (!storageArea) return 'Browser storage is not available here, so nothing can be saved';
   const serializedValue = JSON.stringify(recordValue);
   try {
     storageArea.setItem(storageKey, serializedValue);
     return null;
   } catch (writeError) {
-    if (isQuotaExceededError(writeError) && typeof onQuotaExceeded === 'function' && onQuotaExceeded()) {
+    if (!isQuotaExceededError(writeError)) return getErrorMessageText(writeError, 'Unable to write to browser storage');
+    while (typeof onQuotaExceeded === 'function' && onQuotaExceeded()) {
       try {
         storageArea.setItem(storageKey, serializedValue);
         return null;
       } catch (retryError) {
-        return getErrorMessageText(retryError, 'Local storage is full. Delete revisions to free space.');
+        if (!isQuotaExceededError(retryError)) {
+          return getErrorMessageText(retryError, 'Unable to write to browser storage');
+        }
       }
     }
-    if (isQuotaExceededError(writeError)) {
-      return 'Local storage is full. Delete saved revisions to free space.';
-    }
-    return getErrorMessageText(writeError, 'Unable to write to local storage');
+    return getStorageFullMessage();
   }
 };
 

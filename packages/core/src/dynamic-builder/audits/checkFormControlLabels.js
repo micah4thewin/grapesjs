@@ -1,16 +1,17 @@
+import buildFindingDetails from './buildFindingDetails.js';
 import capAuditFindings from './capAuditFindings.js';
 import createFindingRecord from './createFindingRecord.js';
 import describeAuditElement from './describeAuditElement.js';
 
 const checkFormControlLabels = (auditContext) => {
-  const { canvasBody } = auditContext;
-  if (!canvasBody) return [];
+  const { canvasRoot } = auditContext;
+  if (!canvasRoot) return [];
   const skippedTypes = ['hidden', 'submit', 'button', 'reset', 'image'];
-  const labelForValues = Array.from(canvasBody.querySelectorAll('label[for]')).map((labelElement) =>
+  const labelForValues = Array.from(canvasRoot.querySelectorAll('label[for]')).map((labelElement) =>
     labelElement.getAttribute('for'),
   );
   const findings = [];
-  canvasBody.querySelectorAll('input, select, textarea').forEach((controlElement) => {
+  canvasRoot.querySelectorAll('input, select, textarea').forEach((controlElement) => {
     const controlType = String(controlElement.getAttribute('type') || '').toLowerCase();
     if (skippedTypes.includes(controlType)) return;
     const hasAriaLabel =
@@ -23,12 +24,13 @@ const checkFormControlLabels = (auditContext) => {
       createFindingRecord(
         'error',
         'Forms',
-        'Form control ' + describeAuditElement(controlElement) + ' has no label.',
-        'Connect a label element with the for attribute, or add an aria-label.',
+        describeAuditElement(controlElement) + ' has no label.',
+        'Add a visible label above the field, or an accessible name in its settings.',
+        buildFindingDetails(controlElement, 'aria-label'),
       ),
     );
   });
-  return capAuditFindings(findings, 8, 'Forms', 'more unlabeled form controls were found');
+  return capAuditFindings(findings, auditContext, 'Forms', 'more unlabeled form controls were found');
 };
 
 export default checkFormControlLabels;

@@ -1,22 +1,24 @@
 import createFindingRecord from './createFindingRecord.js';
+import resolveAuditThreshold from './resolveAuditThreshold.js';
 import walkComponentTree from '../support/walkComponentTree.js';
 
 const checkDomNodeCount = (auditContext) => {
   let nodeCount = 0;
-  if (auditContext.canvasBody) {
-    nodeCount = auditContext.canvasBody.getElementsByTagName('*').length;
+  if (auditContext.canvasRoot) {
+    nodeCount = auditContext.canvasRoot.getElementsByTagName('*').length;
   } else {
     walkComponentTree(auditContext.wrapperComponent, () => {
       nodeCount += 1;
     });
   }
-  if (nodeCount <= 1500) return [];
+  const maxDomNodes = resolveAuditThreshold(auditContext, 'maxDomNodes');
+  if (nodeCount <= maxDomNodes) return [];
   return [
     createFindingRecord(
-      nodeCount > 3000 ? 'error' : 'warning',
+      nodeCount > resolveAuditThreshold(auditContext, 'criticalDomNodes') ? 'error' : 'warning',
       'Document',
-      'The page renders ' + nodeCount + ' DOM nodes.',
-      'Split content across pages or simplify components; large DOM trees slow rendering.',
+      'The page renders ' + nodeCount + ' elements.',
+      'Split content across pages or simplify sections; very large pages render slowly on phones.',
     ),
   ];
 };

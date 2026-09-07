@@ -1,5 +1,6 @@
 import collectImageRecords from './collectImageRecords.js';
 import createFindingRecord from './createFindingRecord.js';
+import resolveAuditThreshold from './resolveAuditThreshold.js';
 
 const checkAltCoverage = (auditContext) => {
   const imageRecords = collectImageRecords(auditContext);
@@ -8,13 +9,14 @@ const checkAltCoverage = (auditContext) => {
     (imageRecord) => imageRecord.attributes.alt != null && String(imageRecord.attributes.alt).trim() !== '',
   ).length;
   const coverageRatio = describedCount / imageRecords.length;
-  if (coverageRatio >= 0.9) return [];
+  const minCoverageRatio = resolveAuditThreshold(auditContext, 'minAltCoverageRatio');
+  if (coverageRatio >= minCoverageRatio) return [];
   return [
     createFindingRecord(
       'warning',
       'Content',
       'Only ' + Math.round(coverageRatio * 100) + ' percent of images have descriptive alt text.',
-      'Describe at least 90 percent of images; search engines index alt text.',
+      'Describe at least ' + Math.round(minCoverageRatio * 100) + ' percent of images; search engines index alt text.',
     ),
   ];
 };

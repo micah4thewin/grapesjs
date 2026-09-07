@@ -1,35 +1,28 @@
 import buildElementFromMarkup from '../support/buildElementFromMarkup.js';
-import escapeHtmlText from '../support/escapeHtmlText.js';
+import buildPageNameFormMarkup from './buildPageNameFormMarkup.js';
 import getEditorInstanceSuffix from './getEditorInstanceSuffix.js';
 import openThemedModal from '../support/openThemedModal.js';
+import toSlugText from '../support/toSlugText.js';
 
-const openPageNameModal = (editor, modalTitle, initialValue, submitLabel, onSubmitName, validateName) => {
+const openPageNameModal = (editor, modalOptions) => {
   const containerElement = editor.getContainer && editor.getContainer();
   if (!containerElement || !containerElement.ownerDocument) return;
   const inputId = 'db-page-name-input' + getEditorInstanceSuffix(editor);
-  const errorId = inputId + '-error';
-  const formMarkup = [
-    '<div class="gjs-db-form">',
-    '<div class="gjs-db-field">',
-    `<label class="gjs-db-field-label" for="${inputId}">Page name</label>`,
-    `<input id="${inputId}" class="gjs-db-field-input" type="text" value="${escapeHtmlText(initialValue)}"`,
-    ` aria-describedby="${errorId}" />`,
-    `<div class="gjs-db-field-help gjs-db-field-error-text" id="${errorId}" role="alert"></div>`,
-    '</div>',
-    '<div class="gjs-db-button-row">',
-    `<button type="button" class="gjs-db-button gjs-db-button-primary" data-db-page-modal-submit>${escapeHtmlText(submitLabel)}</button>`,
-    '<button type="button" class="gjs-db-button" data-db-page-modal-cancel>Cancel</button>',
-    '</div>',
-    '</div>',
-  ].join('');
+  const formMarkup = buildPageNameFormMarkup(inputId, modalOptions.initialValue || '', modalOptions.submitLabel);
   const formElement = buildElementFromMarkup(containerElement.ownerDocument, formMarkup);
   if (!formElement) return;
   const inputElement = formElement.querySelector('.gjs-db-field-input');
   const errorElement = formElement.querySelector('.gjs-db-field-error-text');
+  const addressElement = formElement.querySelector('[data-db-page-address]');
+  const refreshAddressPreview = () => {
+    if (!addressElement) return;
+    const slugText = modalOptions.fixedAddress || `${toSlugText(inputElement.value) || 'page'}.html`;
+    addressElement.textContent = `Address: ${slugText}`;
+  };
   const submitPageName = () => {
     const nameValue = String(inputElement.value || '').trim();
-    const validationResult = validateName
-      ? validateName(nameValue)
+    const validationResult = modalOptions.validateName
+      ? modalOptions.validateName(nameValue)
       : { isValid: !!nameValue, message: 'Enter a page name.' };
     if (!validationResult.isValid) {
       inputElement.classList.add('gjs-db-field-invalid');
@@ -41,18 +34,20 @@ const openPageNameModal = (editor, modalTitle, initialValue, submitLabel, onSubm
     inputElement.classList.remove('gjs-db-field-invalid');
     inputElement.removeAttribute('aria-invalid');
     editor.Modal.close();
-    onSubmitName(nameValue);
+    modalOptions.onSubmitName(nameValue);
   };
   formElement.querySelector('[data-db-page-modal-submit]').addEventListener('click', submitPageName);
   formElement.querySelector('[data-db-page-modal-cancel]').addEventListener('click', () => editor.Modal.close());
+  inputElement.addEventListener('input', refreshAddressPreview);
   inputElement.addEventListener('keydown', (keyEvent) => {
     if (keyEvent.key === 'Enter') submitPageName();
     if (keyEvent.key === 'Escape') editor.Modal.close();
   });
-  openThemedModal(editor, modalTitle, formElement, { className: 'gjs-db-page-modal' });
+  refreshAddressPreview();
+  openThemedModal(editor, modalOptions.modalTitle, formElement, { className: 'gjs-db-page-modal' });
   setTimeout(() => {
     inputElement.focus();
-    if (initialValue && inputElement.select) inputElement.select();
+    if (modalOptions.initialValue && inputElement.select) inputElement.select();
   }, 50);
 };
 

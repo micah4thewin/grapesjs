@@ -5,7 +5,12 @@ const getNewPageStarterComponents = (pageNameText) => [
       {
         type: 'db-container',
         components: [
-          { type: 'db-heading', components: [{ type: 'textnode', content: pageNameText || 'New page' }] },
+          {
+            type: 'db-heading',
+            tagName: 'h1',
+            attributes: { 'data-db-level': '1' },
+            components: [{ type: 'textnode', content: pageNameText || 'New page' }],
+          },
           { type: 'db-text' },
         ],
       },

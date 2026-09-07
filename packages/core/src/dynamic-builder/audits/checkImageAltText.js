@@ -1,3 +1,4 @@
+import buildFindingDetails from './buildFindingDetails.js';
 import capAuditFindings from './capAuditFindings.js';
 import collectImageRecords from './collectImageRecords.js';
 import createFindingRecord from './createFindingRecord.js';
@@ -10,12 +11,13 @@ const checkImageAltText = (auditContext) => {
       createFindingRecord(
         'error',
         'Images',
-        'Image ' + imageRecord.label + ' has no alt attribute.',
-        'Describe the image, or set alt="" when it is purely decorative.',
+        imageRecord.label + ' has no alt text.',
+        'Describe what the picture shows, or mark it decorative so screen readers skip it.',
+        buildFindingDetails(imageRecord.target, 'alt-text'),
       ),
     );
   });
-  return capAuditFindings(findings, 8, 'Images', 'more images without alt attributes were found');
+  return capAuditFindings(findings, auditContext, 'Images', 'more images without alt text were found');
 };
 
 export default checkImageAltText;

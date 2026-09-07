@@ -26,7 +26,7 @@ const buildAnimationSiteCss = () => {
     '  will-change: opacity, transform; }',
     ...effectRules,
     ...easingRules,
-    '[data-db-aos][data-db-aos-in="true"] { opacity: 1; transform: none; filter: none; }',
+    '[data-db-aos][data-db-aos-in="true"] { opacity: 1; transform: none; filter: none; will-change: auto; }',
     '@media (prefers-reduced-motion: reduce) {',
     '  [data-db-aos] { transition: none !important; opacity: 1 !important;',
     '    transform: none !important; filter: none !important; } }',

@@ -1,9 +1,9 @@
 import isCanvasElementVisible from './isCanvasElementVisible.js';
 
-const collectVisibleTextElements = (canvasBody, canvasWindow) => {
+const collectVisibleTextElements = (rootElement, canvasWindow) => {
   const textElements = [];
   const skippedTags = ['script', 'style', 'noscript', 'template', 'svg'];
-  canvasBody.querySelectorAll('*').forEach((element) => {
+  rootElement.querySelectorAll('*').forEach((element) => {
     const tagName = element.tagName.toLowerCase();
     if (skippedTags.includes(tagName) || (element.closest && element.closest('svg'))) return;
     const hasDirectText = Array.from(element.childNodes).some(
