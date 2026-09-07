@@ -18,7 +18,10 @@ const wireForeignSnapshotWatch = (editor, moduleOptions, cancelPendingSave) => {
     }
     if (!isPlainRecord(ownerRecord) || ownerRecord.tabId === resolveEditorTabId(editor)) return;
     cancelPendingSave();
-    reportForeignSnapshot(editor, { tabId: String(ownerRecord.tabId || ''), savedAt: String(ownerRecord.savedAt || '') });
+    reportForeignSnapshot(editor, {
+      tabId: String(ownerRecord.tabId || ''),
+      savedAt: String(ownerRecord.savedAt || ''),
+    });
   };
   containerWindow.addEventListener('storage', handleStorageEvent);
   editor.on('destroy', () => containerWindow.removeEventListener('storage', handleStorageEvent));

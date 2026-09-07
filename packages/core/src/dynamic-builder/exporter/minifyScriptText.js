@@ -1,5 +1,18 @@
 const regexStartTokens = '(,=:[!&|?{};+-*%<>~^';
-const regexStartWords = ['return', 'typeof', 'instanceof', 'in', 'of', 'new', 'delete', 'void', 'throw', 'case', 'do', 'else'];
+const regexStartWords = [
+  'return',
+  'typeof',
+  'instanceof',
+  'in',
+  'of',
+  'new',
+  'delete',
+  'void',
+  'throw',
+  'case',
+  'do',
+  'else',
+];
 
 const endsWithRegexStartWord = (outputText) =>
   regexStartWords.some((wordText) => new RegExp('(?:^|[^\\w$])' + wordText + '$').test(outputText));
@@ -105,6 +118,7 @@ const collapseLineWhitespace = (sourceText) => {
   return outputText.trim();
 };
 
-const minifyScriptText = (scriptText) => collapseLineWhitespace(stripScriptComments(String(scriptText == null ? '' : scriptText)));
+const minifyScriptText = (scriptText) =>
+  collapseLineWhitespace(stripScriptComments(String(scriptText == null ? '' : scriptText)));
 
 export default minifyScriptText;

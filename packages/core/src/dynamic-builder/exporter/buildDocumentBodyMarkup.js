@@ -34,7 +34,8 @@ const buildDocumentBodyMarkup = (editor, page, buildOptions) => {
     ].filter(Boolean);
     if (scriptChunks.length) {
       const joinedScriptText = scriptChunks.join('\n\n');
-      const compactScriptText = optionsRecord.optimizeJs === false ? joinedScriptText : minifyScriptText(joinedScriptText);
+      const compactScriptText =
+        optionsRecord.optimizeJs === false ? joinedScriptText : minifyScriptText(joinedScriptText);
       const inlineScriptText = compactScriptText.replace(/<\/script/gi, '<\\/script');
       endParts.push('<script>\n' + inlineScriptText + '\n</script>');
     }

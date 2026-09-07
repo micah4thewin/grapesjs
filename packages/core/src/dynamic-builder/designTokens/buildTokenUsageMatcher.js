@@ -29,7 +29,7 @@ const buildTokenUsageMatcher = (canvasDocument, groupKey, tokenName, tokenValue)
   if (groupKey === 'font') {
     const familyName = value
       .split(',')[0]
-      .replace(/["']/g, '')
+      .replace(/[\u0022\u0027]/g, '')
       .trim()
       .toLowerCase();
     if (!familyName) return null;

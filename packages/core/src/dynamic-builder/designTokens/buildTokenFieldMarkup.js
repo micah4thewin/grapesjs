@@ -13,7 +13,7 @@ const buildTokenFieldMarkup = (groupKey, tokenName, tokenValue, baselineValue) =
   const safeLabel = escapeHtmlText(description.label);
   const fieldId = `db-token-${safeGroup}-${safeName}`;
   const variableName = escapeHtmlText(formatTokenCssVariableName(groupKey, tokenName));
-  const helpText = description.help ? `${escapeHtmlText(description.help)} · ` : '';
+  const helpText = description.help ? `${escapeHtmlText(description.help)} \u00b7 ` : '';
   const swatchMarkup =
     groupKey === 'color'
       ? [

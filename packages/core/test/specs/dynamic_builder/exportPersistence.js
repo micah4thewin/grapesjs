@@ -415,7 +415,9 @@ describe('Dynamic builder export and persistence with an editor', () => {
       expect(restoreRevisionRecord(editor, revisionRecord)).toBe(true);
       expect(editor.UndoManager.hasUndo()).toBe(false);
       expect(editor.getHtml()).not.toContain('after revision');
-      const newestRecord = readRevisionList(editor, moduleOptions).find((storedRecord) => storedRecord.kind === 'safety');
+      const newestRecord = readRevisionList(editor, moduleOptions).find(
+        (storedRecord) => storedRecord.kind === 'safety',
+      );
       expect(JSON.stringify(newestRecord.payload.projectData)).toContain('after revision');
     });
 

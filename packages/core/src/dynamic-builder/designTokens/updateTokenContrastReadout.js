@@ -12,7 +12,7 @@ const updateTokenContrastReadout = (readoutElement, tokenName, tokenRecord) => {
     return;
   }
   readoutElement.setAttribute('data-kind', contrast.kind);
-  readoutElement.textContent = `${contrast.text} · ${pairRecord.usage}`;
+  readoutElement.textContent = `${contrast.text} \u00b7 ${pairRecord.usage}`;
 };
 
 export default updateTokenContrastReadout;

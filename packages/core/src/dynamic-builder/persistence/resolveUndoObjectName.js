@@ -6,7 +6,10 @@ const resolveUndoObjectName = (actionObject) => {
   }
   if (typeof actionObject.selectorsToString === 'function') return 'a style rule';
   if (typeof actionObject.getName === 'function' && typeof actionObject.get === 'function') {
-    const componentName = String(actionObject.getName() || '').trim().replace(/^Db-/, '').replace(/-/g, ' ');
+    const componentName = String(actionObject.getName() || '')
+      .trim()
+      .replace(/^Db-/, '')
+      .replace(/-/g, ' ');
     if (componentName) return componentName.charAt(0).toUpperCase() + componentName.slice(1);
   }
   return '';
