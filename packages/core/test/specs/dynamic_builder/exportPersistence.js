@@ -48,6 +48,12 @@ describe('Dynamic builder export and persistence helpers', () => {
     test('ignores braces inside strings', () => {
       expect(extractCssRuleSelectors('.x::before{content:"{"}.y{color:red}')).toEqual(['.x::before', '.y']);
     });
+
+    test('keeps quoted attribute values inside selectors', () => {
+      expect(extractCssRuleSelectors('[data-db-aos-ready="true"] [data-db-aos]{opacity:1}')).toEqual([
+        '[data-db-aos-ready="true"] [data-db-aos]',
+      ]);
+    });
   });
 
   describe('doesCssChunkMatchDocuments', () => {
@@ -61,6 +67,13 @@ describe('Dynamic builder export and persistence helpers', () => {
     test('drops a chunk whose selectors match nothing', () => {
       const documents = [parseDocument('<p class="db-text">x</p>')];
       expect(doesCssChunkMatchDocuments('.db-accordion{color:red}.db-tabs>.db-tab{color:blue}', documents)).toBe(false);
+    });
+
+    test('judges quoted attribute selectors by what the pages really contain', () => {
+      const cssText = '[data-db-aos-ready="true"] [data-db-aos]{opacity:1}';
+      expect(doesCssChunkMatchDocuments(cssText, [parseDocument('<p class="db-text">x</p>')])).toBe(false);
+      const readyDocument = parseDocument('<div data-db-aos-ready="true"><p data-db-aos="fade">x</p></div>');
+      expect(doesCssChunkMatchDocuments(cssText, [readyDocument])).toBe(true);
     });
 
     test('keeps chunks that only hold at-rules or root variables', () => {

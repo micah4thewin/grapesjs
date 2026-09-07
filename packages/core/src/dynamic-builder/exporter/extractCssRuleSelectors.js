@@ -10,12 +10,18 @@ const extractCssRuleSelectors = (cssText) => {
   for (let cursor = 0; cursor < sourceText.length; cursor += 1) {
     const character = sourceText[cursor];
     if (quoteCharacter) {
-      if (character === '\\') cursor += 1;
-      else if (character === quoteCharacter) quoteCharacter = '';
+      preludeText += character;
+      if (character === '\\') {
+        preludeText += sourceText[cursor + 1] || '';
+        cursor += 1;
+      } else if (character === quoteCharacter) {
+        quoteCharacter = '';
+      }
       continue;
     }
     if (character === '"' || character === "'") {
       quoteCharacter = character;
+      preludeText += character;
       continue;
     }
     if (character === '{') {
