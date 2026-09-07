@@ -16,6 +16,9 @@ const buildPreviewChromeFixCss = () => `
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  padding: 0;
+  line-height: 0;
   width: 2.75rem;
   height: 2.75rem;
   top: auto;
@@ -31,8 +34,8 @@ const buildPreviewChromeFixCss = () => `
 .gjs-off-prv::before {
   content: '';
   display: block;
-  width: 18px;
-  height: 18px;
+  width: 100%;
+  height: 100%;
   background-color: var(--gjs-db-muted);
   -webkit-mask-image: ${eyeOffDataUri};
   mask-image: ${eyeOffDataUri};

@@ -148,7 +148,7 @@ describe('Dynamic builder shell core', () => {
     test('the top bar honours brand and sound options and names the pages trigger', () => {
       ensureMainPageName(editor);
       const defaultMarkup = buildTopBarMarkup(editor, {}, {});
-      expect(defaultMarkup).toContain('Dynamic Builder toolbar');
+      expect(defaultMarkup).toContain('Editor toolbar');
       expect(defaultMarkup).toContain('data-db-sound-toggle');
       expect(defaultMarkup).toContain('aria-label="Pages: Home"');
       expect(defaultMarkup).toContain('Save a snapshot');

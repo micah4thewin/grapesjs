@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GrapesJS Dynamic Builder</title>
+    <title>Editor</title>
     <link rel="stylesheet" href="dist/css/grapes.min.css" />
     <script src="grapes.min.js"></script>
     <style>
@@ -40,7 +40,7 @@
         plugins: [
           function (editorInstance) {
             grapesjs.dynamicBuilder(editorInstance, {
-              shell: { brandLabel: 'Dynamic Builder' },
+              shell: { brandLabel: 'Editor' },
               // Scope the autosave key so two demos on the same origin do not overwrite each other.
               persistence: { storageKey: 'db-project:demo' },
             });
