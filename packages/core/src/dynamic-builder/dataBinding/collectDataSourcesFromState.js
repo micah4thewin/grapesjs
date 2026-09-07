@@ -1,3 +1,4 @@
+import escapeSelectorValue from './escapeSelectorValue.js';
 import validateJsonAreaElement from './validateJsonAreaElement.js';
 
 const collectDataSourcesFromState = (editorState, formElement) => {
@@ -5,7 +6,7 @@ const collectDataSourcesFromState = (editorState, formElement) => {
   let firstInvalidArea = null;
   editorState.entries.forEach((sourceEntry) => {
     if (sourceEntry.mode === 'json') {
-      const jsonArea = formElement.querySelector(`[data-db-source-json="${CSS.escape(sourceEntry.name)}"]`);
+      const jsonArea = formElement.querySelector(`[data-db-source-json="${escapeSelectorValue(sourceEntry.name)}"]`);
       const parsedValue = validateJsonAreaElement(jsonArea);
       if (parsedValue === null) {
         if (!firstInvalidArea && jsonArea) firstInvalidArea = jsonArea;

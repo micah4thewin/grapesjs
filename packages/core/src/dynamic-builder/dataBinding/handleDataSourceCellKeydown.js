@@ -1,3 +1,4 @@
+import escapeSelectorValue from './escapeSelectorValue.js';
 import applyDataSourceRowAction from './applyDataSourceRowAction.js';
 import noteDataSourcesChange from './noteDataSourcesChange.js';
 import renderDataSourceEntry from './renderDataSourceEntry.js';
@@ -6,9 +7,9 @@ const handleDataSourceCellKeydown = (editor, formElement, editorState, sourceEnt
   const rowIndex = parseInt(cellInput.getAttribute('data-db-cell-row'), 10);
   const fieldName = cellInput.getAttribute('data-db-cell-field');
   if (Number.isNaN(rowIndex) || !fieldName) return;
-  const nextSelector = `[data-db-cell-row="${rowIndex + 1}"][data-db-cell-field="${CSS.escape(fieldName)}"]`;
+  const nextSelector = `[data-db-cell-row="${rowIndex + 1}"][data-db-cell-field="${escapeSelectorValue(fieldName)}"]`;
   const nextInput = formElement.querySelector(
-    `[data-db-source-entry="${CSS.escape(sourceEntry.name)}"] ${nextSelector}`,
+    `[data-db-source-entry="${escapeSelectorValue(sourceEntry.name)}"] ${nextSelector}`,
   );
   if (nextInput) {
     nextInput.focus();

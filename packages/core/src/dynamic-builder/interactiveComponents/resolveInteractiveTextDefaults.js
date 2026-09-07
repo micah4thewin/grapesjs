@@ -18,6 +18,8 @@ const resolveInteractiveTextDefaults = (moduleOptions) => {
     navbarBrandText: 'Acme Studio',
     navbarLinkLabels: ['Home', 'About', 'Contact'],
     navbarToggleLabel: 'Toggle navigation menu',
+    navbarCloseLabel: 'Close menu',
+    navbarCtaLabel: 'Get in touch',
     breadcrumbTrail: ['Home', 'Library', 'Current page'],
     announcementText: 'Free shipping on every order this week.',
     announcementCloseLabel: 'Dismiss announcement',

@@ -1,5 +1,5 @@
 import buildChoicePropertyRecord from './buildChoicePropertyRecord.js';
-import buildTextPropertyRecord from './buildTextPropertyRecord.js';
+import getAspectRatioPresetRecords from './getAspectRatioPresetRecords.js';
 
 const buildSizingSectorDefinition = () => ({
   id: 'sizing',
@@ -12,7 +12,7 @@ const buildSizingSectorDefinition = () => ({
     'max-width',
     'min-height',
     'max-height',
-    buildTextPropertyRecord('aspect-ratio', 'Aspect ratio', 'auto'),
+    buildChoicePropertyRecord('db-preset', 'aspect-ratio', 'Aspect ratio', 'auto', getAspectRatioPresetRecords()),
     buildChoicePropertyRecord('select', 'object-fit', 'Object fit', 'fill', [
       'fill',
       'contain',

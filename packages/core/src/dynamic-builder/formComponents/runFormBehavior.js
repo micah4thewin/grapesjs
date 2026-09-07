@@ -9,9 +9,7 @@ const runFormBehavior = () => {
         (controlElement) => controlElement.type !== 'hidden' && isActiveElement(controlElement),
       );
     const readRadioGroup = (controlElement) =>
-      readControls().filter(
-        (otherElement) => otherElement.type === 'radio' && otherElement.name === controlElement.name,
-      );
+      readControls().filter((candidate) => candidate.type === 'radio' && candidate.name === controlElement.name);
     const setStatus = (messageText, statusKind) => {
       if (!statusElement) return;
       statusElement.textContent = messageText || '';
@@ -19,15 +17,15 @@ const runFormBehavior = () => {
       statusElement.setAttribute('role', statusKind === 'error' ? 'alert' : 'status');
       statusElement.setAttribute('aria-live', statusKind === 'error' ? 'assertive' : 'polite');
     };
-    const resolveErrorElement = (controlElement, createMissing) => {
-      const anchorElement = controlElement.closest('.db-choice-list, .db-radio-group, .db-choice') || controlElement;
+    const resolveErrorElement = (control, createMissing) => {
+      const anchorElement = control.closest('.db-choice-list') || control.closest('.db-choice') || control;
       const siblingElement = anchorElement.nextElementSibling;
       if (siblingElement && siblingElement.classList.contains('db-field-error')) return siblingElement;
       if (!createMissing) return null;
-      if (!controlElement.id) controlElement.id = 'db-control-' + Math.random().toString(36).slice(2, 9);
+      if (!control.id) control.id = 'db-control-' + Math.random().toString(36).slice(2, 9);
       const errorElement = document.createElement('small');
       errorElement.className = 'db-field-error';
-      errorElement.id = controlElement.id + '-error';
+      errorElement.id = control.id + '-error';
       anchorElement.insertAdjacentElement('afterend', errorElement);
       return errorElement;
     };

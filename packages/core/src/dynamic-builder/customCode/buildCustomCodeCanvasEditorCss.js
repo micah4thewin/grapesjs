@@ -14,6 +14,8 @@ const buildCustomCodeCanvasEditorCss = () =>
     '  font-size: 12px; background: #e2e8f0; border-radius: 4px; padding: 2px 6px; overflow: hidden;',
     '  text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }',
     '.db-code-card-note { font-size: 11px; color: #64748b; }',
+    '.db-code-card-blocked { color: #b91c1c; font-weight: 600; }',
+    '.db-code-card-link { color: inherit; text-decoration: underline; cursor: pointer; }',
     '.db-custom-html:empty { min-height: 32px; outline: 1px dashed #cbd5e1; }',
   ].join('\n');
 

@@ -9,7 +9,7 @@ const applyFlagRecord = (component, flagRecord) => {
 };
 
 const applyRuleToComponent = (component, rule) => {
-  const flagRecord = { ...rule.flags };
+  const flagRecord = { ...rule.flags, dbInnerPartLocked: true };
   if (rule.name) flagRecord.name = rule.name;
   applyFlagRecord(component, flagRecord);
   if (!rule.lockSubtree || typeof component.components !== 'function') return;

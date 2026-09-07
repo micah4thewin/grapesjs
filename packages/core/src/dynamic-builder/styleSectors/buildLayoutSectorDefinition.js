@@ -28,10 +28,6 @@ const buildLayoutSectorDefinition = () => ({
     'bottom',
     'left',
     buildNumberPropertyRecord('z-index', 'Z index', 'auto', { units: [], fixedValues: ['auto'] }),
-    'overflow',
-    'float',
-    buildChoicePropertyRecord('select', 'visibility', 'Visibility', 'visible', ['visible', 'hidden', 'collapse']),
-    'cursor',
   ],
 });
 

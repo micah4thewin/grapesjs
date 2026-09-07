@@ -6,8 +6,12 @@ const buildCardSampleRecord = (sampleIndex) => {
   const cardRecord = cardRecords[sampleIndex % cardRecords.length];
   const [imageRecord, bodyRecord] = buildCardDefaultChildren();
   imageRecord.attributes = { ...imageRecord.attributes, alt: 'Illustration for ' + cardRecord.title };
-  bodyRecord.components[0].components = cardRecord.title;
-  bodyRecord.components[1].components = cardRecord.text;
+  const [titleRecord, textRecord, linkRecord] = bodyRecord.components;
+  titleRecord.components = cardRecord.title;
+  textRecord.components = cardRecord.text;
+  if (linkRecord && linkRecord.attributes) {
+    linkRecord.attributes = { ...linkRecord.attributes, 'aria-label': 'Read more: ' + cardRecord.title };
+  }
   return { type: 'db-card', components: [imageRecord, bodyRecord] };
 };
 

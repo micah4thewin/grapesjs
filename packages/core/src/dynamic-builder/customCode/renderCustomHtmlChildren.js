@@ -1,4 +1,13 @@
+import getInertChildFlags from './getInertChildFlags.js';
 import sanitizeHtmlMarkup from '../support/sanitizeHtmlMarkup.js';
+import walkComponentTree from '../support/walkComponentTree.js';
+
+const makeChildrenInert = (component) => {
+  const inertFlags = getInertChildFlags();
+  walkComponentTree(component, (currentComponent) => {
+    if (currentComponent !== component && currentComponent.set) currentComponent.set(inertFlags, { avoidStore: true });
+  });
+};
 
 const renderCustomHtmlChildren = (component) => {
   if (!component || !component.components || !component.getAttributes) return;
@@ -14,6 +23,7 @@ const renderCustomHtmlChildren = (component) => {
   const safeMarkup = sanitizeHtmlMarkup(rawCode, { allowIframes: true });
   const fallbackMarkup = '<p class="db-custom-html-note">Empty custom HTML block.</p>';
   component.components(safeMarkup || fallbackMarkup);
+  makeChildrenInert(component);
 };
 
 export default renderCustomHtmlChildren;

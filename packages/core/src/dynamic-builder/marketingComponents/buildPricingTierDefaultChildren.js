@@ -1,8 +1,10 @@
 import buildPricingFeatureRowRecord from './buildPricingFeatureRowRecord.js';
 import computeYearlyAmount from './computeYearlyAmount.js';
 import formatPriceAmount from './formatPriceAmount.js';
+import getPricingTierPresetRecords from './getPricingTierPresetRecords.js';
 
-const buildPricingTierDefaultChildren = (tierPreset) => {
+const buildPricingTierDefaultChildren = (presetRecord) => {
+  const tierPreset = presetRecord || getPricingTierPresetRecords()[0];
   const monthlyText = formatPriceAmount(tierPreset.monthlyAmount, 'USD', '');
   const yearlyText = formatPriceAmount(computeYearlyAmount(tierPreset.monthlyAmount, 17), 'USD', '');
   return [

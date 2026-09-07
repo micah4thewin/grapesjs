@@ -1,3 +1,4 @@
+import escapeSelectorValue from './escapeSelectorValue.js';
 import buildDataSourceEntryMarkup from './buildDataSourceEntryMarkup.js';
 import findDataSourceEntry from './findDataSourceEntry.js';
 import buildElementFromMarkup from '../support/buildElementFromMarkup.js';
@@ -11,7 +12,7 @@ const renderDataSourceEntry = (formElement, editorState, sourceName, focusSelect
     buildDataSourceEntryMarkup(sourceEntry, editorState.usage[sourceName]),
   );
   if (!nextElement) return null;
-  const previousElement = listElement.querySelector(`[data-db-source-entry="${CSS.escape(sourceName)}"]`);
+  const previousElement = listElement.querySelector(`[data-db-source-entry="${escapeSelectorValue(sourceName)}"]`);
   if (previousElement) previousElement.replaceWith(nextElement);
   else listElement.appendChild(nextElement);
   const focusTarget = focusSelector ? nextElement.querySelector(focusSelector) : null;

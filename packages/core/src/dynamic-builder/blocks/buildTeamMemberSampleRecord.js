@@ -1,14 +1,12 @@
 import buildTeamMemberDefaultChildren from '../marketingComponents/buildTeamMemberDefaultChildren.js';
-import getSamplePeopleRecords from './getSamplePeopleRecords.js';
+import getTeamMemberPresetRecords from '../marketingComponents/getTeamMemberPresetRecords.js';
 
 const buildTeamMemberSampleRecord = (sampleIndex) => {
-  const peopleRecords = getSamplePeopleRecords();
-  const personRecord = peopleRecords[sampleIndex % peopleRecords.length];
-  const [portraitRecord, captionRecord] = buildTeamMemberDefaultChildren();
-  portraitRecord.attributes = { ...portraitRecord.attributes, alt: 'Portrait of ' + personRecord.name };
-  captionRecord.components[0].components = personRecord.name;
-  captionRecord.components[1].components = personRecord.role;
-  return { type: 'db-team-member', components: [portraitRecord, captionRecord] };
+  const presetRecords = getTeamMemberPresetRecords();
+  return {
+    type: 'db-team-member',
+    components: buildTeamMemberDefaultChildren(presetRecords[sampleIndex % presetRecords.length]),
+  };
 };
 
 export default buildTeamMemberSampleRecord;

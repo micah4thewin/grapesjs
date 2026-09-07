@@ -9,10 +9,24 @@ import syncAccordionHeadingLevel from './syncAccordionHeadingLevel.js';
 import syncAnnouncementLink from './syncAnnouncementLink.js';
 import syncNavbarLogo from './syncNavbarLogo.js';
 
+const findOwningInteractiveContainer = (component) => {
+  const ruleRecord = getInteractiveInnerPartRules();
+  let currentComponent = typeof component.parent === 'function' ? component.parent() : null;
+  while (currentComponent) {
+    if (ruleRecord[String(currentComponent.get('type') || '')]) return currentComponent;
+    currentComponent = typeof currentComponent.parent === 'function' ? currentComponent.parent() : null;
+  }
+  return null;
+};
+
 const prepareInteractiveComponent = (editor, component, interactiveTextDefaults) => {
   const typeName = component && typeof component.get === 'function' ? String(component.get('type') || '') : '';
   if (!typeName) return false;
   if (getInteractiveInnerPartRules()[typeName]) lockInteractiveInnerParts(component);
+  else if (!component.get('dbInnerPartLocked')) {
+    const containerComponent = findOwningInteractiveContainer(component);
+    if (containerComponent) lockInteractiveInnerParts(containerComponent);
+  }
   if (typeName === 'db-announcement') {
     ensureAnnouncementStorageKey(component);
     syncAnnouncementLink(component);

@@ -11,21 +11,21 @@ const createCustomScriptTypeDefinition = () => ({
       droppable: false,
       attributes: { 'data-db-type': 'custom-script', scriptCode: '' },
       classes: ['db-custom-script', 'db-code-card'],
-      components: buildScriptCardChildren(''),
+      components: buildScriptCardChildren('', false),
       traits: [
         {
           type: 'db-code',
           name: 'scriptCode',
           language: 'javascript',
           label: 'Script code',
-          helpText: 'Stays inert until you turn on "Allow script tags" in Custom code.',
+          helpText:
+            'Ships with the published site only while "Allow script tags" is on in Custom code. Until then this block is left out of exports.',
         },
         {
           type: 'button',
           name: 'dbOpenCustomCode',
-          label: '',
+          label: 'Settings',
           text: 'Open custom code settings',
-          full: true,
           command: 'db:open-custom-code',
         },
       ],

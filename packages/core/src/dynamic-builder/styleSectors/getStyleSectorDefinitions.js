@@ -1,3 +1,4 @@
+import buildAdvancedLayoutSectorDefinition from './buildAdvancedLayoutSectorDefinition.js';
 import buildBackgroundsSectorDefinition from './buildBackgroundsSectorDefinition.js';
 import buildBordersSectorDefinition from './buildBordersSectorDefinition.js';
 import buildEffectsSectorDefinition from './buildEffectsSectorDefinition.js';
@@ -20,6 +21,7 @@ const getStyleSectorDefinitions = (moduleOptions, editor) => {
     buildBackgroundsSectorDefinition(),
     buildBordersSectorDefinition(),
     buildEffectsSectorDefinition(),
+    buildAdvancedLayoutSectorDefinition(),
   ];
   const extraSectorOption = Array.isArray(safeOptions.extraSectors) ? safeOptions.extraSectors : safeOptions.extra;
   const extraSectors = Array.isArray(extraSectorOption) ? extraSectorOption : [];

@@ -27,11 +27,29 @@ const buildNavbarDrawerCss = () => `
     overscroll-behavior: contain;
     transform: translateX(100%);
     visibility: hidden;
-    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), visibility 260ms;
   }
   .db-navbar[data-db-open="true"] .db-navbar-panel {
     transform: translateX(0);
     visibility: visible;
+  }
+  .db-navbar-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: var(--db-space-2);
+    right: max(var(--db-space-2), env(safe-area-inset-right));
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: var(--db-radius-sm);
+    color: var(--db-color-text);
+    cursor: pointer;
+  }
+  .db-navbar-close:hover {
+    background: var(--db-color-surface-alt);
   }
   .db-navbar[data-db-layout] .db-navbar-links {
     flex-direction: column;
@@ -41,8 +59,6 @@ const buildNavbarDrawerCss = () => `
   }
   .db-navbar-link {
     min-height: 3rem;
-    display: flex;
-    align-items: center;
     padding: var(--db-space-3);
     font-size: var(--db-type-base);
     border-bottom: 1px solid var(--db-color-line);
@@ -63,7 +79,6 @@ const buildNavbarDrawerCss = () => `
     background: rgba(12, 14, 18, 0.45);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 220ms ease;
   }
   .db-navbar[data-db-open="true"] .db-navbar-scrim {
     opacity: 1;

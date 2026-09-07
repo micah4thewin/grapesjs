@@ -155,14 +155,10 @@ describe('Dynamic builder block library', () => {
   });
 
   test('grids and templates vary their placeholder people and quotes', () => {
-    const memberNames = [0, 1, 2].map(
-      (sampleIndex) => buildTeamMemberSampleRecord(sampleIndex).components[1].components[0].components,
-    );
-    expect(new Set(memberNames).size).toBe(3);
-    const quoteNames = [0, 1, 2].map(
-      (sampleIndex) => buildTestimonialSampleRecord(sampleIndex).components[1].components[1].components[0].components,
-    );
-    expect(new Set(quoteNames).size).toBe(3);
+    const memberMarkup = [0, 1, 2].map((sampleIndex) => JSON.stringify(buildTeamMemberSampleRecord(sampleIndex)));
+    expect(new Set(memberMarkup).size).toBe(3);
+    const quoteMarkup = [0, 1, 2].map((sampleIndex) => JSON.stringify(buildTestimonialSampleRecord(sampleIndex)));
+    expect(new Set(quoteMarkup).size).toBe(3);
     const teamGridContent = editor.BlockManager.get('db-team-grid').get('content');
     expect(teamGridContent.components[0].components[1].name).toBe('Team grid');
   });

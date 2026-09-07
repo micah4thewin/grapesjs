@@ -1,7 +1,9 @@
 import buildDirectionsUrl from './buildDirectionsUrl.js';
 import buildPhoneHref from './buildPhoneHref.js';
+import getDefaultContactRecord from './getDefaultContactRecord.js';
 
 const buildContactDefaultChildren = (contactRecord) => {
+  const safeRecord = contactRecord || getDefaultContactRecord();
   const hoursPresets = [
     ['Monday to Friday', '9:00 - 18:00'],
     ['Saturday', '10:00 - 16:00'],
@@ -35,19 +37,19 @@ const buildContactDefaultChildren = (contactRecord) => {
           name: 'Street address',
           classes: ['db-contact-line'],
           attributes: { 'data-db-field': 'address' },
-          components: contactRecord.address,
+          components: safeRecord.address,
         },
         buildContactLink(
           'phone',
-          contactRecord.phone,
-          buildPhoneHref(contactRecord.phone),
+          safeRecord.phone,
+          buildPhoneHref(safeRecord.phone),
           'Phone',
           'Phone link (tel:)',
         ),
         buildContactLink(
           'email',
-          contactRecord.email,
-          'mailto:' + contactRecord.email,
+          safeRecord.email,
+          'mailto:' + safeRecord.email,
           'Email',
           'Email link (mailto:)',
         ),
@@ -75,7 +77,7 @@ const buildContactDefaultChildren = (contactRecord) => {
         'data-db-variant': 'secondary',
         'data-db-size': 'md',
         'data-db-field': 'directions',
-        href: buildDirectionsUrl(contactRecord.address),
+        href: buildDirectionsUrl(safeRecord.address),
         target: '_blank',
         rel: 'noopener',
       },

@@ -1,17 +1,14 @@
+import getSiteCustomCodeRecord from '../exporter/getSiteCustomCodeRecord.js';
 import getSiteMetaRecord from '../support/getSiteMetaRecord.js';
 import isPlainRecord from '../support/isPlainRecord.js';
 
 const resolveCustomCodeSettings = (editor, moduleOptions) => {
-  const siteMetaRecord = getSiteMetaRecord(editor);
-  const storedRecord = isPlainRecord(siteMetaRecord.customCode) ? siteMetaRecord.customCode : {};
+  const storedRecord = getSiteMetaRecord(editor).customCode;
   const optionRecord = isPlainRecord(moduleOptions) ? moduleOptions : {};
-  const storedAllowScripts = storedRecord.allowScripts;
+  const hasStoredChoice = isPlainRecord(storedRecord) && storedRecord.allowScripts !== undefined;
   return {
-    headHtml: String(storedRecord.headHtml || ''),
-    bodyStartHtml: String(storedRecord.bodyStartHtml || ''),
-    bodyEndHtml: String(storedRecord.bodyEndHtml || ''),
-    allowScripts: storedAllowScripts === undefined ? optionRecord.allowScripts === true : storedAllowScripts === true,
-    scriptOriginAllowlist: Array.isArray(storedRecord.scriptOriginAllowlist) ? storedRecord.scriptOriginAllowlist : [],
+    ...getSiteCustomCodeRecord(editor),
+    allowScripts: hasStoredChoice ? storedRecord.allowScripts === true : optionRecord.allowScripts === true,
   };
 };
 

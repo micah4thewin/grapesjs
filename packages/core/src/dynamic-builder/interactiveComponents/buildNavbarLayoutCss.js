@@ -45,7 +45,6 @@ const buildNavbarLayoutCss = () => `
   height: 2px;
   border-radius: 2px;
   background: currentColor;
-  transition: transform 220ms ease, opacity 160ms ease;
 }
 .db-navbar-scrim {
   display: none;
@@ -56,12 +55,6 @@ const buildNavbarLayoutCss = () => `
   }
   .db-navbar-link {
     padding: var(--db-space-2);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .db-navbar-panel,
-  .db-navbar-burger-bars span {
-    transition: none;
   }
 }
 `;

@@ -9,8 +9,6 @@ const buildNavbarBaseCss = () => `
 .db-navbar[data-db-sticky="true"] {
   position: sticky;
   top: 0;
-  backdrop-filter: blur(10px);
-  background: var(--db-color-surface);
 }
 .db-navbar-nav {
   display: flex;
@@ -26,6 +24,7 @@ const buildNavbarBaseCss = () => `
   display: inline-flex;
   align-items: center;
   gap: var(--db-space-2);
+  min-height: 2.75rem;
   font-family: var(--db-font-display);
   font-size: var(--db-type-lg);
   font-weight: 700;
@@ -40,6 +39,9 @@ const buildNavbarBaseCss = () => `
   max-width: 10rem;
   object-fit: contain;
 }
+.db-navbar[data-db-brand-text="false"] .db-navbar-brand:has(.db-navbar-logo) .db-navbar-brand-text {
+  display: none;
+}
 .db-navbar-links {
   display: flex;
   align-items: center;
@@ -49,15 +51,16 @@ const buildNavbarBaseCss = () => `
   list-style: none;
 }
 .db-navbar-link {
-  display: block;
+  display: flex;
+  align-items: center;
   position: relative;
+  min-height: 2.75rem;
   padding: var(--db-space-2) var(--db-space-3);
   border-radius: var(--db-radius-sm);
   font-size: var(--db-type-sm);
   font-weight: 500;
   color: var(--db-color-text-muted);
   text-decoration: none;
-  transition: color 160ms ease, background-color 160ms ease;
 }
 .db-navbar-link:hover {
   color: var(--db-color-text);
@@ -80,12 +83,14 @@ const buildNavbarBaseCss = () => `
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  transition: opacity 160ms ease;
 }
 .db-navbar-cta:hover {
   opacity: 0.9;
 }
 .db-navbar[data-db-cta="false"] .db-navbar-cta {
+  display: none;
+}
+.db-navbar-close {
   display: none;
 }
 `;
