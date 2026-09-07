@@ -8,10 +8,10 @@ const duplicateSitePage = (editor, pageId) => {
   const sourcePage = editor.Pages.get(pageId);
   if (!sourcePage || !sourcePage.getMainComponent) return null;
   const copyName = resolveUniquePageName(editor, `${getPageDisplayName(sourcePage)} copy`);
-  const copiedComponents = clonePageComponents(sourcePage);
   const copiedPage = editor.Pages.add({ name: copyName }, { select: true });
   if (!copiedPage) return null;
   const copiedRoot = copiedPage.getMainComponent();
+  const copiedComponents = clonePageComponents(sourcePage);
   if (copiedRoot && copiedComponents.length) copiedRoot.append(copiedComponents);
   const sourceMeta = sourcePage.get('dbPageMeta');
   if (isPlainRecord(sourceMeta)) {

@@ -4,7 +4,7 @@ const buildNewSiteFormMarkup = () =>
     '<div class="gjs-db-section-title">Start a new site</div>',
     '<label class="gjs-db-field"><span class="gjs-db-field-label">Site name</span>',
     '<input class="gjs-db-field-input" name="siteName" type="text" maxlength="80"',
-    ' placeholder="Bakery on Main" autocomplete="off" data-db-autofocus></label>',
+    ' placeholder="Bakery on Main" autocomplete="off"></label>',
     '<label class="gjs-db-field"><span class="gjs-db-field-label">What it is for (optional)</span>',
     '<input class="gjs-db-field-input" name="siteDescription" type="text" maxlength="140"',
     ' placeholder="Menu, opening hours and directions" autocomplete="off"></label>',

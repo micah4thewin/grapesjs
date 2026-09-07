@@ -14,14 +14,17 @@ const startSiteManagerSession = (editor, managerOptions) => {
   if (!editor.onReady) return false;
   editor.onReady(() => {
     if (!isEditorLive(editor)) return;
-    managerOptions.storageAdapter.listSites().then((siteRecords) => {
-      if (!isEditorLive(editor)) return null;
-      const hasSites = siteRecords.length > 0;
-      const startPromise = hasSites
-        ? restoreLastOpenedSite(editor, managerOptions, siteRecords)
-        : adoptCurrentProjectAsSite(editor, managerOptions);
-      return startPromise.then((siteRecord) => finishSessionStart(editor, managerOptions, siteRecord, !hasSites));
-    });
+    managerOptions.storageAdapter
+      .listSites()
+      .then((siteRecords) => {
+        if (!isEditorLive(editor)) return null;
+        const hasSites = siteRecords.length > 0;
+        const startPromise = hasSites
+          ? restoreLastOpenedSite(editor, managerOptions, siteRecords)
+          : adoptCurrentProjectAsSite(editor, managerOptions);
+        return startPromise.then((siteRecord) => finishSessionStart(editor, managerOptions, siteRecord, !hasSites));
+      })
+      .catch((sessionError) => console.error(sessionError));
   });
   return true;
 };

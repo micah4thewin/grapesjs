@@ -1,9 +1,12 @@
+import isEditorLive from '../support/isEditorLive.js';
+
 const revealSymbolInstance = (editor, instanceComponent) => {
   if (!instanceComponent) return;
   editor.select(instanceComponent);
   const canvasModule = editor.Canvas;
   if (!canvasModule || typeof canvasModule.scrollTo !== 'function') return;
   setTimeout(() => {
+    if (!isEditorLive(editor)) return;
     try {
       canvasModule.scrollTo(instanceComponent, { behavior: 'smooth', block: 'center', force: true });
     } catch (scrollError) {

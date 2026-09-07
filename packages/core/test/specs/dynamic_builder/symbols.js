@@ -87,6 +87,15 @@ describe('Dynamic builder reusable components', () => {
     });
   });
 
+  describe('canvas rendering', () => {
+    test('every registered component type can build a canvas view', () => {
+      const brokenTypes = editor.Components.getTypes()
+        .filter((componentType) => typeof (componentType.view || {}).getEvents !== 'function')
+        .map((componentType) => componentType.id);
+      expect(brokenTypes).toEqual([]);
+    });
+  });
+
   describe('placement', () => {
     test('a footer joins every page at the bottom and a navbar at the top', () => {
       const wrapper = editor.getWrapper();

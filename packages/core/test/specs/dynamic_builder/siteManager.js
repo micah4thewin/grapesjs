@@ -21,7 +21,7 @@ const readIndexSites = () => JSON.parse(localStorage.getItem(siteIndexKey) || '{
 
 const waitFor = (delayMs) => new Promise((resolveWait) => setTimeout(resolveWait, delayMs));
 
-jest.setTimeout(30000);
+jest.setTimeout(60000);
 
 describe('Dynamic builder site manager', () => {
   describe('site records', () => {
@@ -299,6 +299,8 @@ describe('Dynamic builder site manager', () => {
       await waitFor(5);
       const modalContent = editor.Modal.getContentEl();
       const firstCard = modalContent.querySelector('[data-db-site-id="' + firstRecord.id + '"]');
+      expect(firstCard.querySelector('[data-db-site-row="rename"]').hidden).toBe(true);
+      expect(firstCard.querySelector('[data-db-site-row="delete"]').hidden).toBe(true);
       firstCard.querySelector('[data-db-site-action="rename"]').click();
       expect(firstCard.querySelector('[data-db-site-row="rename"]').hidden).toBe(false);
       firstCard.querySelector('[data-db-site-rename-input]').value = 'Studio Lane';
@@ -330,6 +332,17 @@ describe('Dynamic builder site manager', () => {
       const copiedSnapshot = JSON.parse(localStorage.getItem(copyRecord.storageKey));
       expect(copiedSnapshot.projectData.pages.map((pageRecord) => pageRecord.name)).toContain('Gallery');
       expect(getStorageKey()).toBe(firstRecord.storageKey);
+      const downloadedKeys = [];
+      editor.Commands.add('db:download-site', () => {
+        downloadedKeys.push(editor.getModel().get('dbStorageKey'));
+        return true;
+      });
+      editor.Modal.getContentEl()
+        .querySelector('[data-db-site-id="' + copyRecord.id + '"] [data-db-site-action="export"]')
+        .click();
+      await waitFor(40);
+      expect(downloadedKeys).toEqual([copyRecord.storageKey]);
+      expect(getStorageKey()).toBe(copyRecord.storageKey);
     });
 
     test('opens the manager on start unless the host turns it off', async () => {

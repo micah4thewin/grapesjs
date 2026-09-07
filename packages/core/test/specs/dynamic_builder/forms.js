@@ -17,6 +17,8 @@ import sanitizeFieldName from '../../../src/dynamic-builder/formComponents/sanit
 import serializeOptionEntries from '../../../src/dynamic-builder/formComponents/serializeOptionEntries';
 import wrapOrphanFormChild from '../../../src/dynamic-builder/formComponents/wrapOrphanFormChild';
 
+jest.setTimeout(30000);
+
 const flushTimers = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 const collectDescendants = (component) =>

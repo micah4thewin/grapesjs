@@ -1,8 +1,4 @@
-const readViewEvents = (viewClass) => {
-  const eventsValue = viewClass && viewClass.prototype ? viewClass.prototype.events : null;
-  if (typeof eventsValue === 'function') return eventsValue.call(viewClass.prototype) || {};
-  return eventsValue || {};
-};
+import resolveViewEventsRecord from './resolveViewEventsRecord.js';
 
 const needsEventsReader = (viewClass) => {
   if (!viewClass) return false;
@@ -18,7 +14,7 @@ const ensureComponentTypeViewEvents = (editor) => {
     const viewClass = typeRecord && typeRecord.view;
     if (!needsEventsReader(viewClass)) return;
     viewClass.dbViewEventsOwner = viewClass;
-    viewClass.getEvents = () => readViewEvents(viewClass);
+    viewClass.getEvents = () => resolveViewEventsRecord(viewClass.prototype);
     patchedCount += 1;
   });
   return patchedCount;

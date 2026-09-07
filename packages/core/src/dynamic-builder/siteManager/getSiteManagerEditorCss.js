@@ -14,6 +14,7 @@ const getSiteManagerEditorCss = () => `
 }
 .gjs-db-site-actions { flex-wrap: wrap; justify-content: flex-end; }
 .gjs-db-site-card .gjs-db-button { min-height: 32px; }
+.gjs-db-site-row[hidden] { display: none; }
 .gjs-db-site-row { flex-basis: 100%; flex-wrap: wrap; align-items: center; margin-top: var(--gjs-db-gap-2); }
 .gjs-db-site-row .gjs-db-field-input { flex: 1 1 12rem; min-width: 10rem; }
 .gjs-db-site-new { padding-top: var(--gjs-db-gap-2); border-top: 1px solid var(--gjs-db-line); }

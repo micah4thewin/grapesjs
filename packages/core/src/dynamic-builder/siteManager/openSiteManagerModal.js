@@ -1,5 +1,6 @@
 import buildElementFromMarkup from '../support/buildElementFromMarkup.js';
 import buildSiteManagerMarkup from './buildSiteManagerMarkup.js';
+import focusSiteManagerStart from './focusSiteManagerStart.js';
 import openThemedModal from '../support/openThemedModal.js';
 import refreshSiteManagerList from './refreshSiteManagerList.js';
 import wireSiteManagerModal from './wireSiteManagerModal.js';
@@ -14,7 +15,7 @@ const openSiteManagerModal = (editor, managerOptions) => {
   if (!rootElement) return null;
   wireSiteManagerModal(editor, managerOptions, rootElement);
   openThemedModal(editor, 'Your sites', rootElement, { className: 'gjs-db-sites-modal' });
-  refreshSiteManagerList(editor, managerOptions, rootElement);
+  refreshSiteManagerList(editor, managerOptions, rootElement).then(() => focusSiteManagerStart(editor, rootElement));
   return rootElement;
 };
 

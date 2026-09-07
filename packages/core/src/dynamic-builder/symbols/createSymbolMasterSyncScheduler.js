@@ -1,4 +1,5 @@
 import captureSymbolFromInstance from './captureSymbolFromInstance.js';
+import isEditorLive from '../support/isEditorLive.js';
 import renderAllSymbolInstances from './renderAllSymbolInstances.js';
 import resolveSymbolIdOfComponent from './resolveSymbolIdOfComponent.js';
 import runSymbolUndoStep from './runSymbolUndoStep.js';
@@ -8,6 +9,7 @@ const createSymbolMasterSyncScheduler = (editor) => {
   let isSyncing = false;
   const runMasterSync = (instanceComponent) => {
     syncTimer = null;
+    if (!isEditorLive(editor)) return;
     isSyncing = true;
     try {
       runSymbolUndoStep(editor, () => {
