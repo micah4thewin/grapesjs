@@ -3,11 +3,9 @@ import attachFlowTargetHints from './attachFlowTargetHints.js';
 import buildElementFromMarkup from '../support/buildElementFromMarkup.js';
 import buildFlowBuilderMarkup from './buildFlowBuilderMarkup.js';
 import createModalHostElement from '../support/createModalHostElement.js';
-import describeFlowSaveNotice from './describeFlowSaveNotice.js';
 import guardModalDismiss from '../codeEditor/guardModalDismiss.js';
 import pickFlowTargetOnCanvas from './pickFlowTargetOnCanvas.js';
 import readComponentFlows from './readComponentFlows.js';
-import resolveAllowScripts from './resolveAllowScripts.js';
 import resolveComponentLabel from './resolveComponentLabel.js';
 import showToastNotice from '../support/showToastNotice.js';
 import testFlowOnCanvas from './testFlowOnCanvas.js';
@@ -24,7 +22,6 @@ const openFlowBuilderModal = (editor, targetComponent, openOptions = {}) => {
   const ownerDocument = containerElement.ownerDocument;
   const canvasDocument = editor.Canvas && editor.Canvas.getDocument && editor.Canvas.getDocument();
   const componentLabel = resolveComponentLabel(component);
-  const allowScripts = resolveAllowScripts(editor);
   const modalHost = createModalHostElement(editor, 'Interactions', { className: 'gjs-db-flow-modal' });
   if (!modalHost) return;
   let isDirty = !!openOptions.flows;
@@ -51,7 +48,7 @@ const openFlowBuilderModal = (editor, targetComponent, openOptions = {}) => {
   const renderBuilder = (flowRecords, renderOptions = {}) => {
     const formElement = buildElementFromMarkup(
       ownerDocument,
-      buildFlowBuilderMarkup(flowRecords, componentLabel, allowScripts),
+      buildFlowBuilderMarkup(flowRecords, componentLabel),
     );
     if (!formElement) return;
     formElement.addEventListener('submit', (submitEvent) => submitEvent.preventDefault());
@@ -63,8 +60,7 @@ const openFlowBuilderModal = (editor, targetComponent, openOptions = {}) => {
       onSave: (nextFlows) => {
         saveFlows(nextFlows);
         closeBuilder();
-        const noticeRecord = describeFlowSaveNotice(nextFlows, allowScripts);
-        showToastNotice(editor, noticeRecord.text, { kind: noticeRecord.kind, duration: noticeRecord.duration });
+        showToastNotice(editor, nextFlows.length ? 'Flows saved.' : 'Flows cleared.', { kind: 'success' });
       },
       onCancel: () => {
         if (isDirty && !discardArmed) {

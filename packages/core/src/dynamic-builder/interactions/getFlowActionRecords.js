@@ -97,7 +97,7 @@ const getFlowActionRecords = () => [
   {
     id: 'custom-js',
     label: 'Run custom JavaScript',
-    hint: 'Only runs on exports when "Allow script tags" is on. The variables element and event are available.',
+    hint: 'Runs in preview and on your published site. The variables element and event are available.',
     fields: [{ name: 'code', label: 'JavaScript', type: 'textarea', placeholder: "console.log('hi', element);" }],
   },
 ];

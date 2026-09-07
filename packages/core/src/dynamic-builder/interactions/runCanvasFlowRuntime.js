@@ -1,7 +1,6 @@
 import getDialogRuntimeSource from './getDialogRuntimeSource.js';
 import getFlowRuntimeSource from './getFlowRuntimeSource.js';
 import isEditorLive from '../support/isEditorLive.js';
-import resolveAllowScripts from './resolveAllowScripts.js';
 import showToastNotice from '../support/showToastNotice.js';
 import stopCanvasFlowRuntime from './stopCanvasFlowRuntime.js';
 
@@ -20,7 +19,7 @@ const runCanvasFlowRuntime = (editor, dialogSettings) => {
     if (typeof canvasWindow.dbShowDialog !== 'function') {
       new canvasWindow.Function(getDialogRuntimeSource(dialogSettings || {})).call(canvasWindow);
     }
-    new canvasWindow.Function(getFlowRuntimeSource(resolveAllowScripts(editor))).call(canvasWindow);
+    new canvasWindow.Function(getFlowRuntimeSource()).call(canvasWindow);
   } catch (runtimeError) {
     console.error('Flow preview could not start', runtimeError);
     return 0;

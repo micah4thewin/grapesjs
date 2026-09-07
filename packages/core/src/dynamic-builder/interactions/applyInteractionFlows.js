@@ -13,7 +13,6 @@ import registerCommandSet from '../support/registerCommandSet.js';
 import registerComponentTypeSet from '../support/registerComponentTypeSet.js';
 import registerRuntimeScript from '../support/registerRuntimeScript.js';
 import registerTraitTypeSet from '../support/registerTraitTypeSet.js';
-import resolveAllowScripts from './resolveAllowScripts.js';
 import resolveInteractionSettings from './resolveInteractionSettings.js';
 import watchAlertButtonComponents from './watchAlertButtonComponents.js';
 import watchPreviewInteractionMode from './watchPreviewInteractionMode.js';
@@ -32,7 +31,7 @@ const applyInteractionFlows = (editor, pluginOptions) => {
   });
   registerRuntimeScript(editor, 'db-flows', {
     detect: (runtimeEditor, page) => hasInteractionFlows(runtimeEditor, page),
-    source: () => getFlowRuntimeSource(resolveAllowScripts(editor)),
+    source: () => getFlowRuntimeSource(),
   });
   registerCommandSet(editor, {
     'db:open-flow-builder': (commandEditor) => openFlowBuilderModal(commandEditor),

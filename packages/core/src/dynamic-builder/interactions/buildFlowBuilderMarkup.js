@@ -16,7 +16,7 @@ const buildRecipeSelectMarkup = () =>
     '</select>',
   ].join('');
 
-const buildFlowBuilderMarkup = (flowRecords, componentLabel, allowScripts) => {
+const buildFlowBuilderMarkup = (flowRecords, componentLabel) => {
   const cardsMarkup = flowRecords.map((flowRecord, flowIndex) => buildFlowCardMarkup(flowRecord, flowIndex)).join('');
   const emptyMarkup = [
     '<p class="gjs-db-flow-empty">',
@@ -30,12 +30,6 @@ const buildFlowBuilderMarkup = (flowRecords, componentLabel, allowScripts) => {
     'Flows on <strong>' + escapeHtmlText(componentLabel) + '</strong>. ',
     'Pick when it runs, then stack the steps that follow.',
     '</p>',
-    allowScripts
-      ? ''
-      : '<p class="gjs-db-flow-notice">' +
-        getIconMarkup('info', { size: 15 }) +
-        '<span>Every step below works on exports. "Run custom JavaScript" stays inert until you turn on ' +
-        '<strong>Allow script tags</strong> in Custom code.</span></p>',
     '<ul class="gjs-db-flow-list" data-db-flow-list>' + cardsMarkup + '</ul>',
     flowRecords.length ? '' : emptyMarkup,
     '<div class="gjs-db-flow-toolbar">',

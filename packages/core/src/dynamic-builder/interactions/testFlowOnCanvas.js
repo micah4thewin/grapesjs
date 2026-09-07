@@ -1,5 +1,4 @@
 import describeFlowPreviewWarnings from './describeFlowPreviewWarnings.js';
-import resolveAllowScripts from './resolveAllowScripts.js';
 import showToastNotice from '../support/showToastNotice.js';
 
 const testFlowOnCanvas = (editor, component, flowRecord) => {
@@ -17,7 +16,7 @@ const testFlowOnCanvas = (editor, component, flowRecord) => {
       showToastNotice(editor, 'The flow could not be started on the canvas.', { kind: 'warning' });
       return;
     }
-    const warnings = describeFlowPreviewWarnings(canvasDocument, [flowRecord], resolveAllowScripts(editor));
+    const warnings = describeFlowPreviewWarnings(canvasDocument, [flowRecord]);
     warnings.forEach((warningText) => showToastNotice(editor, warningText, { kind: 'warning', duration: 6000 }));
     runtime.runFlow(flowRecord, targetElement, null).then((context) => {
       const ranCount = context && context.ranCount ? context.ranCount : 0;
