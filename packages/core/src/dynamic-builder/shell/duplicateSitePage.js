@@ -9,7 +9,8 @@ const duplicateSitePage = (editor, pageId) => {
   const mainComponent = sourcePage.getMainComponent ? sourcePage.getMainComponent() : null;
   if (!mainComponent) return null;
   const copyName = resolveUniquePageName(editor, `${getPageDisplayName(sourcePage)} copy`);
-  const copiedPage = editor.Pages.add({ name: copyName, component: mainComponent.toJSON() }, { select: true });
+  const copiedComponents = mainComponent.components().map((childComponent) => childComponent.toJSON());
+  const copiedPage = editor.Pages.add({ name: copyName, component: copiedComponents }, { select: true });
   if (!copiedPage) return null;
   const sourceMeta = sourcePage.get('dbPageMeta');
   if (isPlainRecord(sourceMeta)) {

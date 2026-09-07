@@ -1,6 +1,8 @@
 import compressImageFileToAsset from './compressImageFileToAsset.js';
+import describeRejectedSvgNotice from '../icons/describeRejectedSvgNotice.js';
 import describeUploadSavings from './describeUploadSavings.js';
 import estimateDataUrlBytes from '../photoEditor/estimateDataUrlBytes.js';
+import isSvgUploadSafe from './isSvgUploadSafe.js';
 import readFileAsDataUrl from './readFileAsDataUrl.js';
 import showToastNotice from '../support/showToastNotice.js';
 
@@ -9,6 +11,10 @@ const isCompressibleImage = (uploadedFile) =>
 
 const addUploadedImageAsset = async (editor, uploadedFile, maxDimension) => {
   const originalDataUrl = await readFileAsDataUrl(uploadedFile);
+  if (!isSvgUploadSafe(originalDataUrl)) {
+    showToastNotice(editor, describeRejectedSvgNotice(uploadedFile.name), { kind: 'error', duration: 5000 });
+    return;
+  }
   const originalRecord = { src: originalDataUrl, name: uploadedFile.name, type: 'image' };
   if (!isCompressibleImage(uploadedFile)) {
     editor.Assets.add({ ...originalRecord, dbOriginalBytes: uploadedFile.size });

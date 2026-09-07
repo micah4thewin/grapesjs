@@ -1,12 +1,16 @@
 import buildHeadingContentRecord from './buildHeadingContentRecord.js';
+import buildPricingSectionWithoutHeading from './buildPricingSectionWithoutHeading.js';
 import buildSectionContentRecord from './buildSectionContentRecord.js';
 import buildTemplateIntroSection from './buildTemplateIntroSection.js';
 import buildTestimonialSampleRecord from './buildTestimonialSampleRecord.js';
 
 const getPricingTemplateComponents = () => [
   { type: 'db-navbar' },
-  buildTemplateIntroSection('Plans that grow with you', 'Pick a plan now, change it whenever your needs change.'),
-  { type: 'db-pricing' },
+  buildTemplateIntroSection(
+    'Simple, honest pricing',
+    'Plans that grow with you. Pick one now and change it whenever your needs change.',
+  ),
+  buildPricingSectionWithoutHeading(),
   buildSectionContentRecord([buildHeadingContentRecord('2', 'Pricing questions'), { type: 'db-accordion' }], {
     attributes: { 'data-db-theme': 'light' },
   }),

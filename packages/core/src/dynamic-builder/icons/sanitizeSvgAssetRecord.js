@@ -1,7 +1,8 @@
 import decodeSvgDataUri from './decodeSvgDataUri.js';
 import encodeSvgDataUri from './encodeSvgDataUri.js';
+import isSvgMarkupSafe from './isSvgMarkupSafe.js';
+import rejectUnsafeSvgAsset from './rejectUnsafeSvgAsset.js';
 import sanitizeSvgMarkup from '../support/sanitizeSvgMarkup.js';
-import showToastNotice from '../support/showToastNotice.js';
 
 const sanitizeSvgAssetRecord = (editor, assetRecord) => {
   if (!assetRecord || typeof assetRecord.get !== 'function') return;
@@ -10,18 +11,11 @@ const sanitizeSvgAssetRecord = (editor, assetRecord) => {
   if (!/^data:image\/svg\+xml/i.test(sourceValue)) return;
   if (assetRecord.get('dbSvgSanitized') === sourceValue) return;
   const decodedMarkup = decodeSvgDataUri(sourceValue);
-  const sanitizedMarkup = decodedMarkup ? sanitizeSvgMarkup(decodedMarkup) : '';
-  if (!sanitizedMarkup) {
-    const assetName = String(assetRecord.get('name') || 'SVG file');
-    editor.Assets.remove(assetRecord);
-    editor.trigger('db:asset:rejected', { name: assetName, reason: 'invalid-svg' });
-    showToastNotice(editor, assetName + ' was rejected: the SVG could not be parsed safely.', {
-      kind: 'error',
-      duration: 5000,
-    });
+  if (!decodedMarkup || !isSvgMarkupSafe(decodedMarkup)) {
+    rejectUnsafeSvgAsset(editor, assetRecord);
     return;
   }
-  const encodedSource = encodeSvgDataUri(sanitizedMarkup);
+  const encodedSource = encodeSvgDataUri(sanitizeSvgMarkup(decodedMarkup));
   assetRecord.set({ src: encodedSource, dbSvgSanitized: encodedSource });
 };
 

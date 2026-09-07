@@ -1,5 +1,6 @@
 import getShellLayoutCss from './getShellLayoutCss.js';
 import injectEditorStylesOnce from '../support/injectEditorStylesOnce.js';
+import keepComponentTypeViewStatics from '../support/keepComponentTypeViewStatics.js';
 import refineDefaultPanels from './refineDefaultPanels.js';
 import registerShellCommands from './registerShellCommands.js';
 import registerShellKeymaps from './registerShellKeymaps.js';
@@ -13,6 +14,7 @@ import wireFirstSaveHint from './wireFirstSaveHint.js';
 import wireShellPageLifecycle from './wireShellPageLifecycle.js';
 
 const applyEditorShell = (editor, pluginOptions) => {
+  keepComponentTypeViewStatics(editor);
   restoreCanvasAfterPageUndo(editor);
   const shellOptions = (pluginOptions && pluginOptions.shell) || {};
   const themeOptions = (pluginOptions && pluginOptions.theme) || {};
