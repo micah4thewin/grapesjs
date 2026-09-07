@@ -63,6 +63,9 @@ const getWorkspaceDockCss = () => `
 .gjs-db-dock-pane {
   display: none;
 }
+.gjs-db-dock-pane[data-db-pane-active='1'] > * {
+  display: block !important;
+}
 .gjs-db-dock-pane[data-db-pane-active='1'] {
   display: block;
   animation: gjs-db-fade-in var(--gjs-db-dur-2) var(--gjs-db-ease-soft);

@@ -6,6 +6,7 @@ const wirePreviewModeChrome = (editor, stripElement) => {
     else stripElement.removeAttribute('data-db-preview');
     containerElement && containerElement.classList.toggle('gjs-db-previewing', isPreviewing);
     if (!isPreviewing) return;
+    if (editor.Modal && editor.Modal.isOpen && editor.Modal.isOpen()) editor.Modal.close();
     const exitButton = stripElement.querySelector('.gjs-db-preview-exit-button');
     exitButton && exitButton.focus && exitButton.focus();
   };

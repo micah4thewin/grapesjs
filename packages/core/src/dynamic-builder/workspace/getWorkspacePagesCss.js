@@ -49,6 +49,14 @@ const getWorkspacePagesCss = () => `
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.gjs-db-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gjs-db-gap-2);
+  padding: var(--gjs-db-gap-2) var(--gjs-db-gap-3) 0;
+  border-top: 1px solid var(--gjs-db-line-soft);
+  margin-top: var(--gjs-db-gap-2);
+}
 .gjs-db-page-tag {
   flex: 0 0 auto;
   padding: 1px 6px;

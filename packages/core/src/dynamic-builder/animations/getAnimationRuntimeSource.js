@@ -1,3 +1,4 @@
+import getAnimationBottomGuardSource from './getAnimationBottomGuardSource.js';
 import getAnimationObserverSource from './getAnimationObserverSource.js';
 import getAnimationRevealSource from './getAnimationRevealSource.js';
 import getAnimationStaggerSource from './getAnimationStaggerSource.js';
@@ -21,6 +22,7 @@ const getAnimationRuntimeSource = () =>
     '  return;',
     '}',
     ...getAnimationObserverSource(),
+    ...getAnimationBottomGuardSource(),
   ].join('\n');
 
 export default getAnimationRuntimeSource;

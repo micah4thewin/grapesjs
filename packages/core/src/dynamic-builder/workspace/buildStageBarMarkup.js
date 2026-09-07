@@ -21,7 +21,7 @@ const buildStageBarMarkup = (editor) => {
     `<div class="gjs-db-stage-cluster" data-db-device-seg>${deviceButtonsMarkup}</div>`,
     '<button type="button" class="gjs-db-stage-readout" data-db-stage-width',
     ' title="Preview at a width of your choice"></button>',
-    '<div class="gjs-db-stage-cluster">',
+    '<div class="gjs-db-stage-cluster" data-db-zoom-cluster>',
     '<button type="button" class="gjs-db-stage-button" data-db-zoom-step="-10" aria-label="Zoom out">',
     getIconMarkup('minus', { size: 14 }),
     '</button>',

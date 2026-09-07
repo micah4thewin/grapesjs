@@ -90,8 +90,14 @@ const getWorkspaceResponsiveCss = () => `
   display: none;
 }
 .gjs-db-ws[data-db-size='xs'] .gjs-db-stage-readout,
+.gjs-db-ws[data-db-size='xs'] [data-db-zoom-cluster],
+.gjs-db-ws[data-db-size='sm'] .gjs-db-stage-readout,
 .gjs-db-ws[data-db-size='xs'] [data-db-device-seg] .gjs-db-stage-button:nth-child(n + 4) {
   display: none;
+}
+.gjs-db-ws[data-db-size='xs'] .gjs-db-stage-bar {
+  padding: var(--gjs-db-gap-2) var(--gjs-db-gap-2) 0;
+  gap: var(--gjs-db-gap-1);
 }
 `;
 
