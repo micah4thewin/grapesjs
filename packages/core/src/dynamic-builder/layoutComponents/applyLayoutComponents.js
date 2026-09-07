@@ -10,6 +10,7 @@ import watchAnchorUpdates from './watchAnchorUpdates.js';
 import watchColumnCountUpdates from './watchColumnCountUpdates.js';
 import watchColumnPresetUpdates from './watchColumnPresetUpdates.js';
 import watchLayoutMigrations from './watchLayoutMigrations.js';
+import watchCanvasDroppableBinding from './watchCanvasDroppableBinding.js';
 import watchSectionBackgroundUpdates from './watchSectionBackgroundUpdates.js';
 import watchSpacerResizeUpdates from './watchSpacerResizeUpdates.js';
 import wireAddBelowToolbarButton from './wireAddBelowToolbarButton.js';
@@ -27,6 +28,7 @@ const applyLayoutComponents = (editor, pluginOptions) => {
   registerEditorOnlyCanvasStyles(editor, 'db-css-layout-editor-hints', buildLayoutEditorCanvasCss());
   registerEditorOnlyCanvasStyles(editor, 'db-css-layout-gutter-drag', buildGutterDragCanvasCss());
   watchLayoutMigrations(editor);
+  watchCanvasDroppableBinding(editor);
   watchSectionBackgroundUpdates(editor);
   watchColumnPresetUpdates(editor);
   watchColumnCountUpdates(editor);

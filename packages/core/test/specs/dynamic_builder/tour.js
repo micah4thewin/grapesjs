@@ -185,8 +185,9 @@ describe('Dynamic builder guided tour', () => {
         ],
       });
       fixJsDomIframe(editor.getModel().shallow);
+      editor.Modal.open({ title: 'Busy dialog', content: '<p>Something already needs you.</p>' });
       await new Promise((resolve) => editor.onReady(() => setTimeout(resolve, 10)));
-      await waitForCondition(() => editor.Modal.isOpen());
+      expect(editor.Modal.isOpen()).toBe(true);
       await new Promise((resolve) => setTimeout(resolve, 300));
       expect(readTourRoot()).toBeNull();
       editor.Modal.close();

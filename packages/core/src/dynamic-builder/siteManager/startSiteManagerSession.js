@@ -3,9 +3,12 @@ import isEditorLive from '../support/isEditorLive.js';
 import openSiteManagerModal from './openSiteManagerModal.js';
 import restoreLastOpenedSite from './restoreLastOpenedSite.js';
 
-const finishSessionStart = (editor, managerOptions, siteRecord, wasAdopted) => {
+const shouldOpenOnStart = (managerOptions, siteCount, wasAdopted) =>
+  managerOptions.openOnStart && !wasAdopted && siteCount > 1;
+
+const finishSessionStart = (editor, managerOptions, siteRecord, wasAdopted, siteCount) => {
   if (!isEditorLive(editor)) return null;
-  if (managerOptions.openOnStart) openSiteManagerModal(editor, managerOptions);
+  if (shouldOpenOnStart(managerOptions, siteCount, wasAdopted)) openSiteManagerModal(editor, managerOptions);
   editor.trigger('db:site:ready', { site: siteRecord || null, adopted: wasAdopted });
   return siteRecord || null;
 };
@@ -22,7 +25,9 @@ const startSiteManagerSession = (editor, managerOptions) => {
         const startPromise = hasSites
           ? restoreLastOpenedSite(editor, managerOptions, siteRecords)
           : adoptCurrentProjectAsSite(editor, managerOptions);
-        return startPromise.then((siteRecord) => finishSessionStart(editor, managerOptions, siteRecord, !hasSites));
+        return startPromise.then((siteRecord) =>
+          finishSessionStart(editor, managerOptions, siteRecord, !hasSites, siteRecords.length),
+        );
       })
       .catch((sessionError) => console.error(sessionError));
   });

@@ -344,7 +344,17 @@ describe('Dynamic builder site manager', () => {
       expect(getStorageKey()).toBe(copyRecord.storageKey);
     });
 
-    test('opens the manager on start unless the host turns it off', async () => {
+    test('stays out of the way on a first run when there is only the adopted site', async () => {
+      await initEditor({ openOnStart: true });
+      expect(readIndexSites().length).toBe(1);
+      expect(editor.Modal.isOpen()).toBe(false);
+    });
+
+    test('opens on start once there is more than one site to choose between', async () => {
+      localStorage.setItem(
+        siteIndexKey,
+        JSON.stringify({ sites: [buildSiteRecord({ name: 'One' }), buildSiteRecord({ name: 'Two' })] }),
+      );
       await initEditor({ openOnStart: true });
       expect(editor.Modal.isOpen()).toBe(true);
       expect(editor.Modal.getContentEl().textContent).toContain('Start a new site');

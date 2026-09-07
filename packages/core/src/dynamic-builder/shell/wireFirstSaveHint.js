@@ -8,6 +8,11 @@ const wireFirstSaveHint = (editor, pluginOptions) => {
   let hintShown = false;
   editor.on('db:save-status', (statusPayload) => {
     if (hintShown || !statusPayload || statusPayload.state !== 'saved') return;
+    const containerElement = editor.getContainer && editor.getContainer();
+    const noticeShowing = containerElement && containerElement.querySelector('.gjs-db-toast');
+    const ownerDocument = containerElement && containerElement.ownerDocument;
+    const tourShowing = ownerDocument && ownerDocument.querySelector('[data-db-tour-popover], [data-db-tour-running]');
+    if (noticeShowing || tourShowing) return;
     hintShown = true;
     writeShellPreference(editor, pluginOptions, hintKey, 'seen');
     showActionToastNotice(editor, 'Your work autosaves in this browser. Download it to keep a copy anywhere else.', {
