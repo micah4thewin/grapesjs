@@ -8,6 +8,7 @@ const getWorkspacePagesCss = () => `
   list-style: none;
 }
 .gjs-db-page-row {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--gjs-db-gap-2);
@@ -42,6 +43,16 @@ const getWorkspacePagesCss = () => `
 }
 .gjs-db-page-row[aria-current='true'] svg {
   color: var(--gjs-db-fg);
+}
+.gjs-db-page-row[aria-current='true']::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: var(--gjs-db-r-pill);
+  background-color: var(--gjs-db-fg);
 }
 .gjs-db-page-name {
   flex: 1 1 auto;

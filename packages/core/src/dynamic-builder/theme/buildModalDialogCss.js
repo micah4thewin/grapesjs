@@ -1,8 +1,6 @@
 const buildModalDialogCss = () => `
 .gjs-mdl-container {
   background-color: var(--gjs-db-overlay);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
   font-family: var(--gjs-db-font-ui);
 }
 .gjs-mdl-dialog {

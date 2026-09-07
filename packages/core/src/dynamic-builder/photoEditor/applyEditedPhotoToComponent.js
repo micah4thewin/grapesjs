@@ -4,7 +4,12 @@ const applyEditedPhotoToComponent = (editor, imageComponent, dataUrl, sourceName
   if (imageComponent.set) imageComponent.set('src', dataUrl);
   const assetManager = editor.AssetManager;
   if (assetManager && assetManager.add) {
-    assetManager.add({ type: 'image', src: dataUrl, name: `${sourceName || 'photo'} (edited)`, dbEditedAt: Date.now() });
+    assetManager.add({
+      type: 'image',
+      src: dataUrl,
+      name: `${sourceName || 'photo'} (edited)`,
+      dbEditedAt: Date.now(),
+    });
   }
 };
 

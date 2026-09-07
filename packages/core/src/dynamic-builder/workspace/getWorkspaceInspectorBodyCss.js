@@ -39,8 +39,8 @@ const getWorkspaceInspectorBodyCss = () => `
 .gjs-db-ws-inspector .gjs-traits-label {
   display: none;
 }
-.gjs-db-ws-inspector .gjs-one-bg,
-.gjs-db-ws-dock .gjs-one-bg {
+.gjs-db-ws-inspector .gjs-one-bg:not(.gjs-block),
+.gjs-db-ws-dock .gjs-one-bg:not(.gjs-block) {
   background-color: transparent;
 }
 .gjs-db-ws-inspector .gjs-sm-sector:last-child,

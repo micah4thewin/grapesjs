@@ -12,6 +12,8 @@ import buildSelectorManagerCss from './buildSelectorManagerCss.js';
 import buildAssetManagerCss from './buildAssetManagerCss.js';
 import buildModalDialogCss from './buildModalDialogCss.js';
 import buildRichTextToolbarCss from './buildRichTextToolbarCss.js';
+import buildCodeSurfaceCss from './buildCodeSurfaceCss.js';
+import buildCodeTokenCss from './buildCodeTokenCss.js';
 import buildCanvasChromeCss from './buildCanvasChromeCss.js';
 import buildInputFieldsCss from './buildInputFieldsCss.js';
 import buildScrollbarCss from './buildScrollbarCss.js';
@@ -45,6 +47,8 @@ const composeEditorThemeCss = () =>
     buildAssetManagerCss,
     buildModalDialogCss,
     buildRichTextToolbarCss,
+    buildCodeSurfaceCss,
+    buildCodeTokenCss,
     buildCanvasChromeCss,
     buildInputFieldsCss,
     buildScrollbarCss,

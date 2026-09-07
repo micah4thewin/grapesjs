@@ -11,8 +11,7 @@ const offerAssetPhotoEdit = (editor, assetModel) => {
     duration: 9000,
     onAction: () => openPhotoEditorForAsset(editor, assetModel),
   });
-  if (toastSession && toastSession.toastElement)
-    toastSession.toastElement.setAttribute('data-db-photo-offer', 'true');
+  if (toastSession && toastSession.toastElement) toastSession.toastElement.setAttribute('data-db-photo-offer', 'true');
   return Boolean(toastSession);
 };
 
