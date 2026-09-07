@@ -80,6 +80,10 @@ const buildPrimitiveButtonsCss = () => `
   gap: var(--gjs-db-gap-2);
   padding-top: var(--gjs-db-gap-2);
 }
+.gjs-db-shell-host [hidden],
+.gjs-mdl-container [hidden] {
+  display: none !important;
+}
 `;
 
 export default buildPrimitiveButtonsCss;

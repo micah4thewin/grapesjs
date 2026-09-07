@@ -41,7 +41,7 @@ describe('Dynamic builder theme', () => {
       expect(lightTokens['--gjs-db-hover']).toBe('#e4e7eb');
       expect(lightTokens['--gjs-db-active']).toBe('#dcdfe4');
       expect(lightTokens['--gjs-db-fg']).toBe('#1b1d20');
-      expect(lightTokens['--gjs-db-muted']).toBe('#5b6067');
+      expect(lightTokens['--gjs-db-muted']).toBe('#4c525a');
       expect(lightTokens['--gjs-db-faint']).toBe('#50565e');
       expect(lightTokens['--gjs-db-line']).toBe('#d3d7dd');
       expect(lightTokens['--gjs-db-shade']).toBe('rgba(157, 165, 176, 0.38)');
@@ -58,7 +58,7 @@ describe('Dynamic builder theme', () => {
       expect(darkTokens['--gjs-db-hover']).toBe('#262a2f');
       expect(darkTokens['--gjs-db-active']).toBe('#2c3036');
       expect(darkTokens['--gjs-db-fg']).toBe('#e7eaee');
-      expect(darkTokens['--gjs-db-muted']).toBe('#a2a9b2');
+      expect(darkTokens['--gjs-db-muted']).toBe('#b3bac3');
       expect(darkTokens['--gjs-db-faint']).toBe('#929aa0');
       expect(darkTokens['--gjs-db-line']).toBe('#303439');
       expect(darkTokens['--gjs-db-shade']).toBe('rgba(0, 0, 0, 0.45)');
@@ -91,16 +91,20 @@ describe('Dynamic builder theme', () => {
     });
   });
 
-  describe('monochrome emphasis', () => {
-    test('the accent and focus tokens are just the foreground colour', () => {
+  describe('signature accent', () => {
+    test('the accent and focus tokens are the slate blue drawn from the house syntax palette', () => {
+      expect(lightTokens['--gjs-db-accent']).toBe('#35618f');
+      expect(lightTokens['--gjs-db-focus']).toBe('#35618f');
+      expect(lightTokens['--gjs-db-accent']).toBe(lightTokens['--gjs-db-syn-def']);
+      expect(darkTokens['--gjs-db-accent']).toBe('#8ab4e0');
+      expect(darkTokens['--gjs-db-focus']).toBe('#8ab4e0');
+      expect(darkTokens['--gjs-db-accent']).toBe(darkTokens['--gjs-db-syn-def']);
+    });
+
+    test('the accent stays legible on the surfaces it sits on', () => {
       paletteRecords.forEach(([modeName, tokenRecords]) => {
-        expect([modeName, tokenRecords['--gjs-db-accent']]).toEqual([modeName, tokenRecords['--gjs-db-fg']]);
-        expect([modeName, tokenRecords['--gjs-db-focus']]).toEqual([modeName, tokenRecords['--gjs-db-fg']]);
-        expect([modeName, tokenRecords['--gjs-db-accent-fg']]).toEqual([modeName, tokenRecords['--gjs-db-bg']]);
-        expect([modeName, tokenRecords['--gjs-db-accent-soft']]).toEqual([
-          modeName,
-          tokenRecords['--gjs-db-selection'],
-        ]);
+        const accentRatio = computeContrastRatio(tokenRecords['--gjs-db-accent'], tokenRecords['--gjs-db-panel']);
+        expect([modeName, accentRatio > 4.5]).toEqual([modeName, true]);
       });
     });
 
