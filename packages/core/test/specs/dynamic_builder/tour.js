@@ -1,6 +1,7 @@
 import grapesjs from '../../../src';
 import { fixJsDom, fixJsDomIframe } from '../../common';
 import applyEditedPhotoToAsset from '../../../src/dynamic-builder/photoEditor/applyEditedPhotoToAsset';
+import appendDriverSkipButton from '../../../src/dynamic-builder/tour/appendDriverSkipButton';
 import applyGuidedTour from '../../../src/dynamic-builder/tour/applyGuidedTour';
 import describeAssetEditOffer from '../../../src/dynamic-builder/photoEditor/describeAssetEditOffer';
 import getDriverCdnRecord from '../../../src/dynamic-builder/tour/getDriverCdnRecord';
@@ -85,6 +86,24 @@ describe('Dynamic builder guided tour', () => {
       expect(resolveTourStepTargets(null)).toEqual([]);
     });
 
+    test('driver popovers gain a labelled skip button next to the navigation', () => {
+      const footerElement = document.createElement('div');
+      const footerButtons = document.createElement('span');
+      footerElement.appendChild(footerButtons);
+      const closeButton = document.createElement('button');
+      let skipCount = 0;
+      expect(
+        appendDriverSkipButton({ footer: footerElement, footerButtons, closeButton }, () => (skipCount += 1)),
+      ).toBe(true);
+      const skipButton = footerElement.querySelector('[data-db-tour-skip]');
+      expect(skipButton.textContent).toBe('Skip tour');
+      expect(skipButton.nextSibling).toBe(footerButtons);
+      expect(closeButton.getAttribute('aria-label')).toBe('Close the tour');
+      skipButton.click();
+      expect(skipCount).toBe(1);
+      expect(appendDriverSkipButton({ footer: footerElement, footerButtons, closeButton }, () => {})).toBe(false);
+    });
+
     test('the popover moves to the other side when there is no room and stays on screen', () => {
       const popoverElement = buildFakePopover(320, 200);
       const tightRect = { left: 700, right: 780, top: 40, bottom: 90 };
@@ -151,12 +170,38 @@ describe('Dynamic builder guided tour', () => {
       expect(readTourRoot()).toBeNull();
     }, 20000);
 
+    test('the tour waits for an open dialog instead of talking over it', async () => {
+      window.Element.prototype.scrollIntoView = () => {};
+      document.body.innerHTML = '<div id="db-editor"></div>';
+      editor = grapesjs.init({
+        container: '#db-editor',
+        storageManager: { autoload: false, autosave: false, type: '' },
+        plugins: [
+          fixJsDom,
+          (editorInstance) => {
+            grapesjs.dynamicBuilder(editorInstance, { shell: { firstRunWizard: false } });
+            applyGuidedTour(editorInstance, { tour: { driverScriptUrl: '', startDelay: 10 } });
+          },
+        ],
+      });
+      fixJsDomIframe(editor.getModel().shallow);
+      await new Promise((resolve) => editor.onReady(() => setTimeout(resolve, 10)));
+      await waitForCondition(() => editor.Modal.isOpen());
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      expect(readTourRoot()).toBeNull();
+      editor.Modal.close();
+      expect(await waitForCondition(() => Boolean(readTourRoot()))).toBe(true);
+      readTourRoot().querySelector('[data-db-tour-skip]').click();
+    }, 20000);
+
     test('every step offers a skip button that closes the tour at once', async () => {
       editor = await mountEditor();
       await waitForCondition(() => Boolean(readTourRoot()));
       const rootElement = readTourRoot();
+      expect(rootElement.querySelector('[data-db-tour-prev]').disabled).toBe(true);
       rootElement.querySelector('[data-db-tour-next]').click();
       expect(rootElement.querySelector('[data-db-tour-progress]').textContent).toContain('Step 2 of');
+      expect(rootElement.querySelector('[data-db-tour-prev]').disabled).toBe(false);
       expect(rootElement.querySelector('[data-db-tour-skip]').textContent).toBe('Skip tour');
       rootElement.querySelector('[data-db-tour-skip]').click();
       expect(readTourRoot()).toBeNull();

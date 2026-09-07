@@ -37,6 +37,7 @@ import deepMergeRecords from './support/deepMergeRecords.js';
 import applyEditorTheme from './theme/applyEditorTheme.js';
 import applyTraitTypes from './traits/applyTraitTypes.js';
 import attachSharedComponentTraits from './support/attachSharedComponentTraits.js';
+import applyGuidedTour from './tour/applyGuidedTour.js';
 import applyTypographySystem from './typography/applyTypographySystem.js';
 import applyWorkspaceLayout from './workspace/applyWorkspaceLayout.js';
 
@@ -81,6 +82,7 @@ const dynamicBuilderPlugin = (editor, pluginOptions = {}) => {
     applyExperienceUpgrades,
     attachSharedComponentTraits,
     applyWorkspaceLayout,
+    applyGuidedTour,
   ]);
   applyAllModules(editor, mergedOptions);
 };

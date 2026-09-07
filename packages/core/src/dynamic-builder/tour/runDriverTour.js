@@ -1,9 +1,12 @@
 import appendDriverSkipButton from './appendDriverSkipButton.js';
 import buildDriverStepRecords from './buildDriverStepRecords.js';
 import prefersReducedMotion from './prefersReducedMotion.js';
+import wireDriverPopoverFocus from './wireDriverPopoverFocus.js';
 
 const runDriverTour = (driverFactory, containerElement, stepRecords, onFinish) => {
-  const targetWindow = containerElement.ownerDocument.defaultView;
+  const ownerDocument = containerElement.ownerDocument;
+  const targetWindow = ownerDocument.defaultView;
+  const releaseFocusTrap = wireDriverPopoverFocus(ownerDocument);
   let driverInstance = null;
   const stopTour = () => driverInstance && driverInstance.destroy();
   driverInstance = driverFactory({
@@ -24,7 +27,10 @@ const runDriverTour = (driverFactory, containerElement, stepRecords, onFinish) =
     prevBtnText: 'Back',
     doneBtnText: 'Done',
     onPopoverRender: (popoverRecord) => appendDriverSkipButton(popoverRecord, stopTour),
-    onDestroyed: () => onFinish && onFinish(),
+    onDestroyed: () => {
+      releaseFocusTrap();
+      if (onFinish) onFinish();
+    },
   });
   driverInstance.drive();
   return { close: stopTour };

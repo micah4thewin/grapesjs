@@ -43,7 +43,7 @@ const getToolsMenuSections = () => [
     ],
   },
   { sectionTitle: 'Advanced', commandIds: ['core:open-code'] },
-  { sectionTitle: 'Help', commandIds: ['db:open-shortcut-help'] },
+  { sectionTitle: 'Help', commandIds: ['db:open-tour', 'db:open-shortcut-help'] },
 ];
 
 export default getToolsMenuSections;
