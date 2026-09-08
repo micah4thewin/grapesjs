@@ -13,8 +13,19 @@ const wireStockPhotoEvents = (editor, moduleOptions, modalElement, viewState) =>
       submitEvent.preventDefault();
       startSearch(searchElement ? searchElement.value : '', 1);
     });
-  if (gridElement)
+  if (gridElement) {
     gridElement.addEventListener('keydown', (keyEvent) => handleStockPhotoGridKeydown(gridElement, keyEvent));
+    gridElement.addEventListener(
+      'error',
+      (errorEvent) => {
+        const imageElement = errorEvent.target;
+        if (!imageElement || String(imageElement.tagName).toLowerCase() !== 'img') return;
+        const cardElement = imageElement.closest ? imageElement.closest('.gjs-db-stock-card') : null;
+        if (cardElement) cardElement.setAttribute('data-db-thumb-missing', 'true');
+      },
+      true,
+    );
+  }
   modalElement.addEventListener('click', (clickEvent) => {
     const clickTarget = clickEvent.target && clickEvent.target.closest ? clickEvent.target : null;
     if (!clickTarget) return;

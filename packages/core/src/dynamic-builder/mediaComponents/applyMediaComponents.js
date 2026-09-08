@@ -10,6 +10,7 @@ import watchCarouselSlideUpdates from './watchCarouselSlideUpdates.js';
 import watchDecorativeSvgChildren from './watchDecorativeSvgChildren.js';
 import watchGalleryCaptionUpdates from './watchGalleryCaptionUpdates.js';
 import watchImageAccessibilityUpdates from './watchImageAccessibilityUpdates.js';
+import watchImageLoadFailures from './watchImageLoadFailures.js';
 import watchImageRadiusUpdates from './watchImageRadiusUpdates.js';
 import watchMapAddressUpdates from './watchMapAddressUpdates.js';
 import watchMediaLinkPastes from './watchMediaLinkPastes.js';
@@ -26,6 +27,7 @@ const applyMediaComponents = (editor, pluginOptions) => {
   markCanvasBodyEditing(editor);
   watchDecorativeSvgChildren(editor);
   watchImageAccessibilityUpdates(editor);
+  watchImageLoadFailures(editor);
   watchImageRadiusUpdates(editor);
   watchGalleryCaptionUpdates(editor);
   watchCarouselSlideUpdates(editor);

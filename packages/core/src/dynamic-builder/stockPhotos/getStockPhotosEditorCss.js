@@ -50,6 +50,13 @@ const getStockPhotosEditorCss = () => `
   padding: var(--gjs-db-gap-5) var(--gjs-db-gap-3);
   text-align: center;
 }
+.gjs-db-stock-card[data-db-thumb-missing='true'] .gjs-db-stock-thumb { opacity: 0; }
+.gjs-db-stock-card[data-db-thumb-missing='true'] .gjs-db-stock-choice { position: relative; background: var(--gjs-db-sunken); }
+.gjs-db-stock-card[data-db-thumb-missing='true'] .gjs-db-stock-choice::after {
+  content: 'Preview unavailable. Choose to use it anyway.';
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  padding: var(--gjs-db-gap-2); text-align: center; color: var(--gjs-db-muted); font-size: 0.78rem;
+}
 `;
 
 export default getStockPhotosEditorCss;

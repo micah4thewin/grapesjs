@@ -9,6 +9,18 @@ const buildInteractiveBlocks = () => [
     attributes: { 'data-db-deadline-date': buildDefaultDeadlineDate() },
   }),
   buildBlockDefinition('db-navbar', 'Navbar', 'Interactive', 'navigation', { type: 'db-navbar' }),
+  buildBlockDefinition('db-navbar-centered', 'Centered navbar', 'Interactive', 'navigation', {
+    type: 'db-navbar',
+    attributes: { 'data-db-layout': 'center', 'data-db-style': 'underline' },
+  }),
+  buildBlockDefinition('db-navbar-split', 'Split navbar', 'Interactive', 'navigation', {
+    type: 'db-navbar',
+    attributes: { 'data-db-layout': 'split', 'data-db-style': 'pill' },
+  }),
+  buildBlockDefinition('db-navbar-minimal', 'Minimal navbar', 'Interactive', 'navigation', {
+    type: 'db-navbar',
+    attributes: { 'data-db-style': 'minimal', 'data-db-cta': 'false' },
+  }),
   buildBlockDefinition('db-breadcrumb', 'Breadcrumb', 'Interactive', 'breadcrumb', { type: 'db-breadcrumb' }),
   buildBlockDefinition('db-social-links', 'Social links', 'Interactive', 'social', { type: 'db-social-links' }),
   buildBlockDefinition('db-announcement-bar', 'Announcement', 'Interactive', 'callout', {

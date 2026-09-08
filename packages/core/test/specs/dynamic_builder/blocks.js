@@ -94,7 +94,7 @@ describe('Dynamic builder block library', () => {
     const cardAttributes = imageBlock.get('attributes');
     expect(cardAttributes.tabindex).toBe('0');
     expect(cardAttributes.role).toBe('button');
-    expect(cardAttributes['aria-label']).toContain('A single picture');
+    expect(cardAttributes['aria-label']).toContain('Single picture');
     expect(cardAttributes['data-db-block-id']).toBe('db-image');
     const renderedMarkup = imageBlock.get('render')({ model: imageBlock, className: 'gjs-block' });
     expect(renderedMarkup).toContain('gjs-db-block-hint');

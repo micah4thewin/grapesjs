@@ -9,11 +9,13 @@ import buildStockPhotoCardMarkup from '../../../src/dynamic-builder/stockPhotos/
 import buildStockPhotoFileName from '../../../src/dynamic-builder/stockPhotos/buildStockPhotoFileName';
 import chooseStockPhoto from '../../../src/dynamic-builder/stockPhotos/chooseStockPhoto';
 import createOpenverseAdapter from '../../../src/dynamic-builder/stockPhotos/createOpenverseAdapter';
+import createWikimediaAdapter from '../../../src/dynamic-builder/stockPhotos/createWikimediaAdapter';
 import createPexelsAdapter from '../../../src/dynamic-builder/stockPhotos/createPexelsAdapter';
 import createUnsplashAdapter from '../../../src/dynamic-builder/stockPhotos/createUnsplashAdapter';
 import describeStockPhotoAddedText from '../../../src/dynamic-builder/stockPhotos/describeStockPhotoAddedText';
 import describeStockPhotoState from '../../../src/dynamic-builder/stockPhotos/describeStockPhotoState';
 import normalizeOpenversePhotoRecord from '../../../src/dynamic-builder/stockPhotos/normalizeOpenversePhotoRecord';
+import normalizeWikimediaPhotoRecord from '../../../src/dynamic-builder/stockPhotos/normalizeWikimediaPhotoRecord';
 import normalizePexelsPhotoRecord from '../../../src/dynamic-builder/stockPhotos/normalizePexelsPhotoRecord';
 import normalizeUnsplashPhotoRecord from '../../../src/dynamic-builder/stockPhotos/normalizeUnsplashPhotoRecord';
 import resolveStockPhotoOptions from '../../../src/dynamic-builder/stockPhotos/resolveStockPhotoOptions';
@@ -93,6 +95,72 @@ describe('Dynamic builder stock photos', () => {
       expect(searchResult.photos[0].photographerName).toBe('Ada Lovelace');
       expect(searchResult.photos[0].licenceName).toBe('CC BY SA 4.0');
       expect(searchResult.photos[0].requiresAttribution).toBe(true);
+    });
+
+    test('the Wikimedia Commons adapter needs no key, asks for CORS and reads credits out of the markup', async () => {
+      const requestCalls = [];
+      global.fetch = (requestUrl, requestOptions) => {
+        requestCalls.push({ requestUrl, requestOptions });
+        return Promise.resolve(
+          buildFakeResponse({
+            continue: { gsroffset: 24 },
+            query: {
+              searchinfo: { totalhits: 120 },
+              pages: [
+                {
+                  pageid: 42,
+                  title: 'File:Sunlit_beach.jpg',
+                  imageinfo: [
+                    {
+                      url: 'https://upload.wikimedia.org/wikipedia/commons/a/ab/Sunlit_beach.jpg',
+                      thumburl:
+                        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Sunlit_beach.jpg/1600px-Sunlit_beach.jpg',
+                      descriptionurl: 'https://commons.wikimedia.org/wiki/File:Sunlit_beach.jpg',
+                      width: 4000,
+                      height: 3000,
+                      mime: 'image/jpeg',
+                      extmetadata: {
+                        Artist: { value: '<a href="//commons.wikimedia.org/wiki/User:Ada">Ada Lovelace</a>' },
+                        LicenseShortName: { value: 'CC BY-SA 4.0' },
+                        LicenseUrl: { value: 'https://creativecommons.org/licenses/by-sa/4.0' },
+                        ImageDescription: { value: '<p>A <b>sunlit</b> beach</p>' },
+                      },
+                    },
+                  ],
+                },
+                {
+                  pageid: 43,
+                  title: 'File:Logo.svg',
+                  imageinfo: [{ url: 'https://x.example/l.svg', mime: 'image/svg+xml' }],
+                },
+              ],
+            },
+          }),
+        );
+      };
+      const searchResult = await createWikimediaAdapter().searchPhotos('beach', 2);
+      expect(requestCalls[0].requestUrl).toContain('commons.wikimedia.org');
+      expect(requestCalls[0].requestUrl).toContain('origin=*');
+      expect(requestCalls[0].requestUrl).toContain('gsroffset=24');
+      expect(searchResult.photos.length).toBe(1);
+      expect(searchResult.totalCount).toBe(120);
+      expect(searchResult.hasMore).toBe(true);
+      const photoRecord = searchResult.photos[0];
+      expect(photoRecord.thumbnailUrl).toContain('/480px-');
+      expect(photoRecord.downloadUrl).toContain('/1600px-');
+      expect(photoRecord.photographerName).toBe('Ada Lovelace');
+      expect(photoRecord.photographerUrl).toBe('https://commons.wikimedia.org/wiki/User:Ada');
+      expect(photoRecord.description).toBe('A sunlit beach');
+      expect(photoRecord.licenceName).toBe('CC BY-SA 4.0');
+      expect(photoRecord.requiresAttribution).toBe(true);
+      expect(
+        normalizeWikimediaPhotoRecord({
+          imageinfo: [
+            { url: 'https://x.example/a.jpg', extmetadata: { LicenseShortName: { value: 'Public domain' } } },
+          ],
+        }).requiresAttribution,
+      ).toBe(false);
+      expect(createWikimediaAdapter().describeProvider().needsKey).toBe(false);
     });
 
     test('the Unsplash adapter sends the key as a header and never in the address', async () => {
@@ -242,10 +310,13 @@ describe('Dynamic builder stock photos', () => {
   });
 
   describe('provider choice', () => {
-    test('with no settings at all the free Openverse library is used', () => {
+    test('with no settings at all the free Wikimedia Commons library is used', () => {
       const moduleOptions = resolveStockPhotoOptions({});
       expect(moduleOptions.enabled).toBe(true);
-      expect(moduleOptions.provider.providerId).toBe('openverse');
+      expect(moduleOptions.provider.providerId).toBe('wikimedia');
+      expect(resolveStockPhotoOptions({ stockPhotos: { provider: 'openverse' } }).provider.providerId).toBe(
+        'openverse',
+      );
       expect(moduleOptions.missingProviderNotice).toBe('');
       expect(moduleOptions.maxImageDimension).toBe(1600);
     });
@@ -316,7 +387,7 @@ describe('Dynamic builder stock photos', () => {
       const modalElement = openStockPhotos();
       expect(editor.Commands.has('db:open-stock-photos')).toBe(true);
       expect(editor.Modal.isOpen()).toBe(true);
-      expect(modalElement.textContent).toContain('Openverse');
+      expect(modalElement.textContent).toContain('Wikimedia Commons');
       expect(modalElement.querySelector('[data-db-stock-search]')).toBeTruthy();
       expect(modalElement.querySelectorAll('[data-db-stock-suggestion]').length).toBeGreaterThan(3);
       expect(modalElement.querySelector('.gjs-db-stock-empty').textContent).toContain('Search above');

@@ -46,6 +46,9 @@ const watchSymbolInstances = (editor) => {
     if (!isEditorOnlyComponentUpdate(changedComponent)) handleSubtreeChange(changedComponent);
   });
   editor.on('component:input', handleSubtreeChange);
+  // Style manager edits land on CSS rules rather than the component, so they
+  // never raise component:update; follow them through the selected component.
+  editor.on('style:property:update component:styleUpdate', () => handleSubtreeChange(editor.getSelected()));
   editor.on('component:update:attributes', (changedComponent) => {
     if (isBusy() || !changedComponent || !changedComponent.get) return;
     refreshSymbolElementFlags(changedComponent);

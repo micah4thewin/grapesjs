@@ -13,6 +13,11 @@ const buildMediaEditorCanvasCss = () =>
     "  content: 'Zoom ' attr(data-db-zoom) ' \\00b7 ' attr(data-db-lat) ', ' attr(data-db-lng);",
     '}',
     "[data-db-type='image'][alt='Placeholder image'] { outline: 2px dashed rgba(37, 99, 235, 0.55); outline-offset: -2px; }",
+    "img[data-db-broken='true'] {",
+    '  display: inline-block; min-width: 8rem; min-height: 5rem; box-sizing: border-box; padding: 0.75rem;',
+    '  outline: 2px dashed #b45309; outline-offset: -2px; background: repeating-linear-gradient(135deg, rgba(180, 83, 9, 0.08) 0 8px, transparent 8px 16px);',
+    '  color: #b45309; font: 600 0.8rem/1.4 system-ui, sans-serif;',
+    '}',
   ].join('\n');
 
 export default buildMediaEditorCanvasCss;

@@ -23,6 +23,18 @@ const buildMarketingSectionBlocks = () => [
     buildSectionContentRecord([{ type: 'db-contact' }]),
   ),
   buildBlockDefinition('db-footer', 'Footer', 'Marketing', 'footer', { type: 'db-footer' }),
+  buildBlockDefinition('db-footer-simple', 'Simple footer', 'Marketing', 'footer', {
+    type: 'db-footer',
+    attributes: { 'data-db-footer': 'simple', 'data-db-theme': 'default' },
+  }),
+  buildBlockDefinition('db-footer-centered', 'Centered footer', 'Marketing', 'footer', {
+    type: 'db-footer',
+    attributes: { 'data-db-footer': 'centered', 'data-db-theme': 'light' },
+  }),
+  buildBlockDefinition('db-footer-newsletter', 'Footer with signup', 'Marketing', 'footer', {
+    type: 'db-footer',
+    attributes: { 'data-db-footer': 'newsletter' },
+  }),
   buildBlockDefinition('db-cta-banner', 'Call to action', 'Marketing', 'button', buildCtaBannerContent()),
 ];
 

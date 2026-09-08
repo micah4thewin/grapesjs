@@ -9,7 +9,7 @@ const describeMissingProviderNotice = (moduleOptions) => {
     return (
       'This site is set up to use ' +
       providerName +
-      ' for photos, but no access key was saved yet. Add the key in the builder settings, or remove the provider setting to use the free Openverse library.'
+      ' for photos, but no access key was saved yet. Add the key in the builder settings, or remove the provider setting to use the free Wikimedia Commons library.'
     );
   return 'No picture service is connected yet, so there is nothing to search. Connect one in the builder settings, or upload your own pictures from the assets panel.';
 };

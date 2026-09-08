@@ -11,9 +11,23 @@ const buildFooterTypeDefinition = () => ({
       draggable: '[data-gjs-type=wrapper]',
       droppable: false,
       classes: ['db-footer'],
-      attributes: { 'data-db-type': 'footer', 'data-db-theme': 'dark' },
+      attributes: { 'data-db-type': 'footer', 'data-db-theme': 'dark', 'data-db-footer': 'columns' },
       components: buildFooterDefaultChildren(),
-      traits: buildMarketingSectionTraits('dark', 'footer'),
+      traits: [
+        {
+          type: 'select',
+          name: 'data-db-footer',
+          label: 'Layout',
+          default: 'columns',
+          options: [
+            { id: 'columns', label: 'Brand and link columns' },
+            { id: 'simple', label: 'One row' },
+            { id: 'centered', label: 'Centered' },
+            { id: 'newsletter', label: 'Columns with email signup' },
+          ],
+        },
+        ...buildMarketingSectionTraits('dark', 'footer'),
+      ],
     },
   },
 });

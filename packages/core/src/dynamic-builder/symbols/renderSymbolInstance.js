@@ -49,6 +49,8 @@ const renderSymbolInstance = (editor, instanceComponent) => {
       setSymbolLeafBaseline(editor, instanceComponent, collectSymbolLeafBaseline(instanceComponent));
       applySymbolOverrides(editor, instanceComponent);
     }
+    if (symbolRecord.rootClassName && instanceComponent.addClass)
+      instanceComponent.addClass(symbolRecord.rootClassName);
     setSymbolSubtreeLocked(instanceComponent, !isSymbolInstanceEditing(instanceComponent));
   });
 };

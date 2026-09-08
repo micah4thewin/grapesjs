@@ -20,6 +20,7 @@ const buildNavbarTypeDefinition = (interactiveTextDefaults) => ({
         'data-db-scroll': 'none',
         'data-db-open': 'false',
         'data-db-layout': 'end',
+        'data-db-style': 'default',
         'data-db-cta': 'true',
         'data-db-brand-text': 'true',
         'data-db-menu-auto': 'false',

@@ -420,6 +420,23 @@ describe('Dynamic builder export and persistence with an editor', () => {
       expect(JSON.parse(localStorage.getItem(storageKey)).projectData).toBeTruthy();
     });
 
+    test('waits for inline text editing to end before it takes the snapshot', () => {
+      jest.useFakeTimers();
+      try {
+        const textComponent = editor.getWrapper().append({ type: 'text', content: 'Brand' })[0];
+        editor.getModel().set('editing', { model: textComponent });
+        editor.trigger('update');
+        jest.advanceTimersByTime(moduleOptions.autosaveDelay + 50);
+        expect(localStorage.getItem(storageKey)).toBeUndefined();
+        editor.getModel().set('editing', null);
+        editor.trigger('rte:disable');
+        jest.advanceTimersByTime(moduleOptions.autosaveDelay + 50);
+        expect(JSON.parse(localStorage.getItem(storageKey)).projectData).toBeTruthy();
+      } finally {
+        jest.useRealTimers();
+      }
+    });
+
     test('offers the stored snapshot as a draft only when it is not auto-loaded', () => {
       saveProjectSnapshot(editor, moduleOptions);
       expect(readLocalDraftRecord(editor, moduleOptions)).toBeNull();

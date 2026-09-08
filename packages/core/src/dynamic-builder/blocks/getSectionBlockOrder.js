@@ -1,5 +1,8 @@
 const getSectionBlockOrder = () => [
   'db-navbar',
+  'db-navbar-centered',
+  'db-navbar-split',
+  'db-navbar-minimal',
   'db-announcement-bar',
   'db-hero-centered',
   'db-hero-split',
@@ -19,6 +22,9 @@ const getSectionBlockOrder = () => [
   'db-newsletter-signup',
   'db-cta-banner',
   'db-footer',
+  'db-footer-simple',
+  'db-footer-centered',
+  'db-footer-newsletter',
 ];
 
 export default getSectionBlockOrder;
