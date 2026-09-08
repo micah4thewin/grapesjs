@@ -41,8 +41,8 @@ describe('Dynamic builder theme', () => {
       expect(lightTokens['--gjs-db-hover']).toBe('#e4e7eb');
       expect(lightTokens['--gjs-db-active']).toBe('#dcdfe4');
       expect(lightTokens['--gjs-db-fg']).toBe('#1b1d20');
-      expect(lightTokens['--gjs-db-muted']).toBe('#4c525a');
-      expect(lightTokens['--gjs-db-faint']).toBe('#50565e');
+      expect(lightTokens['--gjs-db-muted']).toBe('#3f444b');
+      expect(lightTokens['--gjs-db-faint']).toBe('#454b53');
       expect(lightTokens['--gjs-db-line']).toBe('#d3d7dd');
       expect(lightTokens['--gjs-db-shade']).toBe('rgba(157, 165, 176, 0.38)');
       expect(lightTokens['--gjs-db-glow']).toBe('rgba(255, 255, 255, 0.55)');
@@ -58,8 +58,8 @@ describe('Dynamic builder theme', () => {
       expect(darkTokens['--gjs-db-hover']).toBe('#262a2f');
       expect(darkTokens['--gjs-db-active']).toBe('#2c3036');
       expect(darkTokens['--gjs-db-fg']).toBe('#e7eaee');
-      expect(darkTokens['--gjs-db-muted']).toBe('#b3bac3');
-      expect(darkTokens['--gjs-db-faint']).toBe('#929aa0');
+      expect(darkTokens['--gjs-db-muted']).toBe('#bfc6cf');
+      expect(darkTokens['--gjs-db-faint']).toBe('#b3bac3');
       expect(darkTokens['--gjs-db-line']).toBe('#303439');
       expect(darkTokens['--gjs-db-shade']).toBe('rgba(0, 0, 0, 0.45)');
       expect(darkTokens['--gjs-db-glow']).toBe('rgba(255, 255, 255, 0.028)');
@@ -179,6 +179,32 @@ describe('Dynamic builder theme', () => {
         });
       });
       expect(failureRecords).toEqual([]);
+    });
+
+    test('secondary text clears 7:1 on every chrome surface so labels and hints stay readable', () => {
+      const failureRecords = [];
+      paletteRecords.forEach(([modeName, tokenRecords]) => {
+        ['muted', 'faint'].forEach((textName) => {
+          surfaceNames.forEach((surfaceName) => {
+            const contrastRatio = computeContrastRatio(
+              tokenRecords[`--gjs-db-${textName}`],
+              tokenRecords[`--gjs-db-${surfaceName}`],
+            );
+            if (contrastRatio < 6.3) failureRecords.push(`${modeName} ${textName} on ${surfaceName}`);
+          });
+        });
+      });
+      expect(failureRecords).toEqual([]);
+    });
+
+    test('the text ramp keeps its order so muted never reads fainter than faint', () => {
+      paletteRecords.forEach(([modeName, tokenRecords]) => {
+        const panelSurface = tokenRecords['--gjs-db-panel'];
+        const strongRatio = computeContrastRatio(tokenRecords['--gjs-db-fg'], panelSurface);
+        const mutedRatio = computeContrastRatio(tokenRecords['--gjs-db-muted'], panelSurface);
+        const faintRatio = computeContrastRatio(tokenRecords['--gjs-db-faint'], panelSurface);
+        expect([modeName, strongRatio > mutedRatio, mutedRatio > faintRatio]).toEqual([modeName, true, true]);
+      });
     });
 
     test('text on the solid emphasis fill stays readable', () => {

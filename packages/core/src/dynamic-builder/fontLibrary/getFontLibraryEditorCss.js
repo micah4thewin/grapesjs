@@ -11,7 +11,7 @@ const getFontLibraryEditorCss = () => `
 .gjs-db-font-card:hover { background: var(--gjs-db-hover); border-color: var(--gjs-db-accent-soft); }
 .gjs-db-font-card-active { border-color: var(--gjs-db-accent); background: var(--gjs-db-accent-soft); }
 .gjs-db-font-sample { font-size: 1.35rem; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gjs-db-font-name { display: flex; justify-content: space-between; gap: var(--gjs-db-gap-2); font-family: var(--gjs-db-font-ui); font-size: 0.72rem; font-weight: var(--gjs-db-w-medium); }
+.gjs-db-font-name { display: flex; justify-content: space-between; gap: var(--gjs-db-gap-2); font-family: var(--gjs-db-font-ui); font-size: 0.78rem; font-weight: var(--gjs-db-w-medium); }
 .gjs-db-font-name em { font-style: normal; font-weight: var(--gjs-db-w-normal); color: var(--gjs-db-faint); text-align: right; }
 @media (max-width: 760px) { .gjs-db-font-panes { grid-template-columns: 1fr; } .gjs-db-font-list { max-height: 30vh; } }
 `;

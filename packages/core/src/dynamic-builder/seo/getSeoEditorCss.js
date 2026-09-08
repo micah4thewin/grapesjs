@@ -42,7 +42,7 @@ const getSeoEditorCss = () =>
     '.gjs-db-seo-preview-note[hidden] { display: none; }',
     '.gjs-db-seo-health-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 10px;',
     '  border: 1px solid var(--gjs-db-line, rgba(127, 127, 127, 0.4)); border-radius: 999px; background: transparent;',
-    '  color: var(--gjs-db-fg, inherit); font: inherit; font-size: 0.72rem; cursor: pointer; }',
+    '  color: var(--gjs-db-fg, inherit); font: inherit; font-size: 0.78rem; cursor: pointer; }',
     '.gjs-db-seo-health-score { font-weight: 700; }',
     '.gjs-db-seo-health-chip[data-db-seo-level="good"] .gjs-db-seo-health-score { color: var(--gjs-db-success, #1f8a4c); }',
     '.gjs-db-seo-health-chip[data-db-seo-level="fair"] .gjs-db-seo-health-score { color: var(--gjs-db-warning, #b7791f); }',

@@ -78,7 +78,7 @@ const buildPrimitiveTopBarCss = () => `
   align-items: center;
   gap: var(--gjs-db-gap-1);
   margin-left: auto;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   color: var(--gjs-db-faint);
   white-space: nowrap;
 }

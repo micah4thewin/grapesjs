@@ -22,7 +22,7 @@ const getTokenManagerEditorCss = () => `
 .gjs-db-token-reset:focus-visible { outline: 2px solid var(--gjs-db-focus); }
 .gjs-db-token-default-badge { margin-left: 6px; vertical-align: middle; }
 .gjs-db-token-field .gjs-db-field-help code { font-family: var(--gjs-db-font-mono); font-size: 0.68rem; color: var(--gjs-db-faint); }
-.gjs-db-token-contrast, .gjs-db-token-usage, .gjs-db-token-error { font-size: 0.72rem; line-height: 1.4; }
+.gjs-db-token-contrast, .gjs-db-token-usage, .gjs-db-token-error { font-size: 0.78rem; line-height: 1.4; }
 .gjs-db-token-contrast { font-weight: var(--gjs-db-w-medium); }
 .gjs-db-token-contrast[data-kind='success'] { color: var(--gjs-db-success); }
 .gjs-db-token-contrast[data-kind='warning'] { color: var(--gjs-db-warning); }

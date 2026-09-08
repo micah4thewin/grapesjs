@@ -9,7 +9,7 @@ const getFieldPickerEditorCss = () =>
     '.gjs-db-field-pick-token { font-family: var(--gjs-db-font-mono); font-size: 0.7rem;',
     '  color: var(--gjs-db-faint); }',
     '.gjs-db-data-check-item { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }',
-    '.gjs-db-data-check-detail { font-size: 0.72rem; color: var(--gjs-db-faint); }',
+    '.gjs-db-data-check-detail { font-size: 0.78rem; color: var(--gjs-db-faint); }',
   ].join('\n');
 
 export default getFieldPickerEditorCss;

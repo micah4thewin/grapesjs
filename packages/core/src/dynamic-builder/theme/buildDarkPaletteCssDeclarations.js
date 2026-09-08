@@ -7,8 +7,8 @@ const buildDarkPaletteCssDeclarations = () => `
   --gjs-db-hover: #262a2f;
   --gjs-db-active: #2c3036;
   --gjs-db-fg: #e7eaee;
-  --gjs-db-muted: #b3bac3;
-  --gjs-db-faint: #929aa0;
+  --gjs-db-muted: #bfc6cf;
+  --gjs-db-faint: #b3bac3;
   --gjs-db-line: #303439;
   --gjs-db-line-soft: #292d32;
   --gjs-db-accent: #8ab4e0;

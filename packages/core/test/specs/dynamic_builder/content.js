@@ -55,6 +55,25 @@ describe('Dynamic builder content and layout components', () => {
       expect(sectionComponent.getAttributes()['data-db-has-bg']).toBeUndefined();
     });
 
+    test('optional select traits show their default choice instead of an empty field', () => {
+      const sectionComponent = appendSection();
+      editor.select(sectionComponent);
+      expect(sectionComponent.getTrait('data-db-padding').getValue()).toBe('normal');
+      expect(sectionComponent.getTrait('data-db-min-height').getValue()).toBe('auto');
+      expect(sectionComponent.getTrait('data-db-align').getValue()).toBe('left');
+    });
+
+    test('choosing a non default option stores it and choosing the default clears the attribute again', () => {
+      const sectionComponent = appendSection();
+      editor.select(sectionComponent);
+      sectionComponent.getTrait('data-db-padding').setValue('spacious');
+      expect(sectionComponent.getAttributes()['data-db-padding']).toBe('spacious');
+      expect(sectionComponent.getTrait('data-db-padding').getValue()).toBe('spacious');
+      sectionComponent.getTrait('data-db-padding').setValue('normal');
+      expect(sectionComponent.getAttributes()['data-db-padding']).toBeUndefined();
+      expect(sectionComponent.getTrait('data-db-padding').getValue()).toBe('normal');
+    });
+
     test('a fresh section exports no overlay attribute and no exported placeholder class', () => {
       const html = appendSection().toHTML();
       expect(html).not.toContain('data-db-overlay');

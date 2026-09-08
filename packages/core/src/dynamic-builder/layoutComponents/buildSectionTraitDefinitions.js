@@ -1,3 +1,4 @@
+import buildOptionalAttributeGetter from './buildOptionalAttributeGetter.js';
 import buildOptionalAttributeSetter from './buildOptionalAttributeSetter.js';
 
 const buildSectionTraitDefinitions = () => [
@@ -17,6 +18,7 @@ const buildSectionTraitDefinitions = () => [
     type: 'select',
     name: 'data-db-padding',
     label: 'Vertical spacing',
+    getValue: buildOptionalAttributeGetter('data-db-padding', 'normal'),
     setValue: buildOptionalAttributeSetter('data-db-padding', 'normal'),
     options: [
       { id: 'normal', label: 'Normal' },
@@ -29,6 +31,7 @@ const buildSectionTraitDefinitions = () => [
     type: 'select',
     name: 'data-db-min-height',
     label: 'Minimum height',
+    getValue: buildOptionalAttributeGetter('data-db-min-height', 'auto'),
     setValue: buildOptionalAttributeSetter('data-db-min-height', 'auto'),
     options: [
       { id: 'auto', label: 'Fit content' },
@@ -40,6 +43,7 @@ const buildSectionTraitDefinitions = () => [
     type: 'select',
     name: 'data-db-align',
     label: 'Content alignment',
+    getValue: buildOptionalAttributeGetter('data-db-align', 'left'),
     setValue: buildOptionalAttributeSetter('data-db-align', 'left'),
     options: [
       { id: 'left', label: 'Left' },

@@ -7,8 +7,8 @@ const buildLightPaletteCssDeclarations = () => `
   --gjs-db-hover: #e4e7eb;
   --gjs-db-active: #dcdfe4;
   --gjs-db-fg: #1b1d20;
-  --gjs-db-muted: #4c525a;
-  --gjs-db-faint: #50565e;
+  --gjs-db-muted: #3f444b;
+  --gjs-db-faint: #454b53;
   --gjs-db-line: #d3d7dd;
   --gjs-db-line-soft: #dee1e6;
   --gjs-db-accent: #35618f;

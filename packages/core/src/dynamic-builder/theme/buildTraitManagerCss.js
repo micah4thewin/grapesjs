@@ -12,7 +12,7 @@ const buildTraitManagerCss = () => `
   background-color: transparent;
   border-bottom: 1px solid var(--gjs-db-line);
   color: var(--gjs-db-faint);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   padding: var(--gjs-db-gap-2);
 }
 .gjs-trt-header {
@@ -31,7 +31,7 @@ const buildTraitManagerCss = () => `
 }
 .gjs-trt-trait .gjs-label {
   color: var(--gjs-db-muted);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
 }
 .gjs-label-wrp {
   color: var(--gjs-db-muted);

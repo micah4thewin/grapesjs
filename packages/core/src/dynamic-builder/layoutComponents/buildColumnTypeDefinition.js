@@ -2,6 +2,7 @@ import buildDragRule from '../support/buildDragRule.js';
 import buildDropRule from '../support/buildDropRule.js';
 import getPageLevelComponentTypes from '../support/getPageLevelComponentTypes.js';
 import buildLayoutPlaceholderChildren from './buildLayoutPlaceholderChildren.js';
+import buildOptionalAttributeGetter from './buildOptionalAttributeGetter.js';
 import buildOptionalAttributeSetter from './buildOptionalAttributeSetter.js';
 
 const buildColumnTypeDefinition = () => ({
@@ -21,6 +22,7 @@ const buildColumnTypeDefinition = () => ({
           type: 'select',
           name: 'data-db-theme',
           label: 'Background',
+          getValue: buildOptionalAttributeGetter('data-db-theme', 'none'),
           setValue: buildOptionalAttributeSetter('data-db-theme', 'none'),
           options: [
             { id: 'none', label: 'None' },
@@ -33,6 +35,7 @@ const buildColumnTypeDefinition = () => ({
           type: 'select',
           name: 'data-db-align',
           label: 'Text alignment',
+          getValue: buildOptionalAttributeGetter('data-db-align', 'left'),
           setValue: buildOptionalAttributeSetter('data-db-align', 'left'),
           options: [
             { id: 'left', label: 'Left' },

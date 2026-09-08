@@ -11,8 +11,8 @@ const getPhotoEditorEditorCss = () => `
 .gjs-db-photo-controls { display: grid; gap: var(--gjs-db-gap-2); max-height: 60vh; overflow-y: auto; padding-right: 4px; }
 .gjs-db-photo-controls .gjs-db-icon-group-title { margin-top: var(--gjs-db-gap-2); }
 .gjs-db-photo-actions { display: flex; flex-wrap: wrap; gap: var(--gjs-db-gap-1); }
-.gjs-db-photo-actions .gjs-db-button { font-size: 0.72rem; padding: 0.4em 0.7em; }
-.gjs-db-photo-slider { display: grid; gap: 2px; font-family: var(--gjs-db-font-ui); font-size: 0.72rem; color: var(--gjs-db-muted); }
+.gjs-db-photo-actions .gjs-db-button { font-size: 0.78rem; padding: 0.4em 0.7em; }
+.gjs-db-photo-slider { display: grid; gap: 2px; font-family: var(--gjs-db-font-ui); font-size: 0.78rem; color: var(--gjs-db-muted); }
 .gjs-db-photo-slider span { display: flex; justify-content: space-between; }
 .gjs-db-photo-slider b { color: var(--gjs-db-fg); font-weight: var(--gjs-db-w-medium); font-variant-numeric: tabular-nums; }
 .gjs-db-photo-slider input[type='range'] { width: 100%; accent-color: var(--gjs-db-accent); }

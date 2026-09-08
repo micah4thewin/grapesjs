@@ -23,7 +23,7 @@ const getStyleSectorEditorCss = () => `
 .gjs-db-style-scope-buttons { display: flex; gap: 4px; padding: 3px; border-radius: var(--gjs-db-r-2); background: var(--gjs-db-sunken); box-shadow: var(--gjs-db-press-1); }
 .gjs-db-style-scope-button {
   flex: 1 1 0; min-height: 32px; padding: 0 8px; border: none; border-radius: var(--gjs-db-r-1); background: transparent;
-  color: var(--gjs-db-muted); font-family: var(--gjs-db-font-ui); font-size: 0.72rem; cursor: pointer;
+  color: var(--gjs-db-muted); font-family: var(--gjs-db-font-ui); font-size: 0.78rem; cursor: pointer;
 }
 .gjs-db-style-scope-button[aria-pressed='true'] { background: var(--gjs-db-panel); color: var(--gjs-db-fg); box-shadow: var(--gjs-db-lift-1); }
 .gjs-db-style-scope-button:disabled { opacity: 0.5; cursor: not-allowed; }

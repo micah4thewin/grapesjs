@@ -16,7 +16,7 @@ const buildSelectorManagerCss = () => `
   border: none;
   border-radius: var(--gjs-db-r-pill);
   color: var(--gjs-db-fg);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   padding: 0.2em 0.4em 0.2em 0.75em;
   margin: 0 var(--gjs-db-gap-1) var(--gjs-db-gap-1) 0;
 }
@@ -58,12 +58,12 @@ const buildSelectorManagerCss = () => `
 }
 .gjs-clm-sels-info {
   color: var(--gjs-db-faint);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   margin-top: var(--gjs-db-gap-2);
 }
 .gjs-clm-sel-id {
   font-family: var(--gjs-db-font-mono);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   color: var(--gjs-db-muted);
 }
 .gjs-clm-label-sel {

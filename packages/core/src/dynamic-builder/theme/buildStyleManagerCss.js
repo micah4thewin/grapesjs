@@ -33,7 +33,7 @@ const buildStyleManagerCss = () => `
 .gjs-sm-label,
 .gjs-sm-property .gjs-sm-label {
   color: var(--gjs-db-muted);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   margin-bottom: 3px;
 }
 .gjs-sm-clear {
@@ -54,7 +54,7 @@ const buildStyleManagerCss = () => `
   box-shadow: var(--gjs-db-lift-1);
   color: var(--gjs-db-muted);
   font-family: var(--gjs-db-font-ui);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   padding: 0.45em 0.9em;
   cursor: pointer;
   text-shadow: none;

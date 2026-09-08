@@ -26,7 +26,7 @@ const buildPanelsTopBarCss = () => `
   gap: var(--gjs-db-gap-1);
 }
 .gjs-pn-devices-c .gjs-device-label {
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: var(--gjs-db-w-bold);
   color: var(--gjs-db-faint);
   text-transform: uppercase;

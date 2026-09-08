@@ -6,11 +6,11 @@ const getDevicesEditorCss = () => `
 .gjs-db-device-readout {
   position: absolute; right: 14px; bottom: 14px; z-index: 5; display: flex; align-items: center; gap: 6px; padding: 4px 6px 4px 12px;
   border-radius: var(--gjs-db-r-pill); background: var(--gjs-db-panel); box-shadow: var(--gjs-db-lift-2); color: var(--gjs-db-muted);
-  font-family: var(--gjs-db-font-ui); font-size: 0.72rem; font-weight: var(--gjs-db-w-medium); pointer-events: auto;
+  font-family: var(--gjs-db-font-ui); font-size: 0.78rem; font-weight: var(--gjs-db-w-medium); pointer-events: auto;
 }
 .gjs-db-device-readout button {
   min-height: 32px; padding: 0 10px; border: none; border-radius: var(--gjs-db-r-pill); background: var(--gjs-db-sunken);
-  color: var(--gjs-db-fg); font-family: var(--gjs-db-font-ui); font-size: 0.72rem; cursor: pointer;
+  color: var(--gjs-db-fg); font-family: var(--gjs-db-font-ui); font-size: 0.78rem; cursor: pointer;
 }
 .gjs-db-device-readout button:hover { background: var(--gjs-db-hover); }
 .gjs-db-device-readout button:focus-visible { outline: 2px solid var(--gjs-db-focus); }
