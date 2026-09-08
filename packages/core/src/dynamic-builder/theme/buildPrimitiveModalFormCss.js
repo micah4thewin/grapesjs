@@ -70,8 +70,9 @@ input[type='checkbox'].gjs-db-field-input {
   cursor: pointer;
 }
 .gjs-db-field-help {
-  font-size: 0.78rem;
-  color: var(--gjs-db-faint);
+  font-size: 0.8rem;
+  font-weight: var(--gjs-db-w-normal);
+  color: var(--gjs-db-muted);
   line-height: 1.5;
 }
 .gjs-db-grid-two {
@@ -95,6 +96,8 @@ input[type='checkbox'].gjs-db-field-input {
 .gjs-db-muted {
   color: var(--gjs-db-muted);
   font-size: 0.8125rem;
+  font-weight: var(--gjs-db-w-normal);
+  line-height: 1.5;
 }
 .gjs-db-field-error-text {
   color: var(--gjs-db-error);

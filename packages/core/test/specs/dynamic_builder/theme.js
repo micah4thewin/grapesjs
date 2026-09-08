@@ -312,6 +312,25 @@ describe('Dynamic builder theme', () => {
       expect(chromeCss.indexOf('#1c1e21')).toBeGreaterThan(-1);
     });
 
+    test('secondary chrome text never inherits the thin core weight', () => {
+      const chromeCss = `${composeEditorThemeCss()}\n${composeWorkspaceCss()}`;
+      const readRuleBlock = (selectorText) => {
+        const startIndex = chromeCss.indexOf(selectorText);
+        expect(startIndex).toBeGreaterThan(-1);
+        return chromeCss.slice(startIndex, chromeCss.indexOf('}', startIndex));
+      };
+      expect(chromeCss).not.toContain('font-weight: lighter');
+      const resetBlock = readRuleBlock('.gjs-editor-cont .gjs-mdl-dialog,');
+      ['.gjs-trt-trait', '.gjs-block', '.gjs-sm-sector', '.gjs-layer', '.gjs-db-field-help'].forEach((selectorText) => {
+        expect(resetBlock).toContain(`.gjs-editor-cont ${selectorText}`);
+      });
+      expect(resetBlock).toContain('font-weight: var(--gjs-db-w-normal);');
+      expect(readRuleBlock('.gjs-db-inspector-eyebrow {')).toContain('font-size: var(--gjs-db-fs-2);');
+      expect(readRuleBlock('.gjs-db-inspector-eyebrow {')).toContain('color: var(--gjs-db-muted);');
+      expect(readRuleBlock('.gjs-db-field-help {')).toContain('color: var(--gjs-db-muted);');
+      expect(readRuleBlock('.gjs-db-block-hint {')).toContain('color: var(--gjs-db-muted);');
+    });
+
     test('the edited page keeps its own paper and never borrows chrome tokens', () => {
       const chromeCss = composeEditorThemeCss();
       expect(chromeCss).toContain('.gjs-frame-wrapper .gjs-frame {');

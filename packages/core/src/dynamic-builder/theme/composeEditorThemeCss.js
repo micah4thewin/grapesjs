@@ -30,6 +30,7 @@ import buildPreviewChromeFixCss from './buildPreviewChromeFixCss.js';
 import buildModalFieldRefinementsCss from './buildModalFieldRefinementsCss.js';
 import buildDesignKitCardsCss from './buildDesignKitCardsCss.js';
 import buildSentenceCaseLabelCss from './buildSentenceCaseLabelCss.js';
+import buildTextWeightResetCss from './buildTextWeightResetCss.js';
 
 const composeEditorThemeCss = () =>
   [
@@ -65,6 +66,7 @@ const composeEditorThemeCss = () =>
     buildModalFieldRefinementsCss,
     buildDesignKitCardsCss,
     buildSentenceCaseLabelCss,
+    buildTextWeightResetCss,
   ]
     .map((buildSectionCss) => buildSectionCss().trim())
     .join('\n');

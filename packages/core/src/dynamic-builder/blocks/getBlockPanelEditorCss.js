@@ -72,7 +72,7 @@ const getBlockPanelEditorCss = () => `
     font-size: 0.78rem;
   }
   .gjs-block .gjs-db-block-hint {
-    font-size: 0.7rem;
+    font-size: 0.74rem;
   }
 }
 `;

@@ -33,7 +33,8 @@ const buildStyleManagerCss = () => `
 .gjs-sm-label,
 .gjs-sm-property .gjs-sm-label {
   color: var(--gjs-db-muted);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  font-weight: var(--gjs-db-w-normal);
   margin-bottom: 3px;
 }
 .gjs-sm-clear {

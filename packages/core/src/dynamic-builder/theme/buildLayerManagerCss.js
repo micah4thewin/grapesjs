@@ -8,6 +8,7 @@ const buildLayerManagerCss = () => `
   color: var(--gjs-db-muted);
   font-family: var(--gjs-db-font-ui);
   font-size: 0.78rem;
+  font-weight: var(--gjs-db-w-normal);
 }
 .gjs-layer-item {
   border: none;

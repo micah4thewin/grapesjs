@@ -9,7 +9,9 @@ const buildModalDialogCss = () => `
   border-radius: var(--gjs-db-r-4);
   box-shadow: var(--gjs-db-lift-4);
   font-family: var(--gjs-db-font-ui);
+  font-weight: var(--gjs-db-w-normal);
   color: var(--gjs-db-fg);
+  text-shadow: none;
   overflow: hidden;
 }
 .gjs-mdl-header {

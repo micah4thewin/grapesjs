@@ -5,7 +5,8 @@ const buildSelectorManagerCss = () => `
 }
 .gjs-clm-header {
   color: var(--gjs-db-muted);
-  font-size: 0.74rem;
+  font-size: 0.78rem;
+  font-weight: var(--gjs-db-w-normal);
 }
 .gjs-clm-header-status {
   color: var(--gjs-db-faint);

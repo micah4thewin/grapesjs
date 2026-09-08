@@ -12,10 +12,11 @@ const buildBlockCardCss = () => `
   box-sizing: border-box;
 }
 .gjs-db-block-hint {
-  font-size: var(--gjs-db-fs-1);
+  font-size: 0.72rem;
+  font-weight: var(--gjs-db-w-normal);
   line-height: 1.35;
   max-height: 2.75em;
-  color: var(--gjs-db-faint);
+  color: var(--gjs-db-muted);
 }
 .gjs-block {
   display: flex;
@@ -35,6 +36,7 @@ const buildBlockCardCss = () => `
   box-shadow: var(--gjs-db-lift-1);
   color: var(--gjs-db-muted);
   font-family: var(--gjs-db-font-ui);
+  font-weight: var(--gjs-db-w-normal);
   cursor: grab;
   transition:
     box-shadow var(--gjs-db-dur-2) var(--gjs-db-ease),

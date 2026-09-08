@@ -8,9 +8,11 @@ const getWorkspaceInspectorCss = () => `
 }
 .gjs-db-inspector-eyebrow {
   display: block;
-  font-size: var(--gjs-db-fs-1);
-  color: var(--gjs-db-faint);
-  margin-bottom: 2px;
+  font-size: var(--gjs-db-fs-2);
+  font-weight: var(--gjs-db-w-normal);
+  line-height: var(--gjs-db-lh-tight);
+  color: var(--gjs-db-muted);
+  margin-bottom: 3px;
 }
 .gjs-db-inspector-title {
   margin: 0;

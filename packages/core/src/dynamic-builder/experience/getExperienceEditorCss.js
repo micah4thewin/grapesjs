@@ -32,8 +32,9 @@ const getExperienceEditorCss = () => `
 .gjs-db-block-hint {
   display: block;
   margin-top: 2px;
-  color: var(--gjs-db-faint);
-  font-size: 0.64rem;
+  color: var(--gjs-db-muted);
+  font-size: 0.72rem;
+  font-weight: var(--gjs-db-w-normal);
   line-height: 1.35;
 }
 .gjs-db-blocks-empty {
