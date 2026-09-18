@@ -1,9 +1,11 @@
 import buildAutoRevisionLabel from './buildAutoRevisionLabel.js';
 import buildProjectSnapshot from './buildProjectSnapshot.js';
 import buildRevisionMetaRecord from './buildRevisionMetaRecord.js';
+import evictOldestRevision from './evictOldestRevision.js';
 import getErrorMessageText from './getErrorMessageText.js';
 import isPlainRecord from '../support/isPlainRecord.js';
 import readRevisionList from './readRevisionList.js';
+import storePayloadAssets from './storePayloadAssets.js';
 import writeRevisionList from './writeRevisionList.js';
 
 const saveRevisionRecord = (editor, moduleOptions, revisionLabel, recordOptions = {}) => {
@@ -26,7 +28,9 @@ const saveRevisionRecord = (editor, moduleOptions, revisionLabel, recordOptions 
     savedAt: revisionDate.toISOString(),
     kind: recordOptions.kind || 'manual',
     meta: buildRevisionMetaRecord(snapshotPayload),
-    payload: snapshotPayload,
+    payload: storePayloadAssets(editor, moduleOptions, snapshotPayload, () =>
+      evictOldestRevision(editor, moduleOptions),
+    ),
   };
   const nextRevisionList = [revisionRecord].concat(readRevisionList(editor, moduleOptions));
   if (!writeRevisionList(editor, moduleOptions, nextRevisionList)) return null;

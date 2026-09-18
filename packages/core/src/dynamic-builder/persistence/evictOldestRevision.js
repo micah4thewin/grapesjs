@@ -1,5 +1,6 @@
 import buildRevisionsStorageKey from './buildRevisionsStorageKey.js';
 import getLocalStorageArea from './getLocalStorageArea.js';
+import pruneAssetPool from './pruneAssetPool.js';
 import readRevisionList from './readRevisionList.js';
 import sortRevisionsNewestFirst from './sortRevisionsNewestFirst.js';
 
@@ -14,6 +15,7 @@ const evictOldestRevision = (editor, moduleOptions) => {
   } catch (evictError) {
     return false;
   }
+  pruneAssetPool(editor, moduleOptions);
   editor.trigger('db:revision:evicted', { id: evictedRecord.id, label: evictedRecord.label || evictedRecord.id });
   return true;
 };

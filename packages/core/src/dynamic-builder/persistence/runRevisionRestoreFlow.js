@@ -11,7 +11,7 @@ const runRevisionRestoreFlow = (editor, moduleOptions, revisionRecord) => {
   }
   const safetyResult = saveSafetyRevision(editor, moduleOptions, revisionRecord);
   if (!safetyResult.proceed) return false;
-  if (!restoreRevisionRecord(editor, revisionRecord)) return false;
+  if (!restoreRevisionRecord(editor, moduleOptions, revisionRecord)) return false;
   const labelText = String(revisionRecord.label || revisionRecord.id);
   const suffixText = safetyResult.savedRecord ? ' and kept a safety copy' : '';
   showToastNotice(editor, 'Restored "' + labelText + '"' + suffixText, { kind: 'success', duration: 4500 });

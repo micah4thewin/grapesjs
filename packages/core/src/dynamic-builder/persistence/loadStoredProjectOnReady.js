@@ -6,6 +6,7 @@ import readStoredJsonRecord from './readStoredJsonRecord.js';
 import replaceSiteMetaRecord from '../support/replaceSiteMetaRecord.js';
 import resetUndoHistory from './resetUndoHistory.js';
 import resolveStorageKey from './resolveStorageKey.js';
+import restorePayloadAssets from './restorePayloadAssets.js';
 
 const loadStoredProjectOnReady = (editor, moduleOptions) => {
   if (!editor.onReady) return;
@@ -17,7 +18,7 @@ const loadStoredProjectOnReady = (editor, moduleOptions) => {
       return;
     }
     try {
-      editor.loadProjectData(storedSnapshot.projectData);
+      editor.loadProjectData(restorePayloadAssets(editor, moduleOptions, storedSnapshot.projectData));
       if (isPlainRecord(storedSnapshot.siteMeta))
         replaceSiteMetaRecord(editor, storedSnapshot.siteMeta, { silent: true });
       resetUndoHistory(editor);

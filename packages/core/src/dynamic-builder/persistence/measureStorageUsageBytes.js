@@ -1,3 +1,4 @@
+import buildAssetPoolKey from './buildAssetPoolKey.js';
 import buildRevisionsStorageKey from './buildRevisionsStorageKey.js';
 import buildSnapshotOwnerKey from './buildSnapshotOwnerKey.js';
 import getLocalStorageArea from './getLocalStorageArea.js';
@@ -10,6 +11,7 @@ const measureStorageUsageBytes = (editor, moduleOptions) => {
     resolveStorageKey(editor, moduleOptions),
     buildRevisionsStorageKey(editor, moduleOptions),
     buildSnapshotOwnerKey(editor, moduleOptions),
+    buildAssetPoolKey(editor, moduleOptions),
   ];
   return storageKeys.reduce((totalBytes, storageKey) => {
     let storedValue = '';

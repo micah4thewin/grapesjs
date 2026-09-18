@@ -58,7 +58,7 @@ const handleRevisionListClick = (editor, moduleOptions, clickEvent, refreshRevis
     else refreshRevisionList();
     return;
   }
-  if (actionName === 'download' && revisionRecord) downloadRevisionRecord(editor, revisionRecord);
+  if (actionName === 'download' && revisionRecord) downloadRevisionRecord(editor, moduleOptions, revisionRecord);
   if (actionName === 'confirm-delete' && revisionRecord && revisionRecord.kind !== 'draft') {
     deleteRevisionRecord(editor, moduleOptions, revisionId);
     refreshRevisionList();

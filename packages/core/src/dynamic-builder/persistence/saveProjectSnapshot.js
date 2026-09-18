@@ -4,7 +4,9 @@ import emitSaveStatus from './emitSaveStatus.js';
 import evictOldestRevision from './evictOldestRevision.js';
 import getErrorMessageText from './getErrorMessageText.js';
 import isEditorUsable from './isEditorUsable.js';
+import pruneAssetPool from './pruneAssetPool.js';
 import reportForeignSnapshot from './reportForeignSnapshot.js';
+import storePayloadAssets from './storePayloadAssets.js';
 import writeSnapshotOwnerRecord from './writeSnapshotOwnerRecord.js';
 import writeStoredJsonRecord from './writeStoredJsonRecord.js';
 import resolveStorageKey from './resolveStorageKey.js';
@@ -22,8 +24,12 @@ const saveProjectSnapshot = (editor, moduleOptions) => {
     emitSaveStatus(editor, 'error', getErrorMessageText(snapshotError, 'Unable to prepare the project for saving'));
     return false;
   }
-  const writeErrorMessage = writeStoredJsonRecord(resolveStorageKey(editor, moduleOptions), projectSnapshot, () =>
-    evictOldestRevision(editor, moduleOptions),
+  const evictOnQuotaExceeded = () => evictOldestRevision(editor, moduleOptions);
+  const storedSnapshot = storePayloadAssets(editor, moduleOptions, projectSnapshot, evictOnQuotaExceeded);
+  const writeErrorMessage = writeStoredJsonRecord(
+    resolveStorageKey(editor, moduleOptions),
+    storedSnapshot,
+    evictOnQuotaExceeded,
   );
   if (writeErrorMessage) {
     const lastErrorMessage = editorModel.get('dbLastSaveErrorMessage');
@@ -31,6 +37,7 @@ const saveProjectSnapshot = (editor, moduleOptions) => {
     emitSaveStatus(editor, 'error', writeErrorMessage, { repeated: lastErrorMessage === writeErrorMessage });
     return false;
   }
+  pruneAssetPool(editor, moduleOptions);
   writeSnapshotOwnerRecord(editor, moduleOptions, projectSnapshot.savedAt);
   editorModel.set('dbLastSaveErrorMessage', '');
   emitSaveStatus(editor, 'saved', '');

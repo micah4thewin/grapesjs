@@ -5,7 +5,10 @@ import buildPageExportRecords from '../../../src/dynamic-builder/exporter/buildP
 import buildPublishSummaryMarkup from '../../../src/dynamic-builder/exporter/buildPublishSummaryMarkup';
 import buildRevisionItemMarkup from '../../../src/dynamic-builder/persistence/buildRevisionItemMarkup';
 import buildSiteArchiveFileName from '../../../src/dynamic-builder/exporter/buildSiteArchiveFileName';
+import buildStorageUsageText from '../../../src/dynamic-builder/persistence/buildStorageUsageText';
 import countStrippedSlotScripts from '../../../src/dynamic-builder/exporter/countStrippedSlotScripts';
+import dehydratePayloadAssets from '../../../src/dynamic-builder/persistence/dehydratePayloadAssets';
+import deleteRevisionRecord from '../../../src/dynamic-builder/persistence/deleteRevisionRecord';
 import describeUndoGroup from '../../../src/dynamic-builder/persistence/describeUndoGroup';
 import doesCssChunkMatchDocuments from '../../../src/dynamic-builder/exporter/doesCssChunkMatchDocuments';
 import extractCssRuleSelectors from '../../../src/dynamic-builder/exporter/extractCssRuleSelectors';
@@ -17,17 +20,23 @@ import parseImportedRevisionPayload from '../../../src/dynamic-builder/persisten
 import readLocalDraftRecord from '../../../src/dynamic-builder/persistence/readLocalDraftRecord';
 import readRevisionList from '../../../src/dynamic-builder/persistence/readRevisionList';
 import resolvePersistenceOptions from '../../../src/dynamic-builder/persistence/resolvePersistenceOptions';
+import rehydratePayloadAssets from '../../../src/dynamic-builder/persistence/rehydratePayloadAssets';
+import restorePayloadAssets from '../../../src/dynamic-builder/persistence/restorePayloadAssets';
 import restoreRevisionRecord from '../../../src/dynamic-builder/persistence/restoreRevisionRecord';
 import runExportPreflight from '../../../src/dynamic-builder/exporter/runExportPreflight';
+import runRevisionRestoreFlow from '../../../src/dynamic-builder/persistence/runRevisionRestoreFlow';
 import saveProjectSnapshot from '../../../src/dynamic-builder/persistence/saveProjectSnapshot';
 import saveRevisionRecord from '../../../src/dynamic-builder/persistence/saveRevisionRecord';
 import saveSafetyRevision from '../../../src/dynamic-builder/persistence/saveSafetyRevision';
 import stripEditorOnlyAttributes from '../../../src/dynamic-builder/exporter/stripEditorOnlyAttributes';
+import trimRevisionsToBudget from '../../../src/dynamic-builder/persistence/trimRevisionsToBudget';
 import updateSiteMetaRecord from '../../../src/dynamic-builder/support/updateSiteMetaRecord';
 import validateSiteSettingsValues from '../../../src/dynamic-builder/exporter/validateSiteSettingsValues';
 import writeStoredJsonRecord from '../../../src/dynamic-builder/persistence/writeStoredJsonRecord';
 
 const storageKey = 'db-test-export';
+
+const buildTestPhoto = (seedText) => 'data:image/jpeg;base64,' + seedText.repeat(600);
 
 const clearTestStorage = () => {
   Object.keys(localStorage)
@@ -241,6 +250,41 @@ describe('Dynamic builder export and persistence helpers', () => {
       } finally {
         localStorage.setItem = originalSetItem;
       }
+    });
+  });
+
+  describe('asset pooling helpers', () => {
+    test('swaps sizeable data URIs for tokens and puts them back unchanged', () => {
+      const photoUrl = buildTestPhoto('abcd');
+      const sourcePayload = {
+        assets: [{ src: photoUrl }],
+        styles: [{ style: { 'background-image': 'url(' + photoUrl + ')' } }],
+        tinyIcon: 'data:image/png;base64,AAAA',
+      };
+      const { payload, poolAdditions } = dehydratePayloadAssets(sourcePayload);
+      const pooledTokens = Object.keys(poolAdditions);
+      expect(pooledTokens.length).toBe(1);
+      expect(payload.assets[0].src).toBe(pooledTokens[0]);
+      expect(payload.styles[0].style['background-image']).toBe('url(' + pooledTokens[0] + ')');
+      expect(payload.tinyIcon).toBe(sourcePayload.tinyIcon);
+      expect(rehydratePayloadAssets(payload, poolAdditions)).toEqual(sourcePayload);
+    });
+
+    test('falls back to a placeholder when the pool lost the picture', () => {
+      const { payload } = dehydratePayloadAssets({ src: buildTestPhoto('abcd') });
+      expect(rehydratePayloadAssets(payload, {}).src).toContain('data:image/svg+xml');
+    });
+
+    test('keeps the newest revision and drops older ones past the budget', () => {
+      const revisionList = [1, 2, 3].map((recordIndex) => ({ id: 'rev-' + recordIndex, body: 'x'.repeat(400) }));
+      const budgetResult = trimRevisionsToBudget(revisionList, 1800);
+      expect(budgetResult.keptList.map((record) => record.id)).toEqual(['rev-1', 'rev-2']);
+      expect(budgetResult.droppedList.map((record) => record.id)).toEqual(['rev-3']);
+    });
+
+    test('keeps every revision when no budget is set', () => {
+      const revisionList = [{ id: 'rev-1' }, { id: 'rev-2' }];
+      expect(trimRevisionsToBudget(revisionList, 0).keptList).toBe(revisionList);
     });
   });
 
@@ -459,6 +503,24 @@ describe('Dynamic builder export and persistence with an editor', () => {
     });
   });
 
+  describe('pooled snapshots', () => {
+    test('reloads a pooled autosave snapshot with its pictures', () => {
+      const photoUrl = buildTestPhoto('abcd');
+      editor.getWrapper().append('<img src="' + photoUrl + '"/>');
+      expect(saveProjectSnapshot(editor, moduleOptions)).toBe(true);
+      const storedSnapshot = JSON.parse(localStorage.getItem(storageKey));
+      expect(JSON.stringify(storedSnapshot.projectData)).not.toContain('data:image/jpeg;base64,');
+      const restoredSnapshot = restorePayloadAssets(editor, moduleOptions, storedSnapshot.projectData);
+      expect(JSON.stringify(restoredSnapshot)).toContain(photoUrl);
+    });
+
+    test('counts the shared pool in the reported storage usage', () => {
+      editor.Assets.add({ src: buildTestPhoto('abcd'), name: 'photo.jpg', type: 'image' });
+      saveProjectSnapshot(editor, moduleOptions);
+      expect(buildStorageUsageText(editor, moduleOptions)).toMatch(/Using \d+ KB of about 5 MB/);
+    });
+  });
+
   describe('revisions', () => {
     test('saves revisions with plain labels and page metadata', () => {
       const revisionRecord = saveRevisionRecord(editor, moduleOptions, '');
@@ -475,13 +537,51 @@ describe('Dynamic builder export and persistence with an editor', () => {
       const safetyResult = saveSafetyRevision(editor, moduleOptions, revisionRecord);
       expect(safetyResult.savedRecord.label).toBe('Before restoring "Milestone"');
       expect(safetyResult.savedRecord.kind).toBe('safety');
-      expect(restoreRevisionRecord(editor, revisionRecord)).toBe(true);
+      expect(restoreRevisionRecord(editor, moduleOptions, revisionRecord)).toBe(true);
       expect(editor.UndoManager.hasUndo()).toBe(false);
       expect(editor.getHtml()).not.toContain('after revision');
       const newestRecord = readRevisionList(editor, moduleOptions).find(
         (storedRecord) => storedRecord.kind === 'safety',
       );
       expect(JSON.stringify(newestRecord.payload.projectData)).toContain('after revision');
+    });
+
+    test('stores one shared copy of a picture instead of one per revision', () => {
+      editor.Assets.add({ src: buildTestPhoto('abcd'), name: 'photo.jpg', type: 'image' });
+      saveProjectSnapshot(editor, moduleOptions);
+      ['First', 'Second', 'Third'].forEach((labelText) => saveRevisionRecord(editor, moduleOptions, labelText));
+      const countPhotoCopies = (storedText) =>
+        (String(storedText || '').match(/data:image\/jpeg;base64,/g) || []).length;
+      expect(countPhotoCopies(localStorage.getItem(storageKey))).toBe(0);
+      expect(countPhotoCopies(localStorage.getItem(storageKey + ':revisions'))).toBe(0);
+      expect(countPhotoCopies(localStorage.getItem(storageKey + ':asset-pool'))).toBe(1);
+      expect(localStorage.getItem(storageKey + ':revisions')).toContain('db-pooled-asset:');
+    });
+
+    test('restores a pooled revision with its pictures intact', () => {
+      const photoUrl = buildTestPhoto('abcd');
+      editor.Assets.add({ src: photoUrl, name: 'photo.jpg', type: 'image' });
+      editor.getWrapper().append('<img src="' + photoUrl + '"/>');
+      const revisionRecord = saveRevisionRecord(editor, moduleOptions, 'With picture');
+      editor.getWrapper().components('<p>replaced</p>');
+      expect(runRevisionRestoreFlow(editor, moduleOptions, readRevisionList(editor, moduleOptions)[0])).toBe(true);
+      expect(editor.getHtml()).toContain(photoUrl);
+      expect(JSON.stringify(revisionRecord.payload)).toContain('db-pooled-asset:');
+    });
+
+    test('drops pooled pictures once no revision or snapshot points at them', () => {
+      editor.Assets.add({ src: buildTestPhoto('abcd'), name: 'photo.jpg', type: 'image' });
+      const revisionRecord = saveRevisionRecord(editor, moduleOptions, 'Only holder');
+      expect(localStorage.getItem(storageKey + ':asset-pool')).toContain('data:image/jpeg;base64,');
+      editor.Assets.remove(editor.Assets.getAll().at(0));
+      deleteRevisionRecord(editor, moduleOptions, revisionRecord.id);
+      expect(localStorage.getItem(storageKey + ':asset-pool')).not.toContain('data:image/jpeg;base64,');
+    });
+
+    test('skips a safety copy when the project still matches the newest revision', () => {
+      editor.Assets.add({ src: buildTestPhoto('abcd'), name: 'photo.jpg', type: 'image' });
+      const revisionRecord = saveRevisionRecord(editor, moduleOptions, 'Milestone');
+      expect(saveSafetyRevision(editor, moduleOptions, revisionRecord).savedRecord).toBeNull();
     });
 
     test('reports revision failures on their own channel instead of the autosave strip', () => {
