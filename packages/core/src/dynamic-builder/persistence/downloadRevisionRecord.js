@@ -17,14 +17,14 @@ const buildCompactTimestamp = (savedAtText) => {
   ].join('');
 };
 
-const downloadRevisionRecord = (editor, moduleOptions, revisionRecord) => {
+const downloadRevisionRecord = async (editor, revisionRecord) => {
   const siteSeoRecord = getSiteMetaRecord(editor).seo || {};
   const siteSlug = toSlugText(siteSeoRecord.siteName) || 'site';
   const labelText = String(revisionRecord.label || '');
   const isCustomLabel = labelText && labelText !== buildAutoRevisionLabel();
   const labelSuffix = isCustomLabel ? '-' + toSlugText(labelText).slice(0, 40) : '';
   const fileName = siteSlug + '-revision-' + buildCompactTimestamp(revisionRecord.savedAt) + labelSuffix + '.json';
-  const exportedRecord = restorePayloadAssets(editor, moduleOptions, revisionRecord);
+  const exportedRecord = await restorePayloadAssets(revisionRecord);
   downloadTextFile(fileName.replace(/-+/g, '-'), 'application/json', JSON.stringify(exportedRecord, null, 2));
   return fileName;
 };

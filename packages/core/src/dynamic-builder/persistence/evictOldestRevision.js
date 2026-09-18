@@ -1,11 +1,11 @@
 import buildRevisionsStorageKey from './buildRevisionsStorageKey.js';
-import getLocalStorageArea from './getLocalStorageArea.js';
+import getRecordStorageArea from './storage/getRecordStorageArea.js';
 import pruneAssetPool from './pruneAssetPool.js';
 import readRevisionList from './readRevisionList.js';
 import sortRevisionsNewestFirst from './sortRevisionsNewestFirst.js';
 
 const evictOldestRevision = (editor, moduleOptions) => {
-  const storageArea = getLocalStorageArea();
+  const storageArea = getRecordStorageArea();
   if (!storageArea) return false;
   const revisionList = sortRevisionsNewestFirst(readRevisionList(editor, moduleOptions));
   if (revisionList.length < 2) return false;
@@ -15,7 +15,7 @@ const evictOldestRevision = (editor, moduleOptions) => {
   } catch (evictError) {
     return false;
   }
-  pruneAssetPool(editor, moduleOptions);
+  pruneAssetPool().catch(() => false);
   editor.trigger('db:revision:evicted', { id: evictedRecord.id, label: evictedRecord.label || evictedRecord.id });
   return true;
 };

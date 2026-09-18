@@ -57,7 +57,7 @@ grapesjs.init({
 | schema                | applySchemaManager         | JSON-LD manager with validation for common schema.org types                                |
 | audits                | applyQualityAudits         | Accessibility, performance, and SEO audits with a report modal                             |
 | exporter              | applyExportSystem          | Full-document export, zip bundles, publish checklist                                       |
-| persistence           | applyPersistence           | Autosave, save status, named revisions and a shared picture pool in localStorage           |
+| persistence           | applyPersistence           | Autosave, save status, named revisions and a shared picture store in IndexedDB             |
 | shell                 | applyEditorShell           | Top bar, pages manager, tools menu, command palette, theme and sound toggles               |
 | experience            | applyExperienceUpgrades    | Interface sounds, haptics, drop animations, touch drag, block search, page templates       |
 
@@ -89,10 +89,10 @@ listed here are not read by any module.
 | `seo.siteDefaults`                  | `{}`                               | Seed values for the site SEO record.                                                                      |
 | `audits.autoOpenReport`             | `true`                             | Whether running an audit command also opens the report modal.                                             |
 | `exporter.publishBuildOptions`      | `{ separateAssets: true }`         | Build options used by `db:download-site` and `db:publish-site`.                                           |
-| `persistence.storageKey`            | derived from path and container id | localStorage key for the autosaved project. Set this per site.                                            |
+| `persistence.storageKey`            | derived from path and container id | Record key for the autosaved project. Set this per site.                                                  |
 | `persistence.autosaveDelay`         | `2000`                             | Idle milliseconds before an autosave.                                                                     |
 | `persistence.maxRevisions`          | `25`                               | Revisions kept before the oldest is dropped.                                                              |
-| `persistence.maxRevisionBytes`      | `1572864`                          | Byte budget for the revision list. The oldest are dropped before a write, not after the quota is hit.     |
+| `persistence.maxRevisionBytes`      | `1572864`                          | Byte budget for the revision list, pictures excluded. The oldest are dropped before a write.              |
 | `persistence.autoload`              | `true`                             | Restore the stored snapshot on load. Skipped when the host supplies `projectData` or uses remote storage. |
 | `mediaComponents.maxImageDimension` | `1600`                             | Longest edge used when re-encoding uploaded images.                                                       |
 | `experience.sound`                  | `true`                             | Mounts the sound toggle. Playback stays off until the user turns it on.                                   |
@@ -104,26 +104,67 @@ listed here are not read by any module.
 
 ## Browser storage layout
 
-The persistence module writes four keys, all derived from `persistence.storageKey`:
+Saved work lives in an IndexedDB database named `db-dynamic-builder`, with two
+object stores:
 
-| Key                       | Holds                                                            |
-| ------------------------- | ---------------------------------------------------------------- |
-| `<storageKey>`            | The autosaved project snapshot.                                  |
-| `<storageKey>:revisions`  | The named revision list, newest first.                           |
-| `<storageKey>:owner`      | Which tab last wrote the snapshot, to spot a second tab editing. |
-| `<storageKey>:asset-pool` | One copy of every embedded picture, keyed by content digest.     |
+| Store     | Holds                                                                                                         |
+| --------- | ------------------------------------------------------------------------------------------------------------- |
+| `records` | The JSON records: project snapshots, revision lists, site records, uploaded fonts and icons, saved templates. |
+| `assets`  | One copy of every embedded picture, keyed by a digest of its bytes.                                           |
 
-Uploaded pictures are embedded as data URIs, and a browser gives the whole origin
-about 5 MB. A snapshot and each revision used to carry their own copy of every
-picture, so a project with a few photos filled the quota within a handful of
-saves. Snapshots and revisions now store a `db-pooled-asset:<digest>` token in
-place of each data URI over 1 KB, and the pool holds the bytes once. The pool is
-swept after every write, dropping any picture no snapshot or revision still
-points at.
+Within `records`, each project keys off `persistence.storageKey` (the site
+manager overrides it per site):
 
-The swap happens as payloads enter and leave storage, so nothing else sees it:
-`editor.getProjectData()`, restores, and downloaded revision files all carry real
-data URIs. A token whose picture is missing from the pool restores as the usual
+| Key                      | Holds                                                            |
+| ------------------------ | ---------------------------------------------------------------- |
+| `<storageKey>`           | The autosaved project snapshot.                                  |
+| `<storageKey>:revisions` | The named revision list, newest first.                           |
+| `<storageKey>:owner`     | Which tab last wrote the snapshot, to spot a second tab editing. |
+
+### Why not localStorage
+
+Uploaded pictures are embedded as data URIs, and localStorage gives the whole
+origin about 5 MB. A snapshot and each revision used to carry their own copy of
+every picture, so a project with a few photos filled that within a handful of
+saves. Two things changed. Snapshots and revisions keep a
+`db-pooled-asset:<digest>` token in place of each data URI over 1 KB, so the
+bytes are stored once however many saves point at them. And the whole store
+moved to IndexedDB, where the browser allows hundreds of megabytes rather than
+five.
+
+### Synchronous reads, asynchronous writes
+
+IndexedDB is asynchronous, but the autosave has to be able to run inside a
+`pagehide` handler, where nothing can be awaited. So the records are mirrored in
+memory: reads answer from the mirror synchronously and writes update it
+synchronously, then settle into IndexedDB just behind. Reducing a payload to
+tokens is pure, so the save path stays synchronous too, and only the picture
+bytes are written behind it.
+
+Reading saved work is asynchronous, because the pictures have to come back out
+of the store. Anything that loads a project waits on the promise the editor
+publishes as `dbStorageReady`, and the site manager waits on `dbProjectLoaded`
+so it never adopts a project that has not been loaded yet. A write that fails
+after the save returned is reported on the usual `db:save-status` channel rather
+than being swallowed.
+
+### Moving existing work across
+
+A project still in localStorage is adopted the first time it is read, and its
+old asset pool is moved into the `assets` store, freeing the localStorage those
+keys held. The small interface preferences that have to be read before the first
+paint (theme, panel state, recent icons) stay in localStorage deliberately:
+they total a few kilobytes, and reading them asynchronously would mean rendering
+the editor before it knows how it should look.
+
+A browser with no usable IndexedDB falls back to localStorage, with the old
+quota and the revision eviction that goes with it.
+
+### What the rest of the editor sees
+
+Nothing. The swap happens as payloads enter and leave storage:
+`editor.getProjectData()`, restores and downloaded revision files all carry real
+data URIs. A token whose picture is missing from the store restores as the usual
 missing-image placeholder rather than a broken source.
 
 ## Reusable components

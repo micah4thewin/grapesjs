@@ -24,6 +24,8 @@ import openCustomAssetsModal from '../../../src/dynamic-builder/customAssets/ope
 import refreshFontFamilyStyleOptions from '../../../src/dynamic-builder/customAssets/refreshFontFamilyStyleOptions';
 import registerCustomFontFaces from '../../../src/dynamic-builder/customAssets/registerCustomFontFaces';
 import sanitizeCustomIconMarkup from '../../../src/dynamic-builder/customAssets/sanitizeCustomIconMarkup';
+import getRecordStorageArea from '../../../src/dynamic-builder/persistence/storage/getRecordStorageArea';
+import resetPersistenceStorageForTests from '../../../src/dynamic-builder/persistence/storage/resetPersistenceStorageForTests';
 
 const fontSource = 'data:font/woff2;base64,d09GMgABAAAAAAoAAA==';
 const safeIconMarkup = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>';
@@ -57,15 +59,16 @@ const setFieldValue = (rootElement, fieldAttribute, fieldValue) => {
 describe('Dynamic builder custom fonts and icons', () => {
   let editor;
 
-  const clearStoredAssets = () => {
-    window.localStorage.removeItem(getCustomFontStorageKey());
-    window.localStorage.removeItem(getCustomIconStorageKey());
+  // Uploaded fonts and icons are stored with the projects now, so the tests
+  // clear and read them through the same store the adapters use.
+  const clearStoredAssets = async () => {
+    await resetPersistenceStorageForTests();
     cacheCustomAssetRecords('fonts', null);
     cacheCustomAssetRecords('icons', null);
   };
 
-  beforeEach(() => {
-    clearStoredAssets();
+  beforeEach(async () => {
+    await clearStoredAssets();
     document.body.innerHTML = '<div id="fixtures"><div id="db-editor"></div></div>';
     editor = grapesjs.init({
       container: '#db-editor',
@@ -76,9 +79,9 @@ describe('Dynamic builder custom fonts and icons', () => {
     applyCustomAssets(editor, {});
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     editor.destroy();
-    clearStoredAssets();
+    await clearStoredAssets();
   });
 
   describe('font storage adapter', () => {
@@ -87,7 +90,7 @@ describe('Dynamic builder custom fonts and icons', () => {
       const savedRecord = await fontAdapter.writeFont(buildFontRecord());
       expect(savedRecord.fontId).toBe('font-brand-sans-700-normal');
       expect(savedRecord.format).toBe('woff2');
-      expect(String(window.localStorage.getItem(getCustomFontStorageKey()))).toContain('Brand Sans');
+      expect(String(getRecordStorageArea().getItem(getCustomFontStorageKey()))).toContain('Brand Sans');
       expect((await fontAdapter.listFonts()).length).toBe(1);
       await fontAdapter.writeFont(buildFontRecord({ fileName: 'brand-bold-again.woff2' }));
       expect((await fontAdapter.listFonts()).length).toBe(1);

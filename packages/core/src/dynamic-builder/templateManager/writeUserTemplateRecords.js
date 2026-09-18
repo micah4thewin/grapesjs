@@ -1,13 +1,9 @@
 import getUserTemplateStorageKey from './getUserTemplateStorageKey.js';
+import writeStoredJsonRecord from '../persistence/writeStoredJsonRecord.js';
 
-const writeUserTemplateRecords = (templateRecords) => {
-  try {
-    if (typeof window === 'undefined' || !window.localStorage) return false;
-    window.localStorage.setItem(getUserTemplateStorageKey(), JSON.stringify(templateRecords));
-    return true;
-  } catch (storageError) {
-    return false;
-  }
-};
+// Saved templates carry whole sections, pictures included, so they share the
+// project store rather than sitting in the small localStorage budget.
+const writeUserTemplateRecords = (templateRecords) =>
+  !writeStoredJsonRecord(getUserTemplateStorageKey(), Array.isArray(templateRecords) ? templateRecords : []);
 
 export default writeUserTemplateRecords;

@@ -8,23 +8,38 @@ import resetUndoHistory from './resetUndoHistory.js';
 import resolveStorageKey from './resolveStorageKey.js';
 import restorePayloadAssets from './restorePayloadAssets.js';
 
-const loadStoredProjectOnReady = (editor, moduleOptions) => {
+// Waiting on storage hands control back before the project is loaded, so the
+// modules that build on it - the site manager above all - are given something
+// to wait for rather than a project that is still empty.
+const loadStoredProjectOnReady = (editor, moduleOptions, whenStorageReady) => {
   if (!editor.onReady) return;
-  editor.onReady(() => {
-    const storedSnapshot = readStoredJsonRecord(resolveStorageKey(editor, moduleOptions));
-    if (!isPlainRecord(storedSnapshot) || !isPlainRecord(storedSnapshot.projectData)) return;
-    if (isDraftRecoveryMode(editor, moduleOptions)) {
-      editor.trigger('db:project:draft-available', { savedAt: storedSnapshot.savedAt || '' });
-      return;
-    }
+  let markProjectLoaded = () => {};
+  editor.getModel().set(
+    'dbProjectLoaded',
+    new Promise((resolveLoaded) => {
+      markProjectLoaded = resolveLoaded;
+    }),
+  );
+  editor.onReady(async () => {
     try {
-      editor.loadProjectData(restorePayloadAssets(editor, moduleOptions, storedSnapshot.projectData));
-      if (isPlainRecord(storedSnapshot.siteMeta))
-        replaceSiteMetaRecord(editor, storedSnapshot.siteMeta, { silent: true });
-      resetUndoHistory(editor);
-      editor.trigger('db:project:restored', { savedAt: storedSnapshot.savedAt });
-    } catch (loadError) {
-      emitSaveStatus(editor, 'error', getErrorMessageText(loadError, 'Unable to load the saved project'));
+      await whenStorageReady;
+      const storedSnapshot = readStoredJsonRecord(resolveStorageKey(editor, moduleOptions));
+      if (!isPlainRecord(storedSnapshot) || !isPlainRecord(storedSnapshot.projectData)) return;
+      if (isDraftRecoveryMode(editor, moduleOptions)) {
+        editor.trigger('db:project:draft-available', { savedAt: storedSnapshot.savedAt || '' });
+        return;
+      }
+      try {
+        editor.loadProjectData(await restorePayloadAssets(storedSnapshot.projectData));
+        if (isPlainRecord(storedSnapshot.siteMeta))
+          replaceSiteMetaRecord(editor, storedSnapshot.siteMeta, { silent: true });
+        resetUndoHistory(editor);
+        editor.trigger('db:project:restored', { savedAt: storedSnapshot.savedAt });
+      } catch (loadError) {
+        emitSaveStatus(editor, 'error', getErrorMessageText(loadError, 'Unable to load the saved project'));
+      }
+    } finally {
+      markProjectLoaded(true);
     }
   });
 };

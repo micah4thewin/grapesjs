@@ -1,7 +1,7 @@
-import getLocalStorageArea from './getLocalStorageArea.js';
+import getRecordStorageArea from './storage/getRecordStorageArea.js';
 
 const readStoredJsonRecord = (storageKey) => {
-  const storageArea = getLocalStorageArea();
+  const storageArea = getRecordStorageArea();
   if (!storageArea) return null;
   try {
     const rawValue = storageArea.getItem(storageKey);

@@ -17,9 +17,11 @@ import listPageExportEntries from '../../../src/dynamic-builder/exporter/listPag
 import minifyScriptText from '../../../src/dynamic-builder/exporter/minifyScriptText';
 import normalizePreflightResult from '../../../src/dynamic-builder/exporter/normalizePreflightResult';
 import parseImportedRevisionPayload from '../../../src/dynamic-builder/persistence/parseImportedRevisionPayload';
+import pruneAssetPool from '../../../src/dynamic-builder/persistence/pruneAssetPool';
 import readLocalDraftRecord from '../../../src/dynamic-builder/persistence/readLocalDraftRecord';
 import readRevisionList from '../../../src/dynamic-builder/persistence/readRevisionList';
 import resolvePersistenceOptions from '../../../src/dynamic-builder/persistence/resolvePersistenceOptions';
+import resolveStorageKey from '../../../src/dynamic-builder/persistence/resolveStorageKey';
 import rehydratePayloadAssets from '../../../src/dynamic-builder/persistence/rehydratePayloadAssets';
 import restorePayloadAssets from '../../../src/dynamic-builder/persistence/restorePayloadAssets';
 import restoreRevisionRecord from '../../../src/dynamic-builder/persistence/restoreRevisionRecord';
@@ -33,6 +35,20 @@ import trimRevisionsToBudget from '../../../src/dynamic-builder/persistence/trim
 import updateSiteMetaRecord from '../../../src/dynamic-builder/support/updateSiteMetaRecord';
 import validateSiteSettingsValues from '../../../src/dynamic-builder/exporter/validateSiteSettingsValues';
 import writeStoredJsonRecord from '../../../src/dynamic-builder/persistence/writeStoredJsonRecord';
+import getRecordStorageArea, {
+  flushRecordStorage,
+  hydrateRecordStorage,
+  isUsingLocalStorageOnly,
+} from '../../../src/dynamic-builder/persistence/storage/getRecordStorageArea';
+import buildPooledAssetToken from '../../../src/dynamic-builder/persistence/buildPooledAssetToken';
+import preparePersistenceStorage from '../../../src/dynamic-builder/persistence/storage/preparePersistenceStorage';
+import readAllRecordEntries from '../../../src/dynamic-builder/persistence/storage/readAllRecordEntries';
+import resetPersistenceStorageForTests from '../../../src/dynamic-builder/persistence/storage/resetPersistenceStorageForTests';
+import {
+  flushAssetWrites,
+  listKnownAssetTokens,
+  readPooledAssets,
+} from '../../../src/dynamic-builder/persistence/storage/getAssetPoolStore';
 
 const storageKey = 'db-test-export';
 
@@ -44,7 +60,34 @@ const clearTestStorage = () => {
     .forEach((keyName) => localStorage.removeItem(keyName));
 };
 
+// Records answer synchronously from the in-memory mirror; the bytes behind them
+// live in IndexedDB, so a test that inspects them settles the writes first.
+const readStoredText = (recordKey) => getRecordStorageArea().getItem(recordKey);
+
+const readStoredRecord = (recordKey) => JSON.parse(readStoredText(recordKey));
+
+const countPhotoCopies = (storedText) => (String(storedText || '').match(/data:image\/jpeg;base64,/g) || []).length;
+
+// Drives the path a browser without usable IndexedDB takes, where records go
+// back to localStorage and its quota decides what fits.
+const useLocalStorageFallback = async () => {
+  const realIndexedDb = window.indexedDB;
+  await resetPersistenceStorageForTests();
+  Object.defineProperty(window, 'indexedDB', { value: undefined, configurable: true });
+  await hydrateRecordStorage();
+  Object.defineProperty(window, 'indexedDB', { value: realIndexedDb, configurable: true });
+  expect(isUsingLocalStorageOnly()).toBe(true);
+};
+
 const waitFor = (delayMs) => new Promise((resolveWait) => setTimeout(resolveWait, delayMs));
+
+const waitForActiveStorageKey = async (editorInstance) => {
+  for (let attempt = 0; attempt < 200; attempt += 1) {
+    if (editorInstance.getModel().get('dbStorageKey')) return true;
+    await waitFor(10);
+  }
+  return false;
+};
 
 describe('Dynamic builder export and persistence helpers', () => {
   describe('extractCssRuleSelectors', () => {
@@ -230,7 +273,8 @@ describe('Dynamic builder export and persistence helpers', () => {
   });
 
   describe('writeStoredJsonRecord', () => {
-    test('never surfaces the raw quota exception text', () => {
+    test('never surfaces the raw quota exception text', async () => {
+      await useLocalStorageFallback();
       const originalSetItem = localStorage.setItem;
       localStorage.setItem = () => {
         const quotaError = new Error("Failed to execute 'setItem' on 'Storage': quota");
@@ -249,7 +293,60 @@ describe('Dynamic builder export and persistence helpers', () => {
         expect(evictionCalls).toBe(2);
       } finally {
         localStorage.setItem = originalSetItem;
+        await resetPersistenceStorageForTests();
       }
+    });
+
+    test('falls back to localStorage when the browser has no IndexedDB', async () => {
+      await useLocalStorageFallback();
+      try {
+        expect(writeStoredJsonRecord(storageKey + ':fallback', { kept: true })).toBeNull();
+        expect(JSON.parse(localStorage.getItem(storageKey + ':fallback')).kept).toBe(true);
+      } finally {
+        await resetPersistenceStorageForTests();
+      }
+    });
+  });
+
+  describe('moving existing work out of localStorage', () => {
+    const legacyKey = 'db-legacy-spec';
+    const legacyOptions = { storageKey: legacyKey };
+    const stubEditor = { getModel: () => ({ get: () => '' }) };
+
+    afterEach(async () => {
+      localStorage.removeItem(legacyKey);
+      localStorage.removeItem(legacyKey + ':asset-pool');
+      await resetPersistenceStorageForTests();
+    });
+
+    test('adopts a project left in localStorage and frees the keys it held', async () => {
+      await resetPersistenceStorageForTests();
+      const photoUrl = buildTestPhoto('abcd');
+      const assetToken = buildPooledAssetToken(photoUrl);
+      localStorage.setItem(
+        legacyKey,
+        JSON.stringify({ projectData: { assets: [{ src: assetToken }] }, savedAt: 'then' }),
+      );
+      localStorage.setItem(legacyKey + ':asset-pool', JSON.stringify({ [assetToken]: photoUrl }));
+
+      await preparePersistenceStorage(stubEditor, legacyOptions);
+
+      expect(localStorage.getItem(legacyKey)).toBeFalsy();
+      expect(localStorage.getItem(legacyKey + ':asset-pool')).toBeFalsy();
+      const storedRecord = JSON.parse(getRecordStorageArea().getItem(legacyKey));
+      expect(storedRecord.projectData.assets[0].src).toBe(assetToken);
+      const restoredData = await restorePayloadAssets(storedRecord.projectData);
+      expect(restoredData.assets[0].src).toBe(photoUrl);
+    });
+
+    test('keeps new records in IndexedDB instead of localStorage', async () => {
+      await resetPersistenceStorageForTests();
+      await hydrateRecordStorage();
+      getRecordStorageArea().setItem(legacyKey, '{"kept":true}');
+      await flushRecordStorage();
+      expect(localStorage.getItem(legacyKey)).toBeFalsy();
+      const storedEntries = await readAllRecordEntries();
+      expect(JSON.parse(storedEntries[legacyKey]).kept).toBe(true);
     });
   });
 
@@ -309,6 +406,7 @@ describe('Dynamic builder export and persistence helpers', () => {
 describe('Dynamic builder export and persistence with an editor', () => {
   let editor;
   let moduleOptions;
+  let activeKey;
   const originalCreateObjectUrl = URL.createObjectURL;
   const originalRevokeObjectUrl = URL.revokeObjectURL;
   const originalAnchorClick = HTMLAnchorElement.prototype.click;
@@ -325,8 +423,9 @@ describe('Dynamic builder export and persistence with an editor', () => {
     HTMLAnchorElement.prototype.click = originalAnchorClick;
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     clearTestStorage();
+    await resetPersistenceStorageForTests();
     document.body.innerHTML = '<div id="fixtures"><div id="db-editor"></div></div>';
     editor = grapesjs.init({
       container: '#db-editor',
@@ -335,11 +434,15 @@ describe('Dynamic builder export and persistence with an editor', () => {
     });
     fixJsDomIframe(editor.getModel().shallow);
     moduleOptions = resolvePersistenceOptions({ persistence: { storageKey } }, editor);
+    await editor.getModel().get('dbStorageReady');
+    await waitForActiveStorageKey(editor);
+    activeKey = (suffixText = '') => resolveStorageKey(editor, moduleOptions) + suffixText;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     editor.destroy();
     clearTestStorage();
+    await resetPersistenceStorageForTests();
   });
 
   describe('export records', () => {
@@ -444,12 +547,12 @@ describe('Dynamic builder export and persistence with an editor', () => {
   describe('autosave', () => {
     test('writes an owner record and refuses to overwrite a newer save from another tab', () => {
       expect(saveProjectSnapshot(editor, moduleOptions)).toBe(true);
-      const ownerRecord = JSON.parse(localStorage.getItem(storageKey + ':owner'));
+      const ownerRecord = readStoredRecord(activeKey(':owner'));
       expect(ownerRecord.tabId).toBe(editor.getModel().get('dbTabId'));
       const statuses = [];
       editor.on('db:save-status', (payload) => statuses.push(payload));
-      localStorage.setItem(
-        storageKey + ':owner',
+      getRecordStorageArea().setItem(
+        activeKey(':owner'),
         JSON.stringify({ tabId: 'other-tab', savedAt: '2999-01-01T00:00:00.000Z' }),
       );
       expect(saveProjectSnapshot(editor, moduleOptions)).toBe(false);
@@ -458,24 +561,26 @@ describe('Dynamic builder export and persistence with an editor', () => {
     });
 
     test('flushes the pending save when the page is hidden', () => {
-      editor.trigger('update');
-      expect(localStorage.getItem(storageKey)).toBeUndefined();
+      saveProjectSnapshot(editor, moduleOptions);
+      editor.getWrapper().append('<p>pending change</p>');
+      expect(readStoredText(activeKey())).not.toContain('pending change');
       window.dispatchEvent(new Event('pagehide'));
-      expect(JSON.parse(localStorage.getItem(storageKey)).projectData).toBeTruthy();
+      expect(readStoredText(activeKey())).toContain('pending change');
     });
 
     test('waits for inline text editing to end before it takes the snapshot', () => {
       jest.useFakeTimers();
       try {
+        saveProjectSnapshot(editor, moduleOptions);
         const textComponent = editor.getWrapper().append({ type: 'text', content: 'Brand' })[0];
         editor.getModel().set('editing', { model: textComponent });
         editor.trigger('update');
         jest.advanceTimersByTime(moduleOptions.autosaveDelay + 50);
-        expect(localStorage.getItem(storageKey)).toBeUndefined();
+        expect(readStoredText(activeKey())).not.toContain('Brand');
         editor.getModel().set('editing', null);
         editor.trigger('rte:disable');
         jest.advanceTimersByTime(moduleOptions.autosaveDelay + 50);
-        expect(JSON.parse(localStorage.getItem(storageKey)).projectData).toBeTruthy();
+        expect(readStoredText(activeKey())).toContain('Brand');
       } finally {
         jest.useRealTimers();
       }
@@ -492,32 +597,52 @@ describe('Dynamic builder export and persistence with an editor', () => {
     test('follows the dbStorageKey override and persists on demand', () => {
       editor.getModel().set('dbStorageKey', storageKey + '-site-b');
       expect(editor.runCommand('db:persist-now')).toBe(true);
-      expect(JSON.parse(localStorage.getItem(storageKey + '-site-b')).projectData).toBeTruthy();
-      expect(localStorage.getItem(storageKey)).toBeUndefined();
+      expect(readStoredRecord(storageKey + '-site-b').projectData).toBeTruthy();
+      expect(readStoredText(storageKey)).toBeNull();
       expect(saveRevisionRecord(editor, moduleOptions, 'Site B').label).toBe('Site B');
-      expect(JSON.parse(localStorage.getItem(storageKey + '-site-b:revisions'))[0].label).toBe('Site B');
+      expect(readStoredRecord(storageKey + '-site-b:revisions')[0].label).toBe('Site B');
       editor.getModel().set('dbStorageKey', '');
       expect(readRevisionList(editor, moduleOptions)).toEqual([]);
       expect(editor.runCommand('db:persist-now')).toBe(true);
-      expect(JSON.parse(localStorage.getItem(storageKey)).projectData).toBeTruthy();
+      expect(readStoredRecord(activeKey()).projectData).toBeTruthy();
     });
   });
 
   describe('pooled snapshots', () => {
-    test('reloads a pooled autosave snapshot with its pictures', () => {
+    test('reloads a pooled autosave snapshot with its pictures', async () => {
       const photoUrl = buildTestPhoto('abcd');
       editor.getWrapper().append('<img src="' + photoUrl + '"/>');
       expect(saveProjectSnapshot(editor, moduleOptions)).toBe(true);
-      const storedSnapshot = JSON.parse(localStorage.getItem(storageKey));
+      const storedSnapshot = readStoredRecord(activeKey());
       expect(JSON.stringify(storedSnapshot.projectData)).not.toContain('data:image/jpeg;base64,');
-      const restoredSnapshot = restorePayloadAssets(editor, moduleOptions, storedSnapshot.projectData);
+      await flushAssetWrites();
+      const restoredSnapshot = await restorePayloadAssets(storedSnapshot.projectData);
       expect(JSON.stringify(restoredSnapshot)).toContain(photoUrl);
     });
 
-    test('counts the shared pool in the reported storage usage', () => {
+    test('keeps the picture bytes out of the record and in the asset store', async () => {
       editor.Assets.add({ src: buildTestPhoto('abcd'), name: 'photo.jpg', type: 'image' });
       saveProjectSnapshot(editor, moduleOptions);
-      expect(buildStorageUsageText(editor, moduleOptions)).toMatch(/Using \d+ KB of about 5 MB/);
+      await flushAssetWrites();
+      expect(countPhotoCopies(readStoredText(activeKey()))).toBe(0);
+      const pooledTokens = listKnownAssetTokens();
+      expect(pooledTokens.length).toBe(1);
+      const pooledAssets = await readPooledAssets(pooledTokens);
+      expect(pooledAssets[pooledTokens[0]]).toBe(buildTestPhoto('abcd'));
+    });
+
+    test('reports usage against what the browser allows, not a fixed budget', async () => {
+      editor.Assets.add({ src: buildTestPhoto('abcd'), name: 'photo.jpg', type: 'image' });
+      saveProjectSnapshot(editor, moduleOptions);
+      await flushAssetWrites();
+      expect(await buildStorageUsageText()).toMatch(/Using .+ of (the .+ this browser allows|browser storage)/);
+    });
+
+    test('records the real project size so the draft card does not under-report', () => {
+      editor.getWrapper().append('<img src="' + buildTestPhoto('abcd') + '"/>');
+      saveProjectSnapshot(editor, moduleOptions);
+      const draftRecord = readLocalDraftRecord(editor, { ...moduleOptions, autoload: false });
+      expect(draftRecord.meta.byteLength).toBeGreaterThan(buildTestPhoto('abcd').length);
     });
   });
 
@@ -530,14 +655,14 @@ describe('Dynamic builder export and persistence with an editor', () => {
       expect(readRevisionList(editor, moduleOptions)[0].isRestorable).toBe(true);
     });
 
-    test('keeps a safety copy before restoring and clears the undo history', () => {
+    test('keeps a safety copy before restoring and clears the undo history', async () => {
       const revisionRecord = saveRevisionRecord(editor, moduleOptions, 'Milestone');
       expect(saveSafetyRevision(editor, moduleOptions, revisionRecord).savedRecord).toBeNull();
       editor.getWrapper().append('<p>after revision</p>');
       const safetyResult = saveSafetyRevision(editor, moduleOptions, revisionRecord);
       expect(safetyResult.savedRecord.label).toBe('Before restoring "Milestone"');
       expect(safetyResult.savedRecord.kind).toBe('safety');
-      expect(restoreRevisionRecord(editor, moduleOptions, revisionRecord)).toBe(true);
+      expect(await restoreRevisionRecord(editor, revisionRecord)).toBe(true);
       expect(editor.UndoManager.hasUndo()).toBe(false);
       expect(editor.getHtml()).not.toContain('after revision');
       const newestRecord = readRevisionList(editor, moduleOptions).find(
@@ -546,36 +671,42 @@ describe('Dynamic builder export and persistence with an editor', () => {
       expect(JSON.stringify(newestRecord.payload.projectData)).toContain('after revision');
     });
 
-    test('stores one shared copy of a picture instead of one per revision', () => {
+    test('stores one shared copy of a picture however many revisions hold it', async () => {
       editor.Assets.add({ src: buildTestPhoto('abcd'), name: 'photo.jpg', type: 'image' });
       saveProjectSnapshot(editor, moduleOptions);
       ['First', 'Second', 'Third'].forEach((labelText) => saveRevisionRecord(editor, moduleOptions, labelText));
-      const countPhotoCopies = (storedText) =>
-        (String(storedText || '').match(/data:image\/jpeg;base64,/g) || []).length;
-      expect(countPhotoCopies(localStorage.getItem(storageKey))).toBe(0);
-      expect(countPhotoCopies(localStorage.getItem(storageKey + ':revisions'))).toBe(0);
-      expect(countPhotoCopies(localStorage.getItem(storageKey + ':asset-pool'))).toBe(1);
-      expect(localStorage.getItem(storageKey + ':revisions')).toContain('db-pooled-asset:');
+      await flushAssetWrites();
+      expect(countPhotoCopies(readStoredText(activeKey()))).toBe(0);
+      expect(countPhotoCopies(readStoredText(activeKey(':revisions')))).toBe(0);
+      expect(readStoredText(activeKey(':revisions'))).toContain('db-pooled-asset:');
+      expect(listKnownAssetTokens().length).toBe(1);
     });
 
-    test('restores a pooled revision with its pictures intact', () => {
+    test('restores a pooled revision with its pictures intact', async () => {
       const photoUrl = buildTestPhoto('abcd');
       editor.Assets.add({ src: photoUrl, name: 'photo.jpg', type: 'image' });
       editor.getWrapper().append('<img src="' + photoUrl + '"/>');
       const revisionRecord = saveRevisionRecord(editor, moduleOptions, 'With picture');
       editor.getWrapper().components('<p>replaced</p>');
-      expect(runRevisionRestoreFlow(editor, moduleOptions, readRevisionList(editor, moduleOptions)[0])).toBe(true);
+      await flushAssetWrites();
+      const storedRevision = readRevisionList(editor, moduleOptions)[0];
+      expect(await runRevisionRestoreFlow(editor, moduleOptions, storedRevision)).toBe(true);
       expect(editor.getHtml()).toContain(photoUrl);
       expect(JSON.stringify(revisionRecord.payload)).toContain('db-pooled-asset:');
     });
 
-    test('drops pooled pictures once no revision or snapshot points at them', () => {
+    test('drops pooled pictures once no revision or snapshot points at them', async () => {
       editor.Assets.add({ src: buildTestPhoto('abcd'), name: 'photo.jpg', type: 'image' });
       const revisionRecord = saveRevisionRecord(editor, moduleOptions, 'Only holder');
-      expect(localStorage.getItem(storageKey + ':asset-pool')).toContain('data:image/jpeg;base64,');
+      await flushAssetWrites();
+      expect(listKnownAssetTokens().length).toBe(1);
       editor.Assets.remove(editor.Assets.getAll().at(0));
       deleteRevisionRecord(editor, moduleOptions, revisionRecord.id);
-      expect(localStorage.getItem(storageKey + ':asset-pool')).not.toContain('data:image/jpeg;base64,');
+      // The stored snapshot still names the picture until it is written again,
+      // and while it does the sweep is right to keep it.
+      saveProjectSnapshot(editor, moduleOptions);
+      await pruneAssetPool();
+      expect(listKnownAssetTokens()).toEqual([]);
     });
 
     test('skips a safety copy when the project still matches the newest revision', () => {
@@ -584,7 +715,8 @@ describe('Dynamic builder export and persistence with an editor', () => {
       expect(saveSafetyRevision(editor, moduleOptions, revisionRecord).savedRecord).toBeNull();
     });
 
-    test('reports revision failures on their own channel instead of the autosave strip', () => {
+    test('reports a revision failure on its own channel instead of the autosave strip', async () => {
+      await useLocalStorageFallback();
       const statuses = [];
       const revisionErrors = [];
       editor.on('db:save-status', (payload) => statuses.push(payload));

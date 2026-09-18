@@ -5,14 +5,14 @@ import replaceSiteMetaRecord from '../support/replaceSiteMetaRecord.js';
 import resetUndoHistory from './resetUndoHistory.js';
 import restorePayloadAssets from './restorePayloadAssets.js';
 
-const restoreRevisionRecord = (editor, moduleOptions, revisionRecord) => {
+const restoreRevisionRecord = async (editor, revisionRecord) => {
   const revisionPayload = revisionRecord && isPlainRecord(revisionRecord.payload) ? revisionRecord.payload : null;
   if (!revisionPayload || !isPlainRecord(revisionPayload.projectData)) {
     editor.trigger('db:revision:error', { message: 'This revision has no usable project data and cannot be restored' });
     return false;
   }
   try {
-    editor.loadProjectData(restorePayloadAssets(editor, moduleOptions, revisionPayload.projectData));
+    editor.loadProjectData(await restorePayloadAssets(revisionPayload.projectData));
     if (isPlainRecord(revisionPayload.siteMeta)) replaceSiteMetaRecord(editor, revisionPayload.siteMeta);
     resetUndoHistory(editor);
     editor.trigger('db:revision:restored', revisionRecord);

@@ -8,16 +8,21 @@ import describeSiteMetaText from '../../../src/dynamic-builder/siteManager/descr
 import getSiteMetaRecord from '../../../src/dynamic-builder/support/getSiteMetaRecord';
 import pickNewestSiteRecord from '../../../src/dynamic-builder/siteManager/pickNewestSiteRecord';
 import resolveSiteManagerOptions from '../../../src/dynamic-builder/siteManager/resolveSiteManagerOptions';
+import getRecordStorageArea from '../../../src/dynamic-builder/persistence/storage/getRecordStorageArea';
+import resetPersistenceStorageForTests from '../../../src/dynamic-builder/persistence/storage/resetPersistenceStorageForTests';
 
 const siteIndexKey = 'db-sites:index';
 const siteUserKey = 'db-sites:user';
 
-const clearSiteStorage = () =>
-  Object.keys(localStorage)
-    .filter((keyName) => keyName.startsWith('db-site') || keyName.startsWith('db-project'))
-    .forEach((keyName) => localStorage.removeItem(keyName));
+// Site records live in the same store as the project snapshots, so the tests
+// read them the way the adapter does rather than reaching for localStorage.
+const readStoredText = (recordKey) => getRecordStorageArea().getItem(recordKey);
 
-const readIndexSites = () => JSON.parse(localStorage.getItem(siteIndexKey) || '{"sites":[]}').sites;
+const writeStoredText = (recordKey, recordValue) => getRecordStorageArea().setItem(recordKey, recordValue);
+
+const clearSiteStorage = () => resetPersistenceStorageForTests();
+
+const readIndexSites = () => JSON.parse(readStoredText(siteIndexKey) || '{"sites":[]}').sites;
 
 const waitFor = (delayMs) => new Promise((resolveWait) => setTimeout(resolveWait, delayMs));
 
@@ -65,8 +70,8 @@ describe('Dynamic builder site manager', () => {
   });
 
   describe('local storage adapter', () => {
-    beforeEach(() => clearSiteStorage());
-    afterEach(() => clearSiteStorage());
+    beforeEach(async () => clearSiteStorage());
+    afterEach(async () => clearSiteStorage());
 
     test('round trips sites, project payloads and the owner record', async () => {
       const siteAdapter = createLocalStorageSiteAdapter();
@@ -74,7 +79,7 @@ describe('Dynamic builder site manager', () => {
       const siteRecord = buildSiteRecord({ name: 'Round trip' });
       expect(await siteAdapter.writeSite(siteRecord, { projectData: { pages: [] }, savedAt: 'now' })).toBe(true);
       expect(readIndexSites().length).toBe(1);
-      expect(localStorage.getItem(siteRecord.storageKey)).toContain('projectData');
+      expect(readStoredText(siteRecord.storageKey)).toContain('projectData');
       const storedEntry = await siteAdapter.readSite(siteRecord.id);
       expect(storedEntry.record.name).toBe('Round trip');
       expect(storedEntry.snapshot.savedAt).toBe('now');
@@ -86,14 +91,14 @@ describe('Dynamic builder site manager', () => {
       expect(await siteAdapter.readUser()).toBeNull();
       await siteAdapter.writeUser({ id: 'owner-1', name: 'Sam', email: 'sam@example.com', lastSiteId: siteRecord.id });
       expect((await siteAdapter.readUser()).lastSiteId).toBe(siteRecord.id);
-      expect(localStorage.getItem(siteUserKey)).toContain('sam@example.com');
+      expect(readStoredText(siteUserKey)).toContain('sam@example.com');
       await siteAdapter.deleteSite(siteRecord.id);
       expect(await siteAdapter.listSites()).toEqual([]);
-      expect(localStorage.getItem(siteRecord.storageKey)).toBeFalsy();
+      expect(readStoredText(siteRecord.storageKey)).toBeFalsy();
     });
 
     test('ignores junk in the index and rejects records without an id', async () => {
-      localStorage.setItem(siteIndexKey, '{"sites":"broken"}');
+      writeStoredText(siteIndexKey, '{"sites":"broken"}');
       const siteAdapter = createLocalStorageSiteAdapter();
       expect(await siteAdapter.listSites()).toEqual([]);
       expect(await siteAdapter.writeSite({ name: 'No id' })).toBe(false);
@@ -140,12 +145,12 @@ describe('Dynamic builder site manager', () => {
 
     const getStorageKey = () => editor.getModel().get('dbStorageKey');
 
-    beforeEach(() => clearSiteStorage());
+    beforeEach(async () => clearSiteStorage());
 
-    afterEach(() => {
+    afterEach(async () => {
       editor && editor.destroy();
       editor = null;
-      clearSiteStorage();
+      await clearSiteStorage();
     });
 
     test('adopts the existing project as the first site instead of losing it', async () => {
@@ -155,13 +160,13 @@ describe('Dynamic builder site manager', () => {
       expect(siteRecords.length).toBe(1);
       expect(siteRecords[0].name).toBe('My first site');
       expect(getStorageKey()).toBe(siteRecords[0].storageKey);
-      const storedSnapshot = JSON.parse(localStorage.getItem(siteRecords[0].storageKey));
+      const storedSnapshot = JSON.parse(readStoredText(siteRecords[0].storageKey));
       expect(storedSnapshot.projectData.pages.length).toBe(1);
-      expect(JSON.parse(localStorage.getItem(siteUserKey)).lastSiteId).toBe(siteRecords[0].id);
+      expect(JSON.parse(readStoredText(siteUserKey)).lastSiteId).toBe(siteRecords[0].id);
     });
 
     test('names the first site after the site meta when one is set', async () => {
-      localStorage.setItem(
+      writeStoredText(
         'db-project:site-manager-spec',
         JSON.stringify({ projectData: { pages: [{ name: 'Home' }] }, siteMeta: { seo: { siteName: 'Acme Co' } } }),
       );
@@ -184,14 +189,14 @@ describe('Dynamic builder site manager', () => {
       expect(editor.Pages.getAll().length).toBe(1);
       expect(getSiteMetaRecord(editor).seo.siteName).toBe('Second site');
       expect(readIndexSites().length).toBe(2);
-      const firstSnapshot = JSON.parse(localStorage.getItem(firstRecord.storageKey));
+      const firstSnapshot = JSON.parse(readStoredText(firstRecord.storageKey));
       expect(firstSnapshot.projectData.pages.length).toBe(2);
       expect(readIndexSites().find((siteRecord) => siteRecord.id === firstRecord.id).pageCount).toBe(2);
       expect(await editor.runCommand('db:create-site', { name: '   ' })).toBeNull();
       expect(readIndexSites().length).toBe(2);
       editor.Pages.add({ name: 'Team', component: '<div>team</div>' }, { select: false });
       editor.runCommand('db:persist-now');
-      const createdSnapshot = JSON.parse(localStorage.getItem(createdRecord.storageKey));
+      const createdSnapshot = JSON.parse(readStoredText(createdRecord.storageKey));
       expect(createdSnapshot.projectData.pages.map((pageRecord) => pageRecord.name)).toContain('Team');
     });
 
@@ -207,7 +212,7 @@ describe('Dynamic builder site manager', () => {
       await editor.runCommand('db:switch-site', { siteId: secondRecord.id });
       expect(getStorageKey()).toBe(secondRecord.storageKey);
       expect(editor.Pages.getAll().map((pageModel) => pageModel.getName())).toEqual(['Home', 'Pricing']);
-      expect(JSON.parse(localStorage.getItem(siteUserKey)).lastSiteId).toBe(secondRecord.id);
+      expect(JSON.parse(readStoredText(siteUserKey)).lastSiteId).toBe(secondRecord.id);
     });
 
     test('reopens the last edited site on the next session', async () => {
@@ -243,7 +248,7 @@ describe('Dynamic builder site manager', () => {
       const secondRecord = await editor.runCommand('db:create-site', { name: 'Second site' });
       await editor.runCommand('db:delete-site', { siteId: firstRecord.id });
       expect(readIndexSites().map((siteRecord) => siteRecord.id)).toEqual([secondRecord.id]);
-      expect(localStorage.getItem(firstRecord.storageKey)).toBeFalsy();
+      expect(readStoredText(firstRecord.storageKey)).toBeFalsy();
       expect(getStorageKey()).toBe(secondRecord.storageKey);
     });
 
@@ -328,7 +333,7 @@ describe('Dynamic builder site manager', () => {
       await waitFor(20);
       const copyRecord = readIndexSites().find((siteRecord) => siteRecord.id !== firstRecord.id);
       expect(copyRecord.name).toBe('My first site copy');
-      const copiedSnapshot = JSON.parse(localStorage.getItem(copyRecord.storageKey));
+      const copiedSnapshot = JSON.parse(readStoredText(copyRecord.storageKey));
       expect(copiedSnapshot.projectData.pages.map((pageRecord) => pageRecord.name)).toContain('Gallery');
       expect(getStorageKey()).toBe(firstRecord.storageKey);
       const downloadedKeys = [];
@@ -351,7 +356,7 @@ describe('Dynamic builder site manager', () => {
     });
 
     test('opens on start once there is more than one site to choose between', async () => {
-      localStorage.setItem(
+      writeStoredText(
         siteIndexKey,
         JSON.stringify({ sites: [buildSiteRecord({ name: 'One' }), buildSiteRecord({ name: 'Two' })] }),
       );
@@ -389,7 +394,7 @@ describe('Dynamic builder site manager', () => {
       };
       await initEditor({ storageAdapter: hostAdapter, user: { id: 'u1', name: 'Ada', email: 'ada@example.com' } });
       expect(getStorageKey()).toBe(hostRecord.storageKey);
-      expect(localStorage.getItem(siteIndexKey)).toBeFalsy();
+      expect(readStoredText(siteIndexKey)).toBeFalsy();
       await editor.runCommand('db:create-site', { name: 'Cloud two' });
       expect(hostState.sites.length).toBe(2);
       expect(hostState.user).toEqual({

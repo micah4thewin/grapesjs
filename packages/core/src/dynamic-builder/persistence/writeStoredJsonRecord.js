@@ -1,10 +1,10 @@
 import getErrorMessageText from './getErrorMessageText.js';
-import getLocalStorageArea from './getLocalStorageArea.js';
+import getRecordStorageArea from './storage/getRecordStorageArea.js';
 import getStorageFullMessage from './getStorageFullMessage.js';
 import isQuotaExceededError from './isQuotaExceededError.js';
 
 const writeStoredJsonRecord = (storageKey, recordValue, onQuotaExceeded) => {
-  const storageArea = getLocalStorageArea();
+  const storageArea = getRecordStorageArea();
   if (!storageArea) return 'Browser storage is not available here, so nothing can be saved';
   const serializedValue = JSON.stringify(recordValue);
   try {

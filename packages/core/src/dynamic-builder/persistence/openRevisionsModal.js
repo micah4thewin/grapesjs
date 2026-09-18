@@ -13,14 +13,22 @@ const openRevisionsModal = (editor, moduleOptions) => {
   if (!containerElement || !containerElement.ownerDocument) return;
   const rootElement = buildElementFromMarkup(
     containerElement.ownerDocument,
-    buildRevisionsModalMarkup(buildStorageUsageText(editor, moduleOptions)),
+    buildRevisionsModalMarkup('Checking browser storage...'),
   );
   if (!rootElement) return;
   const listElement = rootElement.querySelector('[data-db-revision-list]');
   const usageElement = rootElement.querySelector('[data-db-storage-usage]');
   const refreshRevisionList = () => {
     renderRevisionListElement(listElement, listRestorableRecords(editor, moduleOptions));
-    if (usageElement) usageElement.textContent = buildStorageUsageText(editor, moduleOptions);
+    // The browser reports what it has room for asynchronously, so the list is
+    // never held up waiting for a line of help text.
+    if (usageElement) {
+      buildStorageUsageText()
+        .then((usageText) => {
+          usageElement.textContent = usageText;
+        })
+        .catch(() => false);
+    }
   };
   refreshRevisionList();
   rootElement.addEventListener('click', (clickEvent) =>

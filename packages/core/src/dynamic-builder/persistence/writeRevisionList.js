@@ -25,7 +25,8 @@ const writeRevisionList = (editor, moduleOptions, revisionList) => {
     return false;
   }
   // Trimming the list can orphan the pictures the dropped revisions pointed at.
-  pruneAssetPool(editor, moduleOptions);
+  // Nothing waits on the sweep: it only frees space that is already unreachable.
+  pruneAssetPool().catch(() => false);
   return true;
 };
 

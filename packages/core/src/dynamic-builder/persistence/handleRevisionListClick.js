@@ -54,11 +54,15 @@ const handleRevisionListClick = (editor, moduleOptions, clickEvent, refreshRevis
     if (originButton && typeof originButton.focus === 'function') originButton.focus();
   }
   if (actionName === 'confirm-restore') {
-    if (runRevisionRestoreFlow(editor, moduleOptions, revisionRecord)) editor.Modal.close();
-    else refreshRevisionList();
+    runRevisionRestoreFlow(editor, moduleOptions, revisionRecord)
+      .then((restored) => {
+        if (restored) editor.Modal.close();
+        else refreshRevisionList();
+      })
+      .catch(() => refreshRevisionList());
     return;
   }
-  if (actionName === 'download' && revisionRecord) downloadRevisionRecord(editor, moduleOptions, revisionRecord);
+  if (actionName === 'download' && revisionRecord) downloadRevisionRecord(editor, revisionRecord);
   if (actionName === 'confirm-delete' && revisionRecord && revisionRecord.kind !== 'draft') {
     deleteRevisionRecord(editor, moduleOptions, revisionId);
     refreshRevisionList();

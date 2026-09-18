@@ -13,14 +13,21 @@ const finishSessionStart = (editor, managerOptions, siteRecord, wasAdopted, site
   return siteRecord || null;
 };
 
+// Adopting the open project as a site only makes sense once the stored project
+// has actually been loaded into the editor, which now happens asynchronously.
+const whenProjectLoaded = (editor) => {
+  const editorModel = editor.getModel && editor.getModel();
+  return Promise.resolve(editorModel ? editorModel.get('dbProjectLoaded') : null);
+};
+
 const startSiteManagerSession = (editor, managerOptions) => {
   if (!editor.onReady) return false;
   editor.onReady(() => {
     if (!isEditorLive(editor)) return;
-    managerOptions.storageAdapter
-      .listSites()
+    whenProjectLoaded(editor)
+      .then(() => (isEditorLive(editor) ? managerOptions.storageAdapter.listSites() : null))
       .then((siteRecords) => {
-        if (!isEditorLive(editor)) return null;
+        if (!isEditorLive(editor) || !siteRecords) return null;
         const hasSites = siteRecords.length > 0;
         const startPromise = hasSites
           ? restoreLastOpenedSite(editor, managerOptions, siteRecords)
